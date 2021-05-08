@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup Label="Target">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <TargetFramework>net472</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Platforms>AnyCPU;x64</Platforms>
+        <Configurations>Debug;Release</Configurations>
+    </PropertyGroup>
+    <PropertyGroup Label="Build">
+        <OutputType>Library</OutputType>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Label="Feature">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Version>1.0.0.1</Version>
+    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+  </PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="lib\**" />
+	  <EmbeddedResource Remove="lib\**" />
+	  <None Remove="lib\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="lib\FFXIVClientStructs\FFXIVClientStructs.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Dalamud">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.CSharp" />
+        <Reference Include="Newtonsoft.Json">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="ImGui.NET">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\ImGui.NET.dll</HintPath>
+		</Reference>
+		<Reference Include="ImGuiScene">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\ImGuiScene.dll</HintPath>
+		</Reference>
+		<Reference Include="Lumina">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
+		</Reference>
+		<Reference Include="Lumina.Excel">
+            <Private>false</Private>
+            <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
+		</Reference>
+    </ItemGroup>
+</Project>
