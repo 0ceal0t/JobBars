@@ -131,8 +131,8 @@ namespace JobBars.UI {
 
             // ======= CONTAINERS =========
             RootRes = _UI.CreateResNode();
-            RootRes->X = 48;
-            RootRes->Y = 27;
+            RootRes->X = 0;
+            RootRes->Y = 50; // TEMP
             RootRes->Width = 160;
             RootRes->Height = 46;
             RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + textContainer->ChildCount + 2);
