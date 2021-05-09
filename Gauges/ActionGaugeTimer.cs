@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dalamud.Plugin;
+using JobBars.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public class ActionGaugeTimer : ActionGauge {
-        public float Duration;
+        public float MaxDuration;
         public bool ReplaceIcon = false;
         public ActionIds ReplaceIconAction;
 
-        public float Value;
+        public float StartValue; // this is needed because sometimes buffs don't start with their maximum value, like storm's eye
 
         public ActionGaugeTimer(string name, float duration) : base(name, ActionGaugeType.Timer) {
-            Duration = duration;
+            MaxDuration = duration;
         }
 
         // ===== BUILDER FUNCS =====
@@ -37,30 +39,47 @@ namespace JobBars.Gauges {
         }
 
         // ====================
-        public override void Process(Item action, bool add) {
-            if (add) {
-                if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
-                    Start();
-                    return;
-                }
+        public override void ProcessAction(Item action) {
+            if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
+                Start(action);
             }
-            else {
-                if(Triggers.Contains(action) && Active) {
-                    Stop();
+        }
+
+        private void Start(Item action) {
+            PluginLog.Log("STARTING");
+            SetActive(action);
+            StartValue = MaxDuration;
+        }
+
+        public override void Tick(DateTime time, float delta) {
+            if (Active) {
+                var timeleft = StartValue - (time - ActiveTime).TotalSeconds;
+                if (timeleft <= 0) {
+                    PluginLog.Log("STOPPING");
+                    Active = false;
+                }
+                // ==================
+                if (_UI is UIGauge) {
+                    var gauge = (UIGauge)_UI;
+                    gauge.SetText(((int)timeleft).ToString());
+                    gauge.SetPercent((float)timeleft / MaxDuration);
                 }
             }
         }
 
-        private void Start() {
-            Active = true;
-            // TODO: hide
-            Value = 0;
-            // TODO: update gauge
+        public override void Setup() {
+            if (_UI is UIGauge) {
+                var gauge = (UIGauge)_UI;
+                gauge.SetText("0");
+                gauge.SetPercent(0);
+            }
         }
 
-        private void Stop() {
-            Active = false;
-            Value = 0;
+        public override void ProcessDuration(Item buff, float duration) { // primarily used for things like storm's eye
+            if(Active && buff == LastActiveTrigger) {
+                ActiveTime = DateTime.Now;
+                StartValue = duration;
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ using JobBars.GameStructs;
 using FFXIVClientInterface.Client.UI.Misc;
 using Dalamud.Hooking;
 using JobBars.Gauges;
+using Dalamud.Game.Internal.Network;
 
 #pragma warning disable CS0659
 namespace JobBars {
@@ -52,6 +53,9 @@ namespace JobBars {
             removeStatusHook = new Hook<RemoveStatusDelegate>(removeStatusFuncPtr, (RemoveStatusDelegate)RemoveStatus);
             removeStatusHook.Enable();
 
+            //IntPtr testPtr = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 55 57 41 56 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 41 0F B6 E8"); // IntPtr a1, IntPtr a2, IntPtr a3) <--- status list
+            //IntPtr testPtr2 = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 57 41 54 41 57 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 45 0F B6 E0"); // IntPtr a1, IntPtr a2, IntPtr a3) <---- action effect
+
             PluginInterface.UiBuilder.OnBuildUi += BuildUI;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
             SetupCommands();
@@ -75,25 +79,84 @@ namespace JobBars {
             RemoveCommands();
         }
 
-        private byte AddStatus(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus) {
-            if(_Ready && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
-                PluginLog.Log("ADD STATUS");
+        private byte AddStatus(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus) { // STATUS DURATION SENT SEPARATELY
+            if (_Ready && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId && newStatus == 1) {
+                _GManager.GetBuffDuration(new Item
+                {
+                    Id = statusId,
+                    IsBuff = true
+                }, duration);
             }
             return addStatusHook.Original(statusEffectList, slot, statusId, duration, a5, sourceActorId, newStatus);
         }
 
-        private IntPtr RemoveStatus(IntPtr a1, uint statusId, IntPtr a3, uint sourceActorId, byte a5, byte a6) {
-            if (_Ready && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
-                PluginLog.Log("REMOVE STATUS");
-            }
+        private IntPtr RemoveStatus(IntPtr a1, uint statusId, IntPtr a3, uint sourceActorId, byte a5, byte a6) { // NOT USING THIS FOR NOW
             return removeStatusHook.Original(a1, statusId, a3, sourceActorId, a5, a6);
         }
 
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
-            if(_Ready && IntPtr.Equals(sourceCharacter, PluginInterface.ClientState.LocalPlayer.Address)) {
-                PluginLog.Log("ACTION");
+            ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
+            if (_Ready && IntPtr.Equals(sourceCharacter, PluginInterface.ClientState.LocalPlayer.Address)) {
+                _GManager.PerformAction(new Item
+                {
+                    Id = id,
+                    IsBuff = false
+                });
             }
+
+            byte targetCount = *(byte*)(effectHeader + 0x21);
+            int effectsEntries = 0;
+            int targetEntries = 1;
+            if (targetCount == 0) {
+                effectsEntries = 0;
+                targetEntries = 1;
+            }
+            else if (targetCount == 1) {
+                effectsEntries = 8;
+                targetEntries = 1;
+            }
+            else if (targetCount <= 8) {
+                effectsEntries = 64;
+                targetEntries = 8;
+            }
+            else if (targetCount <= 16) {
+                effectsEntries = 128;
+                targetEntries = 16;
+            }
+            else if (targetCount <= 24) {
+                effectsEntries = 192;
+                targetEntries = 24;
+            }
+            else if (targetCount <= 32) {
+                effectsEntries = 256;
+                targetEntries = 32;
+            }
+
+            List<EffectEntry> entries = new List<EffectEntry>(effectsEntries);
+            for (int i = 0; i < effectsEntries; i++) {
+                entries.Add(*(EffectEntry*)(effectArray + i * 8));
+            }
+
+            ulong[] targets = new ulong[targetEntries];
+            for (int i = 0; i < targetCount; i++) {
+                targets[i] = *(ulong*)(effectTrail + i * 8);
+            }
+
+            for (int i = 0; i < entries.Count; i++) {
+                ulong tTarget = targets[i / 8];
+
+                if (entries[i].type != ActionEffectType.Nothing && entries[i].type != ActionEffectType.Damage) { PluginLog.Log($"{entries[i].type} {tTarget} {entries[i].value} {entries[i].mult} {entries[i].param0} {entries[i].param1} {entries[i].param2}"); }
+
+                if(entries[i].type == ActionEffectType.Gp_Or_Status) {
+                    _GManager.PerformAction(new Item
+                    {
+                        Id = entries[i].value,
+                        IsBuff = true
+                    });
+                }
+            }
+
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
 
@@ -183,12 +246,13 @@ namespace JobBars {
             }
             else if(FrameCount == 1) {
                 _UI.Init();
-                _GManager = new ActionGaugeManager();
+                _GManager = new ActionGaugeManager(_UI);
                 FrameCount++;
                 return;
             }
 
             _GManager.SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
+            _GManager.Tick();
         }
     }
 }

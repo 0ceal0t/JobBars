@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dalamud.Plugin;
+using JobBars.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,14 +9,15 @@ using System.Threading.Tasks;
 namespace JobBars.Gauges {
     public class ActionGaugeGCD : ActionGauge {
         public Item[] Increment;
-        public float Duration;
-        public int Max;
+        public float MaxDuration;
+        public int MaxCounter;
 
-        public int Value;
+        public int Counter;
+        public float Duration;
 
         public ActionGaugeGCD(string name, float duration, int max) : base(name, ActionGaugeType.GCDs) {
-            Duration = duration;
-            Max = max;
+            MaxDuration = duration;
+            MaxCounter = max;
             Increment = new Item[0];
         }
 
@@ -38,38 +41,63 @@ namespace JobBars.Gauges {
         }
 
         // ====================
-        public override void Process(Item action, bool add) {
-            if (add) {
-                if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
-                    Start();
-                    return;
-                }
-                if (Increment.Contains(action) && Active) {
-                    AddValue();
-                }
+        public override void ProcessAction(Item action) {
+            if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
+                Start(action);
+                return;
             }
-            else {
-                if (Triggers.Contains(action) && Active) {
-                    Stop();
-                }
+
+            if(Increment.Contains(action) && Active) {
+                AddValue();
             }
         }
 
-        private void Start() {
-            Active = true;
-            // TODO: hide
-            Value = 0;
-            // TODO: update gauge
+        private void Start(Item action) {
+            PluginLog.Log("STARTING");
+            SetActive(action);
+            Duration = MaxDuration;
+            Counter = 0;
         }
 
         private void AddValue() {
-            Value++;
-            // TODO: update gauge
+            PluginLog.Log("ADD VALUE");
+            Counter++;
         }
 
-        private void Stop() {
-            Active = false;
-            Value = 0;
+        public override void Tick(DateTime time, float delta) {
+            if (Active) {
+                var timeleft = Duration - (time - ActiveTime).TotalSeconds;
+                if(timeleft <= 0) {
+                    PluginLog.Log("STOPPING");
+                    Active = false;
+                }
+                // ==================
+                if(_UI is UIArrow) {
+                    var arrows = (UIArrow)_UI;
+                    arrows.SetValue(Counter);
+                }
+                else {
+                    var gauge = (UIGauge)_UI;
+                    gauge.SetText(Counter.ToString());
+                    gauge.SetPercent(((float)Counter) / MaxCounter);
+                }
+            }
+        }
+
+        public override void Setup() {
+            if(_UI is UIArrow) {
+                var arrows = (UIArrow)_UI;
+                arrows.SetMaxValue(MaxCounter);
+                arrows.SetValue(0);
+            }
+        }
+
+        public override void ProcessDuration(Item buff, float duration) {
+            if (Active && buff == LastActiveTrigger) {
+                PluginLog.Log("d");
+                ActiveTime = DateTime.Now;
+                Duration = duration;
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Actors.Resolvers;
 using Dalamud.Plugin;
+using JobBars.Helper;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +9,58 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
-    public class ActionGaugeManager {
-        public Dictionary<JobIds, ActionGauge[]> JobToGauges;
-        public JobIds CurrentJob;
-        public ActionGauge[] CurrentGauges => JobToGauges[CurrentJob];
+    public unsafe class ActionGaugeManager {
+        public UIBuilder _UI;
 
-        public ActionGaugeManager() {
+        public Dictionary<JobIds, ActionGauge[]> JobToGauges;
+        public JobIds CurrentJob = JobIds.OTHER;
+        public ActionGauge[] CurrentGauges => JobToGauges[CurrentJob];
+        private DateTime LastTick = DateTime.Now;
+
+        public ActionGaugeManager(UIBuilder ui) {
+            _UI = ui;
+
             JobToGauges = new Dictionary<JobIds, ActionGauge[]>();
             JobToGauges.Add(JobIds.OTHER, new ActionGauge[] { });
             JobToGauges.Add(JobIds.GNB, new ActionGauge[] { });
-            JobToGauges.Add(JobIds.AST, new ActionGauge[] { });
+            JobToGauges.Add(JobIds.AST, new ActionGauge[] {
+                new ActionGaugeTimer("Combust", 30)
+                    .WithTriggers(new[]{
+                        new Item(BuffIds.Combust),
+                        new Item(BuffIds.Combust2),
+                        new Item(BuffIds.Combust3)
+                    })
+            });
             JobToGauges.Add(JobIds.PLD, new ActionGauge[] { });
-            JobToGauges.Add(JobIds.WAR, new ActionGauge[] { });
+            JobToGauges.Add(JobIds.WAR, new ActionGauge[] {
+
+            });
             JobToGauges.Add(JobIds.DRK, new ActionGauge[] {
                 new ActionGaugeGCD("Delirium", 10, 5)
-                .WithTriggers(new[]
-                {
-                    new Item(BuffIds.Delirium)
-                })
-                .WithIncrement(new[]{ 
-                    new Item(ActionIds.BloodSpiller),
-                    new Item(ActionIds.Quietus)
-                })
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.Delirium)
+                    })
+                    .WithIncrement(new[]{ 
+                        new Item(ActionIds.BloodSpiller),
+                        new Item(ActionIds.Quietus)
+                    }),
+                new ActionGaugeGCD("Blood Weapon", 10, 5)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.BloodWeapon)
+                    })
+                    .WithIncrement(new[]
+                    {
+                        new Item(ActionIds.HardSlash),
+                        new Item(ActionIds.SiphonStrike),
+                        new Item(ActionIds.Souleater),
+                        new Item(ActionIds.Unmend),
+                        new Item(ActionIds.Unleash),
+                        new Item(ActionIds.StalwartSoul),
+                        new Item(ActionIds.BloodSpiller),
+                        new Item(ActionIds.Quietus)
+                    })
             }); ;
             JobToGauges.Add(JobIds.SCH, new ActionGauge[] { });
             JobToGauges.Add(JobIds.WHM, new ActionGauge[] { });
@@ -48,11 +80,51 @@ namespace JobBars.Gauges {
         public void SetJob(ClassJob job) {
             JobIds _job = job.Id < 19 ? JobIds.OTHER : (JobIds)job.Id;
             if(_job != CurrentJob) {
+                // ==== REMOVE OLD =======
+                foreach(var g_ in CurrentGauges) {
+                    g_._UI = null;
+                }
+                _UI.HideAllGauges();
+
                 CurrentJob = _job;
-                // TODO: disable old
-                // TODO: switch here
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
+
+                // ==== SETUP NEW =======
+                int idx = 0;
+                int y = 0;
+                foreach(var g_ in CurrentGauges) {
+                    g_._UI = g_.Type == ActionGaugeType.GCDs ? _UI.Arrows[idx] : _UI.Gauges[idx];
+                    _UI.Show(g_._UI);
+                    UiHelper.SetPosition(g_._UI.RootRes, 0, y);
+                    y += g_._UI.Height;
+                    idx++;
+
+                    g_.Setup();
+                }
             }
+        }
+
+        public void PerformAction(Item action) {
+            foreach(var g_ in CurrentGauges) {
+                g_.ProcessAction(action);
+            }
+        }
+
+        public void GetBuffDuration(Item buff, float duration) {
+            if(duration < 0) { duration *= -1; }
+            foreach (var g_ in CurrentGauges) {
+                g_.ProcessDuration(buff, duration);
+            }
+        }
+
+        public void Tick() {
+            var currentTime = DateTime.Now;
+            float deltaSecond = (float)(currentTime - LastTick).TotalSeconds;
+            foreach(var g_ in CurrentGauges) {
+                g_.Tick(currentTime, deltaSecond);
+            }
+
+            LastTick = currentTime;
         }
     }
 }

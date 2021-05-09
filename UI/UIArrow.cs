@@ -11,7 +11,7 @@ namespace JobBars.UI {
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 
-        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, node) {
+        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46, node) {
         }
 
         public override void Init() {
@@ -45,8 +45,8 @@ namespace JobBars.UI {
                 Selected[idx]->AtkResNode.Height = 32;
                 Selected[idx]->AtkResNode.X = 0;
                 Selected[idx]->AtkResNode.Y = 0;
-                Selected[idx]->AtkResNode.OriginX = 16;
-                Selected[idx]->AtkResNode.OriginY = 16;
+                Selected[idx]->AtkResNode.OriginX = 0;
+                Selected[idx]->AtkResNode.OriginY = 0;
                 Selected[idx]->PartId = UIBuilder.ARROW_FG;
                 Selected[idx]->PartsList = nameplateAddon->UldManager.PartsList;
                 Selected[idx]->Flags = 0;
@@ -58,8 +58,8 @@ namespace JobBars.UI {
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
                 selectedContainer->Height = 32;
-                selectedContainer->OriginX = 16;
-                selectedContainer->OriginY = 16;
+                selectedContainer->OriginX = 0;
+                selectedContainer->OriginY = 0;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
                 bg->AtkResNode.PrevSiblingNode = selectedContainer;
                 //
@@ -88,10 +88,6 @@ namespace JobBars.UI {
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
             //
             RootRes->ChildNode = Ticks[0];
-
-            //Ticks[0]->ParentNode = RootRes; // temp
-            //Ticks[1]->ParentNode = RootRes;
-            //Ticks[0]->PrevSiblingNode = Ticks[1];
 
             for(int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
@@ -123,18 +119,18 @@ namespace JobBars.UI {
 
         public void SetMaxValue(int value) {
             for(int idx = 0; idx < MAX; idx++) {
-                if(idx <= (value-1)) {
-                    UIBuilder.RecurseHide(Ticks[idx], false); // show
+                if(idx <= value) { // <---- something is scuffed with these -_-
+                    UIBuilder.RecurseHide(Ticks[idx], false, false); // show
                 }
                 else {
-                    UIBuilder.RecurseHide(Ticks[idx], true);
+                    UIBuilder.RecurseHide(Ticks[idx], true, false);
                 }
             }
         }
 
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                if (idx <= (value - 1)) {
+                if (idx <= value) {
                     UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
                 }
                 else {

@@ -3,3 +3,5 @@
 - show icon square
 - custom arrow texture
 - move around
+
+- pets

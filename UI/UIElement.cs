@@ -9,9 +9,11 @@ using static JobBars.UI.UIColor;
 namespace JobBars.UI {
     public abstract unsafe class UIElement {
         public UIBuilder _UI;
+        public int Height;
 
-        public UIElement(UIBuilder _ui, AtkResNode* node = null) {
+        public UIElement(UIBuilder _ui, int height, AtkResNode* node = null) {
             _UI = _ui;
+            Height = height;
             if (node == null) {
                 Init();
             }

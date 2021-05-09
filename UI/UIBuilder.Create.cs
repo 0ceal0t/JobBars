@@ -102,7 +102,7 @@ namespace JobBars.UI {
             node->NodeText.StringLength = 0;
             node->NodeText.Unk = 256;
 
-            UiHelper.SetText(node, "123");
+            UiHelper.SetText(node, "");
 
             return node;
         }

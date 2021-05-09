@@ -17,14 +17,17 @@ namespace JobBars.UI {
         public LoadTextureDelegate LoadTexture;
 
         private AtkResNode* NewRes = null;
-        private UIGauge Gauge;
-        private UIArrow Arrow;
+        private static int MAX_GAUGES = 2;
+        public UIGauge[] Gauges;
+        public UIArrow[] Arrows;
 
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
             var scanner = PluginInterface.TargetModuleScanner;
             var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9");
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
+            Gauges = new UIGauge[MAX_GAUGES];
+            Arrows = new UIArrow[MAX_GAUGES];
         }
 
         public void Dispose() {
@@ -33,7 +36,7 @@ namespace JobBars.UI {
             }
         }
 
-        public static void RecurseHide(AtkResNode* node, bool hide = true) {
+        public static void RecurseHide(AtkResNode* node, bool hide = true, bool siblings = true) {
             if (hide) {
                 UiHelper.Hide(node);
             }
@@ -44,7 +47,7 @@ namespace JobBars.UI {
             if (node->ChildNode != null) {
                 RecurseHide(node->ChildNode, hide);
             }
-            if (node->PrevSiblingNode != null) {
+            if (siblings && node->PrevSiblingNode != null) {
                 RecurseHide(node->PrevSiblingNode, hide);
             }
         }
@@ -102,15 +105,13 @@ namespace JobBars.UI {
             NewRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
             RecurseHide(NewRes, false);
             // =======
-            Gauge = new UIGauge(this, NewRes->ChildNode);
-            Gauge.SetPercent(0.5f);
-            Gauge.SetText("30");
-            Gauge.SetColor(UIColor.Red); // TODO: fix the red
-
-            Arrow = new UIArrow(this, NewRes->ChildNode->PrevSiblingNode);
-            Arrow.SetColor(UIColor.LightBlue);
-            Arrow.SetMaxValue(5);
-            Arrow.SetValue(3);
+            var n = NewRes->ChildNode;
+            for(int idx = 0; idx < MAX_GAUGES; idx++) {
+                Gauges[idx] = new UIGauge(this, n);
+                n = n->PrevSiblingNode;
+                Arrows[idx] = new UIArrow(this, n);
+                n = n->PrevSiblingNode;
+            }
         }
 
         public void Init() {
@@ -120,21 +121,36 @@ namespace JobBars.UI {
                 return;
             }
 
-            Gauge = new UIGauge(this, null);
-            Arrow = new UIArrow(this, null);
+            for(int idx = 0; idx < MAX_GAUGES; idx++) {
+                Gauges[idx] = new UIGauge(this, null);
+                Arrows[idx] = new UIArrow(this, null);
+            }
 
             NewRes = CreateResNode();
             NewRes->Width = 256;
             NewRes->Height = 100;
             NewRes->Flags = 9395;
-            NewRes->ChildCount = (ushort)(Arrow.RootRes->ChildCount + Gauge.RootRes->ChildCount + 2);
+            NewRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = NewRes;
 
-            Gauge.RootRes->ParentNode = NewRes;
-            Arrow.RootRes->ParentNode = NewRes;
-            NewRes->ChildNode = Gauge.RootRes;
-            Gauge.RootRes->PrevSiblingNode = Arrow.RootRes;
-            Arrow.RootRes->NextSiblingNode = Gauge.RootRes;
+            NewRes->ChildNode = Gauges[0].RootRes;
+            for(int idx = 0; idx < MAX_GAUGES; idx++) {
+                Gauges[idx].RootRes->ParentNode = NewRes;
+                Arrows[idx].RootRes->ParentNode = NewRes;
+
+                Gauges[idx].RootRes->PrevSiblingNode = Arrows[idx].RootRes;
+                Arrows[idx].RootRes->NextSiblingNode = Gauges[idx].RootRes;
+                if(idx < (MAX_GAUGES - 1)) {
+                    Arrows[idx].RootRes->PrevSiblingNode = Gauges[idx + 1].RootRes;
+                    Gauges[idx + 1].RootRes->NextSiblingNode = Arrows[idx].RootRes;
+                }
+            }
+
+            //Gauge.RootRes->ParentNode = NewRes;
+            //Arrow.RootRes->ParentNode = NewRes;
+            //NewRes->ChildNode = Gauge.RootRes;
+            //Gauge.RootRes->PrevSiblingNode = Arrow.RootRes;
+            //Arrow.RootRes->NextSiblingNode = Gauge.RootRes;
 
             SetPosition(1500, 500); // TEMP
             SetScale(1, 1);
@@ -157,6 +173,19 @@ namespace JobBars.UI {
             var addon = _ADDON;
             var p = UiHelper.GetNodeScale(_ADDON->RootNode);
             UiHelper.SetScale(NewRes, X / p.X, Y / p.Y);
+        }
+
+        public void HideAllGauges() {
+            foreach(var g in Gauges) {
+                RecurseHide(g.RootRes);
+            }
+            foreach (var g in Arrows) {
+                RecurseHide(g.RootRes);
+            }
+        }
+
+        public void Show(UIElement element) {
+            RecurseHide(element.RootRes, false, false);
         }
     }
 }

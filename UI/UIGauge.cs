@@ -12,8 +12,9 @@ namespace JobBars.UI {
         AtkTextNode* TextNode;
         AtkNineGridNode* TextBlurNode;
         AtkNineGridNode* BarMainNode;
+        string CurrentText = "";
 
-        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, node) {
+        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46, node) {
         }
 
         public override void Pickup(AtkResNode* node) {
@@ -132,7 +133,7 @@ namespace JobBars.UI {
             // ======= CONTAINERS =========
             RootRes = _UI.CreateResNode();
             RootRes->X = 0;
-            RootRes->Y = 50; // TEMP
+            RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
             RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + textContainer->ChildCount + 2);
@@ -144,7 +145,10 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            UiHelper.SetText(TextNode, text);
+            if(text != CurrentText) {
+                UiHelper.SetText(TextNode, text);
+                CurrentText = text;
+            }
             UiHelper.SetSize((AtkResNode*)TextBlurNode, 30 + 16 * text.Length, 40);
             UiHelper.SetPosition((AtkResNode*)TextBlurNode, -16 * (text.Length - 1), 0);
         }
