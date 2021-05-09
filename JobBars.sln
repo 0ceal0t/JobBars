@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobBars", "JobBars.csproj",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFXIVClientStructs", "lib\FFXIVClientStructs\FFXIVClientStructs.csproj", "{A219DD59-672E-4D98-ABFE-3F4586FEAEF7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFXIVClientInterface", "lib\FFXIVClientInterface\FFXIVClientInterface.csproj", "{FF946648-72B3-493D-B9D0-A9E21D75C800}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{A219DD59-672E-4D98-ABFE-3F4586FEAEF7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A219DD59-672E-4D98-ABFE-3F4586FEAEF7}.Release|x64.ActiveCfg = Release|Any CPU
 		{A219DD59-672E-4D98-ABFE-3F4586FEAEF7}.Release|x64.Build.0 = Release|Any CPU
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Debug|x64.ActiveCfg = Debug|x64
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Debug|x64.Build.0 = Debug|x64
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Release|x64.ActiveCfg = Release|x64
+		{FF946648-72B3-493D-B9D0-A9E21D75C800}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,15 +13,6 @@ namespace JobBars.Helper {
     internal unsafe class Common {
         public static DalamudPluginInterface PluginInterface { get; private set; }
 
-        private delegate IntPtr GameAlloc(ulong size, IntPtr unk, IntPtr allocator, IntPtr alignment);
-
-        private delegate IntPtr GetGameAllocator();
-
-        private static GameAlloc _gameAlloc;
-        private static GetGameAllocator _getGameAllocator;
-
-        public static IntPtr PlayerStaticAddress { get; private set; }
-
         public static SigScanner Scanner => PluginInterface.TargetModuleScanner;
 
         public Common(DalamudPluginInterface pluginInterface) {

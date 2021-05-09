@@ -24,6 +24,7 @@
 	  <None Remove="lib\**" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="lib\FFXIVClientInterface\FFXIVClientInterface.csproj" />
 	  <ProjectReference Include="lib\FFXIVClientStructs\FFXIVClientStructs.csproj" />
 	</ItemGroup>
 	<ItemGroup>

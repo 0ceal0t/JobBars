@@ -33,7 +33,7 @@ namespace JobBars.UI {
             }
         }
 
-        private void RecurseHide(AtkResNode* node, bool hide = true) {
+        public static void RecurseHide(AtkResNode* node, bool hide = true) {
             if (hide) {
                 UiHelper.Hide(node);
             }
@@ -105,9 +105,12 @@ namespace JobBars.UI {
             Gauge = new UIGauge(this, NewRes->ChildNode);
             Gauge.SetPercent(0.5f);
             Gauge.SetText("30");
-            Gauge.SetColor(UIColor.Purple);
+            Gauge.SetColor(UIColor.Red); // TODO: fix the red
 
             Arrow = new UIArrow(this, NewRes->ChildNode->PrevSiblingNode);
+            Arrow.SetColor(UIColor.LightBlue);
+            Arrow.SetMaxValue(5);
+            Arrow.SetValue(3);
         }
 
         public void Init() {

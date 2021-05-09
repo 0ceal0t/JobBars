@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public unsafe class UIArrow : UIElement {
-        private static int MAX = 2;
+        private static int MAX = 9;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 
@@ -28,7 +28,7 @@ namespace JobBars.UI {
 
             var nameplateAddon = _UI._ADDON;
 
-            for (int idx = 0; idx < 2; idx++) {
+            for (int idx = 0; idx < MAX; idx++) {
                 var bg = _UI.CreateImageNode();
                 bg->AtkResNode.Width = 32;
                 bg->AtkResNode.Height = 32;
@@ -89,17 +89,16 @@ namespace JobBars.UI {
             //
             RootRes->ChildNode = Ticks[0];
 
-            Ticks[0]->ParentNode = RootRes; // temp
-            Ticks[1]->ParentNode = RootRes;
-            Ticks[0]->PrevSiblingNode = Ticks[1];
+            //Ticks[0]->ParentNode = RootRes; // temp
+            //Ticks[1]->ParentNode = RootRes;
+            //Ticks[0]->PrevSiblingNode = Ticks[1];
 
-            /*for(int idx = 0; idx < MAX; idx++) {
+            for(int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
                 if(idx < (MAX - 1)) {
                     Ticks[idx]->PrevSiblingNode = Ticks[idx + 1];
-                    Ticks[idx + 1]->NextSiblingNode = Ticks[idx];
                 }
-            }*/
+            }
         }
 
         public override unsafe void Pickup(AtkResNode* node) {
@@ -119,6 +118,28 @@ namespace JobBars.UI {
         public override void SetColor(UIColor.ElementColor color) {
             foreach(var item in Selected) {
                 UIColor.SetColor((AtkResNode*)item, color);
+            }
+        }
+
+        public void SetMaxValue(int value) {
+            for(int idx = 0; idx < MAX; idx++) {
+                if(idx <= (value-1)) {
+                    UIBuilder.RecurseHide(Ticks[idx], false); // show
+                }
+                else {
+                    UIBuilder.RecurseHide(Ticks[idx], true);
+                }
+            }
+        }
+
+        public void SetValue(int value) {
+            for (int idx = 0; idx < MAX; idx++) {
+                if (idx <= (value - 1)) {
+                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
+                }
+                else {
+                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true);
+                }
             }
         }
     }
