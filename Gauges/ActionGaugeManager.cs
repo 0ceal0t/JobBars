@@ -22,18 +22,89 @@ namespace JobBars.Gauges {
 
             JobToGauges = new Dictionary<JobIds, ActionGauge[]>();
             JobToGauges.Add(JobIds.OTHER, new ActionGauge[] { });
-            JobToGauges.Add(JobIds.GNB, new ActionGauge[] { });
+            JobToGauges.Add(JobIds.GNB, new ActionGauge[] {
+                new ActionGaugeGCD("No Mercy", 20, 9)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.NoMercy)
+                    })
+                    .WithIncrement(new[]
+                    {
+                        new Item(ActionIds.DemonSlice),
+                        new Item(ActionIds.DemonSlaughter),
+                        new Item(ActionIds.KeenEdge),
+                        new Item(ActionIds.BrutalShell),
+                        new Item(ActionIds.SolidBarrel),
+                        new Item(ActionIds.BurstStrike),
+                        new Item(ActionIds.SonicBreak),
+                        new Item(ActionIds.GnashingFang),
+                        new Item(ActionIds.SavageClaw),
+                        new Item(ActionIds.WickedTalon),
+                        new Item(ActionIds.FatedCicle)
+                    })
+            });
             JobToGauges.Add(JobIds.AST, new ActionGauge[] {
                 new ActionGaugeTimer("Combust", 30)
                     .WithTriggers(new[]{
-                        new Item(BuffIds.Combust),
+                        new Item(BuffIds.Combust1),
                         new Item(BuffIds.Combust2),
                         new Item(BuffIds.Combust3)
                     })
+                    .WithReplaceIcon(new []{ ActionIds.Combust1, ActionIds.Combust2, ActionIds.Combust3 }, _UI.Icon)
             });
-            JobToGauges.Add(JobIds.PLD, new ActionGauge[] { });
+            JobToGauges.Add(JobIds.PLD, new ActionGauge[] {
+                new ActionGaugeGCD("Requiescat", 12, 5)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.Requiescat)
+                    })
+                    .WithIncrement(new[]
+                    {
+                        new Item(ActionIds.HolySpirit),
+                        new Item(ActionIds.HolyCircle),
+                        new Item(ActionIds.Confiteor)
+                    }),
+                new ActionGaugeGCD("Fight or Flight", 25, 11)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.FightOrFlight)
+                    })
+                    .WithIncrement(new[]
+                    {
+                        new Item(ActionIds.FastBlade),
+                        new Item(ActionIds.RiotBlade),
+                        new Item(ActionIds.RoyalAuthority),
+                        new Item(ActionIds.Atonement),
+                        new Item(ActionIds.GoringBlade),
+                        new Item(ActionIds.TotalEclipse),
+                        new Item(ActionIds.Prominence)
+                    }),
+                new ActionGaugeTimer("Goring Blade", 21)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.GoringBlade)
+                    })
+                    .WithReplaceIcon(new[]
+                    {
+                        ActionIds.GoringBlade
+                    }, _UI.Icon)
+            });
             JobToGauges.Add(JobIds.WAR, new ActionGauge[] {
-
+                new ActionGaugeGCD("Inner Release", 10, 5)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.InnerRelease)
+                    })
+                    .WithIncrement(new[]
+                    {
+                        new Item(ActionIds.FellCleave),
+                        new Item(ActionIds.Decimate)
+                    }),
+                new ActionGaugeTimer("Storm's Eye", 60)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.StormsEye)
+                    })
             });
             JobToGauges.Add(JobIds.DRK, new ActionGauge[] {
                 new ActionGaugeGCD("Delirium", 10, 5)
@@ -85,6 +156,7 @@ namespace JobBars.Gauges {
                     g_._UI = null;
                 }
                 _UI.HideAllGauges();
+                _UI.Icon.Reset();
 
                 CurrentJob = _job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
@@ -123,6 +195,7 @@ namespace JobBars.Gauges {
             foreach(var g_ in CurrentGauges) {
                 g_.Tick(currentTime, deltaSecond);
             }
+            _UI.Icon.Update();
 
             LastTick = currentTime;
         }

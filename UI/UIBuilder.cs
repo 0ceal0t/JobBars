@@ -12,12 +12,13 @@ using System.Threading.Tasks;
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public DalamudPluginInterface PluginInterface;
+        public UIIconManager Icon;
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate IntPtr LoadTextureDelegate(IntPtr a1, string path, uint a3);
         public LoadTextureDelegate LoadTexture;
 
         private AtkResNode* NewRes = null;
-        private static int MAX_GAUGES = 2;
+        private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;
 
@@ -28,9 +29,11 @@ namespace JobBars.UI {
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
+            Icon = new UIIconManager(pi);
         }
 
         public void Dispose() {
+            Icon.Dispose();
             if(NewRes != null) {
                 RecurseHide(NewRes);
             }
@@ -98,8 +101,8 @@ namespace JobBars.UI {
             }
         }
 
-        public void Pickup() {
-            PluginLog.Log("==== PICKUP =====");
+        public void LoadExisting() {
+            PluginLog.Log("==== LOAD EXISTING =====");
 
             var addon = _ADDON;
             NewRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
@@ -117,7 +120,7 @@ namespace JobBars.UI {
         public void Init() {
             var nameplateAddon = _ADDON;
             if (nameplateAddon->UldManager.NodeListCount > 4) {
-                Pickup();
+                LoadExisting();
                 return;
             }
 
@@ -145,12 +148,6 @@ namespace JobBars.UI {
                     Gauges[idx + 1].RootRes->NextSiblingNode = Arrows[idx].RootRes;
                 }
             }
-
-            //Gauge.RootRes->ParentNode = NewRes;
-            //Arrow.RootRes->ParentNode = NewRes;
-            //NewRes->ChildNode = Gauge.RootRes;
-            //Gauge.RootRes->PrevSiblingNode = Arrow.RootRes;
-            //Arrow.RootRes->NextSiblingNode = Gauge.RootRes;
 
             SetPosition(1500, 500); // TEMP
             SetScale(1, 1);

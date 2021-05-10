@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
         Aero = 0x8f,
         Aero2 = 0x90,
         // AST
-        Combust = 0x346,
+        Combust1 = 0x346,
         Combust2 = 0x34b,
         Combust3 = 0x759,
         Balance = 0x75a,
@@ -127,6 +127,9 @@ namespace JobBars.Gauges {
         // SCH
         // WHM
         // AST
+        Combust1 = 3599,
+        Combust2 = 3608,
+        Combust3 = 16554,
         // MNK
         Bootshine = 0x35,
         TrueStrike = 0x36,

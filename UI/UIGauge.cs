@@ -17,7 +17,7 @@ namespace JobBars.UI {
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46, node) {
         }
 
-        public override void Pickup(AtkResNode* node) {
+        public override void LoadExisting(AtkResNode* node) {
             RootRes = node;
             TextNode = (AtkTextNode*)RootRes->ChildNode->PrevSiblingNode->ChildNode;
             TextBlurNode = (AtkNineGridNode*)RootRes->ChildNode->PrevSiblingNode->ChildNode->PrevSiblingNode;

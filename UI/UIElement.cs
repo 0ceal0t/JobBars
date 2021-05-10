@@ -18,13 +18,13 @@ namespace JobBars.UI {
                 Init();
             }
             else {
-                Pickup(node);
+                LoadExisting(node);
             }
         }
 
         public AtkResNode* RootRes;
         public abstract void SetColor(ElementColor color);
         public abstract void Init();
-        public abstract void Pickup(AtkResNode* node);
+        public abstract void LoadExisting(AtkResNode* node);
     }
 }

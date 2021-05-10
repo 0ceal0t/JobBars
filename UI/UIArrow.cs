@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public unsafe class UIArrow : UIElement {
-        private static int MAX = 9;
+        private static int MAX = 12;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 
-        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46, node) {
+        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 40, node) {
         }
 
         public override void Init() {
@@ -68,7 +68,7 @@ namespace JobBars.UI {
                 Selected[idx]->AtkResNode.ParentNode = selectedContainer;
 
                 Ticks[idx] = _UI.CreateResNode();
-                Ticks[idx]->X = 18 * idx;
+                Ticks[idx]->X = 18 * (idx - 1);
                 Ticks[idx]->Y = 0;
                 Ticks[idx]->Width = 32;
                 Ticks[idx]->Height = 32;
@@ -97,7 +97,7 @@ namespace JobBars.UI {
             }
         }
 
-        public override unsafe void Pickup(AtkResNode* node) {
+        public override unsafe void LoadExisting(AtkResNode* node) {
             Selected = new AtkImageNode*[MAX];
             Ticks = new AtkResNode*[MAX];
 

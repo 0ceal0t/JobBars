@@ -26,7 +26,6 @@ namespace JobBars {
 
         public UIBuilder _UI;
         public ActionGaugeManager _GManager;
-        public static ClientInterface Client;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
@@ -40,7 +39,6 @@ namespace JobBars {
         public void Initialize(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
             _UI = new UIBuilder(pluginInterface);
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
@@ -73,7 +71,6 @@ namespace JobBars {
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
-            Client.Dispose();
             _UI.Dispose();
 
             RemoveCommands();
@@ -184,65 +181,12 @@ namespace JobBars {
             }
         }
 
-        private readonly string[] allActionBars = {
-            "_ActionBar"/*,
-            "_ActionBar01",
-            "_ActionBar02",
-            "_ActionBar03",
-            "_ActionBar04",
-            "_ActionBar05",
-            "_ActionBar06",
-            "_ActionBar07",
-            "_ActionBar08",
-            "_ActionBar09",
-            "_ActionCross",
-            "_ActionDoubleCrossL",
-            "_ActionDoubleCrossR",*/
-        };
-
         private void FrameworkOnUpdate(Framework framework) {
             if (!_Ready) return;
             if(FrameCount == 0) { // idk lmao
                 _UI.SetupTex();
                 FrameCount++;
                 return;
-
-                // DO STUFF HERE
-
-                /*
-                    * icon component
-                    *  frame res
-                    *      combo border res->image (6-12)
-                    *      recast (part 1-80)
-                    * 
-                    */
-
-                /*var a = Client.ActionManager;
-                var hotbarModule = Client.UiModule.RaptureHotbarModule;
-                for (var abIndex = 0; abIndex < allActionBars.Length; abIndex++) {
-                    var actionBar = allActionBars[abIndex];
-                    var ab = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(actionBar, 1);
-                    if (ab == null || ab->ActionBarSlotsAction == null) continue;
-                    var bar = abIndex > 10 ? null : hotbarModule.GetBar(abIndex, HotBarType.Normal);
-                    for (var i = 0; i < ab->HotbarSlotCount; i++) {
-                        var slot = ab->ActionBarSlotsAction[i];
-                        var slotStruct = hotbarModule.GetBarSlot(bar, i);
-                        if ((slot.PopUpHelpTextPtr != null) && slot.Icon != null) {
-                            var adjustedActionId = Client.ActionManager.GetAdjustedActionId(slotStruct->CommandId);
-                            var recastGroup = (int)Client.ActionManager.GetRecastGroup((byte)slotStruct->CommandType, adjustedActionId) + 1;
-                            PluginLog.Log($"{slot.ActionId} {adjustedActionId} {recastGroup} {slotStruct->CommandType} {slotStruct->CommandId}");
-                            if(recastGroup != 0) {
-                                var recastTimer = Client.ActionManager.GetGroupRecastTime(recastGroup);
-                                if (adjustedActionId == 16554) {
-                                    PluginLog.Log($"{recastTimer->IsActive} {recastTimer->Elapsed} {recastTimer->Total}");
-                                    recastTimer->IsActive = 1;
-                                    recastTimer->Elapsed = 10;
-                                    recastTimer->Total = 30;
-                                }
-                            }
-                        }
-                    }
-                }*/
             }
             else if(FrameCount == 1) {
                 _UI.Init();

@@ -64,12 +64,15 @@ namespace JobBars.Gauges {
             Counter++;
         }
 
+        static int RESET_DELAY = 5;
+        DateTime StopTime;
         public override void Tick(DateTime time, float delta) {
             if (Active) {
                 var timeleft = Duration - (time - ActiveTime).TotalSeconds;
                 if(timeleft <= 0) {
                     PluginLog.Log("STOPPING");
                     Active = false;
+                    StopTime = time;
                 }
                 // ==================
                 if(_UI is UIArrow) {
@@ -80,6 +83,17 @@ namespace JobBars.Gauges {
                     var gauge = (UIGauge)_UI;
                     gauge.SetText(Counter.ToString());
                     gauge.SetPercent(((float)Counter) / MaxCounter);
+                }
+            }
+            else if((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET AFTER A DELAY
+                if (_UI is UIArrow) {
+                    var arrows = (UIArrow)_UI;
+                    arrows.SetValue(0);
+                }
+                else {
+                    var gauge = (UIGauge)_UI;
+                    gauge.SetText("0");
+                    gauge.SetPercent(0);
                 }
             }
         }
