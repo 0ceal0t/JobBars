@@ -1,4 +1,5 @@
 ﻿using Dalamud.Plugin;
+using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;

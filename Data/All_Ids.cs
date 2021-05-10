@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobBars.Gauges {
+namespace JobBars.Data {
     public enum BuffIds : uint {
         Delirium = 0x7b4,
         BloodWeapon = 0x2e6,
@@ -263,5 +263,12 @@ namespace JobBars.Gauges {
         NIN = 30,
         MNK = 20,
         BLU = 36
+    }
+
+    public enum IconIds : uint {
+        Delirium = 3078,
+        LivingShadow = 3088,
+        InnerRelease = 2564,
+        ChainStratagem = 2815
     }
 }

@@ -4,6 +4,7 @@ using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -188,11 +189,13 @@ namespace JobBars.UI {
             var nameplateAddon = _ADDON;
 
             var newId = nameplateAddon->UldManager.Assets[nameplateAddon->UldManager.AssetCount - 1].Id + 1;
-            var pt = IntPtr.Add(new IntPtr(nameplateAddon->UldManager.Assets), 8 + 32 * assetIdx);
+            var pt = IntPtr.Add(new IntPtr(nameplateAddon->UldManager.Assets), 32 * assetIdx + 8);
             if ((assetIdx + 1) > nameplateAddon->UldManager.AssetCount) {
                 nameplateAddon->UldManager.AssetCount = (ushort)(assetIdx + 1);
+                var ptr = new IntPtr(nameplateAddon->UldManager.Assets) - 8;
+                Marshal.WriteInt32(ptr, assetIdx + 1);
             }
-            LoadTexture(pt, path, 1);
+            LoadTexture(pt, path, 1); // game function
             nameplateAddon->UldManager.Assets[assetIdx].Id = newId;
         }
 

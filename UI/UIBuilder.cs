@@ -1,10 +1,14 @@
-﻿using Dalamud.Plugin;
+﻿using Dalamud.Hooking;
+using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
+using JobBars.Gauges;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +17,20 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public DalamudPluginInterface PluginInterface;
         public UIIconManager Icon;
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate IntPtr LoadTextureDelegate(IntPtr a1, string path, uint a3);
         public LoadTextureDelegate LoadTexture;
 
-        private AtkResNode* NewRes = null;
+        private AtkResNode* G_RootRes = null;
         private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;
+
+        private AtkResNode* B_RootRes = null;
+        public UIBuff[] Buffs;
+        public IconIds[] _Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
+        public Dictionary<IconIds, UIBuff> IconToBuff = new Dictionary<IconIds, UIBuff>();
 
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
@@ -29,13 +39,19 @@ namespace JobBars.UI {
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
+            Buffs = new UIBuff[_Icons.Length + 1];
             Icon = new UIIconManager(pi);
+
         }
 
         public void Dispose() {
             Icon.Dispose();
-            if(NewRes != null) {
-                RecurseHide(NewRes);
+
+            if(G_RootRes != null) {
+                RecurseHide(G_RootRes, siblings:false);
+            }
+            if(B_RootRes != null) {
+                RecurseHide(B_RootRes);
             }
         }
 
@@ -59,23 +75,29 @@ namespace JobBars.UI {
         public AtkUnitBase* _ADDON => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
 
         public static ushort ASSET_START = 1;
-        public static ushort PART_START = 8;
+        public static ushort PART_START = 7;
 
         public static ushort GAUGE_ASSET = ASSET_START;
         public static ushort BLUR_ASSET = (ushort)(ASSET_START + 1);
+        public static ushort ARROW_ASSET = (ushort)(ASSET_START + 2);
+
         public static ushort GAUGE_BG_PART = PART_START;
         public static ushort GAUGE_FRAME_PART = (ushort)(PART_START + 1);
         public static ushort GAUGE_TEXT_BLUR_PART = (ushort)(PART_START + 2);
         public static ushort GAUGE_BAR_MAIN = (ushort)(PART_START + 3);
-
-        public static ushort ARROW_ASSET = (ushort)(ASSET_START + 2);
         public static ushort ARROW_BG = (ushort)(PART_START + 4);
         public static ushort ARROW_FG = (ushort)(PART_START + 5);
+
+        public static ushort BUFF_ASSET_START = (ushort)(ASSET_START + 3);
+        public static ushort BUFF_PART_START = (ushort)(PART_START + 6);
+        public Dictionary<IconIds, ushort> IconToPartId = new Dictionary<IconIds, ushort>();
 
         public void SetupTex() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
             UiHelper.ExpandNodeList(addon, 999);
+            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, 99);
+            addon->UldManager.PartsList->Parts = UiHelper.ExpandPartList(addon->UldManager, 99);
 
             LoadTex(GAUGE_ASSET, @"ui/uld/Parameter_Gauge.tex");
             AddPart(GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
@@ -86,10 +108,22 @@ namespace JobBars.UI {
             LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
             AddPart(ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
             AddPart(ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
+
+            var current_asset = BUFF_ASSET_START;
+            var current_part = BUFF_PART_START;
+            foreach (var icon in _Icons) {
+                var _icon = (uint) icon;
+                var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
+                LoadTex(current_asset, path);
+                AddPart(current_asset, current_part, (ushort)((40 - UIBuff.WIDTH) / 2), (ushort)((40 - UIBuff.HEIGHT) / 2), UIBuff.WIDTH, UIBuff.HEIGHT);
+                IconToPartId[icon] = current_part;
+                current_asset++;
+                current_part++;
+            }
         }
 
-        public void PrintAllParts() {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("JobHudDRG0", 1);
+        public void PrintAllParts() { // helper function :/
+            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ActionBar", 1);
             for (int i = 0; i < addon->UldManager.PartsListCount; i++) {
                 var list = addon->UldManager.PartsList[i];
                 for (int j = 0; j < list.PartCount; j++) {
@@ -102,19 +136,34 @@ namespace JobBars.UI {
         }
 
         public void LoadExisting() {
-            PluginLog.Log("==== LOAD EXISTING =====");
+            PluginLog.Log("===== LOAD EXISTING =====");
 
             var addon = _ADDON;
-            NewRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
-            RecurseHide(NewRes, false);
-            // =======
-            var n = NewRes->ChildNode;
+
+            G_RootRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
+            RecurseHide(G_RootRes, false, false);
+
+            var n = G_RootRes->ChildNode;
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, n);
                 n = n->PrevSiblingNode;
                 Arrows[idx] = new UIArrow(this, n);
                 n = n->PrevSiblingNode;
             }
+            // ==========
+            B_RootRes = G_RootRes->PrevSiblingNode;
+            RecurseHide(B_RootRes, false, false);
+
+            var n2 = B_RootRes->ChildNode;
+            for(int idx = 0; idx < Buffs.Length; idx++) {
+                Buffs[idx] = new UIBuff(this, 0, n2);
+                if(idx > 0) {
+                    var icon = _Icons[idx - 1];
+                    IconToBuff[icon] = Buffs[idx];
+                }
+                n2 = n2->PrevSiblingNode;
+            }
+            RecurseHide(Buffs[0].RootRes, true, false); // hide the dummy one
         }
 
         public void Init() {
@@ -128,18 +177,18 @@ namespace JobBars.UI {
                 Gauges[idx] = new UIGauge(this, null);
                 Arrows[idx] = new UIArrow(this, null);
             }
+            G_RootRes = CreateResNode();
+            G_RootRes->Width = 256;
+            G_RootRes->Height = 100;
+            G_RootRes->Flags = 9395;
+            G_RootRes->ParentNode = nameplateAddon->RootNode;
+            G_RootRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = G_RootRes;
 
-            NewRes = CreateResNode();
-            NewRes->Width = 256;
-            NewRes->Height = 100;
-            NewRes->Flags = 9395;
-            NewRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = NewRes;
-
-            NewRes->ChildNode = Gauges[0].RootRes;
+            G_RootRes->ChildNode = Gauges[0].RootRes;
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
-                Gauges[idx].RootRes->ParentNode = NewRes;
-                Arrows[idx].RootRes->ParentNode = NewRes;
+                Gauges[idx].RootRes->ParentNode = G_RootRes;
+                Arrows[idx].RootRes->ParentNode = G_RootRes;
 
                 Gauges[idx].RootRes->PrevSiblingNode = Arrows[idx].RootRes;
                 Arrows[idx].RootRes->NextSiblingNode = Gauges[idx].RootRes;
@@ -148,28 +197,69 @@ namespace JobBars.UI {
                     Gauges[idx + 1].RootRes->NextSiblingNode = Arrows[idx].RootRes;
                 }
             }
+            SetGaugePosition(Configuration.Config.GaugePosition);
+            SetGaugeScale(Configuration.Config.GaugeScale);
 
-            SetPosition(1500, 500); // TEMP
-            SetScale(1, 1);
+            // ===========
+            Buffs[0] = new UIBuff(this, BUFF_PART_START, null); // formatting weirdness, I don't even know why this extra one is necessary
+            int bIdx = 1;
+            foreach (var entry in IconToPartId) {
+                Buffs[bIdx] = new UIBuff(this, entry.Value, null);
+                IconToBuff[entry.Key] = Buffs[bIdx];
+                bIdx++;
+            }
+            B_RootRes = CreateResNode();
+            B_RootRes->Width = 256;
+            B_RootRes->Height = 100;
+            B_RootRes->Flags = 9395;
+            B_RootRes->ParentNode = nameplateAddon->RootNode;
+            B_RootRes->ChildCount = (ushort)(Buffs[0].RootRes->ChildCount * Buffs.Length + Buffs.Length);
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = B_RootRes;
+
+            B_RootRes->ChildNode = Buffs[0].RootRes;
+            for(int idx = 0; idx < Buffs.Length; idx++) {
+                Buffs[idx].RootRes->ParentNode = B_RootRes;
+                UiHelper.SetPosition(Buffs[idx].RootRes, 40 * (idx - 1), 0);
+                if(idx < (Buffs.Length - 1)) {
+                    Buffs[idx].RootRes->PrevSiblingNode = Buffs[idx + 1].RootRes;
+                    Buffs[idx + 1].RootRes->NextSiblingNode = Buffs[idx].RootRes;
+                }
+            }
+            SetBuffPosition(new Vector2(1500, 500));
+            SetBuffScale(1);
 
             // ==== INSERT AT THE END ====
             var n = nameplateAddon->RootNode->ChildNode;
             while (n->PrevSiblingNode != null) {
                 n = n->PrevSiblingNode;
             }
-            n->PrevSiblingNode = NewRes;
+            n->PrevSiblingNode = G_RootRes;
+            G_RootRes->PrevSiblingNode = B_RootRes;
         }
 
-        public void SetPosition(float X, float Y) {
+        public void SetGaugePosition(Vector2 pos) {
+            SetPosition(G_RootRes, pos.X, pos.Y);
+        }
+        public void SetBuffPosition(Vector2 pos) {
+            SetPosition(B_RootRes, pos.X, pos.Y);
+        }
+        public void SetPosition(AtkResNode* node, float X, float Y) {
             var addon = _ADDON;
             var p = UiHelper.GetNodePosition(_ADDON->RootNode);
-            UiHelper.SetPosition(NewRes, X - p.X, Y - p.Y);
+            var pScale = UiHelper.GetNodeScale(_ADDON->RootNode);
+            UiHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
         }
 
-        public void SetScale(float X, float Y) {
+        public void SetGaugeScale(float scale) {
+            SetScale(G_RootRes, scale, scale);
+        }
+        public void SetBuffScale(float scale) {
+            SetScale(B_RootRes, scale, scale);
+        }
+        public void SetScale(AtkResNode* node, float X, float Y) {
             var addon = _ADDON;
             var p = UiHelper.GetNodeScale(_ADDON->RootNode);
-            UiHelper.SetScale(NewRes, X / p.X, Y / p.Y);
+            UiHelper.SetScale(node, X / p.X, Y / p.Y);
         }
 
         public void HideAllGauges() {

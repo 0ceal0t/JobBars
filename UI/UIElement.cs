@@ -11,9 +11,12 @@ namespace JobBars.UI {
         public UIBuilder _UI;
         public int Height;
 
-        public UIElement(UIBuilder _ui, int height, AtkResNode* node = null) {
+        public UIElement(UIBuilder _ui, int height) {
             _UI = _ui;
             Height = height;
+        }
+        
+        public void Setup(AtkResNode* node = null) {
             if (node == null) {
                 Init();
             }

@@ -11,7 +11,8 @@ namespace JobBars.UI {
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 
-        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 40, node) {
+        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 32) {
+            Setup(node);
         }
 
         public override void Init() {

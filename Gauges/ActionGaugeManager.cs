@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Actors.Resolvers;
 using Dalamud.Plugin;
+using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;

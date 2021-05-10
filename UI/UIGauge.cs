@@ -14,7 +14,8 @@ namespace JobBars.UI {
         AtkNineGridNode* BarMainNode;
         string CurrentText = "";
 
-        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46, node) {
+        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46) {
+            Setup(node);
         }
 
         public override void LoadExisting(AtkResNode* node) {

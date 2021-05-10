@@ -47,14 +47,6 @@ namespace JobBars.Helper {
             node->Flags_2 |= 0x1;
         }
 
-        public static void SetVisible(AtkResNode* node, bool visible) {
-            if (visible) {
-                Show(node);
-            } else {
-                Hide(node);
-            }
-        }
-
         public static void SetText(AtkTextNode* textNode, SeString str) {
             if (!Ready) return;
             var bytes = str.Encode();
@@ -80,17 +72,16 @@ namespace JobBars.Helper {
         public static void SetPosition(AtkResNode* node, float? x, float? y) {
             if (x != null) node->X = x.Value;
             if (y != null) node->Y = y.Value;
+            node->Flags |= 0x10;
             node->Flags_2 |= 0x1;
-        }
-        
-        public static void SetPosition(AtkUnitBase* atkUnitBase, float? x, float? y) {
-            if (x >= short.MinValue && x <= short.MaxValue) atkUnitBase->X = (short) x.Value;
-            if (y >= short.MinValue && x <= short.MaxValue) atkUnitBase->Y = (short) y.Value;
+
         }
 
         public static void SetScale(AtkResNode* atkUnitBase, float? scaleX, float? scaleY) {
             atkUnitBase->ScaleX = scaleX.Value;
             atkUnitBase->ScaleY = scaleY.Value;
+            atkUnitBase->Flags |= 0x10;
+            atkUnitBase->Flags_2 |= 0x1;
         }
 
         public static void ExpandNodeList(AtkComponentNode* componentNode, ushort addSize) {
@@ -111,6 +102,33 @@ namespace JobBars.Helper {
             Marshal.Copy(oldListPtr, clone, 0, originalSize);
             Marshal.Copy(clone, 0, newListPtr, originalSize);
             return (AtkResNode**)(newListPtr);
+        }
+
+        public static AtkUldAsset* ExpandAssetList(AtkUldManager manager, ushort addSize) {
+            var oldLength = manager.AssetCount;
+            var newLength = oldLength + addSize;
+            var oldSize = oldLength * 32 + 8;
+            var newSize = newLength * 32 + 8; // extra 8 for array size
+            var newListPtr = Alloc((ulong)newSize);
+            var oldListPtr = new IntPtr(manager.Assets) - 8;
+            byte[] oldData = new byte[oldSize];
+            Marshal.Copy(oldListPtr, oldData, 0, oldSize);
+            Marshal.Copy(oldData, 0, newListPtr, oldSize);
+            return (AtkUldAsset*)(newListPtr + 8);
+        }
+
+        public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
+            var oldLength = manager.PartsList->PartCount;
+            var newLength = oldLength + addSize + 1;
+
+            var oldSize = oldLength * 0x10;
+            var newSize = newLength * 0x10;
+            var newListPtr = Alloc(newSize);
+            var oldListPtr = new IntPtr(manager.PartsList->Parts);
+            byte[] oldData = new byte[oldSize];
+            Marshal.Copy(oldListPtr, oldData, 0, (int)oldSize);
+            Marshal.Copy(oldData, 0, newListPtr, (int)oldSize);
+            return (AtkUldPart*)newListPtr;
         }
 
         public static AtkResNode* CloneNode(AtkResNode* original) {

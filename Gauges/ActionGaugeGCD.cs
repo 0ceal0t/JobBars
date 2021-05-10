@@ -60,7 +60,6 @@ namespace JobBars.Gauges {
         }
 
         private void AddValue() {
-            PluginLog.Log("ADD VALUE");
             Counter++;
         }
 
