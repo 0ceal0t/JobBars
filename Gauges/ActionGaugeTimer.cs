@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public class ActionGaugeTimer : ActionGauge {
@@ -19,6 +20,11 @@ namespace JobBars.Gauges {
 
         public ActionGaugeTimer(string name, float duration) : base(name, ActionGaugeType.Timer) {
             MaxDuration = duration;
+            Visual = new GaugeVisual
+            {
+                Type = GaugeVisualType.Bar,
+                Color = UIColor.Red
+            };
         }
 
         // ===== BUILDER FUNCS =====
@@ -41,6 +47,10 @@ namespace JobBars.Gauges {
             ReplaceIconAction = action;
             return this;
         }
+        public ActionGaugeTimer WithVisual(GaugeVisual visual) {
+            Visual = visual;
+            return this;
+        }
 
         // ====================
         public override void ProcessAction(Item action) {
@@ -59,8 +69,7 @@ namespace JobBars.Gauges {
             if (Active) {
                 var timeleft = StartValue - (time - ActiveTime).TotalSeconds;
 
-                if (_UI is UIGauge) {
-                    var gauge = (UIGauge)_UI;
+                if (_UI is UIGauge gauge) {
                     gauge.SetText(((int)timeleft).ToString());
                     gauge.SetPercent((float)timeleft / MaxDuration);
                     SetIcon(timeleft, MaxDuration);
@@ -75,6 +84,7 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
+            _UI.SetColor(Visual.Color);
             if (_UI is UIGauge) {
                 var gauge = (UIGauge)_UI;
                 gauge.SetText("0");

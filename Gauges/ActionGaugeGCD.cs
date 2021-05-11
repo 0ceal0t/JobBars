@@ -19,6 +19,11 @@ namespace JobBars.Gauges {
             MaxDuration = duration;
             MaxCounter = max;
             Increment = new Item[0];
+            Visual = new GaugeVisual
+            {
+                Type = GaugeVisualType.Arrow,
+                Color = UIColor.LightBlue
+            };
         }
 
         // ===== BUILDER FUNCS =====
@@ -37,6 +42,10 @@ namespace JobBars.Gauges {
         }
         public ActionGaugeGCD NoRefresh() {
             AllowRefresh = false;
+            return this;
+        }
+        public ActionGaugeGCD WithVisual(GaugeVisual visual) {
+            Visual = visual;
             return this;
         }
 
@@ -74,23 +83,19 @@ namespace JobBars.Gauges {
                     StopTime = time;
                 }
                 // ==================
-                if(_UI is UIArrow) {
-                    var arrows = (UIArrow)_UI;
+                if(_UI is UIArrow arrows) {
                     arrows.SetValue(Counter);
                 }
-                else {
-                    var gauge = (UIGauge)_UI;
+                else if(_UI is UIGauge gauge) {
                     gauge.SetText(Counter.ToString());
                     gauge.SetPercent(((float)Counter) / MaxCounter);
                 }
             }
             else if((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET AFTER A DELAY
-                if (_UI is UIArrow) {
-                    var arrows = (UIArrow)_UI;
+                if (_UI is UIArrow arrows) {
                     arrows.SetValue(0);
                 }
-                else {
-                    var gauge = (UIGauge)_UI;
+                else if(_UI is UIGauge gauge) {
                     gauge.SetText("0");
                     gauge.SetPercent(0);
                 }
@@ -98,16 +103,19 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
-            if(_UI is UIArrow) {
-                var arrows = (UIArrow)_UI;
+            _UI.SetColor(Visual.Color);
+            if(_UI is UIArrow arrows) {
                 arrows.SetMaxValue(MaxCounter);
                 arrows.SetValue(0);
+            }
+            else if(_UI is UIGauge gauge) {
+                gauge.SetText("0");
+                gauge.SetPercent(0);
             }
         }
 
         public override void ProcessDuration(Item buff, float duration) {
             if (Active && buff == LastActiveTrigger) {
-                PluginLog.Log("d");
                 ActiveTime = DateTime.Now;
                 Duration = duration;
             }

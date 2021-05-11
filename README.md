@@ -5,3 +5,8 @@
 - move around
 
 - pets
+- track buffs
+- colors
+- bar or arrow
+- diamonds?
+- animated movement

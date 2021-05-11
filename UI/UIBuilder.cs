@@ -41,7 +41,6 @@ namespace JobBars.UI {
             Arrows = new UIArrow[MAX_GAUGES];
             Buffs = new UIBuff[_Icons.Length + 1];
             Icon = new UIIconManager(pi);
-
         }
 
         public void Dispose() {
@@ -80,6 +79,8 @@ namespace JobBars.UI {
         public static ushort GAUGE_ASSET = ASSET_START;
         public static ushort BLUR_ASSET = (ushort)(ASSET_START + 1);
         public static ushort ARROW_ASSET = (ushort)(ASSET_START + 2);
+        public static ushort BUFF_OVERLAY_ASSET = (ushort)(ASSET_START + 3);
+        public static ushort BUFF_ASSET_START = (ushort)(ASSET_START + 4);
 
         public static ushort GAUGE_BG_PART = PART_START;
         public static ushort GAUGE_FRAME_PART = (ushort)(PART_START + 1);
@@ -87,9 +88,10 @@ namespace JobBars.UI {
         public static ushort GAUGE_BAR_MAIN = (ushort)(PART_START + 3);
         public static ushort ARROW_BG = (ushort)(PART_START + 4);
         public static ushort ARROW_FG = (ushort)(PART_START + 5);
+        public static ushort BUFF_BORDER = (ushort)(PART_START + 6);
+        public static ushort BUFF_OVERLAY = (ushort)(PART_START + 7);
+        public static ushort BUFF_PART_START = (ushort)(PART_START + 8);
 
-        public static ushort BUFF_ASSET_START = (ushort)(ASSET_START + 3);
-        public static ushort BUFF_PART_START = (ushort)(PART_START + 6);
         public Dictionary<IconIds, ushort> IconToPartId = new Dictionary<IconIds, ushort>();
 
         public void SetupTex() {
@@ -108,6 +110,9 @@ namespace JobBars.UI {
             LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
             AddPart(ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
             AddPart(ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
+            LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
+            AddPart(BUFF_OVERLAY_ASSET, BUFF_BORDER, 3, 99, 40, 40);
+            AddPart(BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
 
             var current_asset = BUFF_ASSET_START;
             var current_part = BUFF_PART_START;
@@ -139,10 +144,9 @@ namespace JobBars.UI {
             PluginLog.Log("===== LOAD EXISTING =====");
 
             var addon = _ADDON;
-
+            // ===== LOAD EXISTING GAUGES =====
             G_RootRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
             RecurseHide(G_RootRes, false, false);
-
             var n = G_RootRes->ChildNode;
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, n);
@@ -150,7 +154,7 @@ namespace JobBars.UI {
                 Arrows[idx] = new UIArrow(this, n);
                 n = n->PrevSiblingNode;
             }
-            // ==========
+            // ====== LOAD EXISTING BUFFS =======
             B_RootRes = G_RootRes->PrevSiblingNode;
             RecurseHide(B_RootRes, false, false);
 
@@ -173,6 +177,7 @@ namespace JobBars.UI {
                 return;
             }
 
+            // ======== CREATE GAUGES =======
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, null);
                 Arrows[idx] = new UIArrow(this, null);
@@ -200,8 +205,9 @@ namespace JobBars.UI {
             SetGaugePosition(Configuration.Config.GaugePosition);
             SetGaugeScale(Configuration.Config.GaugeScale);
 
-            // ===========
+            // ======= CREATE BUFFS =========
             Buffs[0] = new UIBuff(this, BUFF_PART_START, null); // formatting weirdness, I don't even know why this extra one is necessary
+            RecurseHide(Buffs[0].RootRes, true, false); // just hide it :/
             int bIdx = 1;
             foreach (var entry in IconToPartId) {
                 Buffs[bIdx] = new UIBuff(this, entry.Value, null);
@@ -225,8 +231,8 @@ namespace JobBars.UI {
                     Buffs[idx + 1].RootRes->NextSiblingNode = Buffs[idx].RootRes;
                 }
             }
-            SetBuffPosition(new Vector2(1500, 500));
-            SetBuffScale(1);
+            SetBuffPosition(Configuration.Config.BuffPosition);
+            SetBuffScale(Configuration.Config.BuffScale);
 
             // ==== INSERT AT THE END ====
             var n = nameplateAddon->RootNode->ChildNode;
@@ -237,6 +243,7 @@ namespace JobBars.UI {
             G_RootRes->PrevSiblingNode = B_RootRes;
         }
 
+        // ==== HELPER FUNCTIONS ============
         public void SetGaugePosition(Vector2 pos) {
             SetPosition(G_RootRes, pos.X, pos.Y);
         }
@@ -249,7 +256,6 @@ namespace JobBars.UI {
             var pScale = UiHelper.GetNodeScale(_ADDON->RootNode);
             UiHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
         }
-
         public void SetGaugeScale(float scale) {
             SetScale(G_RootRes, scale, scale);
         }
@@ -261,7 +267,6 @@ namespace JobBars.UI {
             var p = UiHelper.GetNodeScale(_ADDON->RootNode);
             UiHelper.SetScale(node, X / p.X, Y / p.Y);
         }
-
         public void HideAllGauges() {
             foreach(var g in Gauges) {
                 RecurseHide(g.RootRes);
@@ -270,7 +275,6 @@ namespace JobBars.UI {
                 RecurseHide(g.RootRes);
             }
         }
-
         public void Show(UIElement element) {
             RecurseHide(element.RootRes, false, false);
         }

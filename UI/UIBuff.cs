@@ -15,6 +15,8 @@ namespace JobBars.UI {
 
         private ushort PART_ID;
         private AtkTextNode* TextNode;
+        private AtkImageNode* Overlay;
+        string CurrentText = "";
 
         public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui, HEIGHT) {
             PART_ID = partId;
@@ -29,8 +31,8 @@ namespace JobBars.UI {
             var nameplateAddon = _UI._ADDON;
 
             var icon = _UI.CreateImageNode();
-            icon->AtkResNode.Width = 34;
-            icon->AtkResNode.Height = 30;
+            icon->AtkResNode.Width = WIDTH;
+            icon->AtkResNode.Height = HEIGHT;
             icon->AtkResNode.X = 0;
             icon->AtkResNode.Y = 0;
             icon->PartId = PART_ID;
@@ -38,6 +40,17 @@ namespace JobBars.UI {
             icon->Flags = 0;
             icon->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
+
+            Overlay = _UI.CreateImageNode();
+            Overlay->AtkResNode.Width = WIDTH;
+            Overlay->AtkResNode.Height = 0;
+            Overlay->AtkResNode.X = 0;
+            Overlay->AtkResNode.Y = 0;
+            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
+            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
+            Overlay->Flags = 0;
+            Overlay->WrapMode = 1;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
 
             TextNode = _UI.CreateTextNode();
             TextNode->FontSize = 15;
@@ -57,18 +70,33 @@ namespace JobBars.UI {
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
-            RootRes->ChildCount = 2;
+            RootRes->ChildCount = 4;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
             //
             RootRes->ChildNode = (AtkResNode*)TextNode;
 
             icon->AtkResNode.ParentNode = RootRes;
+            Overlay->AtkResNode.ParentNode = RootRes;
             TextNode->AtkResNode.ParentNode = RootRes;
 
-            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
-            icon->AtkResNode.NextSiblingNode = (AtkResNode*)TextNode;
+            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)Overlay;
+            Overlay->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
 
-            UiHelper.SetText(TextNode, "12");
+            UiHelper.SetText(TextNode, "");
+        }
+
+        public void SetText(string text) {
+            if (text != CurrentText) {
+                UiHelper.SetText(TextNode, text);
+                CurrentText = text;
+            }
+        }
+
+        public void SetPercent(float percent) {
+            int h = (int)(HEIGHT * percent);
+            int yOffset = HEIGHT - h;
+            UiHelper.SetSize( (AtkResNode*) Overlay, null, h);
+            UiHelper.SetPosition((AtkResNode*)Overlay, 0, yOffset);
         }
 
         public override void SetColor(ElementColor color) {

@@ -12,16 +12,15 @@ using Dalamud.Game.Internal;
 using JobBars.UI;
 using FFXIVClientInterface;
 using JobBars.GameStructs;
-using FFXIVClientInterface.Client.UI.Misc;
 using Dalamud.Hooking;
-using JobBars.Gauges;
-using Dalamud.Game.Internal.Network;
 using JobBars.Data;
-using Dalamud.Interface;
+using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Game.ClientState.Actors.Types.NonPlayer;
+using JobBars.Gauges;
 
 #pragma warning disable CS0659
 namespace JobBars {
-    public unsafe class JobBars : IDalamudPlugin {
+    public unsafe partial class JobBars : IDalamudPlugin {
         public string Name => "JobBars";
         public DalamudPluginInterface PluginInterface { get; private set; }
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
@@ -97,15 +96,27 @@ namespace JobBars {
         }
 
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
+            if (!_Ready) {
+                receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+                return;
+            }
+
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
-            if (_Ready && IntPtr.Equals(sourceCharacter, PluginInterface.ClientState.LocalPlayer.Address)) {
-                _GManager?.PerformAction(new Item
-                {
-                    Id = id,
-                    IsBuff = false
-                });
+
+            var isSelf = sourceId == PluginInterface.ClientState.LocalPlayer.ActorId;
+            var isPet = (_GManager?.CurrentJob == JobIds.SMN || _GManager?.CurrentJob == JobIds.SCH) ? sourceId == FindCharaPet() : false;
+
+            if(!isSelf || isPet) {
+                receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+                return;
             }
+
+            _GManager?.PerformAction(new Item
+            {
+                Id = id,
+                IsBuff = false
+            });
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
             int effectsEntries = 0;
@@ -147,7 +158,6 @@ namespace JobBars {
 
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
-                //if (entries[i].type != ActionEffectType.Nothing && entries[i].type != ActionEffectType.Damage) { PluginLog.Log($"{entries[i].type} {tTarget} {entries[i].value} {entries[i].mult} {entries[i].param0} {entries[i].param1} {entries[i].param2}"); }
                 if(entries[i].type == ActionEffectType.Gp_Or_Status) {
                     _GManager?.PerformAction(new Item
                     {
@@ -160,118 +170,34 @@ namespace JobBars {
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
 
-        public void SetupCommands() {
-            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnConfigCommandHandler) {
-                HelpMessage = $"Open config window for {this.Name}",
-                ShowInHelp = true
-            });
+        private int GetCharacterActorId() {
+            if (PluginInterface.ClientState.LocalPlayer != null)
+                return PluginInterface.ClientState.LocalPlayer.ActorId;
+            return 0;
         }
-        public void OnConfigCommandHandler(object command, object args) {
-        }
-        public void RemoveCommands() {
-            PluginInterface.CommandManager.RemoveHandler("/jobbars");
+        private int FindCharaPet() {
+            int charaId = GetCharacterActorId();
+            foreach (Actor a in PluginInterface.ClientState.Actors) {
+                if (!(a is BattleNpc npc)) continue;
+
+                IntPtr actPtr = npc.Address;
+                if (actPtr == IntPtr.Zero) continue;
+
+                if (npc.OwnerId == charaId)
+                    return npc.ActorId;
+            }
+            return -1;
         }
 
-        private bool Visible = true;
         private int FrameCount = 0;
-        private bool GAUGE_LOCK = true;
-
-        private void BuildUI() {
-            // ====== SETTINGS =======
-            string _ID = "##JobBars_Settings";
-            ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);
-            if(ImGui.Begin("Settings", ref Visible)) {
-                ImGui.BeginTabBar("Tabs" + _ID);
-                if(ImGui.BeginTabItem("Gauges" + _ID)) {
-                    DrawGaugeSettings();
-                    ImGui.EndTabItem();
-                }
-                if (ImGui.BeginTabItem("Buffs" + _ID)) {
-                    DrawBuffSettings();
-                    ImGui.EndTabItem();
-                }
-                ImGui.EndTabBar();
-                ImGui.End();
-            }
-            // ====== GAUGE POSITION =======
-            if (!GAUGE_LOCK) {
-                ImGuiHelpers.ForceNextWindowMainViewport();
-                ImGui.SetNextWindowPos(Configuration.Config.GaugePosition, ImGuiCond.FirstUseEver);
-                ImGui.SetNextWindowSize(new Vector2(200, 200));
-                ImGui.Begin("##GaugePosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
-                ImGui.Text("Gauge Bar Position");
-
-                var pos = ImGui.GetWindowPos();
-                if(pos != Configuration.Config.GaugePosition) {
-                    Configuration.Config.GaugePosition = pos;
-                    Configuration.Config.Save();
-                    _UI?.SetGaugePosition(pos);
-                }
-
-                ImGui.End();
-            }
-        }
-        JobIds G_SelectedJob = JobIds.OTHER;
-        private void DrawGaugeSettings() {
-            if (_GManager == null) return;
-
-            string _ID = "##JobBars_Gauges";
-            if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
-            }
-            if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
-                _UI?.SetGaugeScale(Configuration.Config.GaugeScale);
-                Configuration.Config.Save();
-            }
-
-            var size = ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetTextLineHeight() + 10);
-            ImGui.BeginChild(_ID + "/Child", size, true);
-            ImGui.Columns(2);
-            ImGui.SetColumnWidth(0, 150);
-
-            foreach(var job in _GManager.JobToGauges.Keys) {
-                if (job == JobIds.OTHER) continue;
-                if(ImGui.Selectable(job + _ID + "/Job", G_SelectedJob == job)) {
-                    G_SelectedJob = job;
-                }
-            }
-
-            var spaceLeft = ImGui.GetContentRegionAvail().Y;
-            if(spaceLeft > 0) {
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + spaceLeft);
-            }
-
-            ImGui.NextColumn();
-
-            if(G_SelectedJob == JobIds.OTHER) {
-                ImGui.Text("Select a job...");
-            }
-            else {
-                ImGui.BeginChild(_ID + "Selected");
-                foreach(var g_ in _GManager.JobToGauges[G_SelectedJob]) {
-                    ImGui.TextColored(new Vector4(0, 1, 0, 1), g_.Name);
-                }
-                ImGui.EndChild();
-            }
-
-            ImGui.Columns(1);
-            ImGui.EndChild();
-            if(ImGui.SmallButton("SAVE" + _ID)) {
-
-            }
-        }
-        private void DrawBuffSettings() {
-
-        }
-
         private void FrameworkOnUpdate(Framework framework) {
             if (!_Ready) return;
-            if(FrameCount == 0) { // idk lmao
+            if (FrameCount == 0) { // idk lmao
                 _UI.SetupTex();
                 FrameCount++;
                 return;
             }
-            else if(FrameCount == 1) {
+            else if (FrameCount == 1) {
                 _UI.Init();
                 _GManager = new ActionGaugeManager(_UI);
                 FrameCount++;
@@ -280,6 +206,20 @@ namespace JobBars {
 
             _GManager.SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
             _GManager.Tick();
+        }
+
+        // ======= COMMANDS ============
+        public void SetupCommands() {
+            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnConfigCommandHandler) {
+                HelpMessage = $"Open config window for {this.Name}",
+                ShowInHelp = true
+            });
+        }
+        public void OnConfigCommandHandler(object command, object args) {
+            Visible = !Visible;
+        }
+        public void RemoveCommands() {
+            PluginInterface.CommandManager.RemoveHandler("/jobbars");
         }
     }
 }

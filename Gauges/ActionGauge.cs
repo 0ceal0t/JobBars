@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public enum ActionGaugeType {
@@ -12,6 +13,7 @@ namespace JobBars.Gauges {
         Timer
     }
 
+    // ===== BUFF OR ACTION ======
     public struct Item {
         public uint Id;
         public bool IsBuff;
@@ -50,6 +52,15 @@ namespace JobBars.Gauges {
             return !(left == right);
         }
     }
+    // ======= VISUAL =========
+    public enum GaugeVisualType {
+        Bar,
+        Arrow
+    }
+    public struct GaugeVisual {
+        public GaugeVisualType Type;
+        public ElementColor Color;
+    }
 
     public abstract class ActionGauge {
         public bool Active = false;
@@ -65,6 +76,7 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
 
         public UIElement _UI = null;
+        public GaugeVisual Visual;
 
         public ActionGauge(string name, ActionGaugeType type) {
             Name = name;

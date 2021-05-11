@@ -13,6 +13,8 @@ namespace JobBars.Data {
         public int Version { get; set; } = 0;
         public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
         public float GaugeScale = 1.0f;
+        public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
+        public float BuffScale = 1.0f;
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
