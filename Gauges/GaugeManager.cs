@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
                 new GaugeGCD("No Mercy", 20, 9)
                     .WithTriggers(new[]
                     {
-                        new Item(BuffIds.NoMercy)
+                        new Item(BuffIds.NoMercy) // buffs are more reliable for tracking gcds within a buff window
                     })
                     .WithIncrement(new[]
                     {
@@ -77,7 +77,7 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Goring Blade", 21)
                     .WithTriggers(new[]
                     {
-                        new Item(BuffIds.GoringBlade)
+                        new Item(ActionIds.GoringBlade)
                     })
                     .WithReplaceIcon(new[]
                     {
@@ -137,9 +137,9 @@ namespace JobBars.Gauges {
             JobToGauges.Add(JobIds.AST, new Gauge[] { // <===== AST
                 new GaugeTimer("Combust", 30)
                     .WithTriggers(new[]{
-                        new Item(BuffIds.Combust1),
-                        new Item(BuffIds.Combust2),
-                        new Item(BuffIds.Combust3)
+                        new Item(ActionIds.Combust1),
+                        new Item(ActionIds.Combust2),
+                        new Item(ActionIds.Combust3)
                     })
                     .WithReplaceIcon(new []{ 
                         ActionIds.Combust1,

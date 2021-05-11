@@ -8,6 +8,7 @@
 - track buffs
 - diamonds?
 - animated movement
+- hide
 
 - crash when switching characters -> need to reset?
 - random crash when loading, maybe need to split up asset and part loading?

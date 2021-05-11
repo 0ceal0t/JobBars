@@ -14,6 +14,7 @@ namespace JobBars.Buffs {
     public unsafe class BuffManager {
         public UIBuilder UI;
 
+        List<Buff> AllBuffs;
         public Dictionary<JobIds, Buff[]> JobToBuffs;
         public JobIds CurrentJob = JobIds.OTHER;
         public Buff[] CurrentGauges => JobToBuffs[CurrentJob];
@@ -32,7 +33,7 @@ namespace JobBars.Buffs {
                 new Buff("Inner Release", IconIds.InnerRelease, 10)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.InnerRelease)
+                        new Item(ActionIds.InnerRelease)
                     })
                     .WithCD(90)
             });
@@ -40,7 +41,7 @@ namespace JobBars.Buffs {
                 new Buff("Delirium", IconIds.Delirium, 10)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Delirium)
+                        new Item(ActionIds.Delirium)
                     })
                     .WithCD(90),
                 new Buff("Living Shadow", IconIds.LivingShadow, 24)
@@ -54,55 +55,55 @@ namespace JobBars.Buffs {
                 new Buff("The Balance", IconIds.TheBalance, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Balance)
+                        new Item(ActionIds.TheBalance)
                     })
                     .WithNoCD(),
                 new Buff("The Bole", IconIds.TheBole, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Bole)
+                        new Item(ActionIds.TheBole)
                     })
                     .WithNoCD(),
                 new Buff("The Spear", IconIds.TheSpear, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Spear)
+                        new Item(ActionIds.TheSpear)
                     })
                     .WithNoCD(),
                 new Buff("The Spire", IconIds.TheSpire, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Spire)
+                        new Item(ActionIds.TheSpire)
                     })
                     .WithNoCD(),
                 new Buff("The Arrow", IconIds.TheArrow, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Arrow)
+                        new Item(ActionIds.TheArrow)
                     })
                     .WithNoCD(),
                 new Buff("The Ewer", IconIds.TheEwer, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Ewer)
+                        new Item(ActionIds.TheEwer)
                     })
                     .WithNoCD(),
                 new Buff("Lady of Crowns", IconIds.LadyOfCrowns, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.LadyOfCrowns)
+                        new Item(ActionIds.LadyOfCrowns)
                     })
                     .WithNoCD(),
                 new Buff("Lord of Crowns", IconIds.LordOfCrowns, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.LordOfCrowns)
+                        new Item(ActionIds.LordOfCrowns)
                     })
                     .WithNoCD(),
                 new Buff("Divination", IconIds.Divination, 15)
                     .WithTriggers(new []
                     {
-                        new Item(BuffIds.Divination)
+                        new Item(ActionIds.Divination)
                     })
                     .WithCD(120)
             });
@@ -120,31 +121,53 @@ namespace JobBars.Buffs {
             JobToBuffs.Add(JobIds.MNK, new Buff[] { });
             JobToBuffs.Add(JobIds.BLU, new Buff[] { });
 
+            AllBuffs = new List<Buff>();
+            foreach (var jobEntry in JobToBuffs) {
+                var buffs = jobEntry.Value;
+                foreach (var buff in buffs) {
+                    AllBuffs.Add(buff);
+                }
+            }
             SetupUI();
         }
 
         public void SetupUI() {
-            foreach(var jobEntry in JobToBuffs) {
-                var buffs = jobEntry.Value;
-                foreach(var buff in buffs) {
-                    buff.UI = UI.IconToBuff[buff.Icon];
-                }
+            foreach(var buff in AllBuffs) {
+                buff.UI = UI.IconToBuff[buff.Icon];
             }
         }
 
         public void SetJob(JobIds job) {
             CurrentJob = job;
+            Reset();
+        }
+
+        public void Reset() {
+            UI.HideAllBuffs();
+            foreach (var buff in AllBuffs) {
+                buff.Reset();
+            }
         }
 
         public void PerformAction(Item action) {
-
+            foreach (var buff in AllBuffs) {
+                buff.ProcessAction(action);
+            }
         }
 
         public void Tick() {
             var currentTime = DateTime.Now;
             float deltaSecond = (float)(currentTime - LastTick).TotalSeconds;
 
-
+            var idx = 0;
+            foreach (var buff in AllBuffs) {
+                if(buff.InActive) { continue; }
+                buff.Tick(currentTime, deltaSecond);
+                if (buff.Visible) {
+                    buff.UI.SetPosition(idx);
+                    idx++;
+                }
+            }
 
             LastTick = currentTime;
         }

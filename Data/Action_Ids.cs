@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.Data {
     public enum ActionIds : uint {
+        Delirium = 7390,
         LivingShadow = 0x4058,
         BloodSpiller = 0x1CE0,
         Quietus = 0x1CDF,
@@ -16,9 +17,11 @@ namespace JobBars.Data {
         Unleash = 0xE25,
         StalwartSoul = 0x4054,
         // WAR
+        InnerRelease = 7389,
         FellCleave = 0xDDD,
         Decimate = 0xDDE,
         // PLD
+        Requiescat = 7383,
         FastBlade = 0x09,
         RiotBlade = 0x0F,
         GoringBlade = 0xDD2,
@@ -30,6 +33,7 @@ namespace JobBars.Data {
         HolyCircle = 0x404A,
         Confiteor = 0x404B,
         // GNB
+        NoMercy = 16138,
         DemonSlice = 0x3F0D,
         DemonSlaughter = 0x3F15,
         KeenEdge = 0x3F09,
@@ -47,6 +51,15 @@ namespace JobBars.Data {
         Combust1 = 3599,
         Combust2 = 3608,
         Combust3 = 16554,
+        TheBalance = 4401,
+        TheArrow = 4402,
+        TheSpear = 4403,
+        TheBole = 4404,
+        TheEwer = 4405,
+        TheSpire = 4406,
+        LordOfCrowns = 7444,
+        LadyOfCrowns = 7445,
+        Divination = 16552,
         // MNK
         Bootshine = 0x35,
         TrueStrike = 0x36,

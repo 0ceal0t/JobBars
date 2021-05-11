@@ -101,11 +101,13 @@ namespace JobBars {
                 return;
             }
 
-            GManager?.PerformAction(new Item
+            var item = new Item
             {
                 Id = id,
                 IsBuff = false
-            });
+            };
+            GManager?.PerformAction(item);
+            BManager?.PerformAction(item);
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
             int effectsEntries = 0;
@@ -224,6 +226,7 @@ namespace JobBars {
         public void SetJob(ClassJob job) {
             JobIds _job = job.Id < 19 ? JobIds.OTHER : (JobIds)job.Id;
             if (_job != CurrentJob) {
+                CurrentJob = _job;
                 GManager.SetJob(_job);
                 BManager.SetJob(_job);
             }

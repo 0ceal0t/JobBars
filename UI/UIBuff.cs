@@ -26,7 +26,8 @@ namespace JobBars.UI {
         public override void LoadExisting(AtkResNode* node) {
             RootRes = node;
             TextNode = (AtkTextNode*)RootRes->ChildNode;
-            Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode;
+            Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode;
+            SetOffCD();
         }
 
         public override void Init() {
@@ -53,17 +54,6 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
 
-            Overlay = _UI.CreateImageNode();
-            Overlay->AtkResNode.Width = WIDTH;
-            Overlay->AtkResNode.Height = 1;
-            Overlay->AtkResNode.X = 0;
-            Overlay->AtkResNode.Y = 0;
-            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
-            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
-            Overlay->Flags = 0;
-            Overlay->WrapMode = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
-
             var icon = _UI.CreateImageNode();
             icon->AtkResNode.Width = WIDTH;
             icon->AtkResNode.Height = HEIGHT;
@@ -74,6 +64,17 @@ namespace JobBars.UI {
             icon->Flags = 0;
             icon->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
+
+            Overlay = _UI.CreateImageNode();
+            Overlay->AtkResNode.Width = WIDTH;
+            Overlay->AtkResNode.Height = 1;
+            Overlay->AtkResNode.X = 0;
+            Overlay->AtkResNode.Y = 0;
+            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
+            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
+            Overlay->Flags = 0;
+            Overlay->WrapMode = 1;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
             //
             RootRes->ChildNode = (AtkResNode*)TextNode;
 
@@ -81,10 +82,38 @@ namespace JobBars.UI {
             Overlay->AtkResNode.ParentNode = RootRes;
             TextNode->AtkResNode.ParentNode = RootRes;
 
-            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)Overlay;
-            Overlay->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
+            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
+            icon->AtkResNode.PrevSiblingNode = (AtkResNode*)Overlay;
 
             UiHelper.SetText(TextNode, "");
+        }
+
+        static int BUFFS_HORIZONTAL = 5;
+        public void SetPosition(int idx) {
+            var position_x = idx % BUFFS_HORIZONTAL;
+            var position_y = (idx - position_x) / BUFFS_HORIZONTAL;
+
+            UiHelper.SetPosition(RootRes, (WIDTH + 7) * position_x, (HEIGHT + 5) * position_y);
+        }
+
+        public void Hide() {
+            UiHelper.Hide(RootRes);
+        }
+
+        public void Show() {
+            UiHelper.Show(RootRes);
+        }
+
+        public void SetOnCD() {
+            RootRes->MultiplyBlue = 75;
+            RootRes->MultiplyRed = 75;
+            RootRes->MultiplyGreen = 75;
+        }
+
+        public void SetOffCD() {
+            RootRes->MultiplyBlue = 100;
+            RootRes->MultiplyRed = 100;
+            RootRes->MultiplyGreen = 100;
         }
 
         public void SetText(string text) {

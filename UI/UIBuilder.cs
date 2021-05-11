@@ -47,10 +47,10 @@ namespace JobBars.UI {
             Icon.Dispose();
 
             if(G_RootRes != null) {
-                RecurseHide(G_RootRes, siblings:false);
+                UiHelper.Hide(G_RootRes);
             }
             if(B_RootRes != null) {
-                RecurseHide(B_RootRes);
+                UiHelper.Hide(B_RootRes);
             }
         }
 
@@ -146,7 +146,7 @@ namespace JobBars.UI {
             var addon = _ADDON;
             // ===== LOAD EXISTING GAUGES =====
             G_RootRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
-            UiHelper.Show(G_RootRes); // just show root, not children
+            UiHelper.Show(G_RootRes);
 
             var n = G_RootRes->ChildNode;
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
@@ -157,7 +157,7 @@ namespace JobBars.UI {
             }
             // ====== LOAD EXISTING BUFFS =======
             B_RootRes = G_RootRes->PrevSiblingNode;
-            RecurseHide(B_RootRes, false, false); // show everything (TEMP)
+            UiHelper.Show(B_RootRes);
 
             var n2 = B_RootRes->ChildNode;
             for(int idx = 0; idx < Buffs.Length; idx++) {
@@ -221,7 +221,6 @@ namespace JobBars.UI {
 
             for (int idx = 0; idx < Buffs.Length; idx++) {
                 Buffs[idx].RootRes->ParentNode = B_RootRes;
-                UiHelper.SetPosition(Buffs[idx].RootRes, 40 * idx, 0);
 
                 if (idx < (Buffs.Length - 1)) {
                     Buffs[idx].RootRes->PrevSiblingNode = Buffs[idx + 1].RootRes;
@@ -265,10 +264,18 @@ namespace JobBars.UI {
             UiHelper.SetScale(node, X / p.X, Y / p.Y);
         }
         public void HideAllGauges() {
-            RecurseHide(Gauges[0].RootRes); // will also get siblings
+            foreach (var gauge in Gauges) {
+                UiHelper.Hide(gauge.RootRes);
+            }
+
+            foreach (var arrow in Arrows) {
+                UiHelper.Hide(arrow.RootRes);
+            }
         }
         public void HideAllBuffs() {
-            RecurseHide(Buffs[0].RootRes); // will also get siblings
+            foreach(var buff in Buffs) {
+                UiHelper.Hide(buff.RootRes);
+            }
         }
         public void Show(UIElement element) {
             RecurseHide(element.RootRes, false, false);
