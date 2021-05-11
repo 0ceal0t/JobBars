@@ -105,7 +105,7 @@ namespace JobBars.Gauges {
                     .WithTriggers(new[]
                     {
                         new Item(BuffIds.StormsEye)
-                    })
+                    }).WithDefaultDuration(30)
             });
             JobToGauges.Add(JobIds.DRK, new ActionGauge[] {
                 new ActionGaugeGCD("Delirium", 10, 5)
@@ -183,10 +183,10 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void GetBuffDuration(Item buff, float duration) {
+        public void GetBuffDuration(Item buff, float duration, bool isRefresh) {
             if(duration < 0) { duration *= -1; }
             foreach (var g_ in CurrentGauges) {
-                g_.ProcessDuration(buff, duration);
+                g_.ProcessDuration(buff, duration, isRefresh);
             }
         }
 

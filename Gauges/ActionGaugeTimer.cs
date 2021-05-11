@@ -12,6 +12,7 @@ namespace JobBars.Gauges {
     public class ActionGaugeTimer : ActionGauge {
         public UIIconManager Icon;
 
+        public float DefaultDuration;
         public float MaxDuration;
         public bool ReplaceIcon = false;
         public ActionIds[] ReplaceIconAction;
@@ -20,10 +21,11 @@ namespace JobBars.Gauges {
 
         public ActionGaugeTimer(string name, float duration) : base(name, ActionGaugeType.Timer) {
             MaxDuration = duration;
+            DefaultDuration = MaxDuration;
             Visual = new GaugeVisual
             {
                 Type = GaugeVisualType.Bar,
-                Color = UIColor.Red
+                Color = UIColor.LightBlue
             };
         }
 
@@ -47,6 +49,10 @@ namespace JobBars.Gauges {
             ReplaceIconAction = action;
             return this;
         }
+        public ActionGaugeTimer WithDefaultDuration(float duration) {
+            DefaultDuration = duration;
+            return this;
+        }
         public ActionGaugeTimer WithVisual(GaugeVisual visual) {
             Visual = visual;
             return this;
@@ -62,7 +68,7 @@ namespace JobBars.Gauges {
         private void Start(Item action) {
             PluginLog.Log("STARTING");
             SetActive(action);
-            StartValue = MaxDuration;
+            StartValue = DefaultDuration;
         }
 
         public override void Tick(DateTime time, float delta) {
@@ -84,16 +90,15 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
-            _UI.SetColor(Visual.Color);
-            if (_UI is UIGauge) {
-                var gauge = (UIGauge)_UI;
+            if (_UI is UIGauge gauge) {
+                gauge.SetColor(Visual.Color);
                 gauge.SetText("0");
                 gauge.SetPercent(0);
             }
         }
 
-        public override void ProcessDuration(Item buff, float duration) { // primarily used for things like storm's eye
-            if(Active && buff == LastActiveTrigger) {
+        public override void ProcessDuration(Item buff, float duration, bool isRefresh) { // primarily used for things like storm's eye
+            if(Active && buff == LastActiveTrigger && (!isRefresh || AllowRefresh)) {
                 ActiveTime = DateTime.Now;
                 StartValue = duration;
             }

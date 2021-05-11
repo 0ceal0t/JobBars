@@ -16,20 +16,27 @@ namespace JobBars.UI {
         }
 
         public override void Init() {
-            /*
-             * resnode container (160 x 32)
-             *  resnode single (32 x 32)
-             *      bg part 0
-             *      resnode (32 x 32)
-             *          selected part 1
-             */
-
             Selected = new AtkImageNode*[MAX];
             Ticks = new AtkResNode*[MAX];
 
             var nameplateAddon = _UI._ADDON;
 
+            RootRes = _UI.CreateResNode();
+            RootRes->X = 0;
+            RootRes->Y = 0;
+            RootRes->Width = 160;
+            RootRes->Height = 46;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
+
             for (int idx = 0; idx < MAX; idx++) {
+                // ======= TICKS =========
+                Ticks[idx] = _UI.CreateResNode();
+                Ticks[idx]->X = 18 * (idx - 1);
+                Ticks[idx]->Y = 0;
+                Ticks[idx]->Width = 32;
+                Ticks[idx]->Height = 32;
+                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Ticks[idx];
+
                 var bg = _UI.CreateImageNode();
                 bg->AtkResNode.Width = 32;
                 bg->AtkResNode.Height = 32;
@@ -40,6 +47,16 @@ namespace JobBars.UI {
                 bg->Flags = 0;
                 bg->WrapMode = 1;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
+
+                // ======== SELECTED ========
+                var selectedContainer = _UI.CreateResNode();
+                selectedContainer->X = 0;
+                selectedContainer->Y = 0;
+                selectedContainer->Width = 32;
+                selectedContainer->Height = 32;
+                selectedContainer->OriginX = 0;
+                selectedContainer->OriginY = 0;
+                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
 
                 Selected[idx] = _UI.CreateImageNode();
                 Selected[idx]->AtkResNode.Width = 32;
@@ -53,43 +70,21 @@ namespace JobBars.UI {
                 Selected[idx]->Flags = 0;
                 Selected[idx]->WrapMode = 1;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Selected[idx];
-
-                var selectedContainer = _UI.CreateResNode();
-                selectedContainer->X = 0;
-                selectedContainer->Y = 0;
-                selectedContainer->Width = 32;
-                selectedContainer->Height = 32;
-                selectedContainer->OriginX = 0;
-                selectedContainer->OriginY = 0;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
-                bg->AtkResNode.PrevSiblingNode = selectedContainer;
-                //
+                // ======== SELECTED SETUP ========
                 selectedContainer->ChildCount = 1;
                 selectedContainer->ChildNode = (AtkResNode*)Selected[idx];
                 Selected[idx]->AtkResNode.ParentNode = selectedContainer;
 
-                Ticks[idx] = _UI.CreateResNode();
-                Ticks[idx]->X = 18 * (idx - 1);
-                Ticks[idx]->Y = 0;
-                Ticks[idx]->Width = 32;
-                Ticks[idx]->Height = 32;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Ticks[idx];
-                //
+                // ======= SETUP TICKS =====
                 Ticks[idx]->ChildCount = 3;
                 Ticks[idx]->ChildNode = (AtkResNode*)bg;
+                bg->AtkResNode.PrevSiblingNode = selectedContainer;
                 bg->AtkResNode.ParentNode = Ticks[idx];
                 selectedContainer->ParentNode = Ticks[idx];
             }
 
-            RootRes = _UI.CreateResNode();
-            RootRes->X = 0;
-            RootRes->Y = 0;
-            RootRes->Width = 160;
-            RootRes->Height = 46;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
-            //
+            // ====== SETUP ROOT =======
             RootRes->ChildNode = Ticks[0];
-
             for(int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
                 if(idx < (MAX - 1)) {
@@ -120,7 +115,7 @@ namespace JobBars.UI {
 
         public void SetMaxValue(int value) {
             for(int idx = 0; idx < MAX; idx++) {
-                if(idx <= value) { // <---- something is scuffed with these -_-
+                if(idx < value) {
                     UIBuilder.RecurseHide(Ticks[idx], false, false); // show
                 }
                 else {
@@ -131,7 +126,7 @@ namespace JobBars.UI {
 
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                if (idx <= value) {
+                if (idx < value) {
                     UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
                 }
                 else {

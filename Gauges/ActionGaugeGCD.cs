@@ -103,18 +103,19 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
-            _UI.SetColor(Visual.Color);
             if(_UI is UIArrow arrows) {
+                arrows.SetColor(Visual.Color);
                 arrows.SetMaxValue(MaxCounter);
                 arrows.SetValue(0);
             }
             else if(_UI is UIGauge gauge) {
+                gauge.SetColor(Visual.Color);
                 gauge.SetText("0");
                 gauge.SetPercent(0);
             }
         }
 
-        public override void ProcessDuration(Item buff, float duration) {
+        public override void ProcessDuration(Item buff, float duration, bool isRefresh) {
             if (Active && buff == LastActiveTrigger) {
                 ActiveTime = DateTime.Now;
                 Duration = duration;

@@ -10,3 +10,6 @@
 - bar or arrow
 - diamonds?
 - animated movement
+
+- fix red color
+- why does it crash when opening hud layout?

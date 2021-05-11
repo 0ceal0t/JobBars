@@ -81,12 +81,12 @@ namespace JobBars {
         }
 
         private byte AddStatus(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus) { // STATUS DURATION SENT SEPARATELY
-            if (_Ready && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId && newStatus == 1) {
+            if (_Ready && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
                 _GManager?.GetBuffDuration(new Item
                 {
                     Id = statusId,
                     IsBuff = true
-                }, duration);
+                }, duration, newStatus == 0);
             }
             return addStatusHook.Original(statusEffectList, slot, statusId, duration, a5, sourceActorId, newStatus);
         }
@@ -158,7 +158,7 @@ namespace JobBars {
 
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
-                if(entries[i].type == ActionEffectType.Gp_Or_Status) {
+                if(entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
                     _GManager?.PerformAction(new Item
                     {
                         Id = entries[i].value,

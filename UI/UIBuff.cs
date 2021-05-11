@@ -30,27 +30,14 @@ namespace JobBars.UI {
         public override void Init() {
             var nameplateAddon = _UI._ADDON;
 
-            var icon = _UI.CreateImageNode();
-            icon->AtkResNode.Width = WIDTH;
-            icon->AtkResNode.Height = HEIGHT;
-            icon->AtkResNode.X = 0;
-            icon->AtkResNode.Y = 0;
-            icon->PartId = PART_ID;
-            icon->PartsList = nameplateAddon->UldManager.PartsList;
-            icon->Flags = 0;
-            icon->WrapMode = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
-
-            Overlay = _UI.CreateImageNode();
-            Overlay->AtkResNode.Width = WIDTH;
-            Overlay->AtkResNode.Height = 0;
-            Overlay->AtkResNode.X = 0;
-            Overlay->AtkResNode.Y = 0;
-            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
-            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
-            Overlay->Flags = 0;
-            Overlay->WrapMode = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
+            // ======= CONTAINERS =========
+            RootRes = _UI.CreateResNode();
+            RootRes->X = 0;
+            RootRes->Y = 0;
+            RootRes->Width = WIDTH;
+            RootRes->Height = HEIGHT;
+            RootRes->ChildCount = 3;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
 
             TextNode = _UI.CreateTextNode();
             TextNode->FontSize = 15;
@@ -64,14 +51,27 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
 
-            // ======= CONTAINERS =========
-            RootRes = _UI.CreateResNode();
-            RootRes->X = 0;
-            RootRes->Y = 0;
-            RootRes->Width = WIDTH;
-            RootRes->Height = HEIGHT;
-            RootRes->ChildCount = 4;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
+            Overlay = _UI.CreateImageNode();
+            Overlay->AtkResNode.Width = WIDTH;
+            Overlay->AtkResNode.Height = 1;
+            Overlay->AtkResNode.X = 0;
+            Overlay->AtkResNode.Y = 0;
+            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
+            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
+            Overlay->Flags = 0;
+            Overlay->WrapMode = 1;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
+
+            var icon = _UI.CreateImageNode();
+            icon->AtkResNode.Width = WIDTH;
+            icon->AtkResNode.Height = HEIGHT;
+            icon->AtkResNode.X = 0;
+            icon->AtkResNode.Y = 0;
+            icon->PartId = PART_ID;
+            icon->PartsList = nameplateAddon->UldManager.PartsList;
+            icon->Flags = 0;
+            icon->WrapMode = 1;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
             //
             RootRes->ChildNode = (AtkResNode*)TextNode;
 

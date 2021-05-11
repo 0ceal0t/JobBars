@@ -39,7 +39,7 @@ namespace JobBars.UI {
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
-            Buffs = new UIBuff[_Icons.Length + 1];
+            Buffs = new UIBuff[_Icons.Length];
             Icon = new UIIconManager(pi);
         }
 
@@ -165,9 +165,11 @@ namespace JobBars.UI {
                     var icon = _Icons[idx - 1];
                     IconToBuff[icon] = Buffs[idx];
                 }
+                Buffs[idx].RootRes->ChildCount = 3;
+                Buffs[idx].RootRes->NextSiblingNode = null;
                 n2 = n2->PrevSiblingNode;
             }
-            RecurseHide(Buffs[0].RootRes, true, false); // hide the dummy one
+            RecurseHide(Buffs[0].RootRes->ChildNode, true, true); // hide the dummy one
         }
 
         public void Init() {
@@ -178,19 +180,19 @@ namespace JobBars.UI {
             }
 
             // ======== CREATE GAUGES =======
-            for(int idx = 0; idx < MAX_GAUGES; idx++) {
-                Gauges[idx] = new UIGauge(this, null);
-                Arrows[idx] = new UIArrow(this, null);
-            }
             G_RootRes = CreateResNode();
             G_RootRes->Width = 256;
             G_RootRes->Height = 100;
             G_RootRes->Flags = 9395;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = G_RootRes;
+            for (int idx = 0; idx < MAX_GAUGES; idx++) {
+                Gauges[idx] = new UIGauge(this, null);
+                Arrows[idx] = new UIArrow(this, null);
+            }
             G_RootRes->ParentNode = nameplateAddon->RootNode;
             G_RootRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = G_RootRes;
-
             G_RootRes->ChildNode = Gauges[0].RootRes;
+
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx].RootRes->ParentNode = G_RootRes;
                 Arrows[idx].RootRes->ParentNode = G_RootRes;
@@ -206,29 +208,28 @@ namespace JobBars.UI {
             SetGaugeScale(Configuration.Config.GaugeScale);
 
             // ======= CREATE BUFFS =========
-            Buffs[0] = new UIBuff(this, BUFF_PART_START, null); // formatting weirdness, I don't even know why this extra one is necessary
-            RecurseHide(Buffs[0].RootRes, true, false); // just hide it :/
-            int bIdx = 1;
-            foreach (var entry in IconToPartId) {
-                Buffs[bIdx] = new UIBuff(this, entry.Value, null);
-                IconToBuff[entry.Key] = Buffs[bIdx];
-                bIdx++;
-            }
             B_RootRes = CreateResNode();
             B_RootRes->Width = 256;
             B_RootRes->Height = 100;
             B_RootRes->Flags = 9395;
             B_RootRes->ParentNode = nameplateAddon->RootNode;
-            B_RootRes->ChildCount = (ushort)(Buffs[0].RootRes->ChildCount * Buffs.Length + Buffs.Length);
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = B_RootRes;
+            int bIdx = 0;
+            foreach (var entry in IconToPartId) {
+                Buffs[bIdx] = new UIBuff(this, entry.Value, null);
+                IconToBuff[entry.Key] = Buffs[bIdx];
+                bIdx++;
+            }
+            B_RootRes->ChildCount = (ushort)(Buffs[0].RootRes->ChildCount * Buffs.Length + Buffs.Length);
 
             B_RootRes->ChildNode = Buffs[0].RootRes;
-            for(int idx = 0; idx < Buffs.Length; idx++) {
+
+            for (int idx = 0; idx < Buffs.Length; idx++) {
                 Buffs[idx].RootRes->ParentNode = B_RootRes;
-                UiHelper.SetPosition(Buffs[idx].RootRes, 40 * (idx - 1), 0);
-                if(idx < (Buffs.Length - 1)) {
+                UiHelper.SetPosition(Buffs[idx].RootRes, 40 * idx, 0);
+
+                if (idx < (Buffs.Length - 1)) {
                     Buffs[idx].RootRes->PrevSiblingNode = Buffs[idx + 1].RootRes;
-                    Buffs[idx + 1].RootRes->NextSiblingNode = Buffs[idx].RootRes;
                 }
             }
             SetBuffPosition(Configuration.Config.BuffPosition);
@@ -241,6 +242,7 @@ namespace JobBars.UI {
             }
             n->PrevSiblingNode = G_RootRes;
             G_RootRes->PrevSiblingNode = B_RootRes;
+            nameplateAddon->RootNode->ChildCount = (ushort)(nameplateAddon->RootNode->ChildCount + (G_RootRes->ChildCount + B_RootRes->ChildCount + 2));
         }
 
         // ==== HELPER FUNCTIONS ============

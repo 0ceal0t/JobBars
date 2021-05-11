@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -28,43 +29,21 @@ namespace JobBars.UI {
         public override void Init() {
             var nameplateAddon = _UI._ADDON;
 
-            // ======== TEXT ==========
-            TextBlurNode = _UI.CreateNineNode();
-            TextBlurNode->AtkResNode.Flags = 8371;
-            TextBlurNode->AtkResNode.Width = 47;
-            TextBlurNode->AtkResNode.Height = 40;
-            TextBlurNode->AtkResNode.X = 0;
-            TextBlurNode->AtkResNode.Y = 0;
-            TextBlurNode->PartID = UIBuilder.GAUGE_TEXT_BLUR_PART;
-            TextBlurNode->PartsList = nameplateAddon->UldManager.PartsList;
-            TextBlurNode->TopOffset = 0;
-            TextBlurNode->BottomOffset = 0;
-            TextBlurNode->RightOffset = 28;
-            TextBlurNode->LeftOffset = 28;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextBlurNode;
+            // ======= CONTAINERS =========
+            RootRes = _UI.CreateResNode();
+            RootRes->X = 0;
+            RootRes->Y = 0;
+            RootRes->Width = 160;
+            RootRes->Height = 46;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
 
-            TextNode = _UI.CreateTextNode();
-            TextNode->AtkResNode.X = 14;
-            TextNode->AtkResNode.Y = 5;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
+            var gaugeContainer = _UI.CreateResNode();
+            gaugeContainer->X = 0;
+            gaugeContainer->Y = 0;
+            gaugeContainer->Width = 160;
+            gaugeContainer->Height = 32;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = gaugeContainer;
 
-            var textContainer = _UI.CreateResNode();
-            textContainer->X = 112;
-            textContainer->Y = 6;
-            textContainer->Width = 47;
-            textContainer->Height = 40;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = textContainer;
-            //
-            textContainer->ChildCount = 2;
-            textContainer->ChildNode = (AtkResNode*)TextNode;
-            TextNode->AtkResNode.ParentNode = textContainer;
-            TextBlurNode->AtkResNode.ParentNode = textContainer;
-            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)TextBlurNode;
-            TextBlurNode->AtkResNode.NextSiblingNode = (AtkResNode*)TextNode;
-
-            // ========= BAR ============
             var bg = _UI.CreateImageNode();
             bg->AtkResNode.Width = 160;
             bg->AtkResNode.Height = 20;
@@ -75,6 +54,14 @@ namespace JobBars.UI {
             bg->Flags = 0;
             bg->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
+
+            // ========= BAR ============
+            var barContainer = _UI.CreateResNode();
+            barContainer->X = 0;
+            barContainer->Y = 0;
+            barContainer->Width = 160;
+            barContainer->Height = 20;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = barContainer;
 
             BarMainNode = _UI.CreateNineNode();
             BarMainNode->AtkResNode.Width = 160;
@@ -88,14 +75,7 @@ namespace JobBars.UI {
             BarMainNode->RightOffset = 7;
             BarMainNode->LeftOffset = 7;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)BarMainNode;
-
-            var barContainer = _UI.CreateResNode();
-            barContainer->X = 0;
-            barContainer->Y = 0;
-            barContainer->Width = 160;
-            barContainer->Height = 20;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = barContainer;
-            //
+            // ======= BAR SETUP =========
             barContainer->ChildCount = 1;
             barContainer->ChildNode = (AtkResNode*)BarMainNode;
             BarMainNode->AtkResNode.ParentNode = barContainer;
@@ -111,38 +91,63 @@ namespace JobBars.UI {
             frame->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)frame;
 
-            var gaugeContainer = _UI.CreateResNode();
-            gaugeContainer->X = 0;
-            gaugeContainer->Y = 0;
-            gaugeContainer->Width = 160;
-            gaugeContainer->Height = 32;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = gaugeContainer;
-            //
-            gaugeContainer->ChildCount = (ushort)(3 + barContainer->ChildCount);
-            gaugeContainer->ChildNode = (AtkResNode*)bg;
+            // ======== GAUGE CONTAINER SETUP ========
             bg->AtkResNode.ParentNode = gaugeContainer;
             barContainer->ParentNode = gaugeContainer;
             frame->AtkResNode.ParentNode = gaugeContainer;
+
+            gaugeContainer->ChildCount = (ushort)(3 + barContainer->ChildCount);
+            gaugeContainer->ChildNode = (AtkResNode*)bg;
+
             bg->AtkResNode.PrevSiblingNode = barContainer;
             barContainer->PrevSiblingNode = (AtkResNode*)frame;
-            barContainer->NextSiblingNode = (AtkResNode*)bg;
             frame->AtkResNode.NextSiblingNode = barContainer;
-            //
+            barContainer->NextSiblingNode = (AtkResNode*)bg;
+
+            // ======== TEXT ==========
+            var textContainer = _UI.CreateResNode();
+            textContainer->X = 112;
+            textContainer->Y = 6;
+            textContainer->Width = 47;
+            textContainer->Height = 40;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = textContainer;
+
+            TextNode = _UI.CreateTextNode();
+            TextNode->AtkResNode.X = 14;
+            TextNode->AtkResNode.Y = 5;
+            TextNode->AtkResNode.Flags |= 0x10;
+            TextNode->AtkResNode.Flags_2 = 1;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
+
+            TextBlurNode = _UI.CreateNineNode();
+            TextBlurNode->AtkResNode.Flags = 8371;
+            TextBlurNode->AtkResNode.Width = 47;
+            TextBlurNode->AtkResNode.Height = 40;
+            TextBlurNode->AtkResNode.X = 0;
+            TextBlurNode->AtkResNode.Y = 0;
+            TextBlurNode->PartID = UIBuilder.GAUGE_TEXT_BLUR_PART;
+            TextBlurNode->PartsList = nameplateAddon->UldManager.PartsList;
+            TextBlurNode->TopOffset = 0;
+            TextBlurNode->BottomOffset = 0;
+            TextBlurNode->RightOffset = 28;
+            TextBlurNode->LeftOffset = 28;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextBlurNode;
+            // ====== TEXT SETUP =========
+            textContainer->ChildCount = 2;
+            textContainer->ChildNode = (AtkResNode*)TextNode;
+            TextNode->AtkResNode.ParentNode = textContainer;
+            TextBlurNode->AtkResNode.ParentNode = textContainer;
+            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)TextBlurNode;
+
+            // ====== CONTAINER SETUP ======
             gaugeContainer->PrevSiblingNode = textContainer;
             textContainer->NextSiblingNode = gaugeContainer;
 
-            // ======= CONTAINERS =========
-            RootRes = _UI.CreateResNode();
-            RootRes->X = 0;
-            RootRes->Y = 0;
-            RootRes->Width = 160;
-            RootRes->Height = 46;
-            RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + textContainer->ChildCount + 2);
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
-            //
+            // ====== ROOT SETUP =====
             RootRes->ChildNode = gaugeContainer;
             gaugeContainer->ParentNode = RootRes;
             textContainer->ParentNode = RootRes;
+            RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + textContainer->ChildCount + 2);
         }
 
         public void SetText(string text) {
