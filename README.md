@@ -6,10 +6,8 @@
 
 - pets
 - track buffs
-- colors
-- bar or arrow
 - diamonds?
 - animated movement
 
-- fix red color
-- why does it crash when opening hud layout?
+- crash when switching characters -> need to reset?
+- random crash when loading, maybe need to split up asset and part loading?

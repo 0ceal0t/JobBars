@@ -45,13 +45,14 @@ namespace JobBars.UI {
         public Dictionary<uint, IconProgress> ActionIdToStatus = new Dictionary<uint, IconProgress>();
         HashSet<IntPtr> ToCleanup = new HashSet<IntPtr>();
 
-        List<IntPtr> IconRecastOverride = new List<IntPtr>();
+        List<IntPtr> IconRecastOverride;
         private delegate void SetIconRecastDelegate(IntPtr icon);
         private Hook<SetIconRecastDelegate> setIconRecastHook;
 
         public UIIconManager(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
             Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
+            IconRecastOverride = new List<IntPtr>();
 
             IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23 BA ?? ?? ?? ?? ");
             setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);

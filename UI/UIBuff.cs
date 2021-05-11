@@ -25,6 +25,8 @@ namespace JobBars.UI {
 
         public override void LoadExisting(AtkResNode* node) {
             RootRes = node;
+            TextNode = (AtkTextNode*)RootRes->ChildNode;
+            Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode;
         }
 
         public override void Init() {

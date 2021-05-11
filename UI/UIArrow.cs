@@ -31,7 +31,7 @@ namespace JobBars.UI {
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
                 Ticks[idx] = _UI.CreateResNode();
-                Ticks[idx]->X = 18 * (idx - 1);
+                Ticks[idx]->X = 18 * idx;
                 Ticks[idx]->Y = 0;
                 Ticks[idx]->Width = 32;
                 Ticks[idx]->Height = 32;

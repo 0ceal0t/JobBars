@@ -45,7 +45,7 @@ namespace JobBars {
                 if (pos != Configuration.Config.GaugePosition) {
                     Configuration.Config.GaugePosition = pos;
                     Configuration.Config.Save();
-                    _UI?.SetGaugePosition(pos);
+                    UI?.SetGaugePosition(pos);
                 }
 
                 ImGui.End();
@@ -62,7 +62,7 @@ namespace JobBars {
                 if (pos != Configuration.Config.BuffPosition) {
                     Configuration.Config.BuffPosition = pos;
                     Configuration.Config.Save();
-                    _UI?.SetBuffPosition(pos);
+                    UI?.SetBuffPosition(pos);
                 }
 
                 ImGui.End();
@@ -71,13 +71,13 @@ namespace JobBars {
 
         JobIds G_SelectedJob = JobIds.OTHER;
         private void DrawGaugeSettings() {
-            if (_GManager == null) return;
+            if (GManager == null) return;
 
             string _ID = "##JobBars_Gauges";
             if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
-                _UI?.SetGaugeScale(Configuration.Config.GaugeScale);
+                UI?.SetGaugeScale(Configuration.Config.GaugeScale);
                 Configuration.Config.Save();
             }
 
@@ -86,7 +86,7 @@ namespace JobBars {
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 150);
 
-            foreach (var job in _GManager.JobToGauges.Keys) {
+            foreach (var job in GManager.JobToGauges.Keys) {
                 if (job == JobIds.OTHER) continue;
                 if (ImGui.Selectable(job + _ID + "/Job", G_SelectedJob == job)) {
                     G_SelectedJob = job;
@@ -105,7 +105,7 @@ namespace JobBars {
             }
             else {
                 ImGui.BeginChild(_ID + "Selected");
-                foreach (var g_ in _GManager.JobToGauges[G_SelectedJob]) {
+                foreach (var g_ in GManager.JobToGauges[G_SelectedJob]) {
                     ImGui.TextColored(new Vector4(0, 1, 0, 1), g_.Name);
                 }
                 ImGui.EndChild();
@@ -120,13 +120,13 @@ namespace JobBars {
 
         JobIds B_SelectedJob = JobIds.OTHER;
         private void DrawBuffSettings() {
-            if (_GManager == null) return;
+            if (GManager == null) return;
 
             string _ID = "##JobBars_Buffs";
             if (ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
-                _UI?.SetBuffScale(Configuration.Config.BuffScale);
+                UI?.SetBuffScale(Configuration.Config.BuffScale);
                 Configuration.Config.Save();
             }
 

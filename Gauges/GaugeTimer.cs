@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
-    public class ActionGaugeTimer : ActionGauge {
+    public class GaugeTimer : Gauge {
         public UIIconManager Icon;
 
-        public float DefaultDuration;
         public float MaxDuration;
+        public float DefaultDuration;
         public bool ReplaceIcon = false;
         public ActionIds[] ReplaceIconAction;
 
-        public float StartValue; // this is needed because sometimes buffs don't start with their maximum value, like storm's eye
+        public float Duration;
 
-        public ActionGaugeTimer(string name, float duration) : base(name, ActionGaugeType.Timer) {
+        public GaugeTimer(string name, float duration) : base(name) {
             MaxDuration = duration;
             DefaultDuration = MaxDuration;
             Visual = new GaugeVisual
@@ -30,32 +30,37 @@ namespace JobBars.Gauges {
         }
 
         // ===== BUILDER FUNCS =====
-        public ActionGaugeTimer WithTriggers(Item[] triggers) {
+        public GaugeTimer WithTriggers(Item[] triggers) {
             Triggers = triggers;
             return this;
         }
-        public ActionGaugeTimer WithHide(string gaugeName) {
+        public GaugeTimer WithHide(string gaugeName) {
             HideGauge = true;
             HideGaugeName = gaugeName;
             return this;
         }
-        public ActionGaugeTimer NoRefresh() {
+        public GaugeTimer NoRefresh() {
             AllowRefresh = false;
             return this;
         }
-        public ActionGaugeTimer WithReplaceIcon(ActionIds[] action, UIIconManager icon) {
+        public GaugeTimer WithReplaceIcon(ActionIds[] action, UIIconManager icon) {
             Icon = icon;
             ReplaceIcon = true;
             ReplaceIconAction = action;
             return this;
         }
-        public ActionGaugeTimer WithDefaultDuration(float duration) {
+        public GaugeTimer WithDefaultDuration(float duration) {
             DefaultDuration = duration;
             return this;
         }
-        public ActionGaugeTimer WithVisual(GaugeVisual visual) {
+        public GaugeTimer WithVisual(GaugeVisual visual) {
             Visual = visual;
             return this;
+        }
+
+        // ====================
+        public bool GetReplaceIcon() {
+            return ReplaceIcon;
         }
 
         // ====================
@@ -68,14 +73,14 @@ namespace JobBars.Gauges {
         private void Start(Item action) {
             PluginLog.Log("STARTING");
             SetActive(action);
-            StartValue = DefaultDuration;
+            Duration = DefaultDuration;
         }
 
         public override void Tick(DateTime time, float delta) {
             if (Active) {
-                var timeleft = StartValue - (time - ActiveTime).TotalSeconds;
+                var timeleft = Duration - (time - ActiveTime).TotalSeconds;
 
-                if (_UI is UIGauge gauge) {
+                if (UI is UIGauge gauge) {
                     gauge.SetText(((int)timeleft).ToString());
                     gauge.SetPercent((float)timeleft / MaxDuration);
                     SetIcon(timeleft, MaxDuration);
@@ -90,8 +95,8 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
-            if (_UI is UIGauge gauge) {
-                gauge.SetColor(Visual.Color);
+            if (UI is UIGauge gauge) {
+                gauge.SetColor(GetVisualColor());
                 gauge.SetText("0");
                 gauge.SetPercent(0);
             }
@@ -100,7 +105,7 @@ namespace JobBars.Gauges {
         public override void ProcessDuration(Item buff, float duration, bool isRefresh) { // primarily used for things like storm's eye
             if(Active && buff == LastActiveTrigger && (!isRefresh || AllowRefresh)) {
                 ActiveTime = DateTime.Now;
-                StartValue = duration;
+                Duration = duration;
             }
         }
 

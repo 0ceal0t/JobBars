@@ -29,7 +29,7 @@ namespace JobBars.UI {
 
         private AtkResNode* B_RootRes = null;
         public UIBuff[] Buffs;
-        public IconIds[] _Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
+        private IconIds[] _Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
         public Dictionary<IconIds, UIBuff> IconToBuff = new Dictionary<IconIds, UIBuff>();
 
         public UIBuilder(DalamudPluginInterface pi) {
@@ -146,7 +146,8 @@ namespace JobBars.UI {
             var addon = _ADDON;
             // ===== LOAD EXISTING GAUGES =====
             G_RootRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
-            RecurseHide(G_RootRes, false, false);
+            UiHelper.Show(G_RootRes); // just show root, not children
+
             var n = G_RootRes->ChildNode;
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, n);
@@ -156,20 +157,15 @@ namespace JobBars.UI {
             }
             // ====== LOAD EXISTING BUFFS =======
             B_RootRes = G_RootRes->PrevSiblingNode;
-            RecurseHide(B_RootRes, false, false);
+            RecurseHide(B_RootRes, false, false); // show everything (TEMP)
 
             var n2 = B_RootRes->ChildNode;
             for(int idx = 0; idx < Buffs.Length; idx++) {
                 Buffs[idx] = new UIBuff(this, 0, n2);
-                if(idx > 0) {
-                    var icon = _Icons[idx - 1];
-                    IconToBuff[icon] = Buffs[idx];
-                }
-                Buffs[idx].RootRes->ChildCount = 3;
-                Buffs[idx].RootRes->NextSiblingNode = null;
+                var icon = _Icons[idx];
+                IconToBuff[icon] = Buffs[idx];
                 n2 = n2->PrevSiblingNode;
             }
-            RecurseHide(Buffs[0].RootRes->ChildNode, true, true); // hide the dummy one
         }
 
         public void Init() {
@@ -220,8 +216,7 @@ namespace JobBars.UI {
                 IconToBuff[entry.Key] = Buffs[bIdx];
                 bIdx++;
             }
-            B_RootRes->ChildCount = (ushort)(Buffs[0].RootRes->ChildCount * Buffs.Length + Buffs.Length);
-
+            B_RootRes->ChildCount = (ushort)(4 * Buffs.Length);
             B_RootRes->ChildNode = Buffs[0].RootRes;
 
             for (int idx = 0; idx < Buffs.Length; idx++) {
@@ -230,6 +225,7 @@ namespace JobBars.UI {
 
                 if (idx < (Buffs.Length - 1)) {
                     Buffs[idx].RootRes->PrevSiblingNode = Buffs[idx + 1].RootRes;
+                    Buffs[idx + 1].RootRes->NextSiblingNode = Buffs[idx].RootRes;
                 }
             }
             SetBuffPosition(Configuration.Config.BuffPosition);
@@ -242,7 +238,6 @@ namespace JobBars.UI {
             }
             n->PrevSiblingNode = G_RootRes;
             G_RootRes->PrevSiblingNode = B_RootRes;
-            nameplateAddon->RootNode->ChildCount = (ushort)(nameplateAddon->RootNode->ChildCount + (G_RootRes->ChildCount + B_RootRes->ChildCount + 2));
         }
 
         // ==== HELPER FUNCTIONS ============
@@ -270,12 +265,10 @@ namespace JobBars.UI {
             UiHelper.SetScale(node, X / p.X, Y / p.Y);
         }
         public void HideAllGauges() {
-            foreach(var g in Gauges) {
-                RecurseHide(g.RootRes);
-            }
-            foreach (var g in Arrows) {
-                RecurseHide(g.RootRes);
-            }
+            RecurseHide(Gauges[0].RootRes); // will also get siblings
+        }
+        public void HideAllBuffs() {
+            RecurseHide(Buffs[0].RootRes); // will also get siblings
         }
         public void Show(UIElement element) {
             RecurseHide(element.RootRes, false, false);
