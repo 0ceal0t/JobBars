@@ -46,10 +46,10 @@ namespace JobBars.UI {
         public void Dispose() {
             Icon.Dispose();
 
-            if(G_RootRes != null) {
+            if (G_RootRes != null) {
                 UiHelper.Hide(G_RootRes);
             }
-            if(B_RootRes != null) {
+            if (B_RootRes != null) {
                 UiHelper.Hide(B_RootRes);
             }
         }
@@ -72,6 +72,13 @@ namespace JobBars.UI {
 
         public uint nodeIdx = 99990001;
         public AtkUnitBase* _ADDON => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+        public bool IsInitialized() {
+            var addon = _ADDON;
+            if(addon != null && addon->UldManager.NodeListCount > 4) {
+                return true;
+            }
+            return false;
+        }
 
         public static ushort ASSET_START = 1;
         public static ushort PART_START = 7;

@@ -18,6 +18,8 @@ using Dalamud.Game.ClientState.Actors.Types.NonPlayer;
 using JobBars.Gauges;
 using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
+using JobBars.PartyList;
+using System.Runtime.InteropServices;
 
 #pragma warning disable CS0659
 namespace JobBars {
@@ -38,6 +40,10 @@ namespace JobBars {
 
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
+        private delegate byte InitZoneDelegate(IntPtr a1, int a2, IntPtr a3);
+        private Hook<InitZoneDelegate> initZoneHook;
+
+        private PList Party; // TEMP
 
         private bool _Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
 
@@ -46,6 +52,9 @@ namespace JobBars {
             PluginInterface = pluginInterface;
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             UIColor.SetupColors();
+
+            Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
+            PluginLog.Log($"{Party.Count}");
 
             _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             _Config.Initialize(PluginInterface);
@@ -62,7 +71,9 @@ namespace JobBars {
             IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
             actorControlSelfHook.Enable();
-
+            IntPtr initZonePtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C0 48 8D 53 10 8B CE E8 ?? ?? ?? ?? 48 8D 4B 60 E8 ?? ?? ?? ?? 48 8D 4B 6C");
+            initZoneHook = new Hook<InitZoneDelegate>(initZonePtr, (InitZoneDelegate)InitZone);
+            initZoneHook.Enable();
             //IntPtr removeStatusFuncPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 7C 24 ?? ?? 41 8B D9 8B FA"); IntPtr a1, uint statusId, IntPtr a3, uint sourceActorId, byte a5, byte a6
             //IntPtr testPtr = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 55 57 41 56 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 41 0F B6 E8"); // IntPtr a1, IntPtr a2, IntPtr a3) <--- status list
             //IntPtr testPtr2 = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 57 41 54 41 57 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 45 0F B6 E0"); // IntPtr a1, IntPtr a2, IntPtr a3) <---- action effect
@@ -80,10 +91,14 @@ namespace JobBars {
 
             actorControlSelfHook?.Disable();
             actorControlSelfHook?.Dispose();
+            initZoneHook?.Disable();
+            initZoneHook?.Dispose();
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
+
             UI.Dispose();
+
             RemoveCommands();
         }
 
@@ -173,10 +188,13 @@ namespace JobBars {
         }
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId) {
             if(arg1 == 0x40000010) { // it's a wipe!
-                GManager?.SetJob(CurrentJob);
-                BManager?.SetJob(CurrentJob);
+                Reset();
             }
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId);
+        }
+        private byte InitZone(IntPtr a1, int a2, IntPtr a3) {
+            Reset();
+            return initZoneHook.Original(a1, a2, a3);
         }
 
         // ======= DATA ==========
@@ -196,7 +214,6 @@ namespace JobBars {
             }
             return -1;
         }
-
         // ======== UPDATE =========
         enum STEPS {
             INIT_TEXTURES,
@@ -210,7 +227,14 @@ namespace JobBars {
         DateTime STEP_TIME;
 
         private void FrameworkOnUpdate(Framework framework) {
-            if (!_Ready) return;
+            if (!_Ready) {
+                if(STEP == STEPS.READY && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
+                    PluginLog.Log("LOGOUT");
+                    STEP = STEPS.INIT_TEXTURES;
+                    CurrentJob = JobIds.OTHER;
+                }
+                return;
+            }
             if (STEP == STEPS.INIT_TEXTURES) {
                 PluginLog.Log("===== INIT TEXTURES =====");
                 UI.SetupTex();
@@ -243,24 +267,29 @@ namespace JobBars {
                 if ((DateTime.Now - STEP_TIME).TotalSeconds > 0.5) {
                     PluginLog.Log("====== READY =======");
                     STEP = STEPS.READY;
+                    UI.HideAllBuffs();
+                    UI.HideAllGauges();
                 }
                 return;
             }
 
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
-            GManager.Tick();
-            BManager.Tick();
+            GManager?.Tick();
+            BManager?.Tick();
         }
 
         JobIds CurrentJob = JobIds.OTHER;
-        public void SetJob(ClassJob job) {
+        private void SetJob(ClassJob job) {
             JobIds _job = job.Id < 19 ? JobIds.OTHER : (JobIds)job.Id;
             if (_job != CurrentJob) {
                 CurrentJob = _job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                GManager.SetJob(_job);
-                BManager.SetJob(_job);
+                Reset();
             }
+        }
+        private void Reset() {
+            GManager?.SetJob(CurrentJob);
+            BManager?.SetJob(CurrentJob);
         }
 
         // ======= COMMANDS ============

@@ -221,9 +221,8 @@ namespace JobBars.Gauges {
             UI.Icon.Reset();
         }
 
-        public void RefreshJob(JobIds job) {
+        public void ResetJob(JobIds job) {
             if(job == CurrentJob) {
-                Reset();
                 SetJob(job);
             }
         }

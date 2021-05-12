@@ -16,6 +16,7 @@ namespace JobBars {
         private bool BUFF_LOCK = true;
 
         private void BuildUI() {
+            if (STEP != STEPS.READY) return;
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
@@ -115,7 +116,7 @@ namespace JobBars {
                             Configuration.Config.GaugeDisabled.Add(gauge.Name);
                         }
                         Configuration.Config.Save();
-                        GManager.RefreshJob(G_SelectedJob);
+                        GManager.ResetJob(G_SelectedJob);
                     }
                     // ===== COLOR =======
                     ImGui.BeginCombo("Color" + _ID + gauge.Name, gauge.Visual.Color.Name);
