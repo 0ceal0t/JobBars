@@ -1,12 +1,15 @@
 ﻿using Dalamud.Interface;
 using ImGuiNET;
 using JobBars.Data;
+using JobBars.Gauges;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -21,7 +24,7 @@ namespace JobBars {
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);
-            if (Visible && ImGui.Begin("Settings", ref Visible)) {
+            if (Visible && ImGui.Begin("JobBars Settings", ref Visible)) {
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {
                     DrawGaugeSettings();
@@ -82,7 +85,7 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            var size = ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetTextLineHeight() + 10);
+            var size = ImGui.GetContentRegionAvail();
             ImGui.BeginChild(_ID + "/Child", size, true);
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 150);
@@ -104,11 +107,12 @@ namespace JobBars {
             else {
                 ImGui.BeginChild(_ID + "Selected");
                 foreach (var gauge in GManager.JobToGauges[G_SelectedJob]) {
-                    ImGui.TextColored(new Vector4(0, 1, 0, 1), gauge.Name);
-
                     // ===== ENABLED / DISABLED ======
                     var _enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
-                    if(ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
+                    var type = gauge is GaugeGCD ? "GCDs" : "Timer";
+
+                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} ({type})");
+                    if (ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
                         if(_enabled) {
                             Configuration.Config.GaugeDisabled.Remove(gauge.Name);
                         }
@@ -119,18 +123,55 @@ namespace JobBars {
                         GManager.ResetJob(G_SelectedJob);
                     }
                     // ===== COLOR =======
-                    ImGui.BeginCombo("Color" + _ID + gauge.Name, gauge.Visual.Color.Name);
+                    var isOverride_COLOR = Configuration.Config.GetColorOverride(gauge.Name, out var colorOverride);
+                    if(ImGui.BeginCombo("Color" + _ID + gauge.Name, isOverride_COLOR ? gauge.Visual.Color.Name : $"DEFAULT ({gauge.Visual.Color.Name})")) {
+                        if(ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Color.Name}){_ID}{gauge.Name}", !isOverride_COLOR)) { // DEFAULT
+                            Configuration.Config.GaugeColorOverride.Remove(gauge.Name);
+                            Configuration.Config.Save();
+                            SetColor(gauge, gauge.DefaultVisual.Color);
+                        }
+                        foreach(var entry in UIColor.AllColors) {
+                            if(ImGui.Selectable($"{entry.Key}{_ID}{gauge.Name}", (gauge.Visual.Color.Name == entry.Key) && isOverride_COLOR)) { // OTHER
+                                Configuration.Config.GaugeColorOverride[gauge.Name] = entry.Key;
+                                Configuration.Config.Save();
+                                SetColor(gauge, entry.Value);
+                            }
+                        }
+                        ImGui.EndCombo();
+                    }
+                    // ====== TYPE (only for GCDs) ======
+                    if(gauge is GaugeGCD) {
+                        var isOverride_TYPE = Configuration.Config.GaugeTypeOverride.TryGetValue(gauge.Name, out var typeOverride);
+                        if(ImGui.BeginCombo("Type" + _ID + gauge.Name, isOverride_TYPE ? $"{gauge.Visual.Type}" : $"DEFAULT ({gauge.Visual.Type})")) {
+                            if(ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Type}){_ID}{gauge.Name}", !isOverride_TYPE)) { // DEFAULT
+                                Configuration.Config.GaugeTypeOverride.Remove(gauge.Name);
+                                Configuration.Config.Save();
+                                gauge.Visual.Type = gauge.DefaultVisual.Type;
+                                GManager.ResetJob(G_SelectedJob);
+                            }
+                            foreach (GaugeVisualType gType in (GaugeVisualType[])Enum.GetValues(typeof(GaugeVisualType))) {
+                                if (ImGui.Selectable($"{gType}{_ID}{gauge.Name}", (gauge.Visual.Type == gType) && isOverride_TYPE)) { // OTHER
+                                    Configuration.Config.GaugeTypeOverride[gauge.Name] = gType;
+                                    Configuration.Config.Save();
+                                    gauge.Visual.Type = gType;
+                                    GManager.ResetJob(G_SelectedJob);
+                                }
+                            }
+                            ImGui.EndCombo();
+                        }
+                    }
 
-                    ImGui.EndCombo();
+                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
                 }
                 ImGui.EndChild();
             }
 
             ImGui.Columns(1);
             ImGui.EndChild();
-            if (ImGui.SmallButton("SAVE" + _ID)) {
-
-            }
+        }
+        public void SetColor(Gauge gauge, ElementColor color) {
+            gauge.Visual.Color = color;
+            gauge.SetColor();
         }
 
         JobIds B_SelectedJob = JobIds.OTHER;
@@ -145,17 +186,19 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            var size = ImGui.GetContentRegionAvail() - new Vector2(0, ImGui.GetTextLineHeight() + 10);
+            var size = ImGui.GetContentRegionAvail();
             ImGui.BeginChild(_ID + "/Child", size, true);
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 150);
 
-            // ....
-
-            var spaceLeft = ImGui.GetContentRegionAvail().Y;
-            if (spaceLeft > 0) {
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + spaceLeft);
+            ImGui.BeginChild(_ID + "Tree");
+            foreach (var job in BManager.JobToBuffs.Keys) {
+                if (job == JobIds.OTHER) continue;
+                if (ImGui.Selectable(job + _ID + "/Job", B_SelectedJob == job)) {
+                    B_SelectedJob = job;
+                }
             }
+            ImGui.EndChild();
 
             ImGui.NextColumn();
 
@@ -164,17 +207,16 @@ namespace JobBars {
             }
             else {
                 ImGui.BeginChild(_ID + "Selected");
+                foreach (var buff in BManager.JobToBuffs[B_SelectedJob]) {
+                    ImGui.Text(buff.Name);
 
-                //....
-
+                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+                }
                 ImGui.EndChild();
             }
 
             ImGui.Columns(1);
             ImGui.EndChild();
-            if (ImGui.SmallButton("SAVE" + _ID)) {
-
-            }
         }
     }
 }

@@ -45,6 +45,7 @@ namespace JobBars.Gauges {
         }
 
         public abstract void Setup();
+        public abstract void SetColor();
         public abstract void ProcessAction(Item action);
         public abstract void ProcessDuration(Item buff, float duration, bool isRefresh);
         public abstract void Tick(DateTime time, float delta);

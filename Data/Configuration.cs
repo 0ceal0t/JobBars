@@ -1,11 +1,14 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
+using JobBars.Gauges;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars.Data {
     [Serializable]
@@ -17,11 +20,25 @@ namespace JobBars.Data {
         public float BuffScale = 1.0f;
 
         public HashSet<string> GaugeDisabled = new HashSet<string>();
+        public Dictionary<string, string> GaugeColorOverride = new Dictionary<string, string>();
+        public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new Dictionary<string, GaugeVisualType>();
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
         [NonSerialized]
         public static Configuration Config;
+
+        public bool GetColorOverride(string gaugeName, out ElementColor color) {
+            color = new ElementColor();
+            if(!GaugeColorOverride.TryGetValue(gaugeName, out string colorName)) {
+                return false;
+            }
+            if (!UIColor.AllColors.TryGetValue(colorName, out var newColor)) {
+                return false;
+            }
+            color = newColor;
+            return true;
+        }
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
             _pluginInterface = pluginInterface;

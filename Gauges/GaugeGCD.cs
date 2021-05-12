@@ -1,4 +1,5 @@
 ﻿using Dalamud.Plugin;
+using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,12 @@ namespace JobBars.Gauges {
         }
         public GaugeGCD WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
+            if (Configuration.Config.GetColorOverride(Name, out var color)) {
+                Visual.Color = color;
+            }
+            if(Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
+                Visual.Type = type;
+            }
             return this;
         }
 
@@ -102,15 +109,24 @@ namespace JobBars.Gauges {
         }
 
         public override void Setup() {
+            SetColor();
             if(UI is UIArrow arrows) {
-                arrows.SetColor(Visual.Color);
                 arrows.SetMaxValue(MaxCounter);
                 arrows.SetValue(0);
             }
             else if(UI is UIGauge gauge) {
-                gauge.SetColor(Visual.Color);
                 gauge.SetText("0");
                 gauge.SetPercent(0);
+            }
+        }
+
+        public override void SetColor() {
+            if (UI == null) return;
+            if (UI is UIArrow arrows) {
+                arrows.SetColor(Visual.Color);
+            }
+            else if (UI is UIGauge gauge) {
+                gauge.SetColor(Visual.Color);
             }
         }
 
