@@ -39,12 +39,13 @@ namespace JobBars {
         private bool _Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
+            PluginLog.Log("=== INIT 1 ====");
             PluginInterface = pluginInterface;
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             _Config.Initialize(PluginInterface);
             UI = new UIBuilder(pluginInterface);
-
+            PluginLog.Log("=== INIT 2 ====");
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, (ReceiveActionEffectDelegate)ReceiveActionEffect);
             receiveActionEffectHook.Enable();

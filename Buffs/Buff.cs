@@ -71,7 +71,7 @@ namespace JobBars.Buffs {
             if(State == BuffState.Active) {
                 var timeleft = Duration - (time - StateTime).TotalSeconds;
 
-                if(timeleft <= 0) {
+                if(timeleft <= 0) { // buff over, either hide or go on cd
                     if(NoCD) {
                         State = BuffState.InActive;
                         UI.Hide();
@@ -87,12 +87,12 @@ namespace JobBars.Buffs {
                         }
                     }
                 }
-                else {
+                else { // buff still active
                     UI.SetPercent(1.0f - (float)(timeleft / Duration));
                     UI.SetText(((int)timeleft).ToString());
                 }
             }
-            else if(State == BuffState.OnCDHidden) {
+            else if(State == BuffState.OnCDHidden) { // on CD, but don't show it yet since it's more than 30 seconds away
                 var timeleft = CD - (time - StateTime).TotalSeconds;
 
                 if(timeleft < 30) {
@@ -102,10 +102,10 @@ namespace JobBars.Buffs {
                     UI.SetText(((int)timeleft).ToString());
                 }
             }
-            else if(State == BuffState.OnCDVisible) {
+            else if(State == BuffState.OnCDVisible) { // on CD, now close to being off CD
                 var timeleft = CD - (time - StateTime).TotalSeconds;
 
-                if(timeleft <= 0) {
+                if(timeleft <= 0) { // back off CD
                     State = BuffState.OffCD;
                     UI.SetOffCD();
                     UI.SetText("");

@@ -85,6 +85,7 @@ namespace JobBars.UI {
 
             // ====== SETUP ROOT =======
             RootRes->ChildNode = Ticks[0];
+            RootRes->ChildCount = (ushort)(4 * MAX);
             for(int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
                 if(idx < (MAX - 1)) {

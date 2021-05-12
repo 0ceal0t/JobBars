@@ -74,6 +74,7 @@ namespace JobBars.Gauges {
             PluginLog.Log("STARTING");
             SetActive(action);
             Duration = DefaultDuration;
+            StartIcon();
         }
 
         public override void Tick(DateTime time, float delta) {
@@ -109,15 +110,22 @@ namespace JobBars.Gauges {
             }
         }
 
+        private void StartIcon() {
+            if (!ReplaceIcon) return;
+            foreach (var icon in ReplaceIconAction) {
+                Icon.ActionIdToState[(uint)icon] = IconState.START_RUNNING;
+            }
+        }
+
         private void ResetIcon() {
             if (!ReplaceIcon) return;
             foreach(var icon in ReplaceIconAction) {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {
                     Current = 0,
-                    Max = 1,
-                    _State = IconState.Waiting
+                    Max = 1
                 };
+                Icon.ActionIdToState[(uint)icon] = IconState.DONE_RUNNING;
             }
         }
 
@@ -127,8 +135,7 @@ namespace JobBars.Gauges {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {
                     Current = current,
-                    Max = max,
-                    _State = IconState.Running
+                    Max = max
                 };
             }
         }

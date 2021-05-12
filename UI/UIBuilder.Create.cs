@@ -184,7 +184,7 @@ namespace JobBars.UI {
             return node;
         }
 
-        // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
+
         public void LoadTex(ushort assetIdx, string path) {
             var nameplateAddon = _ADDON;
 
@@ -198,10 +198,9 @@ namespace JobBars.UI {
             LoadTexture(pt, path, 1); // game function
             nameplateAddon->UldManager.Assets[assetIdx].Id = newId;
         }
-
+        // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
         public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
             var nameplateAddon = _ADDON;
-            var idx = nameplateAddon->UldManager.PartsList->PartCount;
 
             if ((partIdx + 1) > nameplateAddon->UldManager.PartsList->PartCount) {
                 nameplateAddon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
