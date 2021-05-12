@@ -96,14 +96,6 @@ namespace JobBars.UI {
             UiHelper.SetPosition(RootRes, (WIDTH + 7) * position_x, (HEIGHT + 5) * position_y);
         }
 
-        public void Hide() {
-            UiHelper.Hide(RootRes);
-        }
-
-        public void Show() {
-            UiHelper.Show(RootRes);
-        }
-
         public void SetOnCD() {
             RootRes->MultiplyBlue = 75;
             RootRes->MultiplyRed = 75;

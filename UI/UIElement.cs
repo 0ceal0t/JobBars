@@ -1,4 +1,5 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,13 @@ namespace JobBars.UI {
         public abstract void SetColor(ElementColor color);
         public abstract void Init();
         public abstract void LoadExisting(AtkResNode* node);
+
+        public void Hide() {
+            UiHelper.Hide(RootRes);
+        }
+
+        public void Show() {
+            UiHelper.Show(RootRes);
+        }
     }
 }

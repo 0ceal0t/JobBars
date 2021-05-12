@@ -35,7 +35,7 @@ namespace JobBars.UI {
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
             var scanner = PluginInterface.TargetModuleScanner;
-            var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9");
+            var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9"); // can find using the "_hr1" string
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
@@ -97,29 +97,39 @@ namespace JobBars.UI {
         public void SetupTex() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
-            UiHelper.ExpandNodeList(addon, 999);
             addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, 99);
-            addon->UldManager.PartsList->Parts = UiHelper.ExpandPartList(addon->UldManager, 99);
 
             LoadTex(GAUGE_ASSET, @"ui/uld/Parameter_Gauge.tex");
+            LoadTex(BLUR_ASSET, @"ui/uld/JobHudNumBg.tex");
+            LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
+            LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
+
+            var current_asset = BUFF_ASSET_START;
+            foreach (var icon in _Icons) {
+                var _icon = (uint) icon;
+                var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
+                LoadTex(current_asset, path);
+                current_asset++;
+            }
+        }
+
+        public void SetupPart() {
+            var addon = _ADDON;
+            if (addon->UldManager.NodeListCount > 4) return;
+
+            addon->UldManager.PartsList->Parts = UiHelper.ExpandPartList(addon->UldManager, 99);
             AddPart(GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
             AddPart(GAUGE_ASSET, GAUGE_FRAME_PART, 0, 0, 160, 20);
             AddPart(GAUGE_ASSET, GAUGE_BAR_MAIN, 0, 40, 160, 20);
-            LoadTex(BLUR_ASSET, @"ui/uld/JobHudNumBg.tex");
             AddPart(BLUR_ASSET, GAUGE_TEXT_BLUR_PART, 0, 0, 60, 40);
-            LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
             AddPart(ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
             AddPart(ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
-            LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
             AddPart(BUFF_OVERLAY_ASSET, BUFF_BORDER, 3, 99, 40, 40);
             AddPart(BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
 
             var current_asset = BUFF_ASSET_START;
             var current_part = BUFF_PART_START;
             foreach (var icon in _Icons) {
-                var _icon = (uint) icon;
-                var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
-                LoadTex(current_asset, path);
                 AddPart(current_asset, current_part, (ushort)((40 - UIBuff.WIDTH) / 2), (ushort)((40 - UIBuff.HEIGHT) / 2), UIBuff.WIDTH, UIBuff.HEIGHT);
                 IconToPartId[icon] = current_part;
                 current_asset++;
@@ -175,6 +185,7 @@ namespace JobBars.UI {
                 return;
             }
 
+            UiHelper.ExpandNodeList(nameplateAddon, 999);
             // ======== CREATE GAUGES =======
             G_RootRes = CreateResNode();
             G_RootRes->Width = 256;
@@ -265,20 +276,17 @@ namespace JobBars.UI {
         }
         public void HideAllGauges() {
             foreach (var gauge in Gauges) {
-                UiHelper.Hide(gauge.RootRes);
+                gauge.Hide();
             }
 
             foreach (var arrow in Arrows) {
-                UiHelper.Hide(arrow.RootRes);
+                arrow.Hide();
             }
         }
         public void HideAllBuffs() {
             foreach(var buff in Buffs) {
-                UiHelper.Hide(buff.RootRes);
+                buff.Hide();
             }
-        }
-        public void Show(UIElement element) {
-            RecurseHide(element.RootRes, false, false);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace JobBars.Gauges {
             MaxDuration = duration;
             MaxCounter = max;
             Increment = new Item[0];
-            Visual = new GaugeVisual
+            DefaultVisual = Visual = new GaugeVisual
             {
                 Type = GaugeVisualType.Arrow,
                 Color = UIColor.LightBlue
@@ -35,9 +35,8 @@ namespace JobBars.Gauges {
             Increment = increment;
             return this;
         }
-        public GaugeGCD WithHide(string gaugeName) {
-            HideGauge = true;
-            HideGaugeName = gaugeName;
+        public GaugeGCD WithStartHidden() {
+            StartHidden = true;
             return this;
         }
         public GaugeGCD NoRefresh() {
@@ -45,7 +44,7 @@ namespace JobBars.Gauges {
             return this;
         }
         public GaugeGCD WithVisual(GaugeVisual visual) {
-            Visual = visual;
+            DefaultVisual = Visual = visual;
             return this;
         }
 
@@ -104,12 +103,12 @@ namespace JobBars.Gauges {
 
         public override void Setup() {
             if(UI is UIArrow arrows) {
-                arrows.SetColor(GetVisualColor());
+                arrows.SetColor(Visual.Color);
                 arrows.SetMaxValue(MaxCounter);
                 arrows.SetValue(0);
             }
             else if(UI is UIGauge gauge) {
-                gauge.SetColor(GetVisualColor());
+                gauge.SetColor(Visual.Color);
                 gauge.SetText("0");
                 gauge.SetPercent(0);
             }

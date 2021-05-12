@@ -1,4 +1,5 @@
 ﻿using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace JobBars.Gauges {
         public string Name;
         public Item[] Triggers;
         public UIElement UI = null;
+        public GaugeVisual DefaultVisual;
         public GaugeVisual Visual;
 
         public bool Active = false;
@@ -19,8 +21,8 @@ namespace JobBars.Gauges {
         public Item LastActiveTrigger;
         public DateTime ActiveTime;
 
-        public bool HideGauge = false;
-        public string HideGaugeName;
+        public Gauge HideGauge = null;
+        public bool StartHidden = false;
         public bool AllowRefresh = true;
 
         public Gauge(string name) {
@@ -29,16 +31,17 @@ namespace JobBars.Gauges {
         }
 
         public void SetActive(Item trigger) {
+            PerformHide();
             Active = true;
             LastActiveTrigger = trigger;
             ActiveTime = DateTime.Now;
         }
-
-        public GaugeVisualType GetGaugeVisualType() {
-            return Visual.Type;
-        }
-        public ElementColor GetVisualColor() {
-            return Visual.Color;
+        public unsafe void PerformHide() {
+            if(HideGauge != null && UiHelper.GetNodeVisible(UI.RootRes) == false) {
+                UiHelper.SetPosition(UI.RootRes, HideGauge.UI.RootRes->X, HideGauge.UI.RootRes->Y);
+                HideGauge.UI.Hide();
+                UI.Show();
+            }
         }
 
         public abstract void Setup();

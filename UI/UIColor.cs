@@ -24,6 +24,8 @@ namespace JobBars.UI {
         };
 
         public struct ElementColor {
+            public string Name;
+
             public ushort AddRed;
             public ushort AddGreen;
             public ushort AddBlue;
@@ -31,6 +33,16 @@ namespace JobBars.UI {
             public byte MultiplyRed;
             public byte MultiplyGreen;
             public byte MultiplyBlue;
+
+            public ElementColor(string name, ushort addRed, ushort addGreen, ushort addBlue, byte multRed, byte multGreen, byte multBlue) {
+                Name = name;
+                AddRed = addRed;
+                AddGreen = addGreen;
+                AddBlue = addBlue;
+                MultiplyRed = multRed;
+                MultiplyGreen = multGreen;
+                MultiplyBlue = multBlue;
+            }
         }
 
         public unsafe static void SetColor(AtkResNode* node, ElementColor color) {
@@ -50,113 +62,33 @@ namespace JobBars.UI {
         }
 
         // ======== COLORS ======
-        public static ElementColor MpPink = new ElementColor
-        {
-            AddRed = 120,
-            AddGreen = 0,
-            AddBlue = 60,
-            MultiplyRed = 90,
-            MultiplyGreen = 75,
-            MultiplyBlue = 75
-        };
-        public static ElementColor HealthGreen = new ElementColor
-        {
-            AddRed = 20,
-            AddGreen = 75,
-            AddBlue = 0,
-            MultiplyRed = 80,
-            MultiplyGreen = 80,
-            MultiplyBlue = 40
-        };
-        public static ElementColor Purple = new ElementColor
-        {
-            AddRed = 50,
-            AddGreen = 0,
-            AddBlue = 150,
-            MultiplyRed = 80,
-            MultiplyGreen = 75,
-            MultiplyBlue = 80
-        };
-        public static ElementColor Red = new ElementColor
-        {
-            AddRed = 150,
-            AddGreen = 0,
-            AddBlue = 0,
-            MultiplyRed = 80,
-            MultiplyGreen = 80,
-            MultiplyBlue = 80
-        };
-        public static ElementColor LightBlue = new ElementColor
-        {
-            AddRed = 0,
-            AddGreen = 100,
-            AddBlue = 140,
-            MultiplyRed = 80,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor Orange = new ElementColor
-        {
-            AddRed = 120,
-            AddGreen = 50,
-            AddBlue = 65506,
-            MultiplyRed = 100,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor PurplePink = new ElementColor
-        {
-            AddRed = 80,
-            AddGreen = 65476,
-            AddBlue = 50,
-            MultiplyRed = 100,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor BlueGreen = new ElementColor
-        {
-            AddRed = 65456,
-            AddGreen = 50,
-            AddBlue = 90,
-            MultiplyRed = 80,
-            MultiplyGreen = 80,
-            MultiplyBlue = 40
-        };
-        public static ElementColor BrightGreen = new ElementColor
-        {
-            AddRed = 65486,
-            AddGreen = 100,
-            AddBlue = 0,
-            MultiplyRed = 90,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor Yellow = new ElementColor
-        {
-            AddRed = 130,
-            AddGreen = 100,
-            AddBlue = 65516,
-            MultiplyRed = 100,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor White = new ElementColor
-        {
-            AddRed = 150,
-            AddGreen = 140,
-            AddBlue = 140,
-            MultiplyRed = 100,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
-        public static ElementColor DarkBlue = new ElementColor
-        {
-            AddRed = 65496,
-            AddGreen = 65516,
-            AddBlue = 120,
-            MultiplyRed = 100,
-            MultiplyGreen = 100,
-            MultiplyBlue = 100
-        };
+        public static ElementColor MpPink = new ElementColor("MP Pink", 120, 0, 60, 90, 75, 75);
+        public static ElementColor HealthGreen = new ElementColor("Health Green", 20, 75, 0, 80, 80, 40);
+        public static ElementColor Purple = new ElementColor("Purple", 50, 0, 150, 80, 75, 80);
+        public static ElementColor Red = new ElementColor("Red", 150, 0, 0, 80, 80, 80);
+        public static ElementColor LightBlue = new ElementColor("Light Blue", 0, 100, 140, 80, 100, 100);
+        public static ElementColor Orange = new ElementColor("Orange", 120, 50, 65506, 100, 100, 100);
+        public static ElementColor PurplePink = new ElementColor("Purple-Pink", 80, 65476, 50, 100, 100, 100);
+        public static ElementColor BlueGreen = new ElementColor("Blue-Green", 65456, 50, 90, 80, 80, 40);
+        public static ElementColor BrightGreen = new ElementColor("Bright Green", 65486, 100, 0, 90, 100, 100);
+        public static ElementColor Yellow = new ElementColor("Yellow", 130, 100, 65516, 100, 100, 100);
+        public static ElementColor White = new ElementColor("White", 150, 140, 140, 100, 100, 100);
+        public static ElementColor DarkBlue = new ElementColor("Dark Blue", 65516, 65516, 120, 100, 100, 100);
+        public static Dictionary<string, ElementColor> AllColors = new Dictionary<string, ElementColor>();
+
+        public static void SetupColors() {
+            AllColors.Add(MpPink.Name, MpPink);
+            AllColors.Add(HealthGreen.Name, HealthGreen);
+            AllColors.Add(Purple.Name, Purple);
+            AllColors.Add(Red.Name, Red);
+            AllColors.Add(LightBlue.Name, LightBlue);
+            AllColors.Add(Orange.Name, Orange);
+            AllColors.Add(PurplePink.Name, PurplePink);
+            AllColors.Add(BlueGreen.Name, BlueGreen);
+            AllColors.Add(BrightGreen.Name, BrightGreen);
+            AllColors.Add(Yellow.Name, Yellow);
+            AllColors.Add(White.Name, White);
+            AllColors.Add(DarkBlue.Name, DarkBlue);
+        }
     }
 }

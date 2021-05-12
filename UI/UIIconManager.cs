@@ -64,15 +64,15 @@ namespace JobBars.UI {
             IconRecastOverride = new HashSet<IntPtr>();
             IconTextOverride = new HashSet<IntPtr>();
 
-            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23 BA ?? ?? ?? ?? ");
+            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23 BA ?? ?? ?? ?? "); // changes recast partId for gcds
             setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);
             setIconRecastHook.Enable();
 
-            IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9");
+            IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9"); // sets icon text for abilities which use mp, like Combust
             setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, (SetIconRecastTextDelegate)SetIconRecastText);
             setIconRecastTextHook.Enable();
 
-            IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA");
+            IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA"); // sets icon text for other abilities, like Goring blade
             setIconRecastTextHook2 = new Hook<SetIconRecastTextDelegate2>(setIconTextPtr2, (SetIconRecastTextDelegate2)SetIconRecastText2);
             setIconRecastTextHook2.Enable();
         }
@@ -82,6 +82,10 @@ namespace JobBars.UI {
                 Cleanup(ptr);
             }
             ToCleanup.Clear();
+
+            IconRecastOverride.Clear();
+            IconTextOverride.Clear();
+
             ActionIdToStatus.Clear();
             ActionIdToState.Clear();
         }
@@ -121,8 +125,8 @@ namespace JobBars.UI {
             return;
         }
 
+        // visuals get messed up when icons are dragged around, but there's not much I can do
         static int MILLIS_LOOP = 250;
-
         public void Update() {
             if (ActionIdToStatus.Count == 0) return;
             var actionManager = Client.ActionManager;
@@ -156,18 +160,18 @@ namespace JobBars.UI {
                             UiHelper.Hide(dashOverlay);
                             UiHelper.Show(bottomLeftText);
 
-                            IconTextOverride.Add((IntPtr)bottomLeftText);
-                            IconRecastOverride.Add((IntPtr)cdOverlay);
-                        }
-                        else if(state == IconState.RUNNING) {
-                            UiHelper.Show(cdOverlay);
-
                             iconImage->AtkResNode.MultiplyBlue = 50;
                             iconImage->AtkResNode.MultiplyBlue_2 = 50;
                             iconImage->AtkResNode.MultiplyRed = 50;
                             iconImage->AtkResNode.MultiplyRed_2 = 50;
                             iconImage->AtkResNode.MultiplyGreen = 50;
                             iconImage->AtkResNode.MultiplyGreen_2 = 50;
+
+                            IconTextOverride.Add((IntPtr)bottomLeftText);
+                            IconRecastOverride.Add((IntPtr)cdOverlay);
+                        }
+                        else if(state == IconState.RUNNING) {
+                            UiHelper.Show(cdOverlay);
                             cdOverlay->PartId = (ushort)(81 - (float)(iconProgress.Current / iconProgress.Max) * 80);
                             UiHelper.SetText(bottomLeftText, ((int)iconProgress.Current).ToString());
                             UiHelper.Show(bottomLeftText);
@@ -195,7 +199,7 @@ namespace JobBars.UI {
                 }
             }
 
-            foreach(var bump in TO_BUMP) {
+            foreach(var bump in TO_BUMP) { // necessary because there could be multiple of the same icon :/
                 var current = ActionIdToState[bump];
                 if(current == IconState.START_RUNNING) {
                     ActionIdToState[bump] = IconState.RUNNING;

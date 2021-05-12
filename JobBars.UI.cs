@@ -86,17 +86,14 @@ namespace JobBars {
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 150);
 
+            ImGui.BeginChild(_ID + "Tree");
             foreach (var job in GManager.JobToGauges.Keys) {
                 if (job == JobIds.OTHER) continue;
                 if (ImGui.Selectable(job + _ID + "/Job", G_SelectedJob == job)) {
                     G_SelectedJob = job;
                 }
             }
-
-            var spaceLeft = ImGui.GetContentRegionAvail().Y;
-            if (spaceLeft > 0) {
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + spaceLeft);
-            }
+            ImGui.EndChild();
 
             ImGui.NextColumn();
 
@@ -105,8 +102,25 @@ namespace JobBars {
             }
             else {
                 ImGui.BeginChild(_ID + "Selected");
-                foreach (var g_ in GManager.JobToGauges[G_SelectedJob]) {
-                    ImGui.TextColored(new Vector4(0, 1, 0, 1), g_.Name);
+                foreach (var gauge in GManager.JobToGauges[G_SelectedJob]) {
+                    ImGui.TextColored(new Vector4(0, 1, 0, 1), gauge.Name);
+
+                    // ===== ENABLED / DISABLED ======
+                    var _enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
+                    if(ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
+                        if(_enabled) {
+                            Configuration.Config.GaugeDisabled.Remove(gauge.Name);
+                        }
+                        else {
+                            Configuration.Config.GaugeDisabled.Add(gauge.Name);
+                        }
+                        Configuration.Config.Save();
+                        GManager.RefreshJob(G_SelectedJob);
+                    }
+                    // ===== COLOR =======
+                    ImGui.BeginCombo("Color" + _ID + gauge.Name, gauge.Visual.Color.Name);
+
+                    ImGui.EndCombo();
                 }
                 ImGui.EndChild();
             }

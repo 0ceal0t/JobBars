@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
                 new GaugeGCD("No Mercy", 20, 9)
                     .WithTriggers(new[]
                     {
-                        new Item(BuffIds.NoMercy) // buffs are more reliable for tracking gcds within a buff window
+                        new Item(BuffIds.NoMercy) // buffs are more reliable for tracking gcds within a buff window than an action
                     })
                     .WithIncrement(new[]
                     {
@@ -152,7 +152,29 @@ namespace JobBars.Gauges {
             JobToGauges.Add(JobIds.WHM, new Gauge[] { });
             JobToGauges.Add(JobIds.BRD, new Gauge[] { });
             JobToGauges.Add(JobIds.DRG, new Gauge[] { });
-            JobToGauges.Add(JobIds.SMN, new Gauge[] { });
+            JobToGauges.Add(JobIds.SMN, new Gauge[] { // <===== SMN
+                new GaugeGCD("Summon Bahamut", 21, 8)
+                    .WithTriggers(new[]
+                    {
+                        new Item(ActionIds.SummonBahamut)
+                    })
+                    .WithIncrement(new[]{
+                        new Item(ActionIds.Wyrmwave)
+                    })
+                    .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
+                new GaugeGCD("Firebird Trance", 21, 8)
+                    .WithTriggers(new[]
+                    {
+                        new Item(ActionIds.FirebirdTrance)
+                    })
+                    .WithIncrement(new[]{
+                        new Item(ActionIds.ScarletFlame)
+                    })
+                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
+                    .WithStartHidden()
+                    // TODO: DOTS! <---------------------------------------------
+
+            });
             JobToGauges.Add(JobIds.SAM, new Gauge[] { });
             JobToGauges.Add(JobIds.BLM, new Gauge[] { });
             JobToGauges.Add(JobIds.RDM, new Gauge[] { });
@@ -161,34 +183,49 @@ namespace JobBars.Gauges {
             JobToGauges.Add(JobIds.NIN, new Gauge[] { });
             JobToGauges.Add(JobIds.MNK, new Gauge[] { });
             JobToGauges.Add(JobIds.BLU, new Gauge[] { });
+
+            // ======== HIDING ===========
+            JobToGauges[JobIds.SMN][0].HideGauge = JobToGauges[JobIds.SMN][1]; // bahamut + pheonix
+            JobToGauges[JobIds.SMN][1].HideGauge = JobToGauges[JobIds.SMN][0];
         }
 
         public void SetJob(JobIds job) {
             Reset();
-
             CurrentJob = job;
-            PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
+
             int idx = 0;
             int yPosition = 0;
             foreach(var gauge in CurrentGauges) {
-                if (!(gauge.Enabled == !Configuration.Config.GaugeHidden.Contains(gauge.Name))) { continue; }
+                if (!(gauge.Enabled == !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
 
-                gauge.UI = gauge.GetGaugeVisualType() == GaugeVisualType.Arrow ? UI.Arrows[idx] : UI.Gauges[idx];
-                UI.Show(gauge.UI);
-                UiHelper.SetPosition(gauge.UI.RootRes, 0, yPosition);
-                yPosition += gauge.UI.Height;
+                gauge.UI = (gauge.Visual.Type == GaugeVisualType.Arrow ? UI.Arrows[idx] : UI.Gauges[idx]);
+                if(!gauge.StartHidden) {
+                    gauge.UI.Show();
+                    UiHelper.SetPosition(gauge.UI.RootRes, 0, yPosition);
+                    yPosition += gauge.UI.Height;
+                    idx++;
+                }
+                else {
+                    gauge.UI.Hide();
+                }
                 gauge.Setup();
-                idx++;
             }
         }
 
         public void Reset() {
             foreach (var gauge in CurrentGauges) {
-                gauge.UI = null;
                 gauge.Active = false;
+                gauge.UI = null;
             }
             UI.HideAllGauges();
             UI.Icon.Reset();
+        }
+
+        public void RefreshJob(JobIds job) {
+            if(job == CurrentJob) {
+                Reset();
+                SetJob(job);
+            }
         }
 
         public void PerformAction(Item action) {

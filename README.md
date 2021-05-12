@@ -1,14 +1,15 @@
-- display bar, diamond, arrow
-- change value, position, color, scale
-- show icon square
 - custom arrow texture
-- move around
 
 - pets
 - track buffs
 - diamonds?
 - animated movement
-- hide
+- enable / disable specific gauges + buffs
+- change gauge color
+- hiding
+- option to turn off icons
 
 - crash when switching characters -> need to reset?
-- random crash when loading, maybe need to split up asset and part loading?
+- random crash when loading sometimes
+- zone change
+- wipe
