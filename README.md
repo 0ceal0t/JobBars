@@ -1,15 +1,14 @@
 - custom arrow texture
 
 - pets
-- track buffs
 - diamonds?
 - animated movement
-- enable / disable specific gauges + buffs
-- change gauge color
-- hiding
+- enable / disable specific buffs
 - option to turn off icons
-
-- crash when switching characters -> need to reset?
 - random crash when loading sometimes
-- zone change
-- wipe
+- test switching characters again
+- test loading from devplugins
+- party members
+- enable / disable icons
+- horizontal layout
+- right justify

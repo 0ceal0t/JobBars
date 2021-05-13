@@ -104,7 +104,7 @@ namespace JobBars.UI {
         public void SetupTex() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
-            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, 99);
+            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, (ushort)(_Icons.Length + 4));
 
             LoadTex(GAUGE_ASSET, @"ui/uld/Parameter_Gauge.tex");
             LoadTex(BLUR_ASSET, @"ui/uld/JobHudNumBg.tex");

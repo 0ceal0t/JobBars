@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
@@ -190,21 +191,17 @@ namespace JobBars.UI {
 
             var newId = nameplateAddon->UldManager.Assets[nameplateAddon->UldManager.AssetCount - 1].Id + 1;
             var pt = IntPtr.Add(new IntPtr(nameplateAddon->UldManager.Assets), 32 * assetIdx + 8);
+            nameplateAddon->UldManager.Assets[assetIdx].Id = newId;
+            LoadTexture(pt, path, 1); // game function
             if ((assetIdx + 1) > nameplateAddon->UldManager.AssetCount) {
                 nameplateAddon->UldManager.AssetCount = (ushort)(assetIdx + 1);
                 var ptr = new IntPtr(nameplateAddon->UldManager.Assets) - 8;
                 Marshal.WriteInt32(ptr, assetIdx + 1);
             }
-            LoadTexture(pt, path, 1); // game function
-            nameplateAddon->UldManager.Assets[assetIdx].Id = newId;
         }
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
         public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
             var nameplateAddon = _ADDON;
-
-            if ((partIdx + 1) > nameplateAddon->UldManager.PartsList->PartCount) {
-                nameplateAddon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
-            }
 
             var asset = UiHelper.CleanAlloc<AtkUldAsset>();
             asset->Id = nameplateAddon->UldManager.Assets[assetIdx].Id;
@@ -215,6 +212,10 @@ namespace JobBars.UI {
             nameplateAddon->UldManager.PartsList->Parts[partIdx].V = V;
             nameplateAddon->UldManager.PartsList->Parts[partIdx].Width = Width;
             nameplateAddon->UldManager.PartsList->Parts[partIdx].Height = Height;
+
+            if ((partIdx + 1) > nameplateAddon->UldManager.PartsList->PartCount) {
+                nameplateAddon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
+            }
         }
     }
 }
