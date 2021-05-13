@@ -1,13 +1,10 @@
 - custom arrow texture
 
-- diamonds?
 - animated movement
 - random crash when loading sometimes
 - test switching characters again
 - test loading from devplugins
 - party members
-- horizontal layout
 - right justify
 - rdm - procs
 - mch - number of charges
-- dnc - procs

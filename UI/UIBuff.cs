@@ -18,7 +18,7 @@ namespace JobBars.UI {
         private AtkImageNode* Overlay;
         string CurrentText = "";
 
-        public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui, HEIGHT) {
+        public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui) {
             PART_ID = partId;
             Setup(node);
         }
@@ -95,26 +95,22 @@ namespace JobBars.UI {
 
             UiHelper.SetPosition(RootRes, (WIDTH + 7) * position_x, (HEIGHT + 5) * position_y);
         }
-
         public void SetOnCD() {
             RootRes->MultiplyBlue = 75;
             RootRes->MultiplyRed = 75;
             RootRes->MultiplyGreen = 75;
         }
-
         public void SetOffCD() {
             RootRes->MultiplyBlue = 100;
             RootRes->MultiplyRed = 100;
             RootRes->MultiplyGreen = 100;
         }
-
         public void SetText(string text) {
             if (text != CurrentText) {
                 UiHelper.SetText(TextNode, text);
                 CurrentText = text;
             }
         }
-
         public void SetPercent(float percent) {
             int h = (int)(HEIGHT * percent);
             int yOffset = HEIGHT - h;
@@ -122,7 +118,11 @@ namespace JobBars.UI {
             UiHelper.SetPosition((AtkResNode*)Overlay, 0, yOffset);
         }
 
-        public override void SetColor(ElementColor color) {
+        public override int GetHeight(int param) {
+            return HEIGHT;
+        }
+        public override int GetWidth(int param) {
+            return WIDTH;
         }
     }
 }

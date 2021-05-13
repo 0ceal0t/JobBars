@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using Dalamud.Plugin;
+using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
@@ -39,9 +40,9 @@ namespace JobBars.Gauges {
 
         public void SetActive(Item trigger) {
             PerformHide();
-            State = GaugeState.ACTIVE;
             LastActiveTrigger = trigger;
             ActiveTime = DateTime.Now;
+            State = GaugeState.ACTIVE;
         }
         public unsafe void PerformHide() {
             if(HideGauge != null && UiHelper.GetNodeVisible(UI.RootRes) == false) {
@@ -50,18 +51,37 @@ namespace JobBars.Gauges {
                 UI.Show();
             }
         }
+        public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, float> buffDict) {
+            if (LastActiveTrigger.Type == ItemType.BUFF) {
+                if (buffDict.TryGetValue(LastActiveTrigger, out var duration)) { // duration exists, use that
+                    return duration;
+                }
+                else { // time isn't there, are we just waiting on it?
+                    var timeSinceActive = (time - ActiveTime).TotalSeconds;
+                    if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
+                        return (float)(defaultDuration - timeSinceActive);
+                    }
+                    return -1; // yeah lmao it's gone
+                }
+            }
+            else {
+                return (float)(defaultDuration - (time - ActiveTime).TotalSeconds); // triggered by an action, just calculate the time
+            }
+        }
 
         public abstract void Setup();
         public abstract void SetColor();
         public abstract void ProcessAction(Item action);
-        public abstract void ProcessDuration(Item buff, float duration, bool isRefresh);
-        public abstract void Tick(DateTime time, float delta);
+        public abstract void Tick(DateTime time, Dictionary<Item, float> buffDict);
+        public abstract int GetHeight();
+        public abstract int GetWidth();
     }
 
     // ======= VISUAL =========
     public enum GaugeVisualType {
         Bar,
-        Arrow
+        Arrow,
+        Diamond
     }
     public struct GaugeVisual {
         public GaugeVisualType Type;

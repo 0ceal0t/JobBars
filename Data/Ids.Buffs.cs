@@ -48,11 +48,18 @@ namespace JobBars.Data {
         Wildfire = 0x79a,
         // DNC
         Devilment = 0x721,
+        FlourishingCascade = 1814,
+        FlourishingFountain = 1815,
+        FlourishingWindmill = 1816,
+        FlourishingShower = 1817,
+        FlourishingFanDance = 1820,
         // BLM
         // SMN
         // RDM
         Manafication = 0x7b3,
         Embolden = 0x4d7,
+        VerfireReady = 1234,
+        VerstoneReady = 1235,
         // BLU
     }
 }

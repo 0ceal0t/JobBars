@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JobBars.UI {
-    public unsafe class UIArrow : UIElement {
+    public unsafe class UIDiamond : UIElement {
         private static int MAX = 12;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 
-        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
+        public UIDiamond(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
         }
 
@@ -31,7 +31,7 @@ namespace JobBars.UI {
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
                 Ticks[idx] = _UI.CreateResNode();
-                Ticks[idx]->X = 18 * idx;
+                Ticks[idx]->X = 20 * idx;
                 Ticks[idx]->Y = 0;
                 Ticks[idx]->Width = 32;
                 Ticks[idx]->Height = 32;
@@ -42,7 +42,7 @@ namespace JobBars.UI {
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
-                bg->PartId = UIBuilder.ARROW_BG;
+                bg->PartId = UIBuilder.DIAMOND_BG;
                 bg->PartsList = nameplateAddon->UldManager.PartsList;
                 bg->Flags = 0;
                 bg->WrapMode = 1;
@@ -65,7 +65,7 @@ namespace JobBars.UI {
                 Selected[idx]->AtkResNode.Y = 0;
                 Selected[idx]->AtkResNode.OriginX = 0;
                 Selected[idx]->AtkResNode.OriginY = 0;
-                Selected[idx]->PartId = UIBuilder.ARROW_FG;
+                Selected[idx]->PartId = UIBuilder.DIAMOND_FG;
                 Selected[idx]->PartsList = nameplateAddon->UldManager.PartsList;
                 Selected[idx]->Flags = 0;
                 Selected[idx]->WrapMode = 1;
@@ -86,9 +86,9 @@ namespace JobBars.UI {
             // ====== SETUP ROOT =======
             RootRes->ChildNode = Ticks[0];
             RootRes->ChildCount = (ushort)(4 * MAX);
-            for(int idx = 0; idx < MAX; idx++) {
+            for (int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
-                if(idx < (MAX - 1)) {
+                if (idx < (MAX - 1)) {
                     Ticks[idx]->PrevSiblingNode = Ticks[idx + 1];
                 }
             }
@@ -100,7 +100,7 @@ namespace JobBars.UI {
 
             RootRes = node;
             var n = RootRes->ChildNode;
-            for(int i = 0; i < MAX; i++) {
+            for (int i = 0; i < MAX; i++) {
                 if (n == null) continue;
                 Ticks[i] = n;
                 Selected[i] = (AtkImageNode*)n->ChildNode->PrevSiblingNode->ChildNode;
@@ -108,14 +108,13 @@ namespace JobBars.UI {
             }
         }
 
-        public void SetColor(UIColor.ElementColor color) {
-            foreach(var item in Selected) {
-                UIColor.SetColor((AtkResNode*)item, color);
-            }
+        public void SetColor(UIColor.ElementColor color, int idx) {
+            UIColor.SetColor((AtkResNode*)Selected[idx], color);
         }
-        public void SetMaxValue(int value) {
-            for(int idx = 0; idx < MAX; idx++) {
-                if(idx < value) {
+
+        public void SetParts(int value) {
+            for (int idx = 0; idx < MAX; idx++) {
+                if (idx < value) {
                     UIBuilder.RecurseHide(Ticks[idx], false, false); // show
                 }
                 else {
@@ -123,22 +122,18 @@ namespace JobBars.UI {
                 }
             }
         }
-        public void SetValue(int value) {
-            for (int idx = 0; idx < MAX; idx++) {
-                if (idx < value) {
-                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
-                }
-                else {
-                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true);
-                }
-            }
-        }
 
+        public void SelectPart(int idx) {
+            UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false, false);
+        }
+        public void UnselectPart(int idx) {
+            UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true, false);
+        }
         public override int GetHeight(int param) {
             return 32;
         }
         public override int GetWidth(int param) {
-            return 32 + 18 * (param - 1);
+            return 32 + 20 * (param - 1);
         }
     }
 }

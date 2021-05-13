@@ -15,7 +15,7 @@ namespace JobBars.UI {
         AtkNineGridNode* BarMainNode;
         string CurrentText = "";
 
-        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui, 46) {
+        public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
         }
 
@@ -158,13 +158,18 @@ namespace JobBars.UI {
             UiHelper.SetSize((AtkResNode*)TextBlurNode, 30 + 16 * text.Length, 40);
             UiHelper.SetPosition((AtkResNode*)TextBlurNode, -16 * (text.Length - 1), 0);
         }
-
         public void SetPercent(float value) {
             UiHelper.SetSize((AtkResNode*)BarMainNode, (int)(160 * value), 20);
         }
-
-        public override void SetColor(ElementColor color) {
+        public void SetColor(ElementColor color) {
             UIColor.SetColor((AtkResNode*)BarMainNode, color);
+        }
+
+        public override int GetHeight(int param) {
+            return 46;
+        }
+        public override int GetWidth(int param) {
+            return 160;
         }
     }
 }

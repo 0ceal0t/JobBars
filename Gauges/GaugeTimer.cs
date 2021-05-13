@@ -28,36 +28,6 @@ namespace JobBars.Gauges {
                 Color = LightBlue
             };
         }
-
-        public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!(State == GaugeState.ACTIVE) || AllowRefresh)) {
-                Start(action);
-            }
-        }
-
-        private void Start(Item action) {
-            PluginLog.Log("STARTING");
-            SetActive(action);
-            Duration = DefaultDuration;
-            StartIcon();
-        }
-
-        public override void Tick(DateTime time, float delta) {
-            if (State == GaugeState.ACTIVE) {
-                var timeleft = Duration - (time - ActiveTime).TotalSeconds;
-                if (UI is UIGauge gauge) {
-                    gauge.SetText(((int)timeleft).ToString());
-                    gauge.SetPercent((float)timeleft / MaxDuration);
-                    SetIcon(timeleft, MaxDuration);
-                }
-                if (timeleft <= 0) {
-                    PluginLog.Log("STOPPING");
-                    State = GaugeState.INACTIVE;
-                    ResetIcon();
-                }
-            }
-        }
-
         public override void Setup() {
             SetColor();
             if (UI is UIGauge gauge) {
@@ -65,17 +35,16 @@ namespace JobBars.Gauges {
                 gauge.SetPercent(0);
             }
         }
+        private void Start(Item action) {
+            PluginLog.Log("STARTING");
+            SetActive(action);
+            Duration = DefaultDuration;
+            StartIcon();
+        }
         public override void SetColor() {
             if (UI == null) return;
             if (UI is UIGauge gauge) {
                 gauge.SetColor(Visual.Color);
-            }
-        }
-
-        public override void ProcessDuration(Item buff, float duration, bool isRefresh) {
-            if(State == GaugeState.ACTIVE && buff == LastActiveTrigger && (!isRefresh || AllowRefresh)) {
-                ActiveTime = DateTime.Now;
-                Duration = duration;
             }
         }
 
@@ -85,19 +54,6 @@ namespace JobBars.Gauges {
                 Icon.ActionIdToState[(uint)icon] = IconState.START_RUNNING;
             }
         }
-
-        private void ResetIcon() {
-            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
-            foreach(var icon in ReplaceIconAction) {
-                Icon.ActionIdToStatus[(uint)icon] = new IconProgress
-                {
-                    Current = 0,
-                    Max = 1
-                };
-                Icon.ActionIdToState[(uint)icon] = IconState.DONE_RUNNING;
-            }
-        }
-
         private void SetIcon(double current, float max) {
             if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
@@ -107,6 +63,47 @@ namespace JobBars.Gauges {
                     Max = max
                 };
             }
+        }
+        private void ResetIcon() {
+            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
+            foreach (var icon in ReplaceIconAction) {
+                Icon.ActionIdToStatus[(uint)icon] = new IconProgress
+                {
+                    Current = 0,
+                    Max = 1
+                };
+                Icon.ActionIdToState[(uint)icon] = IconState.DONE_RUNNING;
+            }
+        }
+
+        // ===== UPDATE ============
+        public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
+            if (State == GaugeState.ACTIVE) {
+                var timeleft = TimeLeft(Duration, time, buffDict);
+                if (timeleft < 0) {
+                    PluginLog.Log("STOPPING");
+                    State = GaugeState.INACTIVE;
+                    ResetIcon();
+                }
+
+                if (UI is UIGauge gauge) {
+                    gauge.SetText(((int)timeleft).ToString());
+                    gauge.SetPercent((float)timeleft / MaxDuration);
+                    SetIcon(timeleft, MaxDuration);
+                }
+            }
+        }
+        public override void ProcessAction(Item action) {
+            if (Triggers.Contains(action) && (!(State == GaugeState.ACTIVE) || AllowRefresh)) {
+                Start(action);
+            }
+        }
+
+        public override int GetHeight() {
+            return UI == null ? 0 : UI.GetHeight(0);
+        }
+        public override int GetWidth() {
+            return UI == null ? 0 : UI.GetWidth(0);
         }
 
         // ===== BUILDER FUNCS =====

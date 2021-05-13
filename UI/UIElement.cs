@@ -10,11 +10,9 @@ using static JobBars.UI.UIColor;
 namespace JobBars.UI {
     public abstract unsafe class UIElement {
         public UIBuilder _UI;
-        public int Height;
 
-        public UIElement(UIBuilder _ui, int height) {
+        public UIElement(UIBuilder _ui) {
             _UI = _ui;
-            Height = height;
         }
         
         public void Setup(AtkResNode* node = null) {
@@ -27,7 +25,6 @@ namespace JobBars.UI {
         }
 
         public AtkResNode* RootRes;
-        public abstract void SetColor(ElementColor color);
         public abstract void Init();
         public abstract void LoadExisting(AtkResNode* node);
 
@@ -38,5 +35,8 @@ namespace JobBars.UI {
         public void Show() {
             UiHelper.Show(RootRes);
         }
+
+        public abstract int GetHeight(int param);
+        public abstract int GetWidth(int param);
     }
 }

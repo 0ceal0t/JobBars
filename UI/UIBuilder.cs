@@ -26,6 +26,7 @@ namespace JobBars.UI {
         private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;
+        public UIDiamond[] Diamonds;
 
         private AtkResNode* B_RootRes = null;
         public UIBuff[] Buffs;
@@ -39,6 +40,7 @@ namespace JobBars.UI {
             LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
+            Diamonds = new UIDiamond[MAX_GAUGES];
             Buffs = new UIBuff[_Icons.Length];
             Icon = new UIIconManager(pi);
         }
@@ -86,8 +88,9 @@ namespace JobBars.UI {
         public static ushort GAUGE_ASSET = ASSET_START;
         public static ushort BLUR_ASSET = (ushort)(ASSET_START + 1);
         public static ushort ARROW_ASSET = (ushort)(ASSET_START + 2);
-        public static ushort BUFF_OVERLAY_ASSET = (ushort)(ASSET_START + 3);
-        public static ushort BUFF_ASSET_START = (ushort)(ASSET_START + 4);
+        public static ushort DIAMOND_ASSET = (ushort)(ASSET_START + 3);
+        public static ushort BUFF_OVERLAY_ASSET = (ushort)(ASSET_START + 4);
+        public static ushort BUFF_ASSET_START = (ushort)(ASSET_START + 5);
 
         public static ushort GAUGE_BG_PART = PART_START;
         public static ushort GAUGE_FRAME_PART = (ushort)(PART_START + 1);
@@ -95,27 +98,24 @@ namespace JobBars.UI {
         public static ushort GAUGE_BAR_MAIN = (ushort)(PART_START + 3);
         public static ushort ARROW_BG = (ushort)(PART_START + 4);
         public static ushort ARROW_FG = (ushort)(PART_START + 5);
-        public static ushort BUFF_BORDER = (ushort)(PART_START + 6);
-        public static ushort BUFF_OVERLAY = (ushort)(PART_START + 7);
-        public static ushort BUFF_PART_START = (ushort)(PART_START + 8);
+        public static ushort DIAMOND_BG = (ushort)(PART_START + 6);
+        public static ushort DIAMOND_FG = (ushort)(PART_START + 7);
+        public static ushort BUFF_BORDER = (ushort)(PART_START + 8);
+        public static ushort BUFF_OVERLAY = (ushort)(PART_START + 9);
+        public static ushort BUFF_PART_START = (ushort)(PART_START + 10);
 
         public Dictionary<IconIds, ushort> IconToPartId = new Dictionary<IconIds, ushort>();
 
         public void SetupTex() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
-            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, (ushort)(_Icons.Length + 4));
+            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, (ushort)(_Icons.Length + 5));
 
             LoadTex(GAUGE_ASSET, @"ui/uld/Parameter_Gauge.tex");
             LoadTex(BLUR_ASSET, @"ui/uld/JobHudNumBg.tex");
             LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
+            LoadTex(DIAMOND_ASSET, @"ui/uld/JobHudSimple_StackA.tex");
             LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
-
-            /*
-             * [14:04:43.203][Information] [JobBars] LIST 1 PART 0: 0 0 32 32 / ui/uld/JobHudSimple_StackA.tex
-[14:04:43.203][Information] [JobBars] LIST 1 PART 1: 32 0 32 32 / ui/uld/JobHudSimple_StackA.tex
-[14:04:43.203][Information] [JobBars] LIST 1 PART 2: 0 32 32 32 / ui/uld/JobHudSimple_StackA.tex
-             */
 
             var current_asset = BUFF_ASSET_START;
             foreach (var icon in _Icons) {
@@ -137,6 +137,8 @@ namespace JobBars.UI {
             AddPart(BLUR_ASSET, GAUGE_TEXT_BLUR_PART, 0, 0, 60, 40);
             AddPart(ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
             AddPart(ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
+            AddPart(DIAMOND_ASSET, DIAMOND_BG, 0, 0, 32, 32);
+            AddPart(DIAMOND_ASSET, DIAMOND_FG, 32, 0, 32, 32);
             AddPart(BUFF_OVERLAY_ASSET, BUFF_BORDER, 3, 99, 40, 40);
             AddPart(BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
 
@@ -177,6 +179,8 @@ namespace JobBars.UI {
                 n = n->PrevSiblingNode;
                 Arrows[idx] = new UIArrow(this, n);
                 n = n->PrevSiblingNode;
+                Diamonds[idx] = new UIDiamond(this, n);
+                n = n->PrevSiblingNode;
             }
             // ====== LOAD EXISTING BUFFS =======
             B_RootRes = G_RootRes->PrevSiblingNode;
@@ -208,20 +212,31 @@ namespace JobBars.UI {
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, null);
                 Arrows[idx] = new UIArrow(this, null);
+                Diamonds[idx] = new UIDiamond(this, null);
             }
             G_RootRes->ParentNode = addon->RootNode;
-            G_RootRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
+            G_RootRes->ChildCount = (ushort)(
+                Arrows[0].RootRes->ChildCount * MAX_GAUGES + 
+                Gauges[0].RootRes->ChildCount * MAX_GAUGES + 
+                Diamonds[0].RootRes->ChildCount * MAX_GAUGES +
+                3 * MAX_GAUGES
+            );
             G_RootRes->ChildNode = Gauges[0].RootRes;
 
             for(int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx].RootRes->ParentNode = G_RootRes;
                 Arrows[idx].RootRes->ParentNode = G_RootRes;
+                Diamonds[idx].RootRes->ParentNode = G_RootRes;
 
                 Gauges[idx].RootRes->PrevSiblingNode = Arrows[idx].RootRes;
+                Arrows[idx].RootRes->PrevSiblingNode = Diamonds[idx].RootRes;
+
                 Arrows[idx].RootRes->NextSiblingNode = Gauges[idx].RootRes;
+                Diamonds[idx].RootRes->NextSiblingNode = Arrows[idx].RootRes;
+
                 if(idx < (MAX_GAUGES - 1)) {
-                    Arrows[idx].RootRes->PrevSiblingNode = Gauges[idx + 1].RootRes;
-                    Gauges[idx + 1].RootRes->NextSiblingNode = Arrows[idx].RootRes;
+                    Diamonds[idx].RootRes->PrevSiblingNode = Gauges[idx + 1].RootRes;
+                    Gauges[idx + 1].RootRes->NextSiblingNode = Diamonds[idx].RootRes;
                 }
             }
             SetGaugePosition(Configuration.Config.GaugePosition);
@@ -294,6 +309,10 @@ namespace JobBars.UI {
 
             foreach (var arrow in Arrows) {
                 arrow.Hide();
+            }
+
+            foreach (var diamond in Diamonds) {
+                diamond.Hide();
             }
         }
         public void HideAllBuffs() {

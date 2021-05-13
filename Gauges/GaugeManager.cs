@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public unsafe class GaugeManager {
+        public DalamudPluginInterface PluginInterface;
         public UIBuilder UI;
 
         public Dictionary<JobIds, Gauge[]> JobToGauges;
@@ -18,8 +19,9 @@ namespace JobBars.Gauges {
         public Gauge[] CurrentGauges => JobToGauges[CurrentJob];
         private DateTime LastTick = DateTime.Now;
 
-        public GaugeManager(UIBuilder ui) {
+        public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
             UI = ui;
+            PluginInterface = pi;
 
             JobToGauges = new Dictionary<JobIds, Gauge[]>();
             JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
@@ -303,13 +305,12 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Manafication)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.DarkBlue)),
-                new GaugeGCD("Embolden", 20, 9)
-                    .WithTriggers(new[]
+                new GaugeProc("Verfire/Verstone Procs")
+                    .WithProcs(new[]
                     {
-                        new Item(BuffIds.Embolden)
+                        new Proc(BuffIds.VerfireReady, UIColor.Red),
+                        new Proc(BuffIds.VerstoneReady, UIColor.White)
                     })
-                    .WithNoRefresh()
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
             });
             // ============ MCH ==================
             JobToGauges.Add(JobIds.MCH, new Gauge[] {
@@ -333,12 +334,15 @@ namespace JobBars.Gauges {
             });
             // ============ DNC ==================
             JobToGauges.Add(JobIds.DNC, new Gauge[] {
-                new GaugeGCD("Devilment", 20, 9)
-                    .WithTriggers(new[]
+                new GaugeProc("Dancer Procs")
+                    .WithProcs(new[]
                     {
-                        new Item(BuffIds.Devilment)
+                        new Proc(BuffIds.FlourishingCascade, UIColor.BrightGreen),
+                        new Proc(BuffIds.FlourishingFountain, UIColor.Yellow),
+                        new Proc(BuffIds.FlourishingWindmill, UIColor.DarkBlue),
+                        new Proc(BuffIds.FlourishingShower, UIColor.Red),
+                        new Proc(BuffIds.FlourishingFanDance, UIColor.HealthGreen)
                     })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red))
             });
             // ============ NIN ==================
             JobToGauges.Add(JobIds.NIN, new Gauge[] {
@@ -389,22 +393,40 @@ namespace JobBars.Gauges {
             Reset();
             CurrentJob = job;
 
-            int idx = 0;
+            int enabledIdx = 0;
             int yPosition = 0;
+            int xPosition = 0;
             foreach(var gauge in CurrentGauges) {
                 if (!(gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
 
-                gauge.UI = (gauge.Visual.Type == GaugeVisualType.Arrow ? UI.Arrows[idx] : UI.Gauges[idx]);
+                gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
                 if(!gauge.StartHidden) {
                     gauge.UI.Show();
-                    UiHelper.SetPosition(gauge.UI.RootRes, 0, yPosition);
-                    yPosition += gauge.UI.Height;
-                    idx++;
+                    UiHelper.SetPosition(gauge.UI.RootRes, xPosition, yPosition);
+                    if(Configuration.Config.GaugeHorizontal) {
+                        xPosition += gauge.GetWidth();
+                    }
+                    else {
+                        yPosition += gauge.GetHeight();
+                    }
+                    enabledIdx++;
                 }
                 else {
                     gauge.UI.Hide();
                 }
                 gauge.Setup();
+            }
+        }
+        public UIElement GetUI(int idx, GaugeVisualType type) {
+            switch(type) {
+                case GaugeVisualType.Arrow:
+                    return UI.Arrows[idx];
+                case GaugeVisualType.Bar:
+                    return UI.Gauges[idx];
+                case GaugeVisualType.Diamond:
+                    return UI.Diamonds[idx];
+                default:
+                    return null;
             }
         }
 
@@ -430,20 +452,21 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void SetBuffDuration(Item buff, float duration, bool isRefresh) {
-            if(duration < 0) { duration *= -1; }
-            foreach (var gauge in CurrentGauges) {
-                if (!gauge.Enabled) { continue; }
-                gauge.ProcessDuration(buff, duration, isRefresh);
-            }
-        }
-
         public void Tick() {
             var currentTime = DateTime.Now;
-            float deltaSecond = (float)(currentTime - LastTick).TotalSeconds;
+
+            Dictionary<Item, float> BuffDict = new Dictionary<Item, float>();
+            foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
+                BuffDict[new Item
+                {
+                    Id = (uint)status.EffectId,
+                    Type = ItemType.BUFF
+                }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
+            }
+
             foreach(var gauge in CurrentGauges) {
                 if (!gauge.Enabled) { continue; }
-                gauge.Tick(currentTime, deltaSecond);
+                gauge.Tick(currentTime, BuffDict);
             }
             UI.Icon.Update();
             LastTick = currentTime;

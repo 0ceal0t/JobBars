@@ -35,8 +35,6 @@ namespace JobBars {
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
-        private delegate byte AddStatusDelegate(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus);
-        private Hook<AddStatusDelegate> addStatusHook;
 
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
@@ -64,9 +62,6 @@ namespace JobBars {
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, (ReceiveActionEffectDelegate)ReceiveActionEffect);
             receiveActionEffectHook.Enable();
-            IntPtr addStatusFuncPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 55 56 48 83 EC 60 40 32 ED 41 0F B7 F0 48 8B D9");
-            addStatusHook = new Hook<AddStatusDelegate>(addStatusFuncPtr, (AddStatusDelegate)AddStatus);
-            addStatusHook.Enable();
 
             IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
@@ -74,7 +69,6 @@ namespace JobBars {
             IntPtr initZonePtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C0 48 8D 53 10 8B CE E8 ?? ?? ?? ?? 48 8D 4B 60 E8 ?? ?? ?? ?? 48 8D 4B 6C");
             initZoneHook = new Hook<InitZoneDelegate>(initZonePtr, (InitZoneDelegate)InitZone);
             initZoneHook.Enable();
-            //IntPtr removeStatusFuncPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 7C 24 ?? ?? 41 8B D9 8B FA"); IntPtr a1, uint statusId, IntPtr a3, uint sourceActorId, byte a5, byte a6
             //IntPtr testPtr = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 55 57 41 56 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 41 0F B6 E8"); // IntPtr a1, IntPtr a2, IntPtr a3) <--- status list
             //IntPtr testPtr2 = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 57 41 54 41 57 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 45 0F B6 E0"); // IntPtr a1, IntPtr a2, IntPtr a3) <---- action effect
 
@@ -86,8 +80,6 @@ namespace JobBars {
         public void Dispose() {
             receiveActionEffectHook?.Disable();
             receiveActionEffectHook?.Dispose();
-            addStatusHook?.Disable();
-            addStatusHook?.Dispose();
 
             actorControlSelfHook?.Disable();
             actorControlSelfHook?.Dispose();
@@ -103,16 +95,6 @@ namespace JobBars {
         }
 
         // ========= HOOKS ===========
-        private byte AddStatus(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus) { // STATUS DURATION SENT SEPARATELY
-            if (_Ready && Init && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
-                GManager?.SetBuffDuration(new Item
-                {
-                    Id = statusId,
-                    Type = ItemType.BUFF
-                }, duration, newStatus == 0);
-            }
-            return addStatusHook.Original(statusEffectList, slot, statusId, duration, a5, sourceActorId, newStatus);
-        }
         private void SetupActions() {
             var _sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && x.IsPlayerAction);
             foreach(var item in _sheet) {
@@ -241,7 +223,7 @@ namespace JobBars {
                 UI.SetupTex();
                 UI.SetupPart();
                 UI.Init();
-                GManager = new GaugeManager(UI);
+                GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
                 UI.HideAllBuffs();
                 UI.HideAllGauges();

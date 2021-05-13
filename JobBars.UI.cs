@@ -85,7 +85,11 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            if(ImGui.Checkbox("Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
+            if(ImGui.Checkbox("DoT Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
+                GManager.ResetJob(CurrentJob);
+                Configuration.Config.Save();
+            }
+            if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
@@ -114,9 +118,18 @@ namespace JobBars {
                 foreach (var gauge in GManager.JobToGauges[G_SelectedJob]) {
                     // ===== ENABLED / DISABLED ======
                     var _enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
-                    var type = gauge is GaugeGCD ? "GCDs" : "Timer";
+                    var type = "";
+                    if(gauge is GaugeGCD) {
+                        type = "GCDS";
+                    }
+                    else if(gauge is GaugeTimer) {
+                        type = "TIMER";
+                    }
+                    else if(gauge is GaugeProc) {
+                        type = "PROCS";
+                    }
 
-                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} ({type})");
+                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} [{type}]");
                     if (ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
                         if(_enabled) {
                             Configuration.Config.GaugeDisabled.Remove(gauge.Name);
@@ -128,21 +141,23 @@ namespace JobBars {
                         GManager.ResetJob(G_SelectedJob);
                     }
                     // ===== COLOR =======
-                    var isOverride_COLOR = Configuration.Config.GetColorOverride(gauge.Name, out var colorOverride);
-                    if(ImGui.BeginCombo("Color" + _ID + gauge.Name, isOverride_COLOR ? gauge.Visual.Color.Name : $"DEFAULT ({gauge.Visual.Color.Name})")) {
-                        if(ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Color.Name}){_ID}{gauge.Name}", !isOverride_COLOR)) { // DEFAULT
-                            Configuration.Config.GaugeColorOverride.Remove(gauge.Name);
-                            Configuration.Config.Save();
-                            SetColor(gauge, gauge.DefaultVisual.Color);
-                        }
-                        foreach(var entry in UIColor.AllColors) {
-                            if(ImGui.Selectable($"{entry.Key}{_ID}{gauge.Name}", (gauge.Visual.Color.Name == entry.Key) && isOverride_COLOR)) { // OTHER
-                                Configuration.Config.GaugeColorOverride[gauge.Name] = entry.Key;
+                    if(!(gauge is GaugeProc)) {
+                        var isOverride_COLOR = Configuration.Config.GetColorOverride(gauge.Name, out var colorOverride);
+                        if (ImGui.BeginCombo("Color" + _ID + gauge.Name, isOverride_COLOR ? gauge.Visual.Color.Name : $"DEFAULT ({gauge.Visual.Color.Name})")) {
+                            if (ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Color.Name}){_ID}{gauge.Name}", !isOverride_COLOR)) { // DEFAULT
+                                Configuration.Config.GaugeColorOverride.Remove(gauge.Name);
                                 Configuration.Config.Save();
-                                SetColor(gauge, entry.Value);
+                                SetColor(gauge, gauge.DefaultVisual.Color);
                             }
+                            foreach (var entry in UIColor.AllColors) {
+                                if (ImGui.Selectable($"{entry.Key}{_ID}{gauge.Name}", (gauge.Visual.Color.Name == entry.Key) && isOverride_COLOR)) { // OTHER
+                                    Configuration.Config.GaugeColorOverride[gauge.Name] = entry.Key;
+                                    Configuration.Config.Save();
+                                    SetColor(gauge, entry.Value);
+                                }
+                            }
+                            ImGui.EndCombo();
                         }
-                        ImGui.EndCombo();
                     }
                     // ====== TYPE (only for GCDs) ======
                     if(gauge is GaugeGCD) {
