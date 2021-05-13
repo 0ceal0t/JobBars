@@ -1,15 +1,11 @@
 - custom arrow texture
 
-- pets
 - diamonds?
 - animated movement
-- enable / disable specific buffs
-- option to turn off icons
 - random crash when loading sometimes
 - test switching characters again
 - test loading from devplugins
 - party members
-- enable / disable icons
 - horizontal layout
 - right justify
 - rdm - procs

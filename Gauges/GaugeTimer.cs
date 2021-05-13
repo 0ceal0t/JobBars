@@ -80,14 +80,14 @@ namespace JobBars.Gauges {
         }
 
         private void StartIcon() {
-            if (!ReplaceIcon) return;
+            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
                 Icon.ActionIdToState[(uint)icon] = IconState.START_RUNNING;
             }
         }
 
         private void ResetIcon() {
-            if (!ReplaceIcon) return;
+            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach(var icon in ReplaceIconAction) {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {
@@ -99,7 +99,7 @@ namespace JobBars.Gauges {
         }
 
         private void SetIcon(double current, float max) {
-            if (!ReplaceIcon) return;
+            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {

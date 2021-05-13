@@ -30,7 +30,7 @@ namespace JobBars {
                     DrawGaugeSettings();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Buffs" + _ID)) {
+                if (ImGui.BeginTabItem("Party Member Buffs" + _ID)) {
                     DrawBuffSettings();
                     ImGui.EndTabItem();
                 }
@@ -81,7 +81,12 @@ namespace JobBars {
             if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
-                UI?.SetGaugeScale(Configuration.Config.GaugeScale);
+                UI.SetGaugeScale(Configuration.Config.GaugeScale);
+                Configuration.Config.Save();
+            }
+
+            if(ImGui.Checkbox("Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
+                GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
 
@@ -182,7 +187,7 @@ namespace JobBars {
             if (ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
-                UI?.SetBuffScale(Configuration.Config.BuffScale);
+                UI.SetBuffScale(Configuration.Config.BuffScale);
                 Configuration.Config.Save();
             }
 

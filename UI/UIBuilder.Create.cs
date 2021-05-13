@@ -187,34 +187,34 @@ namespace JobBars.UI {
 
 
         public void LoadTex(ushort assetIdx, string path) {
-            var nameplateAddon = _ADDON;
+            var addon = _ADDON;
 
-            var newId = nameplateAddon->UldManager.Assets[nameplateAddon->UldManager.AssetCount - 1].Id + 1;
-            var pt = IntPtr.Add(new IntPtr(nameplateAddon->UldManager.Assets), 32 * assetIdx + 8);
-            nameplateAddon->UldManager.Assets[assetIdx].Id = newId;
+            var newId = addon->UldManager.Assets[addon->UldManager.AssetCount - 1].Id + 1;
+            var pt = IntPtr.Add(new IntPtr(addon->UldManager.Assets), 32 * assetIdx + 8);
+            addon->UldManager.Assets[assetIdx].Id = newId;
             LoadTexture(pt, path, 1); // game function
-            if ((assetIdx + 1) > nameplateAddon->UldManager.AssetCount) {
-                nameplateAddon->UldManager.AssetCount = (ushort)(assetIdx + 1);
-                var ptr = new IntPtr(nameplateAddon->UldManager.Assets) - 8;
+            if ((assetIdx + 1) > addon->UldManager.AssetCount) {
+                addon->UldManager.AssetCount = (ushort)(assetIdx + 1);
+                var ptr = new IntPtr(addon->UldManager.Assets) - 8;
                 Marshal.WriteInt32(ptr, assetIdx + 1);
             }
         }
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
         public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
-            var nameplateAddon = _ADDON;
+            var addon = _ADDON;
 
             var asset = UiHelper.CleanAlloc<AtkUldAsset>();
-            asset->Id = nameplateAddon->UldManager.Assets[assetIdx].Id;
-            asset->AtkTexture = nameplateAddon->UldManager.Assets[assetIdx].AtkTexture;
+            asset->Id = addon->UldManager.Assets[assetIdx].Id;
+            asset->AtkTexture = addon->UldManager.Assets[assetIdx].AtkTexture;
 
-            nameplateAddon->UldManager.PartsList->Parts[partIdx].UldAsset = asset;
-            nameplateAddon->UldManager.PartsList->Parts[partIdx].U = U;
-            nameplateAddon->UldManager.PartsList->Parts[partIdx].V = V;
-            nameplateAddon->UldManager.PartsList->Parts[partIdx].Width = Width;
-            nameplateAddon->UldManager.PartsList->Parts[partIdx].Height = Height;
+            addon->UldManager.PartsList->Parts[partIdx].UldAsset = asset;
+            addon->UldManager.PartsList->Parts[partIdx].U = U;
+            addon->UldManager.PartsList->Parts[partIdx].V = V;
+            addon->UldManager.PartsList->Parts[partIdx].Width = Width;
+            addon->UldManager.PartsList->Parts[partIdx].Height = Height;
 
-            if ((partIdx + 1) > nameplateAddon->UldManager.PartsList->PartCount) {
-                nameplateAddon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
+            if ((partIdx + 1) > addon->UldManager.PartsList->PartCount) {
+                addon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
             }
         }
     }

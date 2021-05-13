@@ -304,7 +304,7 @@ namespace JobBars.Buffs {
             CurrentJob = job;
 
             foreach(var buff in AllBuffs) {
-                if (!(buff.Enabled == !Configuration.Config.BuffDisabled.Contains(buff.Name))) { continue; }
+                buff.Enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
             }
         }
 

@@ -392,7 +392,7 @@ namespace JobBars.Gauges {
             int idx = 0;
             int yPosition = 0;
             foreach(var gauge in CurrentGauges) {
-                if (!(gauge.Enabled == !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
+                if (!(gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
 
                 gauge.UI = (gauge.Visual.Type == GaugeVisualType.Arrow ? UI.Arrows[idx] : UI.Gauges[idx]);
                 if(!gauge.StartHidden) {

@@ -111,6 +111,12 @@ namespace JobBars.UI {
             LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
             LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
 
+            /*
+             * [14:04:43.203][Information] [JobBars] LIST 1 PART 0: 0 0 32 32 / ui/uld/JobHudSimple_StackA.tex
+[14:04:43.203][Information] [JobBars] LIST 1 PART 1: 32 0 32 32 / ui/uld/JobHudSimple_StackA.tex
+[14:04:43.203][Information] [JobBars] LIST 1 PART 2: 0 32 32 32 / ui/uld/JobHudSimple_StackA.tex
+             */
+
             var current_asset = BUFF_ASSET_START;
             foreach (var icon in _Icons) {
                 var _icon = (uint) icon;
@@ -145,7 +151,7 @@ namespace JobBars.UI {
         }
 
         public void PrintAllParts() { // helper function :/
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ActionBar", 1);
+            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("JobHudDNC1", 1);
             for (int i = 0; i < addon->UldManager.PartsListCount; i++) {
                 var list = addon->UldManager.PartsList[i];
                 for (int j = 0; j < list.PartCount; j++) {
@@ -186,24 +192,24 @@ namespace JobBars.UI {
         }
 
         public void Init() {
-            var nameplateAddon = _ADDON;
-            if (nameplateAddon->UldManager.NodeListCount > 4) {
+            var addon = _ADDON;
+            if (addon->UldManager.NodeListCount > 4) {
                 LoadExisting();
                 return;
             }
 
-            UiHelper.ExpandNodeList(nameplateAddon, 999);
+            UiHelper.ExpandNodeList(addon, 999);
             // ======== CREATE GAUGES =======
             G_RootRes = CreateResNode();
             G_RootRes->Width = 256;
             G_RootRes->Height = 100;
             G_RootRes->Flags = 9395;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = G_RootRes;
+            addon->UldManager.NodeList[addon->UldManager.NodeListCount++] = G_RootRes;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, null);
                 Arrows[idx] = new UIArrow(this, null);
             }
-            G_RootRes->ParentNode = nameplateAddon->RootNode;
+            G_RootRes->ParentNode = addon->RootNode;
             G_RootRes->ChildCount = (ushort)(Arrows[0].RootRes->ChildCount * MAX_GAUGES + Gauges[0].RootRes->ChildCount * MAX_GAUGES + 2 * MAX_GAUGES);
             G_RootRes->ChildNode = Gauges[0].RootRes;
 
@@ -226,8 +232,8 @@ namespace JobBars.UI {
             B_RootRes->Width = 256;
             B_RootRes->Height = 100;
             B_RootRes->Flags = 9395;
-            B_RootRes->ParentNode = nameplateAddon->RootNode;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = B_RootRes;
+            B_RootRes->ParentNode = addon->RootNode;
+            addon->UldManager.NodeList[addon->UldManager.NodeListCount++] = B_RootRes;
             int bIdx = 0;
             foreach (var entry in IconToPartId) {
                 Buffs[bIdx] = new UIBuff(this, entry.Value, null);
@@ -249,7 +255,7 @@ namespace JobBars.UI {
             SetBuffScale(Configuration.Config.BuffScale);
 
             // ==== INSERT AT THE END ====
-            var n = nameplateAddon->RootNode->ChildNode;
+            var n = addon->RootNode->ChildNode;
             while (n->PrevSiblingNode != null) {
                 n = n->PrevSiblingNode;
             }
