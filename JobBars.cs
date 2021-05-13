@@ -44,22 +44,22 @@ namespace JobBars {
         private Hook<InitZoneDelegate> initZoneHook;
 
         private PList Party; // TEMP
+        private HashSet<uint> GCDs = new HashSet<uint>();
 
         private bool _Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
+        private bool Init = false;
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
-            PluginLog.Log("=== INIT 1 ====");
             PluginInterface = pluginInterface;
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             UIColor.SetupColors();
+            SetupActions();
 
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
-            PluginLog.Log($"{Party.Count}");
 
             _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             _Config.Initialize(PluginInterface);
             UI = new UIBuilder(pluginInterface);
-            PluginLog.Log("=== INIT 2 ====");
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, (ReceiveActionEffectDelegate)ReceiveActionEffect);
@@ -104,18 +104,26 @@ namespace JobBars {
 
         // ========= HOOKS ===========
         private byte AddStatus(IntPtr statusEffectList, uint slot, UInt16 statusId, float duration, UInt16 a5, uint sourceActorId, byte newStatus) { // STATUS DURATION SENT SEPARATELY
-            if (_Ready && STEP == STEPS.READY && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
+            if (_Ready && Init && sourceActorId == PluginInterface.ClientState.LocalPlayer.ActorId) {
                 GManager?.SetBuffDuration(new Item
                 {
                     Id = statusId,
-                    IsBuff = true
+                    Type = ItemType.BUFF
                 }, duration, newStatus == 0);
             }
             return addStatusHook.Original(statusEffectList, slot, statusId, duration, a5, sourceActorId, newStatus);
         }
-
+        private void SetupActions() {
+            var _sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && x.IsPlayerAction);
+            foreach(var item in _sheet) {
+                var attackType = item.ActionCategory.Value.Name.ToString();
+                if(attackType == "Spell" || attackType == "Weaponskill") {
+                    GCDs.Add(item.RowId);
+                }
+            }
+        }
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
-            if (!_Ready || STEP != STEPS.READY) {
+            if (!_Ready || !Init) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -130,13 +138,13 @@ namespace JobBars {
                 return;
             }
 
-            var item = new Item
+            var actionItem = new Item
             {
                 Id = id,
-                IsBuff = false
+                Type = (GCDs.Contains(id) ? ItemType.GCD : ItemType.OGCD)
             };
-            GManager?.PerformAction(item);
-            BManager?.PerformAction(item);
+            GManager?.PerformAction(actionItem);
+            BManager?.PerformAction(actionItem); // TODO: only trigger if performed by party member
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
             int effectsEntries = 0;
@@ -177,11 +185,15 @@ namespace JobBars {
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
                 if(entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
-                    GManager?.PerformAction(new Item
+                    var buffItem = new Item
                     {
                         Id = entries[i].value,
-                        IsBuff = true
-                    });
+                        Type = ItemType.BUFF
+                    };
+                    GManager?.PerformAction(buffItem);
+                    if((int) tTarget == PluginInterface.ClientState.LocalPlayer.ActorId) {
+                        BManager?.PerformAction(buffItem);
+                    }
                 }
             }
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
@@ -214,62 +226,26 @@ namespace JobBars {
             }
             return -1;
         }
-        // ======== UPDATE =========
-        enum STEPS {
-            INIT_TEXTURES,
-            INIT_PARTS,
-            DONE_INIT_TEXTURES,
-            INIT_GAUGES,
-            DONE_INIT_GAUGES,
-            READY
-        };
-        STEPS STEP = STEPS.INIT_TEXTURES;
-        DateTime STEP_TIME;
 
+        // ======== UPDATE =========
         private void FrameworkOnUpdate(Framework framework) {
             if (!_Ready) {
-                if(STEP == STEPS.READY && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
+                if(Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
                     PluginLog.Log("LOGOUT");
-                    STEP = STEPS.INIT_TEXTURES;
+                    Init = false;
                     CurrentJob = JobIds.OTHER;
                 }
                 return;
             }
-            if (STEP == STEPS.INIT_TEXTURES) {
-                PluginLog.Log("===== INIT TEXTURES =====");
+            if (!Init) {
                 UI.SetupTex();
-                STEP = STEPS.INIT_PARTS;
-                PluginLog.Log("===== DONE INIT TEXTURES =====");
-                return;
-            }
-            if(STEP == STEPS.INIT_PARTS) {
-                PluginLog.Log("===== INIT PARTS =====");
                 UI.SetupPart();
-                STEP = STEPS.DONE_INIT_TEXTURES;
-                STEP_TIME = DateTime.Now;
-                PluginLog.Log("===== DONE INIT PARTS =====");
-                return;
-            }
-            else if (STEP == STEPS.INIT_GAUGES) {
-                PluginLog.Log("===== INIT GAUGES ======");
                 UI.Init();
                 GManager = new GaugeManager(UI);
                 BManager = new BuffManager(UI);
-                STEP = STEPS.DONE_INIT_GAUGES;
-                STEP_TIME = DateTime.Now;
-                return;
-            }
-            else if (STEP == STEPS.DONE_INIT_TEXTURES) {
-                if ((DateTime.Now - STEP_TIME).TotalSeconds > 0.5) { STEP = STEPS.INIT_GAUGES; }
-                return;
-            }
-            else if (STEP == STEPS.DONE_INIT_GAUGES) {
-                if ((DateTime.Now - STEP_TIME).TotalSeconds > 0.5) {
-                    PluginLog.Log("====== READY =======");
-                    STEP = STEPS.READY;
-                    UI.HideAllBuffs();
-                    UI.HideAllGauges();
-                }
+                UI.HideAllBuffs();
+                UI.HideAllGauges();
+                Init = true;
                 return;
             }
 

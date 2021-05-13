@@ -27,42 +27,19 @@ namespace JobBars.Gauges {
             };
         }
 
-        // ===== BUILDER FUNCS =====
-        public GaugeGCD WithTriggers(Item[] triggers) {
-            Triggers = triggers;
-            return this;
-        }
-        public GaugeGCD WithIncrement(Item[] increment) {
-            Increment = increment;
-            return this;
-        }
-        public GaugeGCD WithStartHidden() {
-            StartHidden = true;
-            return this;
-        }
-        public GaugeGCD NoRefresh() {
-            AllowRefresh = false;
-            return this;
-        }
-        public GaugeGCD WithVisual(GaugeVisual visual) {
-            DefaultVisual = Visual = visual;
-            if (Configuration.Config.GetColorOverride(Name, out var color)) {
-                Visual.Color = color;
-            }
-            if(Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
-                Visual.Type = type;
-            }
-            return this;
-        }
-
-        // ====================
         public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
+            if (Triggers.Contains(action) && (!(State == GaugeState.ACTIVE) || AllowRefresh)) {
                 Start(action);
                 return;
             }
 
-            if(Increment.Contains(action) && Active) {
+            if(
+                (State == GaugeState.ACTIVE) && 
+                (
+                    (Increment.Length == 0 && action.Type == ItemType.GCD) || // just take any gcd
+                    (Increment.Length > 0 && Increment.Contains(action)) // take specific gcds
+                )
+            ) {
                 AddValue();
             }
         }
@@ -75,20 +52,21 @@ namespace JobBars.Gauges {
         }
 
         private void AddValue() {
-            Counter++;
+            if(Counter < MaxCounter) {
+                Counter++;
+            }
         }
 
         static int RESET_DELAY = 3;
         DateTime StopTime;
         public override void Tick(DateTime time, float delta) {
-            if (Active) {
+            if (State == GaugeState.ACTIVE) {
                 var timeleft = Duration - (time - ActiveTime).TotalSeconds;
                 if(timeleft <= 0) {
                     PluginLog.Log("STOPPING");
-                    Active = false;
+                    State = GaugeState.FINISHED;
                     StopTime = time;
                 }
-                // ==================
                 if(UI is UIArrow arrows) {
                     arrows.SetValue(Counter);
                 }
@@ -97,13 +75,16 @@ namespace JobBars.Gauges {
                     gauge.SetPercent(((float)Counter) / MaxCounter);
                 }
             }
-            else if((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET AFTER A DELAY
-                if (UI is UIArrow arrows) {
-                    arrows.SetValue(0);
-                }
-                else if(UI is UIGauge gauge) {
-                    gauge.SetText("0");
-                    gauge.SetPercent(0);
+            else if(State == GaugeState.FINISHED) {
+                if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
+                    State = GaugeState.INACTIVE;
+                    if (UI is UIArrow arrows) {
+                        arrows.SetValue(0);
+                    }
+                    else if (UI is UIGauge gauge) {
+                        gauge.SetText("0");
+                        gauge.SetPercent(0);
+                    }
                 }
             }
         }
@@ -131,10 +112,38 @@ namespace JobBars.Gauges {
         }
 
         public override void ProcessDuration(Item buff, float duration, bool isRefresh) {
-            if (Active && buff == LastActiveTrigger) {
+            if ((State == GaugeState.ACTIVE) && buff == LastActiveTrigger) {
                 ActiveTime = DateTime.Now;
                 Duration = duration;
             }
+        }
+
+        // ===== BUILDER FUNCS =====
+        public GaugeGCD WithTriggers(Item[] triggers) {
+            Triggers = triggers;
+            return this;
+        }
+        public GaugeGCD WithSpecificIncrement(Item[] increment) {
+            Increment = increment;
+            return this;
+        }
+        public GaugeGCD WithStartHidden() {
+            StartHidden = true;
+            return this;
+        }
+        public GaugeGCD WithNoRefresh() {
+            AllowRefresh = false;
+            return this;
+        }
+        public GaugeGCD WithVisual(GaugeVisual visual) {
+            DefaultVisual = Visual = visual;
+            if (Configuration.Config.GetColorOverride(Name, out var color)) {
+                Visual.Color = color;
+            }
+            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
+                Visual.Type = type;
+            }
+            return this;
         }
     }
 }

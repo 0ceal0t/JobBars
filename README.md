@@ -12,3 +12,6 @@
 - enable / disable icons
 - horizontal layout
 - right justify
+- rdm - procs
+- mch - number of charges
+- dnc - procs

@@ -19,7 +19,7 @@ namespace JobBars {
         private bool BUFF_LOCK = true;
 
         private void BuildUI() {
-            if (STEP != STEPS.READY) return;
+            if (!Init) return;
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
@@ -208,7 +208,20 @@ namespace JobBars {
             else {
                 ImGui.BeginChild(_ID + "Selected");
                 foreach (var buff in BManager.JobToBuffs[B_SelectedJob]) {
-                    ImGui.Text(buff.Name);
+                    // ===== ENABLED / DISABLED ======
+                    var _enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
+
+                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{buff.Name}");
+                    if (ImGui.Checkbox("Enabled" + _ID + buff.Name, ref _enabled)) {
+                        if (_enabled) {
+                            Configuration.Config.BuffDisabled.Remove(buff.Name);
+                        }
+                        else {
+                            Configuration.Config.BuffDisabled.Add(buff.Name);
+                        }
+                        Configuration.Config.Save();
+                        BManager.SetJob(CurrentJob);
+                    }
 
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
                 }

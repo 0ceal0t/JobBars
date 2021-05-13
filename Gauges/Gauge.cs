@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
+    // ======= STATE ==========
+    public enum GaugeState {
+        INACTIVE,
+        ACTIVE,
+        FINISHED,
+    }
+
     public abstract class Gauge {
         public string Name;
         public Item[] Triggers;
@@ -16,14 +23,14 @@ namespace JobBars.Gauges {
         public GaugeVisual DefaultVisual;
         public GaugeVisual Visual;
 
-        public bool Active = false;
         public bool Enabled = true;
+        public GaugeState State = GaugeState.INACTIVE;
+        public bool AllowRefresh = true;
         public Item LastActiveTrigger;
         public DateTime ActiveTime;
 
         public Gauge HideGauge = null;
         public bool StartHidden = false;
-        public bool AllowRefresh = true;
 
         public Gauge(string name) {
             Name = name;
@@ -32,7 +39,7 @@ namespace JobBars.Gauges {
 
         public void SetActive(Item trigger) {
             PerformHide();
-            Active = true;
+            State = GaugeState.ACTIVE;
             LastActiveTrigger = trigger;
             ActiveTime = DateTime.Now;
         }
@@ -78,18 +85,24 @@ namespace JobBars.Gauges {
     }
 
     // ===== BUFF OR ACTION ======
+    public enum ItemType {
+        BUFF,
+        ACTION, // either GCD or OGCD
+        GCD,
+        OGCD
+    }
     public struct Item {
         public uint Id;
-        public bool IsBuff;
+        public ItemType Type;
 
         // GENERATORS
         public Item(ActionIds action) {
             Id = (uint)action;
-            IsBuff = false;
+            Type = ItemType.ACTION;
         }
         public Item(BuffIds buff) {
             Id = (uint)buff;
-            IsBuff = true;
+            Type = ItemType.BUFF;
         }
 
         // EQUALITY
@@ -98,13 +111,13 @@ namespace JobBars.Gauges {
         }
 
         public bool Equals(Item other) {
-            return (Id == other.Id) && (IsBuff == other.IsBuff);
+            return (Id == other.Id) && ((Type == ItemType.BUFF) == (other.Type == ItemType.BUFF));
         }
 
         public override int GetHashCode() {
             int hash = 13;
             hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + IsBuff.GetHashCode();
+            hash = (hash * 7) + (Type == ItemType.BUFF).GetHashCode();
             return hash;
         }
 

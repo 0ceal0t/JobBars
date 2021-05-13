@@ -18,61 +18,41 @@ namespace JobBars.Data {
         // GNB
         NoMercy = 0x727,
         // SCH
-        Biolysis = 0x767, //.
-        SchBio = 0xb3, //.
-        SchBio2 = 0xbd, //.
-        Chain = 0x4c5, //.
         // WHM
-        Dia = 0x74f, //.
-        Aero = 0x8f, //.
-        Aero2 = 0x90, //.
         // AST
+        TheBalance = 0x75a,
+        TheBole = 0x75b,
+        TheArrow = 0x75c,
+        TheSpear = 0x75d,
+        TheEwer = 0x75e,
+        TheSpire = 0x75f,
+        LordOfCrowns = 0x754,
+        LadyOfCrowns = 0x755,
         // MNK
         PerfectBalance = 0x6e,
-        Brotherhood = 0x4a1,
         RiddleOfFire = 0x49d,
         // DRG
         LanceCharge = 0x748,
         BattleLitany = 0x312,
-        RightEye = 0x776,
+        RightEye = 0x776, // <---- test to make sure it doesn't overlap when cast on self?
         RightEye2 = 0x5ad,
-        LeftEye = 0x5ae,
         // NIN
         TrickAttack = 0x27e,
         Bunshin = 0x7a2,
         // SAM
         Jinpu = 0x512,
         Shifu = 0x513,
-        Higanbana = 0x4cc, //.
         // BRD
-        CausticBite = 0x4b0, //.
-        Stormbite = 0x4b1, //.
-        VenomousBite = 0x7c, //.
-        Windbite = 0x81, //.
         RagingStrikes = 0x7d,
-        BattleVoice = 0x8d,
         // MCH
         Wildfire = 0x79a,
         // DNC
         Devilment = 0x721,
-        TechnicalFinish = 0x71e, //.?
         // BLM
-        Thunder = 0xa1, //.
-        Thunder2 = 0xa2, //.
-        Thunder3 = 0xa3, //.
-        Thunder4 = 0xab4, //.
         // SMN
-        SmnBio = 0xb3, //.
-        SmnBio2 = 0xbd, //.
-        SmnBio3 = 0x4be, //.
-        Miasma = 0x4bf, //.
-        Devotion = 0x4bd,
         // RDM
         Manafication = 0x7b3,
         Embolden = 0x4d7,
         // BLU
-        SongOfTorment = 0x6b2, //.
-        PeculiarLight = 0x6b9, //.
-        OffGuard = 0x6b5, //.
     }
 }

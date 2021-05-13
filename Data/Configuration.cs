@@ -23,6 +23,8 @@ namespace JobBars.Data {
         public Dictionary<string, string> GaugeColorOverride = new Dictionary<string, string>();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new Dictionary<string, GaugeVisualType>();
 
+        public HashSet<string> BuffDisabled = new HashSet<string>();
+
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
         [NonSerialized]

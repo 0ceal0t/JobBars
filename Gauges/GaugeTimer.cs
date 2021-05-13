@@ -29,48 +29,8 @@ namespace JobBars.Gauges {
             };
         }
 
-        // ===== BUILDER FUNCS =====
-        public GaugeTimer WithTriggers(Item[] triggers) {
-            Triggers = triggers;
-            return this;
-        }
-        public GaugeTimer WithStartHidden() {
-            StartHidden = true;
-            return this;
-        }
-        public GaugeTimer NoRefresh() {
-            AllowRefresh = false;
-            return this;
-        }
-        public GaugeTimer WithReplaceIcon(ActionIds[] action, UIIconManager icon) {
-            Icon = icon;
-            ReplaceIcon = true;
-            ReplaceIconAction = action;
-            return this;
-        }
-        public GaugeTimer WithDefaultDuration(float duration) {
-            DefaultDuration = duration;
-            return this;
-        }
-        public GaugeTimer WithVisual(GaugeVisual visual) {
-            DefaultVisual = Visual = visual;
-            if(Configuration.Config.GetColorOverride(Name, out var color)) {
-                Visual.Color = color;
-            }
-            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
-                Visual.Type = type;
-            }
-            return this;
-        }
-
-        // ====================
-        public bool GetReplaceIcon() {
-            return ReplaceIcon;
-        }
-
-        // ====================
         public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!Active || AllowRefresh)) {
+            if (Triggers.Contains(action) && (!(State == GaugeState.ACTIVE) || AllowRefresh)) {
                 Start(action);
             }
         }
@@ -83,18 +43,16 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick(DateTime time, float delta) {
-            if (Active) {
+            if (State == GaugeState.ACTIVE) {
                 var timeleft = Duration - (time - ActiveTime).TotalSeconds;
-
                 if (UI is UIGauge gauge) {
                     gauge.SetText(((int)timeleft).ToString());
                     gauge.SetPercent((float)timeleft / MaxDuration);
                     SetIcon(timeleft, MaxDuration);
                 }
-                // ==========
                 if (timeleft <= 0) {
                     PluginLog.Log("STOPPING");
-                    Active = false;
+                    State = GaugeState.INACTIVE;
                     ResetIcon();
                 }
             }
@@ -114,8 +72,8 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void ProcessDuration(Item buff, float duration, bool isRefresh) { // primarily used for things like storm's eye
-            if(Active && buff == LastActiveTrigger && (!isRefresh || AllowRefresh)) {
+        public override void ProcessDuration(Item buff, float duration, bool isRefresh) {
+            if(State == GaugeState.ACTIVE && buff == LastActiveTrigger && (!isRefresh || AllowRefresh)) {
                 ActiveTime = DateTime.Now;
                 Duration = duration;
             }
@@ -149,6 +107,40 @@ namespace JobBars.Gauges {
                     Max = max
                 };
             }
+        }
+
+        // ===== BUILDER FUNCS =====
+        public GaugeTimer WithTriggers(Item[] triggers) {
+            Triggers = triggers;
+            return this;
+        }
+        public GaugeTimer WithStartHidden() {
+            StartHidden = true;
+            return this;
+        }
+        public GaugeTimer NoRefresh() {
+            AllowRefresh = false;
+            return this;
+        }
+        public GaugeTimer WithReplaceIcon(ActionIds[] action, UIIconManager icon) {
+            Icon = icon;
+            ReplaceIcon = true;
+            ReplaceIconAction = action;
+            return this;
+        }
+        public GaugeTimer WithDefaultDuration(float duration) {
+            DefaultDuration = duration;
+            return this;
+        }
+        public GaugeTimer WithVisual(GaugeVisual visual) {
+            DefaultVisual = Visual = visual;
+            if (Configuration.Config.GetColorOverride(Name, out var color)) {
+                Visual.Color = color;
+            }
+            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
+                Visual.Type = type;
+            }
+            return this;
         }
     }
 }
