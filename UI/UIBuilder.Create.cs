@@ -188,15 +188,14 @@ namespace JobBars.UI {
 
         public void LoadTex(ushort assetIdx, string path) {
             var addon = _ADDON;
-
             var newId = addon->UldManager.Assets[addon->UldManager.AssetCount - 1].Id + 1;
             var pt = IntPtr.Add(new IntPtr(addon->UldManager.Assets), 32 * assetIdx + 8);
             addon->UldManager.Assets[assetIdx].Id = newId;
             LoadTexture(pt, path, 1); // game function
             if ((assetIdx + 1) > addon->UldManager.AssetCount) {
-                addon->UldManager.AssetCount = (ushort)(assetIdx + 1);
                 var ptr = new IntPtr(addon->UldManager.Assets) - 8;
                 Marshal.WriteInt32(ptr, assetIdx + 1);
+                addon->UldManager.AssetCount = (ushort)(assetIdx + 1);
             }
         }
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO

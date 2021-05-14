@@ -50,6 +50,10 @@ namespace JobBars.UI {
         private delegate void SetIconRecastDelegate(IntPtr icon);
         private Hook<SetIconRecastDelegate> setIconRecastHook;
 
+        HashSet<IntPtr> IconComponentOverride;
+        private delegate IntPtr SetIconRecastDelegate2(IntPtr icon);
+        private Hook<SetIconRecastDelegate2> setIconRecastHook2;
+
         HashSet<IntPtr> IconTextOverride;
         private delegate void SetIconRecastTextDelegate(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6);
         private Hook<SetIconRecastTextDelegate> setIconRecastTextHook;
@@ -62,11 +66,17 @@ namespace JobBars.UI {
             Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
 
             IconRecastOverride = new HashSet<IntPtr>();
+            IconComponentOverride = new HashSet<IntPtr>();
             IconTextOverride = new HashSet<IntPtr>();
 
             IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23 BA ?? ?? ?? ?? "); // changes recast partId for gcds
             setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);
             setIconRecastHook.Enable();
+
+            // this is for stuff like thunder during thundercloud procs. god this sig is nasty
+            IntPtr setIconRecastPtr2 = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??");
+            setIconRecastHook2 = new Hook<SetIconRecastDelegate2>(setIconRecastPtr2, (SetIconRecastDelegate2)SetIconRecast2);
+            setIconRecastHook2.Enable();
 
             IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9"); // sets icon text for abilities which use mp, like Combust
             setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, (SetIconRecastTextDelegate)SetIconRecastText);
@@ -84,6 +94,7 @@ namespace JobBars.UI {
             ToCleanup.Clear();
 
             IconRecastOverride.Clear();
+            IconComponentOverride.Clear();
             IconTextOverride.Clear();
 
             ActionIdToStatus.Clear();
@@ -100,9 +111,23 @@ namespace JobBars.UI {
             setIconRecastHook.Disable();
             setIconRecastHook.Dispose();
 
+            //==================
+            setIconRecastHook2.Disable();
+            setIconRecastHook2.Dispose();
+            //===================
+
             Reset();
             Client.Dispose();
         }
+
+        //======================
+        public IntPtr SetIconRecast2(IntPtr icon) {
+            if(IconComponentOverride.Contains(icon)) {
+                return (IntPtr)0;
+            }
+            return setIconRecastHook2.Original(icon);
+        }
+        //======================
 
         public void SetIconRecast(IntPtr icon) {
             if (!IconRecastOverride.Contains(icon)) {
@@ -169,6 +194,7 @@ namespace JobBars.UI {
 
                             IconTextOverride.Add((IntPtr)bottomLeftText);
                             IconRecastOverride.Add((IntPtr)cdOverlay);
+                            IconComponentOverride.Add((IntPtr)icon->Component);
                         }
                         else if(state == IconState.RUNNING) {
                             UiHelper.Show(cdOverlay);
@@ -181,6 +207,7 @@ namespace JobBars.UI {
 
                             IconTextOverride.Remove((IntPtr)bottomLeftText);
                             IconRecastOverride.Remove((IntPtr)cdOverlay);
+                            IconComponentOverride.Add((IntPtr)icon->Component);
                             ResetColor(iconImage);
 
                             UiHelper.Hide(cdOverlay);

@@ -1,4 +1,5 @@
 ﻿using Dalamud.Interface;
+using Dalamud.Plugin;
 using ImGuiNET;
 using JobBars.Data;
 using JobBars.Gauges;
@@ -20,6 +21,7 @@ namespace JobBars {
 
         private void BuildUI() {
             if (!_Ready || !Init) return;
+
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
