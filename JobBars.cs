@@ -53,7 +53,13 @@ namespace JobBars {
             UIColor.SetupColors();
             SetupActions();
 
+            // ===============
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
+            PluginLog.Log($"PARTY =========> {Party.Count}");
+            foreach(var member in Party) {
+                PluginLog.Log($"{member.Actor.Name}");
+            }
+            // ==============
 
             _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             _Config.Initialize(PluginInterface);
@@ -69,8 +75,6 @@ namespace JobBars {
             IntPtr initZonePtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C0 48 8D 53 10 8B CE E8 ?? ?? ?? ?? 48 8D 4B 60 E8 ?? ?? ?? ?? 48 8D 4B 6C");
             initZoneHook = new Hook<InitZoneDelegate>(initZonePtr, (InitZoneDelegate)InitZone);
             initZoneHook.Enable();
-            //IntPtr testPtr = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 55 57 41 56 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 41 0F B6 E8"); // IntPtr a1, IntPtr a2, IntPtr a3) <--- status list
-            //IntPtr testPtr2 = PluginInterface.TargetModuleScanner.ScanText("48 8B C4 57 41 54 41 57 48 83 EC 60 83 3D ?? ?? ?? ?? ?? 45 0F B6 E0"); // IntPtr a1, IntPtr a2, IntPtr a3) <---- action effect
 
             PluginInterface.UiBuilder.OnBuildUi += BuildUI;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
@@ -220,8 +224,14 @@ namespace JobBars {
                 return;
             }
             if (!Init) {
+                if(UI._ADDON == null) {
+                    return;
+                }
+                PluginLog.Log("TEXTURES");
                 UI.SetupTex();
+                PluginLog.Log("PARTS");
                 UI.SetupPart();
+                PluginLog.Log("INIT");
                 UI.Init();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);

@@ -94,14 +94,21 @@ namespace JobBars.UI {
             setIconRecastTextHook.Disable();
             setIconRecastTextHook.Dispose();
 
-            setIconRecastHook.Disable();
-            setIconRecastHook.Dispose();
-
             setIconRecastTextHook2.Disable();
             setIconRecastTextHook2.Dispose();
 
+            setIconRecastHook.Disable();
+            setIconRecastHook.Dispose();
+
             Reset();
             Client.Dispose();
+        }
+
+        public void SetIconRecast(IntPtr icon) {
+            if (!IconRecastOverride.Contains(icon)) {
+                setIconRecastHook.Original(icon);
+            }
+            return;
         }
 
         public void SetIconRecastText(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6) {
@@ -114,13 +121,6 @@ namespace JobBars.UI {
         public void SetIconRecastText2(IntPtr text, IntPtr a2) {
             if (!IconTextOverride.Contains(text) || a2 != IntPtr.Zero) {
                setIconRecastTextHook2.Original(text, a2);
-            }
-            return;
-        }
-
-        public void SetIconRecast(IntPtr icon) {
-            if (!IconRecastOverride.Contains(icon)) {
-                setIconRecastHook.Original(icon);
             }
             return;
         }

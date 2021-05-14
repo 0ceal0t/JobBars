@@ -53,11 +53,6 @@ namespace JobBars.Gauges {
             Duration = MaxDuration;
             Counter = 0;
         }
-        private void AddValue() {
-            if (Counter < MaxCounter) {
-                Counter++;
-            }
-        }
 
         // ========= UPDATE ========
         static int RESET_DELAY = 3;
@@ -105,7 +100,9 @@ namespace JobBars.Gauges {
                     (Increment.Length > 0 && Increment.Contains(action)) // take specific gcds
                 )
             ) {
-                AddValue();
+                if (Counter < MaxCounter) {
+                    Counter++;
+                }
             }
         }
 

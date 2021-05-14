@@ -19,7 +19,7 @@ namespace JobBars {
         private bool BUFF_LOCK = true;
 
         private void BuildUI() {
-            if (!Init) return;
+            if (!_Ready || !Init) return;
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();

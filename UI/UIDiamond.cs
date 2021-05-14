@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public unsafe class UIDiamond : UIElement {
-        private static int MAX = 12;
+        private static int MAX = 6;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
 

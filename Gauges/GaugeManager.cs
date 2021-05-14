@@ -275,6 +275,12 @@ namespace JobBars.Gauges {
             });
             // ============ BLM ==================
             JobToGauges.Add(JobIds.BLM, new Gauge[] {
+                new GaugeProc("Firestarter/Thundercloud")
+                    .WithProcs(new[]
+                    {
+                        new Proc(BuffIds.Thundercloud, UIColor.DarkBlue),
+                        new Proc(BuffIds.Firestarter, UIColor.Orange)
+                    }),
                 new GaugeTimer("Thunder 3", 24)
                     .WithTriggers(new[]{
                         new Item(ActionIds.Thunder3),
@@ -305,7 +311,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Manafication)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.DarkBlue)),
-                new GaugeProc("Verfire/Verstone Procs")
+                new GaugeProc("Verfire/Verstone")
                     .WithProcs(new[]
                     {
                         new Proc(BuffIds.VerfireReady, UIColor.Red),
@@ -355,19 +361,19 @@ namespace JobBars.Gauges {
             });
             // ============ MNK ==================
             JobToGauges.Add(JobIds.MNK, new Gauge[] {
-                new GaugeGCD("Riddle of Fire", 20, 9)
-                    .WithTriggers(new[]
-                    {
-                        new Item(BuffIds.RiddleOfFire)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
                 new GaugeGCD("Perfect Balance", 15, 6)
                     .WithTriggers(new[]
                     {
                         new Item(BuffIds.PerfectBalance)
                     })
                     .WithNoRefresh()
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
+                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
+                new GaugeGCD("Riddle of Fire", 20, 9)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.RiddleOfFire)
+                    })
+                    .WithVisual(GaugeVisual.Arrow(UIColor.Red))
             });
             // ============ BLU ==================
             JobToGauges.Add(JobIds.BLU, new Gauge[] {
@@ -385,8 +391,8 @@ namespace JobBars.Gauges {
             JobToGauges[JobIds.SMN][0].HideGauge = JobToGauges[JobIds.SMN][1]; // bahamut + pheonix
             JobToGauges[JobIds.SMN][1].HideGauge = JobToGauges[JobIds.SMN][0];
 
-            JobToGauges[JobIds.BLM][0].HideGauge = JobToGauges[JobIds.BLM][1]; // thunder 3 + thunder 4
-            JobToGauges[JobIds.BLM][1].HideGauge = JobToGauges[JobIds.BLM][0];
+            JobToGauges[JobIds.BLM][1].HideGauge = JobToGauges[JobIds.BLM][2]; // thunder 3 + thunder 4
+            JobToGauges[JobIds.BLM][2].HideGauge = JobToGauges[JobIds.BLM][1];
         }
 
         public void SetJob(JobIds job) {

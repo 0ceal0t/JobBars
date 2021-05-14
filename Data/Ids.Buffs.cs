@@ -54,6 +54,8 @@ namespace JobBars.Data {
         FlourishingShower = 1817,
         FlourishingFanDance = 1820,
         // BLM
+        Firestarter = 165,
+        Thundercloud = 164,
         // SMN
         // RDM
         Manafication = 0x7b3,
