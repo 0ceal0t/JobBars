@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using FFXIVClientStructs.FFXIV.Component.GUI.ULD;
 
@@ -103,30 +102,6 @@ namespace JobBars.Helper {
             Marshal.Copy(oldListPtr, clone, 0, originalSize);
             Marshal.Copy(clone, 0, newListPtr, originalSize);
             return (AtkResNode**)(newListPtr);
-        }
-
-        public static AtkUldAsset* ExpandAssetList(AtkUldManager manager, ushort addSize) {
-            var oldLength = manager.AssetCount;
-            var newLength = oldLength + addSize;
-            var oldSize = oldLength * 32 + 8;
-            var newSize = newLength * 32 + 8; // extra 8 for array size
-            var newListPtr = Alloc((ulong)newSize + 8);
-            var oldListPtr = new IntPtr(manager.Assets) - 8;
-            byte[] oldData = new byte[oldSize];
-            Marshal.Copy(oldListPtr, oldData, 0, oldSize);
-            Marshal.Copy(oldData, 0, newListPtr, oldSize);
-
-            for(int i = 0; i < manager.PartsListCount; i++) { // adjust old part list to use new assets
-                var list = manager.PartsList[i];
-                for(int j = 0; j < list.PartCount; j++) {
-                    var p = list.Parts[j];
-                    var oldAssetPtr = new IntPtr(p.UldAsset);
-                    var diff = oldAssetPtr.ToInt64() - oldListPtr.ToInt64();
-                    list.Parts[j].UldAsset = (AtkUldAsset*)IntPtr.Add(newListPtr, (int)diff);
-                }
-            }
-
-            return (AtkUldAsset*)(newListPtr + 8);
         }
 
         public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {

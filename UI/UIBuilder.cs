@@ -18,10 +18,6 @@ namespace JobBars.UI {
         public DalamudPluginInterface PluginInterface;
         public UIIconManager Icon;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTextureDelegate(IntPtr a1, string path, uint a3);
-        public LoadTextureDelegate LoadTexture;
-
         private AtkResNode* G_RootRes = null;
         private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
@@ -33,11 +29,32 @@ namespace JobBars.UI {
         private IconIds[] _Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
         public Dictionary<IconIds, UIBuff> IconToBuff = new Dictionary<IconIds, UIBuff>();
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        public delegate IntPtr LoadTex3Delegate(IntPtr uldManager, IntPtr allocator, IntPtr texPaths, IntPtr unkAllocatorStuff, uint assetNumber, byte a6);
+        public LoadTex3Delegate LoadTex3;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        public delegate IntPtr LoadTexAllocDelegate(IntPtr allocator, Int64 size, UInt64 a3);
+        public LoadTexAllocDelegate LoadTexAlloc;
+
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        //public delegate IntPtr LoadTextureDelegate(IntPtr a1, string path, uint a3);
+        //public LoadTextureDelegate LoadTexture;
+
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
-            var scanner = PluginInterface.TargetModuleScanner;
-            var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9"); // can find using the "_hr1" string
-            LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
+
+            // ========= DON'T USE THIS, JUST FOR REFERENCE :) ==========
+            //var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9");
+            //LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
+
+            // nasty sig :(
+            IntPtr loadAssetsPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 44 8B BD ?? ?? ?? ?? 45 33 E4");
+            LoadTex3 = Marshal.GetDelegateForFunctionPointer<LoadTex3Delegate>(loadAssetsPtr);
+
+            IntPtr loadTexAllocPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48");
+            LoadTexAlloc = Marshal.GetDelegateForFunctionPointer<LoadTexAllocDelegate>(loadTexAllocPtr);
+
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
             Diamonds = new UIDiamond[MAX_GAUGES];
@@ -46,7 +63,7 @@ namespace JobBars.UI {
         }
 
         public void Dispose() {
-            Icon.Dispose();
+            Icon?.Dispose();
 
             if (G_RootRes != null) {
                 UiHelper.Hide(G_RootRes);
@@ -106,24 +123,61 @@ namespace JobBars.UI {
 
         public Dictionary<IconIds, ushort> IconToPartId = new Dictionary<IconIds, ushort>();
 
-        public void SetupTex() {
+        public void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
+            var numPaths = paths.Length;
             var addon = _ADDON;
-            if (addon->UldManager.NodeListCount > 4) return;
 
-            addon->UldManager.Assets = UiHelper.ExpandAssetList(addon->UldManager, (ushort)(_Icons.Length + 5));
-            LoadTex(GAUGE_ASSET, @"ui/uld/Parameter_Gauge.tex");
-            LoadTex(BLUR_ASSET, @"ui/uld/JobHudNumBg.tex");
-            LoadTex(ARROW_ASSET, @"ui/uld/JobHudSimple_StackB.tex");
-            LoadTex(DIAMOND_ASSET, @"ui/uld/JobHudSimple_StackA.tex");
-            LoadTex(BUFF_OVERLAY_ASSET, @"ui/uld/IconA_Frame.tex");
-
-            var current_asset = BUFF_ASSET_START;
-            foreach (var icon in _Icons) {
-                var _icon = (uint) icon;
-                var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
-                LoadTex(current_asset, path);
-                current_asset++;
+            var allocator = UiHelper._getGameAllocator();
+            var unk2 = LoadTexAlloc(allocator, 4 * numPaths, 16);
+            for(int i = 0; i < numPaths; i++) {
+                Marshal.WriteInt32(unk2 + 4 * i, i + 1); // 0->1, 1->2, etc.
             }
+
+            IntPtr manager = (IntPtr)addon + 0x28;
+            var size = 16 + 56 * numPaths + 16; // a bit of extra padding on the end
+            IntPtr texPaths = UiHelper.Alloc(size);
+            var data = new byte[size];
+
+            var start = Encoding.ASCII.GetBytes("ashd0101");
+            Buffer.BlockCopy(start, 0, data, 0, start.Length);
+            var numData = BitConverter.GetBytes(numPaths);
+            Buffer.BlockCopy(numData, 0, data, 8, 4); // count
+
+            for(int i = 0; i < numPaths; i++) {
+                var startAddr = 16 + 56 * i;
+                var pathId = BitConverter.GetBytes(i + 1);
+                Buffer.BlockCopy(pathId, 0, data, startAddr, 4);
+                var text = Encoding.ASCII.GetBytes(paths[i]);
+                Buffer.BlockCopy(text, 0, data, startAddr + 4, text.Length);
+            }
+
+            var end = Encoding.ASCII.GetBytes("tphd0100"); // idk if this in necessary, but whatever
+            Buffer.BlockCopy(end, 0, data, 16 + 56 * numPaths, end.Length);
+
+            Marshal.Copy(data, 0, texPaths, size);
+            LoadTex3(manager, allocator, texPaths, unk2, (uint)numPaths, 1);
+
+            for (int i = 0; i < 7; i++) { // _ParameterGauges is nice because it only has 1 PartList and 1 Asset
+                addon->UldManager.PartsList[0].Parts[i].UldAsset = addon->UldManager.Assets; // reset all the assets
+            }
+
+            addon->UldManager.LoadedState = 3; // maybe reset this after the parts are set up? idk
+        }
+
+        public void SetupTex() {
+            List<string> assets = new List<string>();
+            assets.Add("ui/uld/Parameter_Gauge.tex"); // existing asset
+            assets.Add("ui/uld/Parameter_Gauge.tex");
+            assets.Add("ui/uld/JobHudNumBg.tex");
+            assets.Add("ui/uld/JobHudSimple_StackB.tex");
+            assets.Add("ui/uld/JobHudSimple_StackA.tex");
+            assets.Add("ui/uld/IconA_Frame.tex");
+            foreach (var icon in _Icons) {
+                var _icon = (uint)icon;
+                var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
+                assets.Add(path);
+            }
+            LoadAssets(assets.ToArray());
         }
 
         public void SetupPart() {

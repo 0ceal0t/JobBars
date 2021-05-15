@@ -10,11 +10,11 @@ namespace JobBars.Helper
         private delegate void AtkTextNodeSetText(AtkTextNode* textNode, void* a2);
         private static AtkTextNodeSetText _atkTextNodeSetText;
 
-        private delegate IntPtr GameAlloc(ulong size, IntPtr unk, IntPtr allocator, IntPtr alignment);
-        private static GameAlloc _gameAlloc;
+        public delegate IntPtr GameAlloc(ulong size, IntPtr unk, IntPtr allocator, IntPtr alignment);
+        public static GameAlloc _gameAlloc;
 
-        private delegate IntPtr GetGameAllocator();
-        private static GetGameAllocator _getGameAllocator;
+        public delegate IntPtr GetGameAllocator();
+        public static GetGameAllocator _getGameAllocator;
         
         public static bool Ready = false;
 
