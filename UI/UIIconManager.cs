@@ -111,10 +111,8 @@ namespace JobBars.UI {
             setIconRecastHook.Disable();
             setIconRecastHook.Dispose();
 
-            //==================
             setIconRecastHook2.Disable();
             setIconRecastHook2.Dispose();
-            //===================
 
             Reset();
             Client.Dispose();
@@ -145,7 +143,7 @@ namespace JobBars.UI {
 
         public void SetIconRecastText2(IntPtr text, IntPtr a2) {
             if (!IconTextOverride.Contains(text) || a2 != IntPtr.Zero) {
-               setIconRecastTextHook2.Original(text, a2);
+                setIconRecastTextHook2.Original(text, a2);
             }
             return;
         }
@@ -195,6 +193,8 @@ namespace JobBars.UI {
                             IconTextOverride.Add((IntPtr)bottomLeftText);
                             IconRecastOverride.Add((IntPtr)cdOverlay);
                             IconComponentOverride.Add((IntPtr)icon->Component);
+
+                            UiHelper.Hide(icon->Component->UldManager.NodeList[14]); // another image overlay :shrug:
                         }
                         else if(state == IconState.RUNNING) {
                             UiHelper.Show(cdOverlay);
@@ -207,7 +207,7 @@ namespace JobBars.UI {
 
                             IconTextOverride.Remove((IntPtr)bottomLeftText);
                             IconRecastOverride.Remove((IntPtr)cdOverlay);
-                            IconComponentOverride.Add((IntPtr)icon->Component);
+                            IconComponentOverride.Remove((IntPtr)icon->Component);
                             ResetColor(iconImage);
 
                             UiHelper.Hide(cdOverlay);

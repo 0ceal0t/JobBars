@@ -36,10 +36,8 @@ namespace JobBars {
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
+        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
-        private delegate byte InitZoneDelegate(IntPtr a1, int a2, IntPtr a3);
-        private Hook<InitZoneDelegate> initZoneHook;
 
         private PList Party; // TEMP
         private HashSet<uint> GCDs = new HashSet<uint>();
@@ -72,9 +70,6 @@ namespace JobBars {
             IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
             actorControlSelfHook.Enable();
-            IntPtr initZonePtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C0 48 8D 53 10 8B CE E8 ?? ?? ?? ?? 48 8D 4B 60 E8 ?? ?? ?? ?? 48 8D 4B 6C");
-            initZoneHook = new Hook<InitZoneDelegate>(initZonePtr, (InitZoneDelegate)InitZone);
-            initZoneHook.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += BuildUI;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
@@ -87,8 +82,6 @@ namespace JobBars {
 
             actorControlSelfHook?.Disable();
             actorControlSelfHook?.Dispose();
-            initZoneHook?.Disable();
-            initZoneHook?.Dispose();
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
@@ -119,7 +112,8 @@ namespace JobBars {
 
             var isSelf = sourceId == PluginInterface.ClientState.LocalPlayer.ActorId;
             var isPet = (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? sourceId == FindCharaPet() : false;
-            if(!(isSelf || isPet)) {
+            var isParty = !isSelf && !isPet && IsInParty(sourceId);
+            if(!(isSelf || isPet || isParty)) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -129,8 +123,11 @@ namespace JobBars {
                 Id = id,
                 Type = (GCDs.Contains(id) ? ItemType.GCD : ItemType.OGCD)
             };
-            GManager?.PerformAction(actionItem);
-            BManager?.PerformAction(actionItem); // TODO: only trigger if performed by party member
+
+            if(!isParty) { // don't let party members affect our gauge
+                GManager?.PerformAction(actionItem);
+            }
+            BManager?.PerformAction(actionItem);
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
             int effectsEntries = 0;
@@ -176,23 +173,27 @@ namespace JobBars {
                         Id = entries[i].value,
                         Type = ItemType.BUFF
                     };
-                    GManager?.PerformAction(buffItem);
-                    if((int) tTarget == PluginInterface.ClientState.LocalPlayer.ActorId) {
+
+                    if(!isParty) { // don't let party members affect our gauge
+                        GManager?.PerformAction(buffItem);
+                    }
+                    if((int) tTarget == PluginInterface.ClientState.LocalPlayer.ActorId) { // only really care about buffs on us
                         BManager?.PerformAction(buffItem);
                     }
                 }
             }
+
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
-        private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId) {
-            if(arg1 == 0x40000010) { // it's a wipe!
+        private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
+            actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
+            if (a4 == 0x40000010) {
                 Reset();
             }
-            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId);
-        }
-        private byte InitZone(IntPtr a1, int a2, IntPtr a3) {
-            Reset();
-            return initZoneHook.Original(a1, a2, a3);
+            else if(a4 == 0x40000001) {
+                PluginLog.Log("INSTANCE START");
+                Reset();
+            }
         }
 
         // ======= DATA ==========
@@ -211,6 +212,14 @@ namespace JobBars {
                     return npc.ActorId;
             }
             return -1;
+        }
+        private bool IsInParty(int actorId) {
+            foreach(var pMember in Party) {
+                if(pMember.Actor != null && pMember.Actor.ActorId == actorId) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // ======== UPDATE =========

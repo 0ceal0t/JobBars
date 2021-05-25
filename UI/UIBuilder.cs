@@ -165,6 +165,9 @@ namespace JobBars.UI {
         }
 
         public void SetupTex() {
+            var addon = _ADDON;
+            if (addon->UldManager.NodeListCount > 4) return;
+
             List<string> assets = new List<string>();
             assets.Add("ui/uld/Parameter_Gauge.tex"); // existing asset
             assets.Add("ui/uld/Parameter_Gauge.tex");
