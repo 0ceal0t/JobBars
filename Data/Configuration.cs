@@ -4,10 +4,7 @@ using JobBars.Gauges;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Data {
@@ -21,6 +18,7 @@ namespace JobBars.Data {
         public HashSet<string> GaugeDisabled = new HashSet<string>();
         public Dictionary<string, string> GaugeColorOverride = new Dictionary<string, string>();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new Dictionary<string, GaugeVisualType>();
+        public Dictionary<string, int> GaugeOrderOverride = new Dictionary<string, int>();
         public bool GaugeIconReplacement = true;
 
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);

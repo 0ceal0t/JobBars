@@ -17,7 +17,6 @@ namespace JobBars.Gauges {
         public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
         public Gauge[] CurrentGauges => JobToGauges[CurrentJob];
-        private DateTime LastTick = DateTime.Now;
 
         public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
             UI = ui;
@@ -399,10 +398,10 @@ namespace JobBars.Gauges {
             Reset();
             CurrentJob = job;
 
-            int enabledIdx = 0;
             int yPosition = 0;
             int xPosition = 0;
-            foreach(var gauge in CurrentGauges) {
+            int enabledIdx = 0;
+            foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
                 if (!(gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
 
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
@@ -475,7 +474,6 @@ namespace JobBars.Gauges {
                 gauge.Tick(currentTime, BuffDict);
             }
             UI.Icon.Update();
-            LastTick = currentTime;
         }
     }
 }

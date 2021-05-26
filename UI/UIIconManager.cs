@@ -118,15 +118,12 @@ namespace JobBars.UI {
             Client.Dispose();
         }
 
-        //======================
         public IntPtr SetIconRecast2(IntPtr icon) {
             if(IconComponentOverride.Contains(icon)) {
                 return (IntPtr)0;
             }
             return setIconRecastHook2.Original(icon);
         }
-        //======================
-
         public void SetIconRecast(IntPtr icon) {
             if (!IconRecastOverride.Contains(icon)) {
                 setIconRecastHook.Original(icon);
@@ -140,7 +137,6 @@ namespace JobBars.UI {
             }
             return;
         }
-
         public void SetIconRecastText2(IntPtr text, IntPtr a2) {
             if (!IconTextOverride.Contains(text) || a2 != IntPtr.Zero) {
                 setIconRecastTextHook2.Original(text, a2);

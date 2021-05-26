@@ -14,10 +14,7 @@ To open the settings menu, use `/jobbars`
 - more animated movement
 - random crash when loading sometimes
 - test loading from devplugins
-- party members
 - right justify
 - AST: when star is ready
-- BLM: fire or thunder proc
 - MCH: number of charges?
-- change order
-- still some flickering with icons (for example, BLM with thundercloud)
+- danger flashing

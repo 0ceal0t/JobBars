@@ -285,17 +285,10 @@ namespace JobBars.Buffs {
 
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
-                var buffs = jobEntry.Value;
-                foreach (var buff in buffs) {
+                foreach (var buff in jobEntry.Value) {
+                    buff.UI = UI.IconToBuff[buff.Icon];
                     AllBuffs.Add(buff);
                 }
-            }
-            SetupUI();
-        }
-
-        public void SetupUI() {
-            foreach(var buff in AllBuffs) {
-                buff.UI = UI.IconToBuff[buff.Icon];
             }
         }
 

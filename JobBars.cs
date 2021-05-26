@@ -53,10 +53,6 @@ namespace JobBars {
 
             // ===============
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
-            PluginLog.Log($"PARTY =========> {Party.Count}");
-            foreach(var member in Party) {
-                PluginLog.Log($"{member.Actor.Name}");
-            }
             // ==============
 
             _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -188,6 +184,7 @@ namespace JobBars {
         private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
             actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
             if (a4 == 0x40000010) {
+                PluginLog.Log("WIPE");
                 Reset();
             }
             else if(a4 == 0x40000001) {

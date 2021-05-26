@@ -10,28 +10,25 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
-    // ======= STATE ==========
-    public enum GaugeState {
-        INACTIVE,
-        ACTIVE,
-        FINISHED,
-    }
-
     public abstract class Gauge {
         public string Name;
         public Item[] Triggers;
         public UIElement UI = null;
+
         public GaugeVisual DefaultVisual;
         public GaugeVisual Visual;
 
         public bool Enabled = true;
-        public GaugeState State = GaugeState.INACTIVE;
         public bool AllowRefresh = true;
+        public GaugeState State = GaugeState.INACTIVE;
+
         public Item LastActiveTrigger;
         public DateTime ActiveTime;
 
         public Gauge HideGauge = null;
         public bool StartHidden = false;
+
+        public int Order => Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
 
         public Gauge(string name) {
             Name = name;
@@ -69,12 +66,28 @@ namespace JobBars.Gauges {
             }
         }
 
+        public void GetVisualConfig() {
+            if (Configuration.Config.GetColorOverride(Name, out var color)) {
+                Visual.Color = color;
+            }
+            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
+                Visual.Type = type;
+            }
+        }
+
         public abstract void Setup();
         public abstract void SetColor();
         public abstract void ProcessAction(Item action);
         public abstract void Tick(DateTime time, Dictionary<Item, float> buffDict);
         public abstract int GetHeight();
         public abstract int GetWidth();
+    }
+
+    // ======= STATE ==========
+    public enum GaugeState {
+        INACTIVE,
+        ACTIVE,
+        FINISHED,
     }
 
     // ======= VISUAL =========
@@ -129,7 +142,6 @@ namespace JobBars.Gauges {
         public override bool Equals(object obj) {
             return obj is Item overrides && Equals(overrides);
         }
-
         public bool Equals(Item other) {
             return (Id == other.Id) && ((Type == ItemType.BUFF) == (other.Type == ItemType.BUFF));
         }
@@ -144,7 +156,6 @@ namespace JobBars.Gauges {
         public static bool operator ==(Item left, Item right) {
             return left.Equals(right);
         }
-
         public static bool operator !=(Item left, Item right) {
             return !(left == right);
         }

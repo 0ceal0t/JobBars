@@ -80,7 +80,8 @@ namespace JobBars.Gauges {
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
             if (State == GaugeState.ACTIVE) {
                 var timeleft = TimeLeft(Duration, time, buffDict);
-                if (timeleft < 0) {
+                if (timeleft <= 0) {
+                    timeleft = 0; // prevent "-1" or something
                     PluginLog.Log("STOPPING");
                     State = GaugeState.INACTIVE;
                     ResetIcon();

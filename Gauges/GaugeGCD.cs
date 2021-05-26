@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 namespace JobBars.Gauges {
     public class GaugeGCD : Gauge {
         public Item[] Increment;
-        public int MaxCounter;
-        public float MaxDuration;
 
         public int Counter;
+        public int MaxCounter;
+
         public float Duration;
+        public float MaxDuration;
 
         public GaugeGCD(string name, float duration, int max) : base(name) {
             MaxDuration = duration;
@@ -132,12 +133,7 @@ namespace JobBars.Gauges {
         }
         public GaugeGCD WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
-            if (Configuration.Config.GetColorOverride(Name, out var color)) {
-                Visual.Color = color;
-            }
-            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
-                Visual.Type = type;
-            }
+            GetVisualConfig();
             return this;
         }
     }

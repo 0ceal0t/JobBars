@@ -121,23 +121,36 @@ namespace JobBars {
                     // ===== ENABLED / DISABLED ======
                     var _enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
                     var type = "";
-                    if(gauge is GaugeGCD) {
+                    if (gauge is GaugeGCD) {
                         type = "GCDS";
                     }
-                    else if(gauge is GaugeTimer) {
+                    else if (gauge is GaugeTimer) {
                         type = "TIMER";
                     }
-                    else if(gauge is GaugeProc) {
+                    else if (gauge is GaugeProc) {
                         type = "PROCS";
                     }
 
                     ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} [{type}]");
                     if (ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
-                        if(_enabled) {
+                        if (_enabled) {
                             Configuration.Config.GaugeDisabled.Remove(gauge.Name);
                         }
                         else {
                             Configuration.Config.GaugeDisabled.Add(gauge.Name);
+                        }
+                        Configuration.Config.Save();
+                        GManager.ResetJob(G_SelectedJob);
+                    }
+                    // ===== ORDER =======
+                    int order = gauge.Order;
+                    if (ImGui.InputInt("Order" + _ID + gauge.Name, ref order)) {
+                        if(order <= -1) {
+                            order = -1;
+                            Configuration.Config.GaugeOrderOverride.Remove(gauge.Name);
+                        }
+                        else {
+                            Configuration.Config.GaugeOrderOverride[gauge.Name] = order;
                         }
                         Configuration.Config.Save();
                         GManager.ResetJob(G_SelectedJob);
