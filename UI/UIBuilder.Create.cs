@@ -178,24 +178,5 @@ namespace JobBars.UI {
 
             return node;
         }
-
-        // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
-        public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
-            var addon = _ADDON;
-
-            var asset = UiHelper.CleanAlloc<AtkUldAsset>();
-            asset->Id = addon->UldManager.Assets[assetIdx].Id;
-            asset->AtkTexture = addon->UldManager.Assets[assetIdx].AtkTexture;
-
-            addon->UldManager.PartsList->Parts[partIdx].UldAsset = asset;
-            addon->UldManager.PartsList->Parts[partIdx].U = U;
-            addon->UldManager.PartsList->Parts[partIdx].V = V;
-            addon->UldManager.PartsList->Parts[partIdx].Width = Width;
-            addon->UldManager.PartsList->Parts[partIdx].Height = Height;
-
-            if ((partIdx + 1) > addon->UldManager.PartsList->PartCount) {
-                addon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
-            }
-        }
     }
 }

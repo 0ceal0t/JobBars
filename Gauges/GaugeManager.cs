@@ -395,9 +395,15 @@ namespace JobBars.Gauges {
         }
 
         public void SetJob(JobIds job) {
-            Reset();
-            CurrentJob = job;
+            // RESET
+            foreach (var gauge in CurrentGauges) {
+                gauge.State = GaugeState.Inactive;
+                gauge.UI = null;
+            }
+            UI.HideAllGauges();
+            UI.Icon.Reset();
 
+            CurrentJob = job;
             int totalPosition = 0;
             int enabledIdx = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
@@ -436,15 +442,6 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void Reset() {
-            foreach (var gauge in CurrentGauges) {
-                gauge.State = GaugeState.Inactive;
-                gauge.UI = null;
-            }
-            UI.HideAllGauges();
-            UI.Icon.Reset();
-        }
-
         public void ResetJob(JobIds job) {
             if(job == CurrentJob) {
                 SetJob(job);
@@ -452,8 +449,7 @@ namespace JobBars.Gauges {
         }
 
         public void PerformAction(Item action) {
-            foreach(var gauge in CurrentGauges) {
-                if(!gauge.Enabled) { continue; }
+            foreach(var gauge in CurrentGauges.Where(x => x.Enabled)) {
                 gauge.ProcessAction(action);
             }
         }

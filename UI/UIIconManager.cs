@@ -69,7 +69,7 @@ namespace JobBars.UI {
             IconComponentOverride = new HashSet<IntPtr>();
             IconTextOverride = new HashSet<IntPtr>();
 
-            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23 BA ?? ?? ?? ?? "); // changes recast partId for gcds
+            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23"); // changes recast partId for gcds
             setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);
             setIconRecastHook.Enable();
 

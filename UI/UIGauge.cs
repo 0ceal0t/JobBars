@@ -10,10 +10,10 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIGauge : UIElement {
-        AtkTextNode* TextNode;
-        AtkNineGridNode* TextBlurNode;
-        AtkNineGridNode* BarMainNode;
-        string CurrentText = "";
+        private AtkTextNode* TextNode;
+        private AtkNineGridNode* TextBlurNode;
+        private AtkNineGridNode* BarMainNode;
+        private string CurrentText = "";
 
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);

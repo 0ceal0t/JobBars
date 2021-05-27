@@ -15,7 +15,7 @@ using static JobBars.UI.UIColor;
 namespace JobBars {
     public unsafe partial class JobBars {
 
-        public bool Visible = true;
+        public bool Visible = false;
         private bool GAUGE_LOCK = true;
         private bool BUFF_LOCK = true;
 

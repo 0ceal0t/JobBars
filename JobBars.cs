@@ -182,11 +182,9 @@ namespace JobBars {
         private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
             actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
             if (a4 == 0x40000010) {
-                PluginLog.Log("WIPE");
                 Reset();
             }
             else if(a4 == 0x40000001) {
-                PluginLog.Log("INSTANCE START");
                 Reset();
             }
         }
@@ -231,11 +229,8 @@ namespace JobBars {
                 if(UI._ADDON == null) {
                     return;
                 }
-                PluginLog.Log("TEXTURES");
                 UI.SetupTex();
-                PluginLog.Log("PARTS");
                 UI.SetupPart();
-                PluginLog.Log("INIT");
                 UI.Init();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
@@ -307,19 +302,17 @@ namespace JobBars {
         public bool Equals(Item other) {
             return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
         }
-
-        public override int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();
-            return hash;
-        }
-
         public static bool operator ==(Item left, Item right) {
             return left.Equals(right);
         }
         public static bool operator !=(Item left, Item right) {
             return !(left == right);
+        }
+        public override int GetHashCode() {
+            int hash = 13;
+            hash = (hash * 7) + Id.GetHashCode();
+            hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();
+            return hash;
         }
     }
 }

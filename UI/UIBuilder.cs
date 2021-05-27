@@ -3,6 +3,7 @@ using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
+using JobBars.GameStructs;
 using JobBars.Gauges;
 using JobBars.Helper;
 using System;
@@ -30,22 +31,28 @@ namespace JobBars.UI {
         public Dictionary<IconIds, UIBuff> IconToBuff = new Dictionary<IconIds, UIBuff>();
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTex3Delegate(IntPtr uldManager, IntPtr allocator, IntPtr texPaths, IntPtr unkAllocatorStuff, uint assetNumber, byte a6);
-        public LoadTex3Delegate LoadTex3;
+        public delegate IntPtr LoadTexDelegate(IntPtr uldManager, IntPtr allocator, IntPtr texPaths, IntPtr assetMapping, uint assetNumber, byte a6);
+        public LoadTexDelegate LoadTex;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public delegate IntPtr LoadTexAllocDelegate(IntPtr allocator, Int64 size, UInt64 a3);
         public LoadTexAllocDelegate LoadTexAlloc;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        public delegate IntPtr TexUnallocDelegate(IntPtr tex);
+        public TexUnallocDelegate TexUnalloc;
+
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
 
-            // nasty sig :(
-            IntPtr loadAssetsPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 44 8B BD ?? ?? ?? ?? 45 33 E4");
-            LoadTex3 = Marshal.GetDelegateForFunctionPointer<LoadTex3Delegate>(loadAssetsPtr);
+            IntPtr loadAssetsPtr = PluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??");
+            LoadTex = Marshal.GetDelegateForFunctionPointer<LoadTexDelegate>(loadAssetsPtr);
 
             IntPtr loadTexAllocPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48");
             LoadTexAlloc = Marshal.GetDelegateForFunctionPointer<LoadTexAllocDelegate>(loadTexAllocPtr);
+
+            IntPtr texUnallocPtr = PluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? C6 43 10 02");
+            TexUnalloc = Marshal.GetDelegateForFunctionPointer<TexUnallocDelegate>(texUnallocPtr);
 
             Gauges = new UIGauge[MAX_GAUGES];
             Arrows = new UIArrow[MAX_GAUGES];
@@ -62,6 +69,13 @@ namespace JobBars.UI {
             }
             if (B_RootRes != null) {
                 UiHelper.Hide(B_RootRes);
+            }
+
+            if(PluginInterface.ClientState?.LocalPlayer == null) {
+                var addon = _ADDON;
+                for (int i = 0; i < addon->UldManager.AssetCount; i++) {
+                    TexUnalloc(new IntPtr(addon->UldManager.Assets) + 0x8 + 0x20 * i);
+                }
             }
         }
 
@@ -115,14 +129,16 @@ namespace JobBars.UI {
 
         public Dictionary<IconIds, ushort> IconToPartId = new Dictionary<IconIds, ushort>();
 
+
         public void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
             var numPaths = paths.Length;
             var addon = _ADDON;
+            AtkUldAsset* oldAssets = addon->UldManager.Assets;
 
             var allocator = UiHelper._getGameAllocator();
-            var unk2 = LoadTexAlloc(allocator, 4 * numPaths, 16);
+            var assetMapping = LoadTexAlloc(allocator, 4 * numPaths, 16);
             for(int i = 0; i < numPaths; i++) {
-                Marshal.WriteInt32(unk2 + 4 * i, i + 1); // 0->1, 1->2, etc.
+                Marshal.WriteInt32(assetMapping + 4 * i, i + 1); // 0->1, 1->2, etc.
             }
 
             IntPtr manager = (IntPtr)addon + 0x28;
@@ -143,17 +159,18 @@ namespace JobBars.UI {
                 Buffer.BlockCopy(text, 0, data, startAddr + 4, text.Length);
             }
 
-            var end = Encoding.ASCII.GetBytes("tphd0100"); // idk if this in necessary, but whatever
+            var end = Encoding.ASCII.GetBytes("tphd0100"); // idk if this is necessary, but whatever
             Buffer.BlockCopy(end, 0, data, 16 + 56 * numPaths, end.Length);
 
             Marshal.Copy(data, 0, texPaths, size);
-            LoadTex3(manager, allocator, texPaths, unk2, (uint)numPaths, 1);
+            LoadTex(manager, allocator, texPaths, assetMapping, (uint)numPaths, 1);
 
             for (int i = 0; i < 7; i++) { // _ParameterGauges is nice because it only has 1 PartList and 1 Asset
                 addon->UldManager.PartsList[0].Parts[i].UldAsset = addon->UldManager.Assets; // reset all the assets
             }
 
             addon->UldManager.LoadedState = 3; // maybe reset this after the parts are set up? idk
+            TexUnalloc(new IntPtr(oldAssets) + 0x8); // unallocate the old AtkTexture
         }
 
         public void SetupTex() {
@@ -201,16 +218,22 @@ namespace JobBars.UI {
             }
         }
 
-        public void PrintAllParts() { // helper function :/
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("JobHudDNC1", 1);
-            for (int i = 0; i < addon->UldManager.PartsListCount; i++) {
-                var list = addon->UldManager.PartsList[i];
-                for (int j = 0; j < list.PartCount; j++) {
-                    var p = list.Parts[j];
-                    var textPtr = p.UldAsset->AtkTexture.Resource->TexFileResourceHandle->ResourceHandle.FileName;
-                    var texString = Marshal.PtrToStringAnsi(new IntPtr(textPtr));
-                    PluginLog.Log($"LIST {i} PART {j}: {p.U} {p.V} {p.Width} {p.Height} / {texString}");
-                }
+        // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
+        public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
+            var addon = _ADDON;
+
+            var asset = UiHelper.CleanAlloc<AtkUldAsset>();
+            asset->Id = addon->UldManager.Assets[assetIdx].Id;
+            asset->AtkTexture = addon->UldManager.Assets[assetIdx].AtkTexture;
+
+            addon->UldManager.PartsList->Parts[partIdx].UldAsset = asset;
+            addon->UldManager.PartsList->Parts[partIdx].U = U;
+            addon->UldManager.PartsList->Parts[partIdx].V = V;
+            addon->UldManager.PartsList->Parts[partIdx].Width = Width;
+            addon->UldManager.PartsList->Parts[partIdx].Height = Height;
+
+            if ((partIdx + 1) > addon->UldManager.PartsList->PartCount) {
+                addon->UldManager.PartsList->PartCount = (ushort)(partIdx + 1);
             }
         }
 
