@@ -10,8 +10,8 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public class GaugeProc : Gauge {
-        Proc[] Procs;
-        int Size;
+        private Proc[] Procs;
+        private int Size;
 
         public GaugeProc(string name) : base(name) {
             Procs = new Proc[0];
@@ -22,20 +22,14 @@ namespace JobBars.Gauges {
             };
         }
 
-        public override void Setup() {
-            SetColor();
+        public override void SetupVisual(bool resetValue = true) {
             if (UI is UIDiamond diamond) {
                 diamond.SetParts(Size);
                 foreach(var proc in Procs) {
-                    diamond.UnselectPart(proc.Idx);
-                }
-            }
-        }
-        public override void SetColor() {
-            if (UI == null) return;
-            if (UI is UIDiamond diamond) {
-                foreach(var proc in Procs) {
                     diamond.SetColor(proc.Color, proc.Idx);
+                    if(resetValue) {
+                        diamond.UnselectPart(proc.Idx);
+                    }
                 }
             }
         }

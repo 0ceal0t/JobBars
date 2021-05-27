@@ -36,7 +36,9 @@ namespace JobBars.UI {
             UiHelper.Show(RootRes);
         }
 
+        public abstract void SetColor(ElementColor color);
         public abstract int GetHeight(int param);
         public abstract int GetWidth(int param);
+        public abstract int GetHorizontalYOffset();
     }
 }

@@ -34,7 +34,7 @@ namespace JobBars.Data {
         // DRG
         LanceCharge = 0x748,
         BattleLitany = 0x312,
-        RightEye = 0x776, // <---- test to make sure it doesn't overlap when cast on self?
+        RightEye = 0x776,
         RightEye2 = 0x5ad,
         // NIN
         TrickAttack = 0x27e,

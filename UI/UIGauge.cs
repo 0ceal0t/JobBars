@@ -161,7 +161,7 @@ namespace JobBars.UI {
         public void SetPercent(float value) {
             UiHelper.SetSize((AtkResNode*)BarMainNode, (int)(160 * value), 20);
         }
-        public void SetColor(ElementColor color) {
+        public override void SetColor(ElementColor color) {
             UIColor.SetColor((AtkResNode*)BarMainNode, color);
         }
 
@@ -170,6 +170,9 @@ namespace JobBars.UI {
         }
         public override int GetWidth(int param) {
             return 160;
+        }
+        public override int GetHorizontalYOffset() {
+            return 0;
         }
     }
 }

@@ -10,25 +10,30 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
+    public enum GaugeState {
+        Inactive,
+        Active,
+        Finished,
+    }
+
     public abstract class Gauge {
         public string Name;
         public Item[] Triggers;
         public UIElement UI = null;
+        public bool Enabled = true;
+        public int Order => Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
 
         public GaugeVisual DefaultVisual;
         public GaugeVisual Visual;
 
-        public bool Enabled = true;
         public bool AllowRefresh = true;
-        public GaugeState State = GaugeState.INACTIVE;
+        public GaugeState State = GaugeState.Inactive;
 
         public Item LastActiveTrigger;
         public DateTime ActiveTime;
 
         public Gauge HideGauge = null;
         public bool StartHidden = false;
-
-        public int Order => Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
 
         public Gauge(string name) {
             Name = name;
@@ -39,8 +44,9 @@ namespace JobBars.Gauges {
             PerformHide();
             LastActiveTrigger = trigger;
             ActiveTime = DateTime.Now;
-            State = GaugeState.ACTIVE;
+            State = GaugeState.Active;
         }
+
         public unsafe void PerformHide() {
             if(HideGauge != null && UiHelper.GetNodeVisible(UI.RootRes) == false) {
                 UiHelper.SetPosition(UI.RootRes, HideGauge.UI.RootRes->X, HideGauge.UI.RootRes->Y);
@@ -48,8 +54,9 @@ namespace JobBars.Gauges {
                 UI.Show();
             }
         }
+
         public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, float> buffDict) {
-            if (LastActiveTrigger.Type == ItemType.BUFF) {
+            if (LastActiveTrigger.Type == ItemType.Buff) {
                 if (buffDict.TryGetValue(LastActiveTrigger, out var duration)) { // duration exists, use that
                     return duration;
                 }
@@ -75,19 +82,11 @@ namespace JobBars.Gauges {
             }
         }
 
-        public abstract void Setup();
-        public abstract void SetColor();
+        public abstract void SetupVisual(bool resetValue = true);
         public abstract void ProcessAction(Item action);
         public abstract void Tick(DateTime time, Dictionary<Item, float> buffDict);
         public abstract int GetHeight();
         public abstract int GetWidth();
-    }
-
-    // ======= STATE ==========
-    public enum GaugeState {
-        INACTIVE,
-        ACTIVE,
-        FINISHED,
     }
 
     // ======= VISUAL =========
@@ -114,50 +113,6 @@ namespace JobBars.Gauges {
                 Type = GaugeVisualType.Arrow,
                 Color = color
             };
-        }
-    }
-
-    // ===== BUFF OR ACTION ======
-    public enum ItemType {
-        BUFF,
-        ACTION, // either GCD or OGCD
-        GCD,
-        OGCD
-    }
-    public struct Item {
-        public uint Id;
-        public ItemType Type;
-
-        // GENERATORS
-        public Item(ActionIds action) {
-            Id = (uint)action;
-            Type = ItemType.ACTION;
-        }
-        public Item(BuffIds buff) {
-            Id = (uint)buff;
-            Type = ItemType.BUFF;
-        }
-
-        // EQUALITY
-        public override bool Equals(object obj) {
-            return obj is Item overrides && Equals(overrides);
-        }
-        public bool Equals(Item other) {
-            return (Id == other.Id) && ((Type == ItemType.BUFF) == (other.Type == ItemType.BUFF));
-        }
-
-        public override int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + (Type == ItemType.BUFF).GetHashCode();
-            return hash;
-        }
-
-        public static bool operator ==(Item left, Item right) {
-            return left.Equals(right);
-        }
-        public static bool operator !=(Item left, Item right) {
-            return !(left == right);
         }
     }
 }

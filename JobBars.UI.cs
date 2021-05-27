@@ -78,20 +78,24 @@ namespace JobBars {
         JobIds G_SelectedJob = JobIds.OTHER;
         private void DrawGaugeSettings() {
             if (GManager == null) return;
-
             string _ID = "##JobBars_Gauges";
+
+            // ===== GENERAL GAUGE =======
             if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
                 UI.SetGaugeScale(Configuration.Config.GaugeScale);
                 Configuration.Config.Save();
             }
-
             if(ImGui.Checkbox("DoT Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
+                GManager.ResetJob(CurrentJob);
+                Configuration.Config.Save();
+            }
+            if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
@@ -206,14 +210,15 @@ namespace JobBars {
         }
         public void SetColor(Gauge gauge, ElementColor color) {
             gauge.Visual.Color = color;
-            gauge.SetColor();
+            gauge.SetupVisual(resetValue: false);
         }
 
         JobIds B_SelectedJob = JobIds.OTHER;
         private void DrawBuffSettings() {
             if (GManager == null) return;
-
             string _ID = "##JobBars_Buffs";
+
+            // ===== GENERAL BUFFS =======
             if (ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK)) {
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {

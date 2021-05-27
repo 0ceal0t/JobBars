@@ -118,11 +118,17 @@ namespace JobBars.UI {
             UiHelper.SetPosition((AtkResNode*)Overlay, 0, yOffset);
         }
 
+        public override void SetColor(ElementColor color) {
+        }
+
         public override int GetHeight(int param) {
             return HEIGHT;
         }
         public override int GetWidth(int param) {
             return WIDTH;
+        }
+        public override int GetHorizontalYOffset() {
+            return 0;
         }
     }
 }

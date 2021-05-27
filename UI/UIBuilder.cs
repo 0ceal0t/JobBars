@@ -37,16 +37,8 @@ namespace JobBars.UI {
         public delegate IntPtr LoadTexAllocDelegate(IntPtr allocator, Int64 size, UInt64 a3);
         public LoadTexAllocDelegate LoadTexAlloc;
 
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        //public delegate IntPtr LoadTextureDelegate(IntPtr a1, string path, uint a3);
-        //public LoadTextureDelegate LoadTexture;
-
         public UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
-
-            // ========= DON'T USE THIS, JUST FOR REFERENCE :) ==========
-            //var loadTexAddr = scanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 80 79 10 01 41 8B E8 48 8B FA 48 8B D9");
-            //LoadTexture = Marshal.GetDelegateForFunctionPointer<LoadTextureDelegate>(loadTexAddr);
 
             // nasty sig :(
             IntPtr loadAssetsPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 44 8B BD ?? ?? ?? ?? 45 33 E4");

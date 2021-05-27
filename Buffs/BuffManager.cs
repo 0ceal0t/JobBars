@@ -12,13 +12,12 @@ using System.Threading.Tasks;
 
 namespace JobBars.Buffs {
     public unsafe class BuffManager {
-        public UIBuilder UI;
-
-        List<Buff> AllBuffs;
         public Dictionary<JobIds, Buff[]> JobToBuffs;
-        public JobIds CurrentJob = JobIds.OTHER;
         public Buff[] CurrentGauges => JobToBuffs[CurrentJob];
-        private DateTime LastTick = DateTime.Now;
+
+        private UIBuilder UI;
+        private List<Buff> AllBuffs;
+        private JobIds CurrentJob = JobIds.OTHER;
 
         public BuffManager(UIBuilder ui) {
             UI = ui;
@@ -293,17 +292,10 @@ namespace JobBars.Buffs {
         }
 
         public void SetJob(JobIds job) {
-            Reset();
             CurrentJob = job;
-
             foreach(var buff in AllBuffs) {
+                buff.State = BuffState.Inactive;
                 buff.Enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
-            }
-        }
-
-        public void Reset() {
-            foreach (var buff in AllBuffs) {
-                buff.State = BuffState.INACTIVE;
             }
             UI.HideAllBuffs();
         }
@@ -317,19 +309,16 @@ namespace JobBars.Buffs {
 
         public void Tick() {
             var currentTime = DateTime.Now;
-            float deltaSecond = (float)(currentTime - LastTick).TotalSeconds;
 
             var idx = 0;
             foreach (var buff in AllBuffs) {
                 if (!buff.Enabled) { continue; }
-                buff.Tick(currentTime, deltaSecond);
+                buff.Tick(currentTime);
                 if (buff.Visible) {
                     buff.UI.SetPosition(idx);
                     idx++;
                 }
             }
-
-            LastTick = currentTime;
         }
     }
 }

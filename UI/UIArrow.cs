@@ -108,7 +108,7 @@ namespace JobBars.UI {
             }
         }
 
-        public void SetColor(UIColor.ElementColor color) {
+        public override void SetColor(UIColor.ElementColor color) {
             foreach(var item in Selected) {
                 UIColor.SetColor((AtkResNode*)item, color);
             }
@@ -139,6 +139,9 @@ namespace JobBars.UI {
         }
         public override int GetWidth(int param) {
             return 32 + 18 * (param - 1);
+        }
+        public override int GetHorizontalYOffset() {
+            return -3;
         }
     }
 }

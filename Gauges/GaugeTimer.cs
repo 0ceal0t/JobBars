@@ -10,14 +10,13 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
-        public UIIconManager Icon;
+        private UIIconManager Icon;
+        private bool ReplaceIcon = false;
+        private ActionIds[] ReplaceIconAction;
 
-        public float MaxDuration;
-        public float DefaultDuration;
-        public bool ReplaceIcon = false;
-        public ActionIds[] ReplaceIconAction;
-
-        public float Duration;
+        private float Duration;
+        private float MaxDuration;
+        private float DefaultDuration;
 
         public GaugeTimer(string name, float duration) : base(name) {
             MaxDuration = duration;
@@ -28,30 +27,21 @@ namespace JobBars.Gauges {
                 Color = LightBlue
             };
         }
-        public override void Setup() {
-            SetColor();
-            if (UI is UIGauge gauge) {
-                gauge.SetText("0");
-                gauge.SetPercent(0);
-            }
-        }
-        private void Start(Item action) {
-            PluginLog.Log("STARTING");
-            SetActive(action);
-            Duration = DefaultDuration;
-            StartIcon();
-        }
-        public override void SetColor() {
-            if (UI == null) return;
-            if (UI is UIGauge gauge) {
-                gauge.SetColor(Visual.Color);
+
+        public override void SetupVisual(bool resetValue = true) {
+            UI?.SetColor(Visual.Color);
+            if (resetValue) {
+                if (UI is UIGauge gauge) {
+                    gauge.SetText("0");
+                    gauge.SetPercent(0);
+                }
             }
         }
 
         private void StartIcon() {
             if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
-                Icon.ActionIdToState[(uint)icon] = IconState.START_RUNNING;
+                Icon.ActionIdToState[(uint)icon] = IconState.StartRunning;
             }
         }
         private void SetIcon(double current, float max) {
@@ -72,18 +62,17 @@ namespace JobBars.Gauges {
                     Current = 0,
                     Max = 1
                 };
-                Icon.ActionIdToState[(uint)icon] = IconState.DONE_RUNNING;
+                Icon.ActionIdToState[(uint)icon] = IconState.DoneRunning;
             }
         }
 
         // ===== UPDATE ============
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
-            if (State == GaugeState.ACTIVE) {
+            if (State == GaugeState.Active) {
                 var timeleft = TimeLeft(Duration, time, buffDict);
                 if (timeleft <= 0) {
                     timeleft = 0; // prevent "-1" or something
-                    PluginLog.Log("STOPPING");
-                    State = GaugeState.INACTIVE;
+                    State = GaugeState.Inactive;
                     ResetIcon();
                 }
 
@@ -95,8 +84,10 @@ namespace JobBars.Gauges {
             }
         }
         public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!(State == GaugeState.ACTIVE) || AllowRefresh)) {
-                Start(action);
+            if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
+                SetActive(action);
+                Duration = DefaultDuration;
+                StartIcon();
             }
         }
 

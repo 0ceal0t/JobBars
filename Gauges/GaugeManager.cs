@@ -398,8 +398,7 @@ namespace JobBars.Gauges {
             Reset();
             CurrentJob = job;
 
-            int yPosition = 0;
-            int xPosition = 0;
+            int totalPosition = 0;
             int enabledIdx = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
                 if (!(gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
@@ -407,19 +406,21 @@ namespace JobBars.Gauges {
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
                 if(!gauge.StartHidden) {
                     gauge.UI.Show();
-                    UiHelper.SetPosition(gauge.UI.RootRes, xPosition, yPosition);
-                    if(Configuration.Config.GaugeHorizontal) {
-                        xPosition += gauge.GetWidth();
+                    if(Configuration.Config.GaugeHorizontal) { // HORIZONTAL
+                        UiHelper.SetPosition(gauge.UI.RootRes, totalPosition, gauge.UI.GetHorizontalYOffset());
+                        totalPosition += gauge.GetWidth();
                     }
-                    else {
-                        yPosition += gauge.GetHeight();
+                    else { // VERTICAL
+                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
+                        UiHelper.SetPosition(gauge.UI.RootRes, xPosition, totalPosition);
+                        totalPosition += gauge.GetHeight();
                     }
                     enabledIdx++;
                 }
                 else {
                     gauge.UI.Hide();
                 }
-                gauge.Setup();
+                gauge.SetupVisual();
             }
         }
         public UIElement GetUI(int idx, GaugeVisualType type) {
@@ -437,7 +438,7 @@ namespace JobBars.Gauges {
 
         public void Reset() {
             foreach (var gauge in CurrentGauges) {
-                gauge.State = GaugeState.INACTIVE;
+                gauge.State = GaugeState.Inactive;
                 gauge.UI = null;
             }
             UI.HideAllGauges();
@@ -465,7 +466,7 @@ namespace JobBars.Gauges {
                 BuffDict[new Item
                 {
                     Id = (uint)status.EffectId,
-                    Type = ItemType.BUFF
+                    Type = ItemType.Buff
                 }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
             }
 

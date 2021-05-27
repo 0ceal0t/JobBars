@@ -2,12 +2,6 @@
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
@@ -184,24 +178,6 @@ namespace JobBars.UI {
 
             return node;
         }
-
-
-        // ========= DON'T USE THIS :) JUST FOR REFERENCE ==========
-        /*public void LoadTex(ushort assetIdx, string path) {
-            var addon = _ADDON;
-
-            uint newId = (uint)(assetIdx + 1);
-            var pt = IntPtr.Add(new IntPtr(addon->UldManager.Assets), 32 * assetIdx + 8);
-            Marshal.WriteByte(pt + 16, 1);
-            var a = LoadTexture(pt, path, 1); // game function
-            addon->UldManager.Assets[assetIdx].Id = newId;
-
-            if (newId > addon->UldManager.AssetCount) {
-                var ptr = new IntPtr(addon->UldManager.Assets) - 8;
-                Marshal.WriteInt32(ptr, (int)newId);
-                addon->UldManager.AssetCount = (ushort)newId;
-            }
-        }*/
 
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
         public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {

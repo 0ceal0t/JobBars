@@ -8,13 +8,3 @@ Including:
 
 ## Usage
 To open the settings menu, use `/jobbars`
-
-## TODO
-- custom arrow texture
-- more animated movement
-- random crash when loading sometimes
-- test loading from devplugins
-- right justify
-- AST: when star is ready
-- MCH: number of charges?
-- danger flashing
