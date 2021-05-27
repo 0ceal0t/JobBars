@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars.Buffs {
     public enum BuffState {
@@ -29,6 +30,7 @@ namespace JobBars.Buffs {
         private float Duration;
         private float CD;
         private bool NoCD = false;
+        private ElementColor Color;
 
         public bool Visible => (State == BuffState.Active || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
 
@@ -37,6 +39,11 @@ namespace JobBars.Buffs {
             Icon = icon;
             Duration = duration;
             Triggers = new Item[0];
+            Color = UIColor.White;
+        }
+
+        public void SetupVisual() {
+            UI?.SetColor(Color);
         }
 
         public void ProcessAction(Item action) {
@@ -110,6 +117,10 @@ namespace JobBars.Buffs {
         }
         public Buff WithNoCD() {
             NoCD = true;
+            return this;
+        }
+        public Buff WithColor(ElementColor color) {
+            Color = color;
             return this;
         }
     }

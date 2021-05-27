@@ -59,6 +59,9 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Assets\" />
+	</ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
       <Exec Command="xcopy /Y &quot;$(TargetDir)JobBars.json&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)FFXIVClientInterface.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)FFXIVClientStructs.dll&quot; &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)JobBars.dll&quot; &quot;$(TargetDir)Output&quot;" />

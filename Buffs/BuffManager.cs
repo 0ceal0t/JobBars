@@ -38,6 +38,7 @@ namespace JobBars.Buffs {
                         new Item(ActionIds.InnerRelease)
                     })
                     .WithCD(90)
+                    .WithColor(UIColor.Orange)
             });
             JobToBuffs.Add(JobIds.DRK, new Buff[] {
                 new Buff("Delirium", IconIds.Delirium, 10)
@@ -45,13 +46,15 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.Delirium)
                     })
-                    .WithCD(90),
+                    .WithCD(90)
+                    .WithColor(UIColor.Red),
                 new Buff("Living Shadow", IconIds.LivingShadow, 24)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.LivingShadow)
                     })
                     .WithCD(120)
+                    .WithColor(UIColor.Purple)
             });
             // ======= AST ==========
             JobToBuffs.Add(JobIds.AST, new Buff[] {
@@ -60,55 +63,64 @@ namespace JobBars.Buffs {
                     {
                         new Item(BuffIds.TheBalance)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.Orange),
                 new Buff("The Bole", IconIds.TheBole, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.TheBole)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.BrightGreen),
                 new Buff("The Spear", IconIds.TheSpear, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.TheSpear)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.DarkBlue),
                 new Buff("The Spire", IconIds.TheSpire, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.TheSpire)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.Yellow),
                 new Buff("The Arrow", IconIds.TheArrow, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.TheArrow)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.LightBlue),
                 new Buff("The Ewer", IconIds.TheEwer, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.TheEwer)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.LightBlue),
                 new Buff("Lady of Crowns", IconIds.LadyOfCrowns, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.LadyOfCrowns)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.Purple),
                 new Buff("Lord of Crowns", IconIds.LordOfCrowns, 15)
                     .WithTriggers(new []
                     {
                         new Item(BuffIds.LordOfCrowns)
                     })
-                    .WithNoCD(),
+                    .WithNoCD()
+                    .WithColor(UIColor.Red),
                 new Buff("Divination", IconIds.Divination, 15)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Divination)
                     })
                     .WithCD(120)
+                    .WithColor(UIColor.Yellow)
             });
             // ======= SCH ==========
             JobToBuffs.Add(JobIds.SCH, new Buff[] {
@@ -118,6 +130,7 @@ namespace JobBars.Buffs {
                         new Item(ActionIds.ChainStratagem)
                     })
                     .WithCD(120)
+                    .WithColor(UIColor.White)
             });
             // ======= WHM ==========
             JobToBuffs.Add(JobIds.WHM, new Buff[] {
@@ -129,13 +142,15 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.BattleVoice)
                     })
-                    .WithCD(180),
+                    .WithCD(180)
+                    .WithColor(UIColor.Orange),
                 new Buff("Raging Strikes", IconIds.RagingStrikes, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.RagingStrikes)
                     })
                     .WithCD(80)
+                    .WithColor(UIColor.Yellow)
             });
             // ======= DRG ==========
             JobToBuffs.Add(JobIds.DRG, new Buff[] {
@@ -144,19 +159,22 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.DragonSight)
                     })
-                    .WithCD(120),
+                    .WithCD(120)
+                    .WithColor(UIColor.Orange),
                 new Buff("Battle Litany", IconIds.BattleLitany, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.BattleLitany)
                     })
-                    .WithCD(180),
+                    .WithCD(180)
+                    .WithColor(UIColor.LightBlue),
                 new Buff("Lance Charge", IconIds.LanceCharge, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.LanceCharge)
                     })
                     .WithCD(90)
+                    .WithColor(UIColor.Red)
             });
             // ======= SMN ==========
             JobToBuffs.Add(JobIds.SMN, new Buff[] {
@@ -165,19 +183,22 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.Devotion)
                     })
-                    .WithCD(180),
+                    .WithCD(180)
+                    .WithColor(UIColor.Yellow),
                 new Buff("Summon Bahamut", IconIds.SummonBahamut, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.SummonBahamut)
                     })
-                    .WithCD(60),
+                    .WithCD(60)
+                    .WithColor(UIColor.LightBlue),
                 new Buff("Firebird Trance", IconIds.FirebirdTrance, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.FirebirdTrance)
                     })
                     .WithCD(60)
+                    .WithColor(UIColor.Orange)
             });
             // ======= SAM ==========
             JobToBuffs.Add(JobIds.SAM, new Buff[] {
@@ -187,6 +208,7 @@ namespace JobBars.Buffs {
                         new Item(ActionIds.DoubleMidare)
                     })
                     .WithCD(60)
+                    .WithColor(UIColor.DarkBlue)
             });
             // ======= BLM ==========
             JobToBuffs.Add(JobIds.BLM, new Buff[] {
@@ -198,13 +220,15 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.Manafication)
                     })
-                    .WithCD(120),
+                    .WithCD(120)
+                    .WithColor(UIColor.DarkBlue),
                 new Buff("Embolden", IconIds.Embolden, 10)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Embolden)
                     })
                     .WithCD(110)
+                    .WithColor(UIColor.White)
             });
             // ======= MCH ==========
             JobToBuffs.Add(JobIds.MCH, new Buff[] {
@@ -214,6 +238,7 @@ namespace JobBars.Buffs {
                         new Item(ActionIds.Wildfire)
                     })
                     .WithCD(120)
+                    .WithColor(UIColor.Orange)
             });
             // ======= DNC ==========
             JobToBuffs.Add(JobIds.DNC, new Buff[] {
@@ -222,13 +247,15 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.QuadTechFinish)
                     })
-                    .WithCD(120),
+                    .WithCD(120)
+                    .WithColor(UIColor.PurplePink),
                 new Buff("Devilment", IconIds.Devilment, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Devilment)
                     })
                     .WithCD(120)
+                    .WithColor(UIColor.BrightGreen)
             });
             // ======= NIN ==========
             JobToBuffs.Add(JobIds.NIN, new Buff[] {
@@ -237,13 +264,15 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.TrickAttack)
                     })
-                    .WithCD(60),
+                    .WithCD(60)
+                    .WithColor(UIColor.Yellow),
                 new Buff("Bunshin", IconIds.Bunshin, 15)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Bunshin)
                     })
                     .WithCD(90)
+                    .WithColor(UIColor.Orange)
             });
             // ======= MNK ==========
             JobToBuffs.Add(JobIds.MNK, new Buff[] {
@@ -252,19 +281,22 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.Brotherhood)
                     })
-                    .WithCD(90),
+                    .WithCD(90)
+                    .WithColor(UIColor.Orange),
                 new Buff("Riddle of Fire", IconIds.RiddleOfFire, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.RiddleOfFire)
                     })
-                    .WithCD(90),
+                    .WithCD(90)
+                    .WithColor(UIColor.Red),
                 new Buff("Perfect Balance", IconIds.PerfectBalance, 15)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.PerfectBalance)
                     })
                     .WithCD(90)
+                    .WithColor(UIColor.Orange)
             });
             // ======= BLU ==========
             JobToBuffs.Add(JobIds.BLU, new Buff[] {
@@ -273,19 +305,22 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.OffGuard)
                     })
-                    .WithCD(60),
+                    .WithCD(60)
+                    .WithColor(UIColor.BrightGreen),
                 new Buff("Peculiar Light", IconIds.PeculiarLight, 15)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.PeculiarLight)
                     })
                     .WithCD(60)
+                    .WithColor(UIColor.Red)
             });
 
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
                 foreach (var buff in jobEntry.Value) {
                     buff.UI = UI.IconToBuff[buff.Icon];
+                    buff.SetupVisual();
                     AllBuffs.Add(buff);
                 }
             }

@@ -16,6 +16,7 @@ namespace JobBars.UI {
         private ushort PART_ID;
         private AtkTextNode* TextNode;
         private AtkImageNode* Overlay;
+        private AtkImageNode* Border;
         string CurrentText = "";
 
         public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui) {
@@ -27,6 +28,7 @@ namespace JobBars.UI {
             RootRes = node;
             TextNode = (AtkTextNode*)RootRes->ChildNode;
             Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode;
+            Border = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
             SetOffCD();
         }
 
@@ -39,7 +41,7 @@ namespace JobBars.UI {
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
-            RootRes->ChildCount = 3;
+            RootRes->ChildCount = 4;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
 
             TextNode = _UI.CreateTextNode();
@@ -75,6 +77,18 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
+
+            Border = _UI.CreateImageNode();
+            Border->AtkResNode.Width = 47;
+            Border->AtkResNode.Height = 47;
+            Border->AtkResNode.X = -2;
+            Border->AtkResNode.Y = -2;
+            Border->PartId = UIBuilder.BUFF_BORDER;
+            Border->PartsList = nameplateAddon->UldManager.PartsList;
+            Border->Flags = 0;
+            Border->WrapMode = 1;
+            UiHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Border;
             //
             RootRes->ChildNode = (AtkResNode*)TextNode;
 
@@ -84,6 +98,7 @@ namespace JobBars.UI {
 
             TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
             icon->AtkResNode.PrevSiblingNode = (AtkResNode*)Overlay;
+            Overlay->AtkResNode.PrevSiblingNode = (AtkResNode*)Border;
 
             UiHelper.SetText(TextNode, "");
         }
@@ -119,6 +134,9 @@ namespace JobBars.UI {
         }
 
         public override void SetColor(ElementColor color) {
+            var newColor = color;
+            newColor.AddBlue -= 50;
+            UIColor.SetColor((AtkResNode*)Border, newColor);
         }
 
         public override int GetHeight(int param) {

@@ -205,7 +205,7 @@ namespace JobBars.UI {
             AddPart(ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
             AddPart(DIAMOND_ASSET, DIAMOND_BG, 0, 0, 32, 32);
             AddPart(DIAMOND_ASSET, DIAMOND_FG, 32, 0, 32, 32);
-            AddPart(BUFF_OVERLAY_ASSET, BUFF_BORDER, 3, 99, 40, 40);
+            AddPart(BUFF_OVERLAY_ASSET, BUFF_BORDER, 252, 12, 47, 47);
             AddPart(BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
 
             var current_asset = BUFF_ASSET_START;
@@ -327,7 +327,7 @@ namespace JobBars.UI {
                 IconToBuff[entry.Key] = Buffs[bIdx];
                 bIdx++;
             }
-            B_RootRes->ChildCount = (ushort)(4 * Buffs.Length);
+            B_RootRes->ChildCount = (ushort)(5 * Buffs.Length);
             B_RootRes->ChildNode = Buffs[0].RootRes;
 
             for (int idx = 0; idx < Buffs.Length; idx++) {
