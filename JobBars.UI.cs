@@ -91,6 +91,18 @@ namespace JobBars {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
+            ImGui.Text("Play <se.");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(25f);
+            if (ImGui.InputInt("##se.Number",ref _Config.SeNumber,0))
+            {
+                if (_Config.SeNumber < 0) _Config.SeNumber = 0;
+                if (_Config.SeNumber >16) _Config.SeNumber = 16;
+                Configuration.Config.Save();
+            }
+            ImGui.SameLine();
+            ImGui.Text("> when dots going to fade (0 = off)");
+
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
