@@ -82,9 +82,10 @@ To open the settings menu, use `/jobbars`
 ## TODO
 - [ ] Flashing when DoTs are low
 - [ ] Glow around gauges
-- [ ] Border around buffs
 - [ ] AST upgraded star
 - [ ] DRG Fang and Claw / Wheeling Thrust?
 - [ ] DRG Disembowel / Chaos Thrust? (probably not useful)
 - [ ] NIN GCDs under trick? (probably not useful)
 - [ ] MCH number of charges of Gauss Round / Richochet
+- [ ] Hide all buffs
+- [x] ~~Border around buffs~~

@@ -181,10 +181,10 @@ namespace JobBars {
         }
         private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
             actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
-            if (a4 == 0x40000010) {
+            if (a4 == 0x40000010) { // WIPE
                 Reset();
             }
-            else if(a4 == 0x40000001) {
+            else if(a4 == 0x40000001) { // INSTANCE START
                 Reset();
             }
         }
