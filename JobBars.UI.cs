@@ -20,7 +20,7 @@ namespace JobBars {
         private bool BUFF_LOCK = true;
 
         private void BuildUI() {
-            if (!_Ready || !Init) return;
+            if (!Ready || !Init) return;
 
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";

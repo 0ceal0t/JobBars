@@ -71,7 +71,7 @@ namespace JobBars.UI {
                 UiHelper.Hide(B_RootRes);
             }
 
-            if(PluginInterface.ClientState?.LocalPlayer == null) {
+            if(PluginInterface.ClientState?.LocalPlayer == null) { // game closing
                 var addon = _ADDON;
                 for (int i = 0; i < addon->UldManager.AssetCount; i++) {
                     TexUnalloc(new IntPtr(addon->UldManager.Assets) + 0x8 + 0x20 * i);

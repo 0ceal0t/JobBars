@@ -88,4 +88,6 @@ To open the settings menu, use `/jobbars`
 - [ ] NIN GCDs under trick? (probably not useful)
 - [ ] MCH number of charges of Gauss Round / Richochet
 - [ ] Hide all buffs
+- [x] ~~Remove buffs on party change~~
+- [x] ~~Dia messes up battle stance icon~~
 - [x] ~~Border around buffs~~

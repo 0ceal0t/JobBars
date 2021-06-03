@@ -65,6 +65,7 @@ namespace JobBars.Data {
         Windbite = 0x71,
         BattleVoice = 118,
         RagingStrikes = 101,
+        IronJaws = 3560,
         // MCH
         Wildfire = 2878,
         Hypercharge = 0x4339,
