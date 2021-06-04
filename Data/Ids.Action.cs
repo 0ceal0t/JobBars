@@ -89,6 +89,7 @@ namespace JobBars.Data {
         Wyrmwave = 0x1D04,
         ScarletFlame = 0x4087,
         Devotion = 7423,
+        TriDisaster = 3580,
         // RDM
         Embolden = 7520,
         Manafication = 7521,

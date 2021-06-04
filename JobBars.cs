@@ -36,7 +36,7 @@ namespace JobBars {
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10);
+        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
         private PList Party; // TEMP
@@ -70,6 +70,7 @@ namespace JobBars {
             PluginInterface.UiBuilder.OnBuildUi += BuildUI;
             PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
+            PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
         }
 
@@ -83,6 +84,7 @@ namespace JobBars {
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
+            PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
             UI.Dispose();
 
@@ -183,14 +185,14 @@ namespace JobBars {
 
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
-        private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
-            actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
-            if (a4 == 0x40000010) { // WIPE
+        private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId) {
+            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId);
+            if (arg1 == 0x40000010) { // WIPE
                 Reset();
             }
-            else if(a4 == 0x40000001) { // INSTANCE START
-                Reset();
-            }
+        }
+        private void ZoneChanged(object sender, ushort e) {
+            Reset();
         }
 
         // ======= DATA ==========
