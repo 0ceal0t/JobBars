@@ -31,18 +31,20 @@ namespace JobBars {
         private UIBuilder UI;
         private GaugeManager GManager;
         private BuffManager BManager;
-        private Configuration _Config;
+        private Configuration Config;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10);
+        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
         private PList Party; // TEMP
+        private int LastPartyCount = 0;
+
         private HashSet<uint> GCDs = new HashSet<uint>();
 
-        private bool _Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
+        private bool Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
         private bool Init = false;
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
@@ -53,8 +55,8 @@ namespace JobBars {
 
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
 
-            _Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            _Config.Initialize(PluginInterface);
+            Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            Config.Initialize(PluginInterface);
             UI = new UIBuilder(pluginInterface);
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
@@ -66,7 +68,9 @@ namespace JobBars {
             actorControlSelfHook.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += BuildUI;
+            PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
+            PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
         }
 
@@ -78,7 +82,9 @@ namespace JobBars {
             actorControlSelfHook?.Dispose();
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
+            PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
+            PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
             UI.Dispose();
 
@@ -87,8 +93,8 @@ namespace JobBars {
 
         // ========= HOOKS ===========
         private void SetupActions() {
-            var _sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && x.IsPlayerAction);
-            foreach(var item in _sheet) {
+            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && x.IsPlayerAction);
+            foreach(var item in sheet) {
                 var attackType = item.ActionCategory.Value.Name.ToString();
                 if(attackType == "Spell" || attackType == "Weaponskill") {
                     GCDs.Add(item.RowId);
@@ -96,7 +102,7 @@ namespace JobBars {
             }
         }
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
-            if (!_Ready || !Init) {
+            if (!Ready || !Init) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -179,14 +185,14 @@ namespace JobBars {
 
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
-        private void ActorControlSelf(uint entityId, uint id, uint a3, uint a4, uint a5, uint a6, int a7, int a8, Int64 a9, byte a10) {
-            actorControlSelfHook.Original(entityId, id, a3, a4, a5, a6, a7, a8, a9, a10);
-            if (a4 == 0x40000010) {
+        private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId) {
+            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId);
+            if (arg1 == 0x40000010) { // WIPE
                 Reset();
             }
-            else if(a4 == 0x40000001) {
-                Reset();
-            }
+        }
+        private void ZoneChanged(object sender, ushort e) {
+            Reset();
         }
 
         // ======= DATA ==========
@@ -217,7 +223,7 @@ namespace JobBars {
 
         // ======== UPDATE =========
         private void FrameworkOnUpdate(Framework framework) {
-            if (!_Ready) {
+            if (!Ready) {
                 if(Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
                     PluginLog.Log("LOGOUT");
                     Init = false;
@@ -243,6 +249,11 @@ namespace JobBars {
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
             GManager?.Tick();
             BManager?.Tick();
+
+            if(Party.Count < LastPartyCount) {
+                BManager?.SetJob(CurrentJob);
+            }
+            LastPartyCount = Party.Count;
         }
 
         JobIds CurrentJob = JobIds.OTHER;
@@ -261,12 +272,15 @@ namespace JobBars {
 
         // ======= COMMANDS ============
         public void SetupCommands() {
-            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnConfigCommandHandler) {
+            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnCommand) {
                 HelpMessage = $"Open config window for {this.Name}",
                 ShowInHelp = true
             });
         }
-        public void OnConfigCommandHandler(object command, object args) {
+        private void OnOpenConfig(object sender, EventArgs eventArgs) {
+            Visible = true;
+        }
+        public void OnCommand(object command, object args) {
             Visible = !Visible;
         }
         public void RemoveCommands() {

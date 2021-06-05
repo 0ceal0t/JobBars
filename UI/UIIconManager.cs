@@ -162,7 +162,7 @@ namespace JobBars.UI {
                 for (var i = 0; i < ab->HotbarSlotCount; i++) {
                     var slot = ab->ActionBarSlotsAction[i];
                     var slotStruct = hotbarModule.GetBarSlot(bar, i);
-                    if(slotStruct != null && ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) {
+                    if(slotStruct != null && slotStruct->CommandType == HotbarSlotType.Action && ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) {
                         var state = ActionIdToState[slotStruct->CommandId];
 
                         var icon = slot.Icon;

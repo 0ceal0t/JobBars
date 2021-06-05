@@ -164,7 +164,8 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Caustic Bite", 30)
                     .WithTriggers(new[]{
                         new Item(ActionIds.CausticBite),
-                        new Item(ActionIds.VenomousBite)
+                        new Item(ActionIds.VenomousBite),
+                        new Item(ActionIds.IronJaws)
                     })
                     .WithReplaceIcon(new []{
                         ActionIds.CausticBite,
@@ -174,7 +175,8 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Stormbite", 30)
                     .WithTriggers(new[]{
                         new Item(ActionIds.Windbite),
-                        new Item(ActionIds.Stormbite)
+                        new Item(ActionIds.Stormbite),
+                        new Item(ActionIds.IronJaws)
                     })
                     .WithReplaceIcon(new []{
                         ActionIds.Windbite,
@@ -229,7 +231,8 @@ namespace JobBars.Gauges {
                     .WithTriggers(new[]{
                         new Item(ActionIds.ArcBio),
                         new Item(ActionIds.ArcBio2),
-                        new Item(ActionIds.Bio3)
+                        new Item(ActionIds.Bio3),
+                        new Item(ActionIds.TriDisaster)
                     })
                     .WithReplaceIcon(new []{
                         ActionIds.ArcBio,
@@ -240,7 +243,8 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Miasma", 30)
                     .WithTriggers(new[]{
                         new Item(ActionIds.Miasma),
-                        new Item(ActionIds.Miasma3)
+                        new Item(ActionIds.Miasma3),
+                        new Item(ActionIds.TriDisaster)
                     })
                     .WithReplaceIcon(new []{
                         ActionIds.Miasma,
@@ -313,8 +317,8 @@ namespace JobBars.Gauges {
                 new GaugeProc("Verfire/Verstone")
                     .WithProcs(new[]
                     {
-                        new Proc(BuffIds.VerfireReady, UIColor.Red),
-                        new Proc(BuffIds.VerstoneReady, UIColor.White)
+                        new Proc(BuffIds.VerstoneReady, UIColor.White),
+                        new Proc(BuffIds.VerfireReady, UIColor.Red)
                     })
             });
             // ============ MCH ==================

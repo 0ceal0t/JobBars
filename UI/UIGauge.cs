@@ -14,7 +14,7 @@ namespace JobBars.UI {
         private AtkTextNode* TextNode;
         private AtkNineGridNode* TextBlurNode;
         private AtkNineGridNode* BarMainNode;
-        private string CurrentText = "";
+        private string CurrentText;
         private ElementColor currentColor;
 
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {

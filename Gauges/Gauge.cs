@@ -19,7 +19,7 @@ namespace JobBars.Gauges {
     public abstract class Gauge {
         public string Name;
         public Item[] Triggers;
-        public UIElement UI = null;
+        public UIElement UI;
         public bool Enabled = true;
         public int Order => Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
 
@@ -32,7 +32,7 @@ namespace JobBars.Gauges {
         public Item LastActiveTrigger;
         public DateTime ActiveTime;
 
-        public Gauge HideGauge = null;
+        public Gauge HideGauge;
         public bool StartHidden = false;
 
         public Gauge(string name) {
