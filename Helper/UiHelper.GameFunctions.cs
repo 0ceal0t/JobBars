@@ -15,6 +15,10 @@ namespace JobBars.Helper
 
         public delegate IntPtr GetGameAllocator();
         public static GetGameAllocator _getGameAllocator;
+
+        public delegate long PlaySeDelegate(int a1, long a2, long a3);
+        public static PlaySeDelegate _playSe;
+        
         
         public static bool Ready = false;
 
@@ -22,6 +26,7 @@ namespace JobBars.Helper
             _atkTextNodeSetText = Marshal.GetDelegateForFunctionPointer<AtkTextNodeSetText>(scanner.ScanText("E8 ?? ?? ?? ?? 49 8B FC"));
             _gameAlloc = Marshal.GetDelegateForFunctionPointer<GameAlloc>(scanner.ScanText("E8 ?? ?? ?? ?? 45 8D 67 23"));
             _getGameAllocator = Marshal.GetDelegateForFunctionPointer<GetGameAllocator>(scanner.ScanText("E8 ?? ?? ?? ?? 8B 75 08"));
+            _playSe  = Marshal.GetDelegateForFunctionPointer<PlaySeDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
             Ready = true;
         }
 

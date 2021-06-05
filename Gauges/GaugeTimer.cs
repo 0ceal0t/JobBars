@@ -78,6 +78,7 @@ namespace JobBars.Gauges {
 
                 if (UI is UIGauge gauge) {
                     gauge.SetText(((int)timeleft).ToString());
+                    gauge.SetTextColor(timeleft < 4f  ? Red : NoColor);
                     gauge.SetPercent((float)timeleft / MaxDuration);
                     SetIcon(timeleft, MaxDuration);
                 }

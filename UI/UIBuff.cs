@@ -11,7 +11,7 @@ using static JobBars.UI.UIColor;
 namespace JobBars.UI {
     public unsafe class UIBuff : UIElement {
         public static ushort WIDTH = 37;
-        public static ushort HEIGHT = 28;
+        public static ushort HEIGHT = 37;
 
         private ushort PART_ID;
         private AtkTextNode* TextNode;
@@ -81,8 +81,8 @@ namespace JobBars.UI {
             Border = _UI.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
-            Border->AtkResNode.X = -2;
-            Border->AtkResNode.Y = -2;
+            Border->AtkResNode.X = -5;
+            Border->AtkResNode.Y = -5;
             Border->PartId = UIBuilder.BUFF_BORDER;
             Border->PartsList = nameplateAddon->UldManager.PartsList;
             Border->Flags = 0;

@@ -25,6 +25,7 @@ namespace JobBars.Data {
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
         public float BuffScale = 1.0f;
         public HashSet<string> BuffDisabled = new HashSet<string>();
+        public int SeNumber = 0;
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;

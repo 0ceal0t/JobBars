@@ -88,13 +88,28 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
             if(ImGui.Checkbox("DoT Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
-                GManager.ResetJob(CurrentJob);
+               GManager.ResetJob(CurrentJob);
+               Configuration.Config.Save();
+            }
+
+            
+            ImGui.Text("Play <se.");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(25f);
+            if (ImGui.InputInt("##se.Number",ref Configuration.Config.SeNumber,0))
+            {
+                if (Configuration.Config.SeNumber < 0) Configuration.Config.SeNumber = 0;
+                if (Configuration.Config.SeNumber >16) Configuration.Config.SeNumber = 16;
                 Configuration.Config.Save();
             }
+            ImGui.SameLine();
+            ImGui.Text("> when dots going to fade (0 = off)");
+
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
             }
+            
             if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
                 GManager.ResetJob(CurrentJob);
                 Configuration.Config.Save();
