@@ -1,5 +1,6 @@
 ﻿using Dalamud.Plugin;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,17 @@ namespace JobBars.Gauges {
         private bool ReplaceIcon = false;
         private ActionIds[] ReplaceIconAction;
 
+        private Item[] TriggersRefreshOnly;
+
         private float Duration;
         private float MaxDuration;
         private float DefaultDuration;
 
+        private float LastTimeLeft;
+        private static float LowTimerWarning = 4.0f;
+
         public GaugeTimer(string name, float duration) : base(name) {
+            TriggersRefreshOnly = new Item[0];
             MaxDuration = duration;
             DefaultDuration = MaxDuration;
             DefaultVisual = Visual = new GaugeVisual
@@ -33,6 +40,7 @@ namespace JobBars.Gauges {
             if (resetValue) {
                 if (UI is UIGauge gauge) {
                     gauge.SetText("0");
+                    gauge.SetTextColor(NoColor);
                     gauge.SetPercent(0);
                 }
             }
@@ -69,25 +77,39 @@ namespace JobBars.Gauges {
         // ===== UPDATE ============
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
             if (State == GaugeState.Active) {
-                var timeleft = TimeLeft(Duration, time, buffDict);
-                if (timeleft <= 0) {
-                    timeleft = 0; // prevent "-1" or something
+                var timeLeft = TimeLeft(Duration, time, buffDict);
+                if (timeLeft <= 0) {
+                    timeLeft = 0; // prevent "-1" or something
                     State = GaugeState.Inactive;
                     ResetIcon();
                 }
 
                 if (UI is UIGauge gauge) {
-                    gauge.SetText(((int)timeleft).ToString());
-                    gauge.SetTextColor(timeleft < 4f  ? Red : NoColor);
-                    gauge.SetPercent((float)timeleft / MaxDuration);
-                    SetIcon(timeleft, MaxDuration);
+                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning) {
+                        gauge.SetTextColor(Red);
+                        if(Configuration.Config.SeNumber > 0) {
+                            UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
+                        }
+                    }
+                    else if (LastTimeLeft < LowTimerWarning && timeLeft >= LowTimerWarning) {
+                        gauge.SetTextColor(NoColor);
+                    }
+
+                    gauge.SetText(((int)timeLeft).ToString());
+                    gauge.SetPercent((float)timeLeft / MaxDuration);
+                    SetIcon(timeLeft, MaxDuration);
                 }
+
+                LastTimeLeft = timeLeft;
             }
         }
         public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
+            if (
+                (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) ||
+                (TriggersRefreshOnly.Contains(action) && State == GaugeState.Active) // like iron jaws
+            ) { // START
                 SetActive(action);
-                Duration = DefaultDuration;
+                Duration = DefaultDuration + (action.Type != ItemType.Buff ? 1 : 0); // add an extra second if triggered by an action, since buffs aren't immediately applied
                 StartIcon();
             }
         }
@@ -102,6 +124,10 @@ namespace JobBars.Gauges {
         // ===== BUILDER FUNCS =====
         public GaugeTimer WithTriggers(Item[] triggers) {
             Triggers = triggers;
+            return this;
+        }
+        public GaugeTimer WithTriggersRefreshOnly(Item[] triggersRefreshOnly) {
+            TriggersRefreshOnly = triggersRefreshOnly;
             return this;
         }
         public GaugeTimer WithStartHidden() {

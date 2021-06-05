@@ -19,7 +19,7 @@ namespace JobBars.UI {
         public DalamudPluginInterface PluginInterface;
         public UIIconManager Icon;
 
-        private AtkResNode* G_RootRes = null;
+        public AtkResNode* G_RootRes = null;
         private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;

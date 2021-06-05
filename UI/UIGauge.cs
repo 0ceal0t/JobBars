@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JobBars.Data;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
@@ -15,7 +14,6 @@ namespace JobBars.UI {
         private AtkNineGridNode* TextBlurNode;
         private AtkNineGridNode* BarMainNode;
         private string CurrentText;
-        private ElementColor currentColor;
 
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
@@ -161,20 +159,20 @@ namespace JobBars.UI {
             UiHelper.SetPosition((AtkResNode*)TextBlurNode, -16 * (text.Length - 1), 0);
         }
         public void SetTextColor(ElementColor color) {
-            if (!color.Equals(currentColor))
-            {
-                UIColor.SetColor((AtkResNode*)TextNode, color);
-                if (currentColor.Equals(NoColor) && Configuration.Config.SeNumber>0 ) UiHelper._playSe(Configuration.Config.SeNumber+36, 0, 0);
-                currentColor = color;
-            }
+            UIColor.SetColor((AtkResNode*)TextNode, color);
         }
         public void SetPercent(float value) {
+            if(value > 1) {
+                value = 1;
+            }
+            else if(value < 0) {
+                value = 0;
+            }
             UiHelper.SetSize((AtkResNode*)BarMainNode, (int)(160 * value), 20);
         }
         public override void SetColor(ElementColor color) {
             UIColor.SetColor((AtkResNode*)BarMainNode, color);
         }
-
         public override int GetHeight(int param) {
             return 46;
         }

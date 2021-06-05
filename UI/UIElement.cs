@@ -3,6 +3,7 @@ using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
@@ -36,6 +37,11 @@ namespace JobBars.UI {
             UiHelper.Show(RootRes);
         }
 
+        public void SetSplitPosition(Vector2 pos) {
+            var p = UiHelper.GetNodePosition(_UI.G_RootRes);
+            var pScale = UiHelper.GetNodeScale(_UI.G_RootRes);
+            UiHelper.SetPosition(RootRes, (pos.X - p.X) / pScale.X, (pos.Y - p.Y) / pScale.Y);
+        }
         public abstract void SetColor(ElementColor color);
         public abstract int GetHeight(int param);
         public abstract int GetWidth(int param);

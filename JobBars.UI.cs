@@ -41,17 +41,37 @@ namespace JobBars {
             }
             // ====== GAUGE POSITION =======
             if (!GAUGE_LOCK) {
-                ImGuiHelpers.ForceNextWindowMainViewport();
-                ImGui.SetNextWindowPos(Configuration.Config.GaugePosition, ImGuiCond.FirstUseEver);
-                ImGui.SetNextWindowSize(new Vector2(200, 200));
-                ImGui.Begin("##GaugePosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
-                ImGui.Text("Gauge Bar Position");
+                if(Configuration.Config.GaugeSplit) {
+                    foreach(var gauge in GManager.CurrentGauges) {
+                        if (gauge.StartHidden) continue;
 
-                var pos = ImGui.GetWindowPos();
-                if (pos != Configuration.Config.GaugePosition) {
-                    Configuration.Config.GaugePosition = pos;
-                    Configuration.Config.Save();
-                    UI?.SetGaugePosition(pos);
+                        ImGuiHelpers.ForceNextWindowMainViewport();
+                        ImGui.SetNextWindowPos(Configuration.Config.GetGaugeSplitPosition(gauge.Name), ImGuiCond.FirstUseEver);
+                        ImGui.SetNextWindowSize(new Vector2(200, 200));
+                        ImGui.Begin("##GaugePosition" + gauge.Name, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
+                        ImGui.Text($"{gauge.Name}");
+
+                        var pos = ImGui.GetWindowPos();
+                        if (pos != Configuration.Config.GetGaugeSplitPosition(gauge.Name)) {
+                            Configuration.Config.GaugeSplitPosition[gauge.Name] = pos;
+                            Configuration.Config.Save();
+                            gauge.UI?.SetSplitPosition(pos);
+                        }
+                    }
+                }
+                else {
+                    ImGuiHelpers.ForceNextWindowMainViewport();
+                    ImGui.SetNextWindowPos(Configuration.Config.GaugePosition, ImGuiCond.FirstUseEver);
+                    ImGui.SetNextWindowSize(new Vector2(200, 200));
+                    ImGui.Begin("##GaugePosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
+                    ImGui.Text("Gauge Bar Position");
+
+                    var pos = ImGui.GetWindowPos();
+                    if (pos != Configuration.Config.GaugePosition) {
+                        Configuration.Config.GaugePosition = pos;
+                        Configuration.Config.Save();
+                        UI?.SetGaugePosition(pos);
+                    }
                 }
 
                 ImGui.End();
@@ -83,6 +103,10 @@ namespace JobBars {
             // ===== GENERAL GAUGE =======
             if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
             }
+            if(ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
+                GManager.ResetJob(CurrentJob);
+                Configuration.Config.Save();
+            }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
                 UI.SetGaugeScale(Configuration.Config.GaugeScale);
                 Configuration.Config.Save();
@@ -93,17 +117,13 @@ namespace JobBars {
             }
 
             
-            ImGui.Text("Play <se.");
-            ImGui.SameLine();
             ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("##se.Number",ref Configuration.Config.SeNumber,0))
+            if (ImGui.InputInt("Sound effect # when DoTs are low (0 = off)",ref Configuration.Config.SeNumber,0))
             {
                 if (Configuration.Config.SeNumber < 0) Configuration.Config.SeNumber = 0;
                 if (Configuration.Config.SeNumber >16) Configuration.Config.SeNumber = 16;
                 Configuration.Config.Save();
             }
-            ImGui.SameLine();
-            ImGui.Text("> when dots going to fade (0 = off)");
 
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
                 GManager.ResetJob(CurrentJob);

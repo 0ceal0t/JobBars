@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {
                 new GaugeGCD("No Mercy", 20, 9)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.NoMercy) // buffs are more reliable for tracking gcds within a buff window than an action
                     })
@@ -36,11 +36,11 @@ namespace JobBars.Gauges {
             // ============ PLD ==================
             JobToGauges.Add(JobIds.PLD, new Gauge[] {
                 new GaugeGCD("Requiescat", 12, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.Requiescat)
                     })
-                    .WithSpecificIncrement(new[]
+                    .WithSpecificIncrement(new []
                     {
                         new Item(ActionIds.HolySpirit),
                         new Item(ActionIds.HolyCircle),
@@ -48,11 +48,11 @@ namespace JobBars.Gauges {
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
                 new GaugeGCD("Fight or Flight", 25, 11)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.FightOrFlight)
                     })
-                    .WithSpecificIncrement(new[] // has to be physical
+                    .WithSpecificIncrement(new [] // has to be physical
                     {
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
@@ -64,11 +64,11 @@ namespace JobBars.Gauges {
                     })
                     .WithVisual(GaugeVisual.Bar(UIColor.Red)),
                 new GaugeTimer("Goring Blade", 21)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(ActionIds.GoringBlade)
                     })
-                    .WithReplaceIcon(new[]
+                    .WithReplaceIcon(new []
                     {
                         ActionIds.GoringBlade
                     }, UI.Icon)
@@ -77,18 +77,18 @@ namespace JobBars.Gauges {
             // ============ WAR ==================
             JobToGauges.Add(JobIds.WAR, new Gauge[] {
                 new GaugeGCD("Inner Release", 10, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.InnerRelease)
                     })
-                    .WithSpecificIncrement(new[]
+                    .WithSpecificIncrement(new []
                     {
                         new Item(ActionIds.FellCleave),
                         new Item(ActionIds.Decimate)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
                 new GaugeTimer("Storm's Eye", 60)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.StormsEye)
                     })
@@ -98,17 +98,18 @@ namespace JobBars.Gauges {
             // ============ DRK ==================
             JobToGauges.Add(JobIds.DRK, new Gauge[] {
                 new GaugeGCD("Delirium", 10, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.Delirium)
                     })
-                    .WithSpecificIncrement(new[]{ 
+                    .WithSpecificIncrement(new []
+                    { 
                         new Item(ActionIds.BloodSpiller),
                         new Item(ActionIds.Quietus)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
                 new GaugeGCD("Blood Weapon", 10, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.BloodWeapon)
                     })
@@ -117,12 +118,14 @@ namespace JobBars.Gauges {
             // ============ AST ==================
             JobToGauges.Add(JobIds.AST, new Gauge[] {
                 new GaugeTimer("Combust", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Combust1),
                         new Item(ActionIds.Combust2),
                         new Item(ActionIds.Combust3)
                     })
-                    .WithReplaceIcon(new []{ 
+                    .WithReplaceIcon(new []
+                    { 
                         ActionIds.Combust1,
                         ActionIds.Combust2,
                         ActionIds.Combust3
@@ -132,12 +135,14 @@ namespace JobBars.Gauges {
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
                 new GaugeTimer("Biolysis", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new[]
+                    {
                         new Item(ActionIds.ArcBio),
                         new Item(ActionIds.ArcBio2),
                         new Item(ActionIds.Biolysis)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.ArcBio,
                         ActionIds.ArcBio2,
                         ActionIds.Biolysis
@@ -147,12 +152,14 @@ namespace JobBars.Gauges {
             // ============ WHM ==================
             JobToGauges.Add(JobIds.WHM, new Gauge[] {
                 new GaugeTimer("Dia", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Aero),
                         new Item(ActionIds.Aero2),
                         new Item(ActionIds.Dia)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Aero,
                         ActionIds.Aero2,
                         ActionIds.Dia
@@ -165,26 +172,36 @@ namespace JobBars.Gauges {
                     .WithTriggers(new[]{
                         new Item(ActionIds.CausticBite),
                         new Item(ActionIds.VenomousBite),
+                    })
+                    .WithTriggersRefreshOnly(new []
+                    {
                         new Item(ActionIds.IronJaws)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.CausticBite,
                         ActionIds.VenomousBite
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.Purple)),
                 new GaugeTimer("Stormbite", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Windbite),
                         new Item(ActionIds.Stormbite),
                         new Item(ActionIds.IronJaws)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithTriggersRefreshOnly(new []
+                    {
+                        new Item(ActionIds.IronJaws)
+                    })
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Windbite,
                         ActionIds.Stormbite
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.LightBlue)),
                 new GaugeGCD("Raging Strikes", 20, 9)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.RagingStrikes)
                     })
@@ -213,40 +230,46 @@ namespace JobBars.Gauges {
                     {
                         new Item(ActionIds.SummonBahamut)
                     })
-                    .WithSpecificIncrement(new[]{
+                    .WithSpecificIncrement(new []
+                    {
                         new Item(ActionIds.Wyrmwave)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
                 new GaugeGCD("Firebird Trance", 21, 8)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(ActionIds.FirebirdTrance)
                     })
-                    .WithSpecificIncrement(new[]{
+                    .WithSpecificIncrement(new []
+                    {
                         new Item(ActionIds.ScarletFlame)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
                     .WithStartHidden(),
                 new GaugeTimer("Bio", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.ArcBio),
                         new Item(ActionIds.ArcBio2),
                         new Item(ActionIds.Bio3),
                         new Item(ActionIds.TriDisaster)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.ArcBio,
                         ActionIds.ArcBio2,
                         ActionIds.Bio3
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.HealthGreen)),
                 new GaugeTimer("Miasma", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Miasma),
                         new Item(ActionIds.Miasma3),
                         new Item(ActionIds.TriDisaster)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Miasma,
                         ActionIds.Miasma3
                     }, UI.Icon)
@@ -255,23 +278,28 @@ namespace JobBars.Gauges {
             // ============ SAM ==================
             JobToGauges.Add(JobIds.SAM, new Gauge[] {
                 new GaugeTimer("Jinpu", 40)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(BuffIds.Jinpu)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Jinpu
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.DarkBlue)),
                 new GaugeTimer("Shifu", 40)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(BuffIds.Shifu)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Shifu
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.Red)),
                 new GaugeTimer("Higanbana", 60)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Higanbana)
                     })
                     .WithVisual(GaugeVisual.Bar(UIColor.Orange)),
@@ -279,27 +307,31 @@ namespace JobBars.Gauges {
             // ============ BLM ==================
             JobToGauges.Add(JobIds.BLM, new Gauge[] {
                 new GaugeProc("Firestarter/Thundercloud")
-                    .WithProcs(new[]
+                    .WithProcs(new []
                     {
                         new Proc(BuffIds.Thundercloud, UIColor.DarkBlue),
                         new Proc(BuffIds.Firestarter, UIColor.Orange)
                     }),
                 new GaugeTimer("Thunder 3", 24)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Thunder3),
                         new Item(ActionIds.Thunder)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Thunder3,
                         ActionIds.Thunder
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.DarkBlue)),
                 new GaugeTimer("Thunder 4", 18)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.Thunder4),
                         new Item(ActionIds.Thunder2)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.Thunder4,
                         ActionIds.Thunder2
                     }, UI.Icon)
@@ -309,13 +341,13 @@ namespace JobBars.Gauges {
             // ============ RDM ==================
             JobToGauges.Add(JobIds.RDM, new Gauge[] {
                 new GaugeGCD("Manafication", 10, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.Manafication)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.DarkBlue)),
                 new GaugeProc("Verfire/Verstone")
-                    .WithProcs(new[]
+                    .WithProcs(new []
                     {
                         new Proc(BuffIds.VerstoneReady, UIColor.White),
                         new Proc(BuffIds.VerfireReady, UIColor.Red)
@@ -324,18 +356,18 @@ namespace JobBars.Gauges {
             // ============ MCH ==================
             JobToGauges.Add(JobIds.MCH, new Gauge[] {
                 new GaugeGCD("Hypercharge", 9, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(ActionIds.Hypercharge)
                     })
-                    .WithSpecificIncrement(new[]
+                    .WithSpecificIncrement(new []
                     {
                         new Item(ActionIds.AutoCrossbow),
                         new Item(ActionIds.HeatBlast)
                     })
                     .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
                 new GaugeGCD("Wildfire", 10, 6)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.Wildfire)
                     })
@@ -344,7 +376,7 @@ namespace JobBars.Gauges {
             // ============ DNC ==================
             JobToGauges.Add(JobIds.DNC, new Gauge[] {
                 new GaugeProc("Dancer Procs")
-                    .WithProcs(new[]
+                    .WithProcs(new []
                     {
                         new Proc(BuffIds.FlourishingCascade, UIColor.BrightGreen),
                         new Proc(BuffIds.FlourishingFountain, UIColor.Yellow),
@@ -356,7 +388,7 @@ namespace JobBars.Gauges {
             // ============ NIN ==================
             JobToGauges.Add(JobIds.NIN, new Gauge[] {
                 new GaugeGCD("Bunshin", 15, 5)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.Bunshin)
                     })
@@ -365,14 +397,14 @@ namespace JobBars.Gauges {
             // ============ MNK ==================
             JobToGauges.Add(JobIds.MNK, new Gauge[] {
                 new GaugeGCD("Perfect Balance", 15, 6)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.PerfectBalance)
                     })
                     .WithNoRefresh()
                     .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
                 new GaugeGCD("Riddle of Fire", 20, 9)
-                    .WithTriggers(new[]
+                    .WithTriggers(new []
                     {
                         new Item(BuffIds.RiddleOfFire)
                     })
@@ -381,10 +413,12 @@ namespace JobBars.Gauges {
             // ============ BLU ==================
             JobToGauges.Add(JobIds.BLU, new Gauge[] {
                 new GaugeTimer("Song of Torment", 30)
-                    .WithTriggers(new[]{
+                    .WithTriggers(new []
+                    {
                         new Item(ActionIds.SongOfTorment)
                     })
-                    .WithReplaceIcon(new []{
+                    .WithReplaceIcon(new []
+                    {
                         ActionIds.SongOfTorment
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.Red))
@@ -416,14 +450,19 @@ namespace JobBars.Gauges {
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
                 if(!gauge.StartHidden) {
                     gauge.UI.Show();
-                    if(Configuration.Config.GaugeHorizontal) { // HORIZONTAL
-                        UiHelper.SetPosition(gauge.UI.RootRes, totalPosition, gauge.UI.GetHorizontalYOffset());
-                        totalPosition += gauge.GetWidth();
+                    if(Configuration.Config.GaugeSplit) { // SPLIT
+                        gauge.UI.SetSplitPosition(Configuration.Config.GetGaugeSplitPosition(gauge.Name));
                     }
-                    else { // VERTICAL
-                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
-                        UiHelper.SetPosition(gauge.UI.RootRes, xPosition, totalPosition);
-                        totalPosition += gauge.GetHeight();
+                    else {
+                        if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
+                            UiHelper.SetPosition(gauge.UI.RootRes, totalPosition, gauge.UI.GetHorizontalYOffset());
+                            totalPosition += gauge.GetWidth();
+                        }
+                        else { // VERTICAL
+                            int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
+                            UiHelper.SetPosition(gauge.UI.RootRes, xPosition, totalPosition);
+                            totalPosition += gauge.GetHeight();
+                        }
                     }
                     enabledIdx++;
                 }
