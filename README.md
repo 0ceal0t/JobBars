@@ -81,12 +81,14 @@ To open the settings menu, use `/jobbars`
 
 ## TODO
 - [ ] Glow around gauges
-- [ ] AST upgraded star
+- [ ] Split up party buffs and personal buffs
 - [ ] DRG Fang and Claw / Wheeling Thrust?
 - [ ] DRG Disembowel / Chaos Thrust? (probably not useful)
 - [ ] NIN GCDs under trick? (probably not useful)
-- [ ] MCH number of charges of Gauss Round / Richochet
 - [ ] Hide all buffs options
+- [x] ~~MCH number of charges of Gauss Round / Richochet~~
+- [x] ~~Track DoTs based on target~~
+- [x] ~~AST upgraded star~~
 - [x] ~~Move gauges independently~~
 - [x] ~~Sound effect when DoTs are low~~
 - [x] ~~Red text when DoTs are low~~

@@ -173,6 +173,9 @@ namespace JobBars {
                     else if (gauge is GaugeProc) {
                         type = "PROCS";
                     }
+                    else if(gauge is GaugeCharges) {
+                        type = "CHARGES";
+                    }
 
                     ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} [{type}]");
                     if (ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {

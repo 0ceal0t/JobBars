@@ -93,7 +93,8 @@ namespace JobBars.Gauges {
     public enum GaugeVisualType {
         Bar,
         Arrow,
-        Diamond
+        Diamond,
+        BarDiamondCombo
     }
     public struct GaugeVisual {
         public GaugeVisualType Type;
@@ -111,6 +112,14 @@ namespace JobBars.Gauges {
             return new GaugeVisual
             {
                 Type = GaugeVisualType.Arrow,
+                Color = color
+            };
+        }
+
+        public static GaugeVisual BarDiamondCombo(ElementColor color) {
+            return new GaugeVisual
+            {
+                Type = GaugeVisualType.BarDiamondCombo,
                 Color = color
             };
         }

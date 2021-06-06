@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIDiamond : UIElement {
@@ -94,7 +95,7 @@ namespace JobBars.UI {
             }
         }
 
-        public override unsafe void LoadExisting(AtkResNode* node) {
+        public override void LoadExisting(AtkResNode* node) {
             Selected = new AtkImageNode*[MAX];
             Ticks = new AtkResNode*[MAX];
 
@@ -108,10 +109,18 @@ namespace JobBars.UI {
             }
         }
 
-        public override void SetColor(UIColor.ElementColor color) {
+        public override void SetColor(ElementColor color) {
+            for(int idx = 0; idx < MAX; idx++) {
+                SetColor(color, idx);
+            }
         }
-        public void SetColor(UIColor.ElementColor color, int idx) {
+
+        public void SetColor(ElementColor color, int idx) {
             UIColor.SetColor((AtkResNode*)Selected[idx], color);
+        }
+
+        public void SetMaxValue(int value) {
+            SetParts(value);
         }
 
         public void SetParts(int value) {
@@ -125,12 +134,25 @@ namespace JobBars.UI {
             }
         }
 
+        public void SetValue(int value) {
+            for (int idx = 0; idx < MAX; idx++) {
+                if (idx < value) {
+                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
+                }
+                else {
+                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true);
+                }
+            }
+        }
+
         public void SelectPart(int idx) {
             UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false, false);
         }
+
         public void UnselectPart(int idx) {
             UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true, false);
         }
+
         public override int GetHeight(int param) {
             return 32;
         }

@@ -61,9 +61,9 @@ namespace JobBars.UI {
         private delegate void SetIconRecastTextDelegate2(IntPtr text, IntPtr a2);
         private Hook<SetIconRecastTextDelegate2> setIconRecastTextHook2;
 
-        public UIIconManager(DalamudPluginInterface pluginInterface) {
+        public UIIconManager(DalamudPluginInterface pluginInterface, ClientInterface client) {
             PluginInterface = pluginInterface;
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
+            Client = client;
 
             IconRecastOverride = new HashSet<IntPtr>();
             IconComponentOverride = new HashSet<IntPtr>();
@@ -115,7 +115,6 @@ namespace JobBars.UI {
             setIconRecastHook2.Dispose();
 
             Reset();
-            Client.Dispose();
         }
 
         public IntPtr SetIconRecast2(IntPtr icon) {

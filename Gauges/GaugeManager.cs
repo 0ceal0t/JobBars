@@ -6,6 +6,7 @@ using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -366,7 +367,19 @@ namespace JobBars.Gauges {
                     {
                         new Item(BuffIds.Wildfire)
                     })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red))
+                    .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
+                new GaugeCharges("Gauss Round Charges", 30, 3)
+                    .WithTriggers(new []
+                    {
+                        new Item(ActionIds.GaussRound)
+                    })
+                    .WithVisual(GaugeVisual.BarDiamondCombo(UIColor.Red)),
+                new GaugeCharges("Ricochet Charges", 30, 3)
+                    .WithTriggers(new []
+                    {
+                        new Item(ActionIds.Ricochet)
+                    })
+                    .WithVisual(GaugeVisual.BarDiamondCombo(UIColor.LightBlue))
             });
             // ============ DNC ==================
             JobToGauges.Add(JobIds.DNC, new Gauge[] {
@@ -450,12 +463,12 @@ namespace JobBars.Gauges {
                     }
                     else {
                         if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
-                            UiHelper.SetPosition(gauge.UI.RootRes, totalPosition, gauge.UI.GetHorizontalYOffset());
+                            gauge.UI.SetPosition(new Vector2(totalPosition, gauge.UI.GetHorizontalYOffset()));
                             totalPosition += gauge.GetWidth();
                         }
                         else { // VERTICAL
                             int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
-                            UiHelper.SetPosition(gauge.UI.RootRes, xPosition, totalPosition);
+                            gauge.UI.SetPosition(new Vector2(xPosition, totalPosition));
                             totalPosition += gauge.GetHeight();
                         }
                     }
@@ -475,6 +488,8 @@ namespace JobBars.Gauges {
                     return UI.Gauges[idx];
                 case GaugeVisualType.Diamond:
                     return UI.Diamonds[idx];
+                case GaugeVisualType.BarDiamondCombo:
+                    return new UIGaugeDiamondCombo(UI, UI.Gauges[idx], UI.Diamonds[idx]); // kind of scuffed, but oh well
                 default:
                     return null;
             }

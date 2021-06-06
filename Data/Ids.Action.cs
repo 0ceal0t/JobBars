@@ -71,6 +71,8 @@ namespace JobBars.Data {
         Hypercharge = 0x4339,
         HeatBlast = 0x1CF2,
         AutoCrossbow = 0x4071,
+        GaussRound = 2874,
+        Ricochet = 2890,
         // DNC
         QuadTechFinish = 16196,
         Devilment = 16011,

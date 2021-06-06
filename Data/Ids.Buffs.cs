@@ -35,7 +35,7 @@ namespace JobBars.Data {
         TheSpire = 0x75f,
         LordOfCrowns = 0x754,
         LadyOfCrowns = 0x755,
-        Combust =838,
+        Combust = 838,
         Combust2 = 843,
         Combust3 = 0x759,
         GiantDominance = 1248,

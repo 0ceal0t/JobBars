@@ -104,20 +104,6 @@ namespace JobBars.Helper {
             return (AtkResNode**)(newListPtr);
         }
 
-        public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
-            var oldLength = manager.PartsList->PartCount;
-            var newLength = oldLength + addSize + 1;
-
-            var oldSize = oldLength * 0x10;
-            var newSize = newLength * 0x10;
-            var newListPtr = Alloc(newSize);
-            var oldListPtr = new IntPtr(manager.PartsList->Parts);
-            byte[] oldData = new byte[oldSize];
-            Marshal.Copy(oldListPtr, oldData, 0, (int)oldSize);
-            Marshal.Copy(oldData, 0, newListPtr, (int)oldSize);
-            return (AtkUldPart*)newListPtr;
-        }
-
         public static AtkResNode* CloneNode(AtkResNode* original) {
             var size = original->Type switch
             {

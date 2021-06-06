@@ -58,7 +58,7 @@ namespace JobBars.UI {
             Arrows = new UIArrow[MAX_GAUGES];
             Diamonds = new UIDiamond[MAX_GAUGES];
             Buffs = new UIBuff[_Icons.Length];
-            Icon = new UIIconManager(pi);
+            Icon = new UIIconManager(pi, JobBars.Client);
         }
 
         public void Dispose() {
@@ -197,7 +197,7 @@ namespace JobBars.UI {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
 
-            addon->UldManager.PartsList->Parts = UiHelper.ExpandPartList(addon->UldManager, 99);
+            addon->UldManager.PartsList->Parts = ExpandPartList(addon->UldManager, 99);
             AddPart(GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
             AddPart(GAUGE_ASSET, GAUGE_FRAME_PART, 0, 0, 160, 20);
             AddPart(GAUGE_ASSET, GAUGE_BAR_MAIN, 0, 40, 160, 20);
@@ -217,6 +217,20 @@ namespace JobBars.UI {
                 current_asset++;
                 current_part++;
             }
+        }
+
+        public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
+            var oldLength = manager.PartsList->PartCount;
+            var newLength = oldLength + addSize + 1;
+
+            var oldSize = oldLength * 0x10;
+            var newSize = newLength * 0x10;
+            var newListPtr = UiHelper.Alloc(newSize);
+            var oldListPtr = new IntPtr(manager.PartsList->Parts);
+            byte[] oldData = new byte[oldSize];
+            Marshal.Copy(oldListPtr, oldData, 0, (int)oldSize);
+            Marshal.Copy(oldData, 0, newListPtr, (int)oldSize);
+            return (AtkUldPart*)newListPtr;
         }
 
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO

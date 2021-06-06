@@ -19,6 +19,7 @@ using JobBars.Gauges;
 using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
 using JobBars.PartyList;
+using FFXIVClientInterface;
 using System.Runtime.InteropServices;
 
 #pragma warning disable CS0659
@@ -47,8 +48,11 @@ namespace JobBars {
         private bool Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
         private bool Init = false;
 
+        public static ClientInterface Client;
+
         public void Initialize(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
+            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             UIColor.SetupColors();
             SetupActions();
@@ -89,6 +93,7 @@ namespace JobBars {
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
             UI.Dispose();
+            Client.Dispose();
 
             RemoveCommands();
         }
@@ -253,7 +258,7 @@ namespace JobBars {
             BManager?.Tick();
             Animation.Tick();
 
-            if(Party.Count < LastPartyCount) {
+            if (Party.Count < LastPartyCount) {
                 BManager?.SetJob(CurrentJob);
             }
             LastPartyCount = Party.Count;

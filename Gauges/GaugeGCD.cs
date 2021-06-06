@@ -11,11 +11,11 @@ namespace JobBars.Gauges {
     public class GaugeGCD : Gauge {
         public Item[] Increment;
 
-        public int Counter;
-        public int MaxCounter;
+        private int Counter;
+        private int MaxCounter;
 
-        public float Duration;
-        public float MaxDuration;
+        private float Duration;
+        private float MaxDuration;
 
         public GaugeGCD(string name, float duration, int max) : base(name) {
             MaxDuration = duration;
