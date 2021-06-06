@@ -77,9 +77,11 @@ namespace JobBars {
         public void Dispose() {
             receiveActionEffectHook?.Disable();
             receiveActionEffectHook?.Dispose();
+            receiveActionEffectHook = null;
 
             actorControlSelfHook?.Disable();
             actorControlSelfHook?.Dispose();
+            actorControlSelfHook = null;
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
