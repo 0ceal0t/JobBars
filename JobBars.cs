@@ -249,6 +249,7 @@ namespace JobBars {
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
             GManager?.Tick();
             BManager?.Tick();
+            Animation.Tick();
 
             if(Party.Count < LastPartyCount) {
                 BManager?.SetJob(CurrentJob);

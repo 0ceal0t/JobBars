@@ -80,7 +80,6 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
-- [ ] Move gauges independently
 - [ ] Glow around gauges
 - [ ] AST upgraded star
 - [ ] DRG Fang and Claw / Wheeling Thrust?
@@ -88,6 +87,7 @@ To open the settings menu, use `/jobbars`
 - [ ] NIN GCDs under trick? (probably not useful)
 - [ ] MCH number of charges of Gauss Round / Richochet
 - [ ] Hide all buffs options
+- [x] ~~Move gauges independently~~
 - [x] ~~Sound effect when DoTs are low~~
 - [x] ~~Red text when DoTs are low~~
 - [x] ~~Remove buffs on instance end~~

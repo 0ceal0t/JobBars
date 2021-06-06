@@ -1,4 +1,6 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
+using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,7 @@ namespace JobBars.UI {
         private static int MAX = 12;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
+        private int LastValue = 0;
 
         public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
@@ -54,8 +57,8 @@ namespace JobBars.UI {
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
                 selectedContainer->Height = 32;
-                selectedContainer->OriginX = 0;
-                selectedContainer->OriginY = 0;
+                selectedContainer->OriginX = 16;
+                selectedContainer->OriginY = 16;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
 
                 Selected[idx] = _UI.CreateImageNode();
@@ -63,8 +66,8 @@ namespace JobBars.UI {
                 Selected[idx]->AtkResNode.Height = 32;
                 Selected[idx]->AtkResNode.X = 0;
                 Selected[idx]->AtkResNode.Y = 0;
-                Selected[idx]->AtkResNode.OriginX = 0;
-                Selected[idx]->AtkResNode.OriginY = 0;
+                Selected[idx]->AtkResNode.OriginX = 16;
+                Selected[idx]->AtkResNode.OriginY = 16;
                 Selected[idx]->PartId = UIBuilder.ARROW_FG;
                 Selected[idx]->PartsList = nameplateAddon->UldManager.PartsList;
                 Selected[idx]->Flags = 0;
@@ -127,11 +130,16 @@ namespace JobBars.UI {
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
                     UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
+                    if(idx >= LastValue) { // newly added
+                        var item = (AtkResNode*)Selected[idx];
+                        Animation.AddAnim((float f) => UiHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
+                    }
                 }
                 else {
                     UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true);
                 }
             }
+            LastValue = value;
         }
 
         public override int GetHeight(int param) {

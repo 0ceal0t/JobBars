@@ -54,8 +54,8 @@ namespace JobBars.UI {
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
                 selectedContainer->Height = 32;
-                selectedContainer->OriginX = 0;
-                selectedContainer->OriginY = 0;
+                selectedContainer->OriginX = 16;
+                selectedContainer->OriginY = 16;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
 
                 Selected[idx] = _UI.CreateImageNode();
@@ -63,8 +63,8 @@ namespace JobBars.UI {
                 Selected[idx]->AtkResNode.Height = 32;
                 Selected[idx]->AtkResNode.X = 0;
                 Selected[idx]->AtkResNode.Y = 0;
-                Selected[idx]->AtkResNode.OriginX = 0;
-                Selected[idx]->AtkResNode.OriginY = 0;
+                Selected[idx]->AtkResNode.OriginX = 16;
+                Selected[idx]->AtkResNode.OriginY = 16;
                 Selected[idx]->PartId = UIBuilder.DIAMOND_FG;
                 Selected[idx]->PartsList = nameplateAddon->UldManager.PartsList;
                 Selected[idx]->Flags = 0;
