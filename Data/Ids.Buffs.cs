@@ -38,6 +38,7 @@ namespace JobBars.Data {
         Combust =838,
         Combust2 = 843,
         Combust3 = 0x759,
+        GiantDominance = 1248,
         // MNK
         PerfectBalance = 0x6e,
         RiddleOfFire = 0x49d,

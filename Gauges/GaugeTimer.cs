@@ -15,8 +15,6 @@ namespace JobBars.Gauges {
         private bool ReplaceIcon = false;
         private ActionIds[] ReplaceIconAction;
 
-        private Item[] TriggersRefreshOnly;
-
         private float Duration;
         private float MaxDuration;
         private float DefaultDuration;
@@ -25,7 +23,6 @@ namespace JobBars.Gauges {
         private static float LowTimerWarning = 4.0f;
 
         public GaugeTimer(string name, float duration) : base(name) {
-            TriggersRefreshOnly = new Item[0];
             MaxDuration = duration;
             DefaultDuration = MaxDuration;
             DefaultVisual = Visual = new GaugeVisual
@@ -77,8 +74,11 @@ namespace JobBars.Gauges {
         // ===== UPDATE ============
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
             var timeLeft = TimeLeft(Duration, time, buffDict);
-            if (timeLeft > 0) State = GaugeState.Active;
-            else timeLeft = 0;
+            if(timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
+                State = GaugeState.Active;
+                StartIcon();
+            }
+
             if (State == GaugeState.Active) {
                 if (timeLeft <= 0) {
                     timeLeft = 0; // prevent "-1" or something
@@ -106,11 +106,7 @@ namespace JobBars.Gauges {
             }
         }
         public override void ProcessAction(Item action) {
-            if (
-                (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) ||
-                (TriggersRefreshOnly.Contains(action) && State == GaugeState.Active) // like iron jaws
-            ) { // START
-                
+            if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
                 SetActive(action);
                 Duration = DefaultDuration;
                 StartIcon();
@@ -127,10 +123,6 @@ namespace JobBars.Gauges {
         // ===== BUILDER FUNCS =====
         public GaugeTimer WithTriggers(Item[] triggers) {
             Triggers = triggers;
-            return this;
-        }
-        public GaugeTimer WithTriggersRefreshOnly(Item[] triggersRefreshOnly) {
-            TriggersRefreshOnly = triggersRefreshOnly;
             return this;
         }
         public GaugeTimer WithStartHidden() {

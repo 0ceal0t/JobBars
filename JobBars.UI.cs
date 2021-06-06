@@ -47,7 +47,7 @@ namespace JobBars {
 
                         ImGuiHelpers.ForceNextWindowMainViewport();
                         ImGui.SetNextWindowPos(Configuration.Config.GetGaugeSplitPosition(gauge.Name), ImGuiCond.FirstUseEver);
-                        ImGui.SetNextWindowSize(new Vector2(100, 50));
+                        ImGui.SetNextWindowSize(new Vector2(200, 200));
                         ImGui.PushStyleVar(ImGuiStyleVar.Alpha,0.7f);
                         ImGui.Begin("##GaugePosition" + gauge.Name, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
                         ImGui.Text($"{gauge.Name}");
@@ -65,15 +65,16 @@ namespace JobBars {
                     ImGuiHelpers.ForceNextWindowMainViewport();
                     ImGui.SetNextWindowPos(Configuration.Config.GaugePosition, ImGuiCond.FirstUseEver);
                     ImGui.SetNextWindowSize(new Vector2(200, 200));
+                    ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
                     ImGui.Begin("##GaugePosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
                     ImGui.Text("Gauge Bar Position");
-
                     var pos = ImGui.GetWindowPos();
                     if (pos != Configuration.Config.GaugePosition) {
                         Configuration.Config.GaugePosition = pos;
                         Configuration.Config.Save();
                         UI?.SetGaugePosition(pos);
                     }
+                    ImGui.PopStyleVar(1);
                 }
 
                 ImGui.End();
@@ -83,15 +84,16 @@ namespace JobBars {
                 ImGuiHelpers.ForceNextWindowMainViewport();
                 ImGui.SetNextWindowPos(Configuration.Config.BuffPosition, ImGuiCond.FirstUseEver);
                 ImGui.SetNextWindowSize(new Vector2(200, 200));
+                ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
                 ImGui.Begin("##BuffPosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
                 ImGui.Text("Buff Bar Position");
-
                 var pos = ImGui.GetWindowPos();
                 if (pos != Configuration.Config.BuffPosition) {
                     Configuration.Config.BuffPosition = pos;
                     Configuration.Config.Save();
                     UI?.SetBuffPosition(pos);
                 }
+                ImGui.PopStyleVar(1);
 
                 ImGui.End();
             }
