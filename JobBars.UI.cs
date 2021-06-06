@@ -47,17 +47,19 @@ namespace JobBars {
 
                         ImGuiHelpers.ForceNextWindowMainViewport();
                         ImGui.SetNextWindowPos(Configuration.Config.GetGaugeSplitPosition(gauge.Name), ImGuiCond.FirstUseEver);
-                        ImGui.SetNextWindowSize(new Vector2(200, 200));
+                        ImGui.SetNextWindowSize(new Vector2(100, 50));
+                        ImGui.PushStyleVar(ImGuiStyleVar.Alpha,0.7f);
                         ImGui.Begin("##GaugePosition" + gauge.Name, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
                         ImGui.Text($"{gauge.Name}");
-
                         var pos = ImGui.GetWindowPos();
                         if (pos != Configuration.Config.GetGaugeSplitPosition(gauge.Name)) {
                             Configuration.Config.GaugeSplitPosition[gauge.Name] = pos;
                             Configuration.Config.Save();
                             gauge.UI?.SetSplitPosition(pos);
                         }
+                        ImGui.PopStyleVar(1);
                     }
+                    
                 }
                 else {
                     ImGuiHelpers.ForceNextWindowMainViewport();

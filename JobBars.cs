@@ -36,7 +36,7 @@ namespace JobBars {
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId);
+        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId,byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
         private PList Party; // TEMP
@@ -77,9 +77,11 @@ namespace JobBars {
         public void Dispose() {
             receiveActionEffectHook?.Disable();
             receiveActionEffectHook?.Dispose();
+            receiveActionEffectHook = null;
 
             actorControlSelfHook?.Disable();
             actorControlSelfHook?.Dispose();
+            actorControlSelfHook = null;
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
@@ -185,8 +187,8 @@ namespace JobBars {
 
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
-        private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId) {
-            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId);
+        private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId,byte a10) {
+            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId,a10);
             if (arg1 == 0x40000010) { // WIPE
                 Reset();
             }

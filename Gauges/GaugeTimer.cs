@@ -76,8 +76,10 @@ namespace JobBars.Gauges {
 
         // ===== UPDATE ============
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
+            var timeLeft = TimeLeft(Duration, time, buffDict);
+            if (timeLeft > 0) State = GaugeState.Active;
+            else timeLeft = 0;
             if (State == GaugeState.Active) {
-                var timeLeft = TimeLeft(Duration, time, buffDict);
                 if (timeLeft <= 0) {
                     timeLeft = 0; // prevent "-1" or something
                     State = GaugeState.Inactive;
@@ -85,7 +87,7 @@ namespace JobBars.Gauges {
                 }
 
                 if (UI is UIGauge gauge) {
-                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning) {
+                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning && timeLeft != 0) {
                         gauge.SetTextColor(Red);
                         if(Configuration.Config.SeNumber > 0) {
                             UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
@@ -108,8 +110,9 @@ namespace JobBars.Gauges {
                 (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) ||
                 (TriggersRefreshOnly.Contains(action) && State == GaugeState.Active) // like iron jaws
             ) { // START
+                
                 SetActive(action);
-                Duration = DefaultDuration + (action.Type != ItemType.Buff ? 1 : 0); // add an extra second if triggered by an action, since buffs aren't immediately applied
+                Duration = DefaultDuration;
                 StartIcon();
             }
         }
