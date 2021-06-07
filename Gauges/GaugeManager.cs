@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Actors.Resolvers;
+using Dalamud.Game.ClientState.Structs;
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.Helper;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -511,13 +513,24 @@ namespace JobBars.Gauges {
             var currentTime = DateTime.Now;
 
             Dictionary<Item, float> BuffDict = new Dictionary<Item, float>();
-            foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
+            /*foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
+                BuffDict[new Item
+                {
+                    Id = (uint)status.EffectId,
+                    Type = ItemType.Buff
+                }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
+            }*/
+            var selfBuffAddr = PluginInterface.ClientState.LocalPlayer.Address + ActorOffsets.UIStatusEffects;
+            for (int i = 0; i < 30; i++) {
+                var addr = selfBuffAddr + i * 0xC;
+                var status = (StatusEffect)Marshal.PtrToStructure(addr, typeof(StatusEffect));
                 BuffDict[new Item
                 {
                     Id = (uint)status.EffectId,
                     Type = ItemType.Buff
                 }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
             }
+
             if (PluginInterface.ClientState.Targets.CurrentTarget != null) {
                 /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
                     if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
@@ -529,10 +542,10 @@ namespace JobBars.Gauges {
                     }
                 }*/
 
-                var buffAddr = PluginInterface.ClientState.Targets.CurrentTarget.Address + Dalamud.Game.ClientState.Structs.ActorOffsets.UIStatusEffects;
+                var buffAddr = PluginInterface.ClientState.Targets.CurrentTarget.Address + ActorOffsets.UIStatusEffects;
                 for(int i = 0; i < 30; i++) {
                     var addr = buffAddr + i * 0xC;
-                    var status = (Dalamud.Game.ClientState.Structs.StatusEffect) System.Runtime.InteropServices.Marshal.PtrToStructure(addr, typeof(Dalamud.Game.ClientState.Structs.StatusEffect));
+                    var status = (StatusEffect) Marshal.PtrToStructure(addr, typeof(StatusEffect));
                     if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
                         BuffDict[new Item
                         {
