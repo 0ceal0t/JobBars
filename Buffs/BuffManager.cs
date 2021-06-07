@@ -335,7 +335,12 @@ namespace JobBars.Buffs {
             UI.HideAllBuffs();
         }
 
+        public void Reset() {
+            SetJob(CurrentJob);
+        }
+
         public void PerformAction(Item action) {
+            if (!Configuration.Config.BuffBarEnabled) return;
             foreach (var buff in AllBuffs) {
                 if(!buff.Enabled) { continue; }
                 buff.ProcessAction(action);
@@ -343,6 +348,7 @@ namespace JobBars.Buffs {
         }
 
         public void Tick() {
+            if (!Configuration.Config.BuffBarEnabled) return;
             var currentTime = DateTime.Now;
 
             var idx = 0;

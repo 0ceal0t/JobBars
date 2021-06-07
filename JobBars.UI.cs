@@ -105,10 +105,9 @@ namespace JobBars {
             string _ID = "##JobBars_Gauges";
 
             // ===== GENERAL GAUGE =======
-            if (ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK)) {
-            }
-            if(ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
-                GManager.ResetJob(CurrentJob);
+            ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK);
+            if (ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
+                GManager.Reset();
                 Configuration.Config.Save();
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
@@ -116,10 +115,9 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
             if(ImGui.Checkbox("DoT Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
-               GManager.ResetJob(CurrentJob);
-               Configuration.Config.Save();
+                GManager.Reset();
+                Configuration.Config.Save();
             }
-
             
             ImGui.SetNextItemWidth(25f);
             if (ImGui.InputInt("Sound effect # when DoTs are low (0 = off)",ref Configuration.Config.SeNumber,0))
@@ -130,12 +128,12 @@ namespace JobBars {
             }
 
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
-                GManager.ResetJob(CurrentJob);
+                GManager.Reset();
                 Configuration.Config.Save();
             }
             
             if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
-                GManager.ResetJob(CurrentJob);
+                GManager.Reset();
                 Configuration.Config.Save();
             }
 
@@ -208,13 +206,13 @@ namespace JobBars {
                             if (ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Color.Name}){_ID}{gauge.Name}", !isOverride_COLOR)) { // DEFAULT
                                 Configuration.Config.GaugeColorOverride.Remove(gauge.Name);
                                 Configuration.Config.Save();
-                                SetColor(gauge, gauge.DefaultVisual.Color);
+                                SetGaugeColor(gauge, gauge.DefaultVisual.Color);
                             }
                             foreach (var entry in UIColor.AllColors) {
                                 if (ImGui.Selectable($"{entry.Key}{_ID}{gauge.Name}", (gauge.Visual.Color.Name == entry.Key) && isOverride_COLOR)) { // OTHER
                                     Configuration.Config.GaugeColorOverride[gauge.Name] = entry.Key;
                                     Configuration.Config.Save();
-                                    SetColor(gauge, entry.Value);
+                                    SetGaugeColor(gauge, entry.Value);
                                 }
                             }
                             ImGui.EndCombo();
@@ -251,7 +249,7 @@ namespace JobBars {
             ImGui.EndChild();
         }
 
-        public void SetColor(Gauge gauge, ElementColor color) {
+        public void SetGaugeColor(Gauge gauge, ElementColor color) {
             gauge.Visual.Color = color;
             gauge.SetupVisual(resetValue: false);
         }
@@ -261,7 +259,10 @@ namespace JobBars {
             string _ID = "##JobBars_Buffs";
 
             // ===== GENERAL BUFFS =======
-            if (ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK)) {
+            ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK);
+            if(ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
+                BManager.Reset();
+                Configuration.Config.Save();
             }
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
                 UI.SetBuffScale(Configuration.Config.BuffScale);
@@ -302,7 +303,7 @@ namespace JobBars {
                             Configuration.Config.BuffDisabled.Add(buff.Name);
                         }
                         Configuration.Config.Save();
-                        BManager.SetJob(CurrentJob);
+                        BManager.Reset();
                     }
 
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

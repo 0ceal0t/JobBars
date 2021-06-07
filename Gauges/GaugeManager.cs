@@ -138,7 +138,14 @@ namespace JobBars.Gauges {
                         ActionIds.Combust2,
                         ActionIds.Combust3
                     }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.LightBlue))
+                    .WithVisual(GaugeVisual.Bar(UIColor.LightBlue)),
+                new GaugeTimer("Lightspeed", 15)
+                    .WithTriggers(new []
+                    {
+                        new Item(BuffIds.Lightspeed)
+                    })
+                    .WithVisual(GaugeVisual.Bar(UIColor.Yellow))
+                    .WithNoLowWarning()
             });
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
@@ -495,6 +502,10 @@ namespace JobBars.Gauges {
                 default:
                     return null;
             }
+        }
+
+        public void Reset() {
+            SetJob(CurrentJob);
         }
 
         public void ResetJob(JobIds job) {

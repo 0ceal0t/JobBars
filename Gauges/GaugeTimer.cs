@@ -19,6 +19,7 @@ namespace JobBars.Gauges {
         private float MaxDuration;
         private float DefaultDuration;
 
+        private bool ShowLowWarning = true;
         private float LastTimeLeft;
         private static float LowTimerWarning = 4.0f;
 
@@ -88,7 +89,7 @@ namespace JobBars.Gauges {
                 }
 
                 if (UI is UIGauge gauge) {
-                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning && timeLeft != 0) {
+                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning && timeLeft != 0 && ShowLowWarning) {
                         gauge.SetTextColor(Red);
                         if(Configuration.Config.SeNumber > 0) {
                             UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
@@ -148,6 +149,11 @@ namespace JobBars.Gauges {
 
         public GaugeTimer WithDefaultDuration(float duration) {
             DefaultDuration = duration;
+            return this;
+        }
+
+        public GaugeTimer WithNoLowWarning() {
+            ShowLowWarning = false;
             return this;
         }
 

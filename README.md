@@ -87,7 +87,7 @@ Some people find these useful. If you only want some of them, gauges and be enab
 - [ ] DRG Fang and Claw / Wheeling Thrust?
 - [ ] DRG Disembowel / Chaos Thrust? (probably not useful)
 - [ ] NIN GCDs under trick? (probably not useful)
-- [ ] Hide all buffs options
+- [x] ~~Hide all buffs options~~
 - [x] ~~MCH number of charges of Gauss Round / Richochet~~
 - [x] ~~Track DoTs based on target~~
 - [x] ~~AST upgraded star~~

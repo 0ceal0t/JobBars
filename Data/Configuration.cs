@@ -12,22 +12,25 @@ namespace JobBars.Data {
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 0;
 
-        public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
         public float GaugeScale = 1.0f;
         public bool GaugeHorizontal = false;
         public bool GaugeAlignRight = false;
+        public bool GaugeSplit = false;
+        public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
+        public Dictionary<string, Vector2> GaugeSplitPosition = new Dictionary<string, Vector2>();
+
         public bool GaugeIconReplacement = true;
         public HashSet<string> GaugeDisabled = new HashSet<string>();
         public Dictionary<string, string> GaugeColorOverride = new Dictionary<string, string>();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new Dictionary<string, GaugeVisualType>();
         public Dictionary<string, int> GaugeOrderOverride = new Dictionary<string, int>();
+
         public int SeNumber = 0;
-        public bool GaugeSplit = false;
-        public Dictionary<string, Vector2> GaugeSplitPosition = new Dictionary<string, Vector2>();
 
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
         public float BuffScale = 1.0f;
         public HashSet<string> BuffDisabled = new HashSet<string>();
+        public bool BuffBarEnabled = true;
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
