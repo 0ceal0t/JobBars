@@ -15,6 +15,7 @@ namespace JobBars.UI {
             B = 255,
             A = 255
         };
+
         public static ByteColor BYTE_Transparent = new ByteColor
         {
             R = 0,

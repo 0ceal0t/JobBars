@@ -117,6 +117,7 @@ namespace JobBars.UI {
                 UIColor.SetColor((AtkResNode*)item, color);
             }
         }
+
         public void SetMaxValue(int value) {
             for(int idx = 0; idx < MAX; idx++) {
                 if(idx < value) {
@@ -127,6 +128,7 @@ namespace JobBars.UI {
                 }
             }
         }
+
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
@@ -146,9 +148,11 @@ namespace JobBars.UI {
         public override int GetHeight(int param) {
             return 32;
         }
+
         public override int GetWidth(int param) {
             return 32 + 18 * (param - 1);
         }
+
         public override int GetHorizontalYOffset() {
             return -3;
         }

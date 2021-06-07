@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using Newtonsoft.Json.Linq;
 using JobBars.Helper;
 using Dalamud.Game.Internal;
 using JobBars.UI;
@@ -20,7 +19,6 @@ using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
 using JobBars.PartyList;
 using FFXIVClientInterface;
-using System.Runtime.InteropServices;
 
 #pragma warning disable CS0659
 namespace JobBars {
@@ -108,6 +106,7 @@ namespace JobBars {
                 }
             }
         }
+
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
             if (!Ready || !Init) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
@@ -192,12 +191,14 @@ namespace JobBars {
 
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
+
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId,byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId,a10);
             if (arg1 == 0x40000010) { // WIPE
                 Reset();
             }
         }
+
         private void ZoneChanged(object sender, ushort e) {
             Reset();
         }
@@ -208,6 +209,7 @@ namespace JobBars {
                 return PluginInterface.ClientState.LocalPlayer.ActorId;
             return 0;
         }
+
         private int FindCharaPet() {
             int charaId = GetCharacterActorId();
             foreach (Actor a in PluginInterface.ClientState.Actors) {
@@ -219,6 +221,7 @@ namespace JobBars {
             }
             return -1;
         }
+
         private bool IsInParty(int actorId) {
             foreach(var pMember in Party) {
                 if(pMember.Actor != null && pMember.Actor.ActorId == actorId) {
@@ -285,12 +288,15 @@ namespace JobBars {
                 ShowInHelp = true
             });
         }
+
         private void OnOpenConfig(object sender, EventArgs eventArgs) {
             Visible = true;
         }
+
         public void OnCommand(object command, object args) {
             Visible = !Visible;
         }
+
         public void RemoveCommands() {
             PluginInterface.CommandManager.RemoveHandler("/jobbars");
         }
@@ -303,33 +309,37 @@ namespace JobBars {
         GCD,
         OGCD
     }
+
     public struct Item {
         public uint Id;
         public ItemType Type;
 
-        // GENERATORS
         public Item(ActionIds action) {
             Id = (uint)action;
             Type = ItemType.Action;
         }
+
         public Item(BuffIds buff) {
             Id = (uint)buff;
             Type = ItemType.Buff;
         }
 
-        // EQUALITY
         public override bool Equals(object obj) {
             return obj is Item overrides && Equals(overrides);
         }
+
         public bool Equals(Item other) {
             return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
         }
+
         public static bool operator ==(Item left, Item right) {
             return left.Equals(right);
         }
+
         public static bool operator !=(Item left, Item right) {
             return !(left == right);
         }
+
         public override int GetHashCode() {
             int hash = 13;
             hash = (hash * 7) + Id.GetHashCode();

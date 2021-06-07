@@ -17,7 +17,9 @@ namespace JobBars.UI {
         private AtkTextNode* TextNode;
         private AtkImageNode* Overlay;
         private AtkImageNode* Border;
-        string CurrentText = "";
+        private string CurrentText = "";
+
+        static int BUFFS_HORIZONTAL = 5;
 
         public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui) {
             PART_ID = partId;
@@ -103,29 +105,32 @@ namespace JobBars.UI {
             UiHelper.SetText(TextNode, "");
         }
 
-        static int BUFFS_HORIZONTAL = 5;
         public void SetPosition(int idx) {
             var position_x = idx % BUFFS_HORIZONTAL;
             var position_y = (idx - position_x) / BUFFS_HORIZONTAL;
 
             UiHelper.SetPosition(RootRes, (WIDTH + 7) * position_x, (HEIGHT + 5) * position_y);
         }
+
         public void SetOnCD() {
             RootRes->MultiplyBlue = 75;
             RootRes->MultiplyRed = 75;
             RootRes->MultiplyGreen = 75;
         }
+
         public void SetOffCD() {
             RootRes->MultiplyBlue = 100;
             RootRes->MultiplyRed = 100;
             RootRes->MultiplyGreen = 100;
         }
+
         public void SetText(string text) {
             if (text != CurrentText) {
                 UiHelper.SetText(TextNode, text);
                 CurrentText = text;
             }
         }
+
         public void SetPercent(float percent) {
             int h = (int)(HEIGHT * percent);
             int yOffset = HEIGHT - h;
@@ -142,9 +147,11 @@ namespace JobBars.UI {
         public override int GetHeight(int param) {
             return HEIGHT;
         }
+
         public override int GetWidth(int param) {
             return WIDTH;
         }
+
         public override int GetHorizontalYOffset() {
             return 0;
         }

@@ -32,7 +32,6 @@ namespace JobBars.Gauges {
             }
         }
 
-        // ========= UPDATE ========
         public unsafe override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
             foreach(var trigger in Triggers) {
                 if (trigger.Type == ItemType.Buff) continue;
@@ -61,11 +60,13 @@ namespace JobBars.Gauges {
                 comboInactive.SetPercent(0);
             }
         }
+
         public override void ProcessAction(Item action) { }
 
         public override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);
         }
+
         public override int GetWidth() {
             return UI == null ? 0 : UI.GetWidth(0);
         }
@@ -75,6 +76,7 @@ namespace JobBars.Gauges {
             Triggers = triggers;
             return this;
         }
+
         public GaugeCharges WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
             GetVisualConfig();

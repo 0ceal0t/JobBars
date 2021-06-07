@@ -69,7 +69,6 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Goring Blade", 21)
                     .WithTriggers(new []
                     {
-                        //new Item(ActionIds.GoringBlade)
                         new Item(BuffIds.GoringBlade)
                     })
                     .WithReplaceIcon(new []
@@ -482,6 +481,7 @@ namespace JobBars.Gauges {
                 gauge.SetupVisual();
             }
         }
+
         public UIElement GetUI(int idx, GaugeVisualType type) {
             switch(type) {
                 case GaugeVisualType.Arrow:

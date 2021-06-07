@@ -158,9 +158,11 @@ namespace JobBars.UI {
             UiHelper.SetSize((AtkResNode*)TextBlurNode, 30 + 16 * text.Length, 40);
             UiHelper.SetPosition((AtkResNode*)TextBlurNode, -16 * (text.Length - 1), 0);
         }
+
         public void SetTextColor(ElementColor color) {
             UIColor.SetColor((AtkResNode*)TextNode, color);
         }
+
         public void SetPercent(float value) {
             if(value > 1) {
                 value = 1;
@@ -170,15 +172,19 @@ namespace JobBars.UI {
             }
             UiHelper.SetSize((AtkResNode*)BarMainNode, (int)(160 * value), 20);
         }
+
         public override void SetColor(ElementColor color) {
             UIColor.SetColor((AtkResNode*)BarMainNode, color);
         }
+
         public override int GetHeight(int param) {
             return 46;
         }
+
         public override int GetWidth(int param) {
             return 160;
         }
+
         public override int GetHorizontalYOffset() {
             return 0;
         }

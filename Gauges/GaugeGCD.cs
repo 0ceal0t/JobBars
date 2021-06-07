@@ -17,6 +17,9 @@ namespace JobBars.Gauges {
         private float Duration;
         private float MaxDuration;
 
+        private static int RESET_DELAY = 3;
+        private DateTime StopTime;
+
         public GaugeGCD(string name, float duration, int max) : base(name) {
             MaxDuration = duration;
             MaxCounter = max;
@@ -42,9 +45,6 @@ namespace JobBars.Gauges {
             }
         }
 
-        // ========= UPDATE ========
-        private static int RESET_DELAY = 3;
-        private DateTime StopTime;
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
             if (State == GaugeState.Active) {
                 float timeLeft = TimeLeft(Duration, time, buffDict);
@@ -74,6 +74,7 @@ namespace JobBars.Gauges {
                 }
             }
         }
+
         public override void ProcessAction(Item action) {
             if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
                 SetActive(action);
@@ -98,6 +99,7 @@ namespace JobBars.Gauges {
         public override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);
         }
+
         public override int GetWidth() {
             return UI == null ? 0 : UI.GetWidth(MaxCounter);
         }
@@ -107,18 +109,22 @@ namespace JobBars.Gauges {
             Triggers = triggers;
             return this;
         }
+
         public GaugeGCD WithSpecificIncrement(Item[] increment) {
             Increment = increment;
             return this;
         }
+
         public GaugeGCD WithStartHidden() {
             StartHidden = true;
             return this;
         }
+
         public GaugeGCD WithNoRefresh() {
             AllowRefresh = false;
             return this;
         }
+
         public GaugeGCD WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
             GetVisualConfig();

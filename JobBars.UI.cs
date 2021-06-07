@@ -14,14 +14,15 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars {
     public unsafe partial class JobBars {
-
         public bool Visible = false;
         private bool GAUGE_LOCK = true;
         private bool BUFF_LOCK = true;
 
+        JobIds G_SelectedJob = JobIds.OTHER;
+        JobIds B_SelectedJob = JobIds.OTHER;
+
         private void BuildUI() {
             if (!Ready || !Init) return;
-
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
@@ -99,7 +100,6 @@ namespace JobBars {
             }
         }
 
-        JobIds G_SelectedJob = JobIds.OTHER;
         private void DrawGaugeSettings() {
             if (GManager == null) return;
             string _ID = "##JobBars_Gauges";
@@ -250,12 +250,12 @@ namespace JobBars {
             ImGui.Columns(1);
             ImGui.EndChild();
         }
+
         public void SetColor(Gauge gauge, ElementColor color) {
             gauge.Visual.Color = color;
             gauge.SetupVisual(resetValue: false);
         }
 
-        JobIds B_SelectedJob = JobIds.OTHER;
         private void DrawBuffSettings() {
             if (GManager == null) return;
             string _ID = "##JobBars_Buffs";
