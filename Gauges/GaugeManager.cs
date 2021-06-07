@@ -519,7 +519,20 @@ namespace JobBars.Gauges {
                 }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
             }
             if (PluginInterface.ClientState.Targets.CurrentTarget != null) {
-                foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
+                /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
+                    if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
+                        BuffDict[new Item
+                        {
+                            Id = (uint)status.EffectId,
+                            Type = ItemType.Buff
+                        }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
+                    }
+                }*/
+
+                var buffAddr = PluginInterface.ClientState.Targets.CurrentTarget.Address + Dalamud.Game.ClientState.Structs.ActorOffsets.UIStatusEffects;
+                for(int i = 0; i < 30; i++) {
+                    var addr = buffAddr + i * 0xC;
+                    var status = (Dalamud.Game.ClientState.Structs.StatusEffect) System.Runtime.InteropServices.Marshal.PtrToStructure(addr, typeof(Dalamud.Game.ClientState.Structs.StatusEffect));
                     if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
                         BuffDict[new Item
                         {
