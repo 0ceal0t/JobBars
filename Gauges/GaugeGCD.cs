@@ -20,6 +20,8 @@ namespace JobBars.Gauges {
         private static int RESET_DELAY = 3;
         private DateTime StopTime;
 
+        public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+
         public GaugeGCD(string name, float duration, int max) : base(name) {
             MaxDuration = duration;
             MaxCounter = max;
@@ -37,6 +39,10 @@ namespace JobBars.Gauges {
                 if (UI is UIArrow arrows) {
                     arrows.SetMaxValue(MaxCounter);
                     arrows.SetValue(0);
+                }
+                else if(UI is UIDiamond diamond) {
+                    diamond.SetMaxValue(MaxCounter);
+                    diamond.SetValue(0);
                 }
                 else if (UI is UIGauge gauge) {
                     gauge.SetText("0");
@@ -56,6 +62,9 @@ namespace JobBars.Gauges {
                 if(UI is UIArrow arrows) {
                     arrows.SetValue(Counter);
                 }
+                else if(UI is UIDiamond diamond) {
+                    diamond.SetValue(Counter);
+                }
                 else if(UI is UIGauge gauge) {
                     gauge.SetText(Counter.ToString());
                     gauge.SetPercent(((float)Counter) / MaxCounter);
@@ -66,6 +75,9 @@ namespace JobBars.Gauges {
                     State = GaugeState.Inactive;
                     if (UI is UIArrow arrows) {
                         arrows.SetValue(0);
+                    }
+                    else if(UI is UIDiamond diamond) {
+                        diamond.SetValue(0);
                     }
                     else if (UI is UIGauge gauge) {
                         gauge.SetText("0");
@@ -85,10 +97,8 @@ namespace JobBars.Gauges {
 
             if (
                 (State == GaugeState.Active) &&
-                (
-                    (Increment.Length == 0 && action.Type == ItemType.GCD) || // just take any gcd
-                    (Increment.Length > 0 && Increment.Contains(action)) // take specific gcds
-                )
+                ((Increment.Length == 0 && action.Type == ItemType.GCD) || // just take any gcd
+                (Increment.Length > 0 && Increment.Contains(action))) // take specific gcds
             ) {
                 if (Counter < MaxCounter) {
                     Counter++;

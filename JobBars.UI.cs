@@ -228,7 +228,7 @@ namespace JobBars {
                                 gauge.Visual.Type = gauge.DefaultVisual.Type;
                                 GManager.ResetJob(G_SelectedJob);
                             }
-                            foreach (GaugeVisualType gType in (GaugeVisualType[])Enum.GetValues(typeof(GaugeVisualType))) {
+                            foreach (GaugeVisualType gType in GaugeGCD.ValidGaugeVisualType) {
                                 if (ImGui.Selectable($"{gType}{_ID}{gauge.Name}", (gauge.Visual.Type == gType) && isOverride_TYPE)) { // OTHER
                                     Configuration.Config.GaugeTypeOverride[gauge.Name] = gType;
                                     Configuration.Config.Save();

@@ -19,6 +19,7 @@ using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
 using JobBars.PartyList;
 using FFXIVClientInterface;
+using Dalamud.Game.ClientState;
 
 #pragma warning disable CS0659
 namespace JobBars {
@@ -31,6 +32,8 @@ namespace JobBars {
         private GaugeManager GManager;
         private BuffManager BManager;
         private Configuration Config;
+        private JobIds CurrentJob = JobIds.OTHER;
+        private HashSet<uint> GCDs = new HashSet<uint>();
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
@@ -40,8 +43,6 @@ namespace JobBars {
 
         private PList Party; // TEMP
         private int LastPartyCount = 0;
-
-        private HashSet<uint> GCDs = new HashSet<uint>();
 
         private bool Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
         private bool Init = false;
@@ -118,6 +119,7 @@ namespace JobBars {
             var isSelf = sourceId == PluginInterface.ClientState.LocalPlayer.ActorId;
             var isPet = (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? sourceId == FindCharaPet() : false;
             var isParty = !isSelf && !isPet && IsInParty(sourceId);
+
             if(!(isSelf || isPet || isParty)) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
@@ -238,9 +240,7 @@ namespace JobBars {
                 return;
             }
             if (!Init) {
-                if(UI._ADDON == null) {
-                    return;
-                }
+                if (UI._ADDON == null) return;
                 UI.SetupTex();
                 UI.SetupPart();
                 UI.Init();
@@ -263,11 +263,10 @@ namespace JobBars {
             LastPartyCount = Party.Count;
         }
 
-        JobIds CurrentJob = JobIds.OTHER;
-        private void SetJob(ClassJob job) {
-            JobIds _job = job.Id < 19 ? JobIds.OTHER : (JobIds)job.Id;
-            if (_job != CurrentJob) {
-                CurrentJob = _job;
+        private void SetJob(ClassJob jobId) {
+            JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
+            if (job != CurrentJob) {
+                CurrentJob = job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
                 Reset();
             }

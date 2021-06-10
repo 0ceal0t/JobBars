@@ -375,7 +375,7 @@ namespace JobBars.UI {
             SetPosition(B_RootRes, pos.X, pos.Y);
         }
 
-        public void SetPosition(AtkResNode* node, float X, float Y) {
+        private void SetPosition(AtkResNode* node, float X, float Y) {
             var addon = _ADDON;
             var p = UiHelper.GetNodePosition(_ADDON->RootNode);
             var pScale = UiHelper.GetNodeScale(_ADDON->RootNode);
@@ -390,21 +390,29 @@ namespace JobBars.UI {
             SetScale(B_RootRes, scale, scale);
         }
 
-        public void SetScale(AtkResNode* node, float X, float Y) {
+        private void SetScale(AtkResNode* node, float X, float Y) {
             var addon = _ADDON;
             var p = UiHelper.GetNodeScale(_ADDON->RootNode);
             UiHelper.SetScale(node, X / p.X, Y / p.Y);
+        }
+
+        public void Hide() {
+            UiHelper.Hide(G_RootRes);
+            UiHelper.Hide(B_RootRes);
+        }
+
+        public void Show() {
+            UiHelper.Show(G_RootRes);
+            UiHelper.Show(B_RootRes);
         }
 
         public void HideAllGauges() {
             foreach (var gauge in Gauges) {
                 gauge.Hide();
             }
-
             foreach (var arrow in Arrows) {
                 arrow.Hide();
             }
-
             foreach (var diamond in Diamonds) {
                 diamond.Hide();
             }
