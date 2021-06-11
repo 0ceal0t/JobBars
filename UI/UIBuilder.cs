@@ -131,8 +131,13 @@ namespace JobBars.UI {
             return false;
         }
 
+        public void Setup() {
+            SetupTex();
+            SetupPart();
+            Init();
+        }
 
-        public void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
+        private void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
             var numPaths = paths.Length;
             var addon = _ADDON;
             AtkUldAsset* oldAssets = addon->UldManager.Assets;
@@ -175,7 +180,7 @@ namespace JobBars.UI {
             TexUnalloc(new IntPtr(oldAssets) + 0x8); // unallocate the old AtkTexture
         }
 
-        public void SetupTex() {
+        private void SetupTex() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
 
@@ -194,7 +199,7 @@ namespace JobBars.UI {
             LoadAssets(assets.ToArray());
         }
 
-        public void SetupPart() {
+        private void SetupPart() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) return;
 
@@ -220,7 +225,7 @@ namespace JobBars.UI {
             }
         }
 
-        public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
+        private static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
             var oldLength = manager.PartsList->PartCount;
             var newLength = oldLength + addSize + 1;
 
@@ -235,7 +240,7 @@ namespace JobBars.UI {
         }
 
         // JUST LOAD EVERYTHING INTO PARTLIST #0, I DON'T CARE LMAO
-        public void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
+        private void AddPart(ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
             var addon = _ADDON;
 
             var asset = UiHelper.CleanAlloc<AtkUldAsset>();
@@ -253,7 +258,7 @@ namespace JobBars.UI {
             }
         }
 
-        public void LoadExisting() {
+        private void LoadExisting() {
             PluginLog.Log("===== LOAD EXISTING =====");
 
             var addon = _ADDON;
@@ -283,7 +288,7 @@ namespace JobBars.UI {
             }
         }
 
-        public void Init() {
+        private void Init() {
             var addon = _ADDON;
             if (addon->UldManager.NodeListCount > 4) {
                 LoadExisting();

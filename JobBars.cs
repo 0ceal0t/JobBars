@@ -241,11 +241,10 @@ namespace JobBars {
             }
             if (!Init) {
                 if (UI._ADDON == null) return;
-                UI.SetupTex();
-                UI.SetupPart();
-                UI.Init();
+                UI.Setup();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
+                SetupUI();
                 UI.HideAllBuffs();
                 UI.HideAllGauges();
                 Init = true;

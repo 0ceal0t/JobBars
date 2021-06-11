@@ -4,6 +4,7 @@ using ImGuiNET;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.UI;
+using JobBars.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,27 @@ namespace JobBars {
         private bool GAUGE_LOCK = true;
         private bool BUFF_LOCK = true;
 
-        JobIds G_SelectedJob = JobIds.OTHER;
-        JobIds B_SelectedJob = JobIds.OTHER;
+        private JobGaugeSettingsView Gauge_SelectedJob;
+        private Dictionary<JobIds, JobGaugeSettingsView> JobGaugeSettings;
+
+        private JobBuffSettingsView Buff_SelectedJob;
+        private Dictionary<JobIds, JobBuffSettingsView> JobBuffSettings;
+
+        private void SetupUI() {
+            Gauge_SelectedJob = null;
+            JobGaugeSettings = new();
+            foreach(var entry in GManager.JobToGauges) {
+                if (entry.Key == JobIds.OTHER) continue;
+                JobGaugeSettings[entry.Key] = new JobGaugeSettingsView(entry.Key, entry.Value, GManager);
+            }
+
+            Buff_SelectedJob = null;
+            JobBuffSettings = new();
+            foreach (var entry in BManager.JobToBuffs) {
+                if (entry.Key == JobIds.OTHER) continue;
+                JobBuffSettings[entry.Key] = new JobBuffSettingsView(entry.Key, entry.Value, BManager);
+            }
+        }
 
         private void BuildUI() {
             if (!Ready || !Init) return;
@@ -45,59 +65,43 @@ namespace JobBars {
                 if(Configuration.Config.GaugeSplit) {
                     foreach(var gauge in GManager.CurrentGauges) {
                         if (gauge.StartHidden) continue;
-
-                        ImGuiHelpers.ForceNextWindowMainViewport();
-                        ImGui.SetNextWindowPos(Configuration.Config.GetGaugeSplitPosition(gauge.Name), ImGuiCond.FirstUseEver);
-                        ImGui.SetNextWindowSize(new Vector2(200, 200));
-                        ImGui.PushStyleVar(ImGuiStyleVar.Alpha,0.7f);
-                        ImGui.Begin("##GaugePosition" + gauge.Name, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
-                        ImGui.Text($"{gauge.Name}");
-                        var pos = ImGui.GetWindowPos();
-                        if (pos != Configuration.Config.GetGaugeSplitPosition(gauge.Name)) {
+                        if (DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, Configuration.Config.GetGaugeSplitPosition(gauge.Name), out var pos)) {
                             Configuration.Config.GaugeSplitPosition[gauge.Name] = pos;
                             Configuration.Config.Save();
                             gauge.UI?.SetSplitPosition(pos);
                         }
-                        ImGui.PopStyleVar(1);
                     }
                     
                 }
                 else {
-                    ImGuiHelpers.ForceNextWindowMainViewport();
-                    ImGui.SetNextWindowPos(Configuration.Config.GaugePosition, ImGuiCond.FirstUseEver);
-                    ImGui.SetNextWindowSize(new Vector2(200, 200));
-                    ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
-                    ImGui.Begin("##GaugePosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
-                    ImGui.Text("Gauge Bar Position");
-                    var pos = ImGui.GetWindowPos();
-                    if (pos != Configuration.Config.GaugePosition) {
+                    if(DrawPositionView("##GaugePosition", "Gauge Bar Position", Configuration.Config.GaugePosition, out var pos)) {
                         Configuration.Config.GaugePosition = pos;
                         Configuration.Config.Save();
                         UI?.SetGaugePosition(pos);
                     }
-                    ImGui.PopStyleVar(1);
                 }
-
-                ImGui.End();
             }
             // ====== BUFF POSITION =======
             if (!BUFF_LOCK) {
-                ImGuiHelpers.ForceNextWindowMainViewport();
-                ImGui.SetNextWindowPos(Configuration.Config.BuffPosition, ImGuiCond.FirstUseEver);
-                ImGui.SetNextWindowSize(new Vector2(200, 200));
-                ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
-                ImGui.Begin("##BuffPosition", ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
-                ImGui.Text("Buff Bar Position");
-                var pos = ImGui.GetWindowPos();
-                if (pos != Configuration.Config.BuffPosition) {
+                if(DrawPositionView("##BuffPosition", "Buff Bar Position", Configuration.Config.BuffPosition, out var pos)) {
                     Configuration.Config.BuffPosition = pos;
                     Configuration.Config.Save();
                     UI?.SetBuffPosition(pos);
                 }
-                ImGui.PopStyleVar(1);
-
-                ImGui.End();
             }
+        }
+
+        private bool DrawPositionView(string _ID, string text, Vector2 position, out Vector2 newPosition) {
+            ImGuiHelpers.ForceNextWindowMainViewport();
+            ImGui.SetNextWindowPos(position, ImGuiCond.FirstUseEver);
+            ImGui.SetNextWindowSize(new Vector2(200, 200));
+            ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
+            ImGui.Begin(_ID, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
+            ImGui.Text(text);
+            newPosition = ImGui.GetWindowPos();
+            ImGui.PopStyleVar(1);
+            ImGui.End();
+            return newPosition != position;
         }
 
         private void DrawGaugeSettings() {
@@ -120,8 +124,7 @@ namespace JobBars {
             }
             
             ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Sound effect # when DoTs are low (0 = off)",ref Configuration.Config.SeNumber,0))
-            {
+            if (ImGui.InputInt("Sound effect # when DoTs are low (0 = off)",ref Configuration.Config.SeNumber,0)) {
                 if (Configuration.Config.SeNumber < 0) Configuration.Config.SeNumber = 0;
                 if (Configuration.Config.SeNumber >16) Configuration.Config.SeNumber = 16;
                 Configuration.Config.Save();
@@ -137,121 +140,27 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            var size = ImGui.GetContentRegionAvail();
-            ImGui.BeginChild(_ID + "/Child", size, true);
+            ImGui.BeginChild(_ID + "/Child", ImGui.GetContentRegionAvail(), true);
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 150);
 
             ImGui.BeginChild(_ID + "Tree");
-            foreach (var job in GManager.JobToGauges.Keys) {
-                if (job == JobIds.OTHER) continue;
-                if (ImGui.Selectable(job + _ID + "/Job", G_SelectedJob == job)) {
-                    G_SelectedJob = job;
+            foreach(var job in JobGaugeSettings) {
+                if (ImGui.Selectable(job.Key + _ID + "/Job", Gauge_SelectedJob == job.Value)) {
+                    Gauge_SelectedJob = job.Value;
                 }
             }
             ImGui.EndChild();
-
             ImGui.NextColumn();
 
-            if (G_SelectedJob == JobIds.OTHER) {
+            if (Gauge_SelectedJob == null) {
                 ImGui.Text("Select a job...");
             }
             else {
-                ImGui.BeginChild(_ID + "Selected");
-                foreach (var gauge in GManager.JobToGauges[G_SelectedJob]) {
-                    // ===== ENABLED / DISABLED ======
-                    var _enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
-                    var type = "";
-                    if (gauge is GaugeGCD) {
-                        type = "GCDS";
-                    }
-                    else if (gauge is GaugeTimer) {
-                        type = "TIMER";
-                    }
-                    else if (gauge is GaugeProc) {
-                        type = "PROCS";
-                    }
-                    else if(gauge is GaugeCharges) {
-                        type = "CHARGES";
-                    }
-
-                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{gauge.Name} [{type}]");
-                    if (ImGui.Checkbox("Enabled" + _ID + gauge.Name, ref _enabled)) {
-                        if (_enabled) {
-                            Configuration.Config.GaugeDisabled.Remove(gauge.Name);
-                        }
-                        else {
-                            Configuration.Config.GaugeDisabled.Add(gauge.Name);
-                        }
-                        Configuration.Config.Save();
-                        GManager.ResetJob(G_SelectedJob);
-                    }
-                    // ===== ORDER =======
-                    int order = gauge.Order;
-                    if (ImGui.InputInt("Order" + _ID + gauge.Name, ref order)) {
-                        if(order <= -1) {
-                            order = -1;
-                            Configuration.Config.GaugeOrderOverride.Remove(gauge.Name);
-                        }
-                        else {
-                            Configuration.Config.GaugeOrderOverride[gauge.Name] = order;
-                        }
-                        Configuration.Config.Save();
-                        GManager.ResetJob(G_SelectedJob);
-                    }
-                    // ===== COLOR =======
-                    if(!(gauge is GaugeProc)) {
-                        var isOverride_COLOR = Configuration.Config.GetColorOverride(gauge.Name, out var colorOverride);
-                        if (ImGui.BeginCombo("Color" + _ID + gauge.Name, isOverride_COLOR ? gauge.Visual.Color.Name : $"DEFAULT ({gauge.Visual.Color.Name})")) {
-                            if (ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Color.Name}){_ID}{gauge.Name}", !isOverride_COLOR)) { // DEFAULT
-                                Configuration.Config.GaugeColorOverride.Remove(gauge.Name);
-                                Configuration.Config.Save();
-                                SetGaugeColor(gauge, gauge.DefaultVisual.Color);
-                            }
-                            foreach (var entry in UIColor.AllColors) {
-                                if (ImGui.Selectable($"{entry.Key}{_ID}{gauge.Name}", (gauge.Visual.Color.Name == entry.Key) && isOverride_COLOR)) { // OTHER
-                                    Configuration.Config.GaugeColorOverride[gauge.Name] = entry.Key;
-                                    Configuration.Config.Save();
-                                    SetGaugeColor(gauge, entry.Value);
-                                }
-                            }
-                            ImGui.EndCombo();
-                        }
-                    }
-                    // ====== TYPE (only for GCDs) ======
-                    if(gauge is GaugeGCD) {
-                        var isOverride_TYPE = Configuration.Config.GaugeTypeOverride.TryGetValue(gauge.Name, out var typeOverride);
-                        if(ImGui.BeginCombo("Type" + _ID + gauge.Name, isOverride_TYPE ? $"{gauge.Visual.Type}" : $"DEFAULT ({gauge.Visual.Type})")) {
-                            if(ImGui.Selectable($"DEFAULT ({gauge.DefaultVisual.Type}){_ID}{gauge.Name}", !isOverride_TYPE)) { // DEFAULT
-                                Configuration.Config.GaugeTypeOverride.Remove(gauge.Name);
-                                Configuration.Config.Save();
-                                gauge.Visual.Type = gauge.DefaultVisual.Type;
-                                GManager.ResetJob(G_SelectedJob);
-                            }
-                            foreach (GaugeVisualType gType in GaugeGCD.ValidGaugeVisualType) {
-                                if (ImGui.Selectable($"{gType}{_ID}{gauge.Name}", (gauge.Visual.Type == gType) && isOverride_TYPE)) { // OTHER
-                                    Configuration.Config.GaugeTypeOverride[gauge.Name] = gType;
-                                    Configuration.Config.Save();
-                                    gauge.Visual.Type = gType;
-                                    GManager.ResetJob(G_SelectedJob);
-                                }
-                            }
-                            ImGui.EndCombo();
-                        }
-                    }
-
-                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
-                }
-                ImGui.EndChild();
+                Gauge_SelectedJob.Draw(_ID);
             }
-
             ImGui.Columns(1);
             ImGui.EndChild();
-        }
-
-        public void SetGaugeColor(Gauge gauge, ElementColor color) {
-            gauge.Visual.Color = color;
-            gauge.SetupVisual(resetValue: false);
         }
 
         private void DrawBuffSettings() {
@@ -275,42 +184,20 @@ namespace JobBars {
             ImGui.SetColumnWidth(0, 150);
 
             ImGui.BeginChild(_ID + "Tree");
-            foreach (var job in BManager.JobToBuffs.Keys) {
-                if (job == JobIds.OTHER) continue;
-                if (ImGui.Selectable(job + _ID + "/Job", B_SelectedJob == job)) {
-                    B_SelectedJob = job;
+            foreach (var job in JobBuffSettings) {
+                if (ImGui.Selectable(job.Key + _ID + "/Job", Buff_SelectedJob == job.Value)) {
+                    Buff_SelectedJob = job.Value;
                 }
             }
             ImGui.EndChild();
-
             ImGui.NextColumn();
 
-            if (B_SelectedJob == JobIds.OTHER) {
+            if (Buff_SelectedJob == null) {
                 ImGui.Text("Select a job...");
             }
             else {
-                ImGui.BeginChild(_ID + "Selected");
-                foreach (var buff in BManager.JobToBuffs[B_SelectedJob]) {
-                    // ===== ENABLED / DISABLED ======
-                    var _enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
-
-                    ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{buff.Name}");
-                    if (ImGui.Checkbox("Enabled" + _ID + buff.Name, ref _enabled)) {
-                        if (_enabled) {
-                            Configuration.Config.BuffDisabled.Remove(buff.Name);
-                        }
-                        else {
-                            Configuration.Config.BuffDisabled.Add(buff.Name);
-                        }
-                        Configuration.Config.Save();
-                        BManager.Reset();
-                    }
-
-                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
-                }
-                ImGui.EndChild();
+                Buff_SelectedJob.Draw(_ID);
             }
-
             ImGui.Columns(1);
             ImGui.EndChild();
         }
