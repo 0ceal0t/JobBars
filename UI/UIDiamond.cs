@@ -20,9 +20,9 @@ namespace JobBars.UI {
             Selected = new AtkImageNode*[MAX];
             Ticks = new AtkResNode*[MAX];
 
-            var nameplateAddon = _UI._ADDON;
+            var nameplateAddon = UI._ADDON;
 
-            RootRes = _UI.CreateResNode();
+            RootRes = UI.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
@@ -31,14 +31,14 @@ namespace JobBars.UI {
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
-                Ticks[idx] = _UI.CreateResNode();
+                Ticks[idx] = UI.CreateResNode();
                 Ticks[idx]->X = 20 * idx;
                 Ticks[idx]->Y = 0;
                 Ticks[idx]->Width = 32;
                 Ticks[idx]->Height = 32;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Ticks[idx];
 
-                var bg = _UI.CreateImageNode();
+                var bg = UI.CreateImageNode();
                 bg->AtkResNode.Width = 32;
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
@@ -50,7 +50,7 @@ namespace JobBars.UI {
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
 
                 // ======== SELECTED ========
-                var selectedContainer = _UI.CreateResNode();
+                var selectedContainer = UI.CreateResNode();
                 selectedContainer->X = 0;
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
@@ -59,7 +59,7 @@ namespace JobBars.UI {
                 selectedContainer->OriginY = 16;
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
 
-                Selected[idx] = _UI.CreateImageNode();
+                Selected[idx] = UI.CreateImageNode();
                 Selected[idx]->AtkResNode.Width = 32;
                 Selected[idx]->AtkResNode.Height = 32;
                 Selected[idx]->AtkResNode.X = 0;

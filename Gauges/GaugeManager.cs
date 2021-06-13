@@ -19,14 +19,13 @@ namespace JobBars.Gauges {
 
         public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
-        public Gauge[] CurrentGauges => JobToGauges[CurrentJob];
+        public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : new Gauge[0];
 
         public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
             UI = ui;
             PluginInterface = pi;
 
             JobToGauges = new Dictionary<JobIds, Gauge[]>();
-            JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {
                 new GaugeGCD("No Mercy", 20, 9)
@@ -449,7 +448,6 @@ namespace JobBars.Gauges {
         }
 
         public void SetJob(JobIds job) {
-            // RESET
             foreach (var gauge in CurrentGauges) {
                 gauge.State = GaugeState.Inactive;
                 gauge.UI = null;
@@ -458,15 +456,31 @@ namespace JobBars.Gauges {
             UI.Icon.Reset();
 
             CurrentJob = job;
-            int totalPosition = 0;
             int enabledIdx = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
                 if (!(gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name))) { continue; }
-
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
-                if(!gauge.StartHidden) {
+                if (!gauge.StartHidden) {
                     gauge.UI.Show();
-                    if(Configuration.Config.GaugeSplit) { // SPLIT
+                    enabledIdx++;
+                }
+                else {
+                    gauge.UI.Hide();
+                }
+                gauge.SetupVisual();
+            }
+            SetPositionScale();
+        }
+
+        public void SetPositionScale() {
+            UI.SetGaugePosition(Configuration.Config.GaugePosition);
+            UI.SetGaugeScale(Configuration.Config.GaugeScale);
+
+            int totalPosition = 0;
+            foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
+                if (!gauge.Enabled) { continue; }
+                if (!gauge.StartHidden) {
+                    if (Configuration.Config.GaugeSplit) { // SPLIT
                         gauge.UI.SetSplitPosition(Configuration.Config.GetGaugeSplitPosition(gauge.Name));
                     }
                     else {
@@ -480,12 +494,7 @@ namespace JobBars.Gauges {
                             totalPosition += gauge.GetHeight();
                         }
                     }
-                    enabledIdx++;
                 }
-                else {
-                    gauge.UI.Hide();
-                }
-                gauge.SetupVisual();
             }
         }
 

@@ -9,9 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static JobBars.UI.UIColor;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -25,7 +22,7 @@ namespace JobBars {
         private JobBuffSettingsView Buff_SelectedJob;
         private Dictionary<JobIds, JobBuffSettingsView> JobBuffSettings;
 
-        private void SetupUI() {
+        private void SetupSettings() {
             Gauge_SelectedJob = null;
             JobGaugeSettings = new();
             foreach(var entry in GManager.JobToGauges) {
@@ -41,7 +38,7 @@ namespace JobBars {
             }
         }
 
-        private void BuildUI() {
+        private void BuildSettingsUI() {
             if (!Ready || !Init) return;
             // ====== SETTINGS =======
             string _ID = "##JobBars_Settings";

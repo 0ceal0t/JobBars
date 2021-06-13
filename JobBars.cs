@@ -47,6 +47,9 @@ namespace JobBars {
         private bool Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
         private bool Init = false;
 
+        private Vector2 LastPosition;
+        private Vector2 LastScale;
+
         public static ClientInterface Client;
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
@@ -70,7 +73,7 @@ namespace JobBars {
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
             actorControlSelfHook.Enable();
 
-            PluginInterface.UiBuilder.OnBuildUi += BuildUI;
+            PluginInterface.UiBuilder.OnBuildUi += BuildSettingsUI;
             PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
@@ -86,7 +89,7 @@ namespace JobBars {
             actorControlSelfHook?.Dispose();
             actorControlSelfHook = null;
 
-            PluginInterface.UiBuilder.OnBuildUi -= BuildUI;
+            PluginInterface.UiBuilder.OnBuildUi -= BuildSettingsUI;
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
@@ -239,12 +242,13 @@ namespace JobBars {
                 }
                 return;
             }
+            var addon = UI._ADDON;
             if (!Init) {
-                if (UI._ADDON == null) return;
+                if (addon == null) return;
                 UI.Setup();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
-                SetupUI();
+                SetupSettings();
                 UI.HideAllBuffs();
                 UI.HideAllGauges();
                 Init = true;
@@ -252,14 +256,23 @@ namespace JobBars {
             }
 
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
-            GManager?.Tick();
-            BManager?.Tick();
+            GManager.Tick();
+            BManager.Tick();
             Animation.Tick();
 
             if (Party.Count < LastPartyCount) {
                 BManager?.SetJob(CurrentJob);
             }
             LastPartyCount = Party.Count;
+
+            var currentPosition = UiHelper.GetNodePosition(addon->RootNode);
+            var currentScale = UiHelper.GetNodeScale(addon->RootNode);
+            if(currentPosition != LastPosition || currentScale != LastScale) {
+                GManager.SetPositionScale();
+                BManager.SetPositionScale();
+            }
+            LastPosition = currentPosition;
+            LastScale = currentScale;
         }
 
         private void SetJob(ClassJob jobId) {

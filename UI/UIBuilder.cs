@@ -332,8 +332,6 @@ namespace JobBars.UI {
                     Gauges[idx + 1].RootRes->NextSiblingNode = Diamonds[idx].RootRes;
                 }
             }
-            SetGaugePosition(Configuration.Config.GaugePosition);
-            SetGaugeScale(Configuration.Config.GaugeScale);
 
             // ======= CREATE BUFFS =========
             B_RootRes = CreateResNode();
@@ -359,8 +357,6 @@ namespace JobBars.UI {
                     Buffs[idx + 1].RootRes->NextSiblingNode = Buffs[idx].RootRes;
                 }
             }
-            SetBuffPosition(Configuration.Config.BuffPosition);
-            SetBuffScale(Configuration.Config.BuffScale);
 
             // ==== INSERT AT THE END ====
             var n = addon->RootNode->ChildNode;

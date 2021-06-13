@@ -27,24 +27,24 @@ namespace JobBars.UI {
         }
 
         public override void Init() {
-            var nameplateAddon = _UI._ADDON;
+            var nameplateAddon = UI._ADDON;
 
             // ======= CONTAINERS =========
-            RootRes = _UI.CreateResNode();
+            RootRes = UI.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
 
-            var gaugeContainer = _UI.CreateResNode();
+            var gaugeContainer = UI.CreateResNode();
             gaugeContainer->X = 0;
             gaugeContainer->Y = 0;
             gaugeContainer->Width = 160;
             gaugeContainer->Height = 32;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = gaugeContainer;
 
-            var bg = _UI.CreateImageNode();
+            var bg = UI.CreateImageNode();
             bg->AtkResNode.Width = 160;
             bg->AtkResNode.Height = 20;
             bg->AtkResNode.X = 0;
@@ -56,14 +56,14 @@ namespace JobBars.UI {
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
 
             // ========= BAR ============
-            var barContainer = _UI.CreateResNode();
+            var barContainer = UI.CreateResNode();
             barContainer->X = 0;
             barContainer->Y = 0;
             barContainer->Width = 160;
             barContainer->Height = 20;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = barContainer;
 
-            BarMainNode = _UI.CreateNineNode();
+            BarMainNode = UI.CreateNineNode();
             BarMainNode->AtkResNode.Width = 160;
             BarMainNode->AtkResNode.Height = 20;
             BarMainNode->AtkResNode.X = 0;
@@ -80,7 +80,7 @@ namespace JobBars.UI {
             barContainer->ChildNode = (AtkResNode*)BarMainNode;
             BarMainNode->AtkResNode.ParentNode = barContainer;
 
-            var frame = _UI.CreateImageNode();
+            var frame = UI.CreateImageNode();
             frame->AtkResNode.Width = 160;
             frame->AtkResNode.Height = 20;
             frame->AtkResNode.X = 0;
@@ -105,21 +105,21 @@ namespace JobBars.UI {
             barContainer->NextSiblingNode = (AtkResNode*)bg;
 
             // ======== TEXT ==========
-            var textContainer = _UI.CreateResNode();
+            var textContainer = UI.CreateResNode();
             textContainer->X = 112;
             textContainer->Y = 6;
             textContainer->Width = 47;
             textContainer->Height = 40;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = textContainer;
 
-            TextNode = _UI.CreateTextNode();
+            TextNode = UI.CreateTextNode();
             TextNode->AtkResNode.X = 14;
             TextNode->AtkResNode.Y = 5;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
 
-            TextBlurNode = _UI.CreateNineNode();
+            TextBlurNode = UI.CreateNineNode();
             TextBlurNode->AtkResNode.Flags = 8371;
             TextBlurNode->AtkResNode.Width = 47;
             TextBlurNode->AtkResNode.Height = 40;

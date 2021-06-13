@@ -10,10 +10,10 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public abstract unsafe class UIElement {
-        public UIBuilder _UI;
+        public UIBuilder UI;
 
-        public UIElement(UIBuilder _ui) {
-            _UI = _ui;
+        public UIElement(UIBuilder ui) {
+            UI = ui;
         }
         
         public void Setup(AtkResNode* node = null) {
@@ -38,8 +38,8 @@ namespace JobBars.UI {
         }
 
         public virtual void SetSplitPosition(Vector2 pos) {
-            var p = UiHelper.GetNodePosition(_UI.G_RootRes);
-            var pScale = UiHelper.GetNodeScale(_UI.G_RootRes);
+            var p = UiHelper.GetNodePosition(UI.G_RootRes);
+            var pScale = UiHelper.GetNodeScale(UI.G_RootRes);
             UiHelper.SetPosition(RootRes, (pos.X - p.X) / pScale.X, (pos.Y - p.Y) / pScale.Y);
         }
 

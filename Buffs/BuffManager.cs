@@ -333,6 +333,12 @@ namespace JobBars.Buffs {
                 buff.Enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
             }
             UI.HideAllBuffs();
+            SetPositionScale();
+        }
+
+        public void SetPositionScale() {
+            UI.SetBuffPosition(Configuration.Config.BuffPosition);
+            UI.SetBuffScale(Configuration.Config.BuffScale);
         }
 
         public void Reset() {

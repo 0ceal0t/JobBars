@@ -60,8 +60,8 @@ namespace JobBars.UI {
         }
 
         public override void SetSplitPosition(Vector2 pos) {
-            var p = UiHelper.GetNodePosition(_UI.G_RootRes);
-            var pScale = UiHelper.GetNodeScale(_UI.G_RootRes);
+            var p = UiHelper.GetNodePosition(UI.G_RootRes);
+            var pScale = UiHelper.GetNodeScale(UI.G_RootRes);
             var x = (pos.X - p.X) / pScale.X;
             var y = (pos.Y - p.Y) / pScale.Y;
 

@@ -35,10 +35,10 @@ namespace JobBars.UI {
         }
 
         public override void Init() {
-            var nameplateAddon = _UI._ADDON;
+            var nameplateAddon = UI._ADDON;
 
             // ======= CONTAINERS =========
-            RootRes = _UI.CreateResNode();
+            RootRes = UI.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
@@ -46,7 +46,7 @@ namespace JobBars.UI {
             RootRes->ChildCount = 4;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
 
-            TextNode = _UI.CreateTextNode();
+            TextNode = UI.CreateTextNode();
             TextNode->FontSize = 15;
             TextNode->LineSpacing = 15;
             TextNode->AlignmentFontType = 20;
@@ -58,7 +58,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
 
-            var icon = _UI.CreateImageNode();
+            var icon = UI.CreateImageNode();
             icon->AtkResNode.Width = WIDTH;
             icon->AtkResNode.Height = HEIGHT;
             icon->AtkResNode.X = 0;
@@ -69,7 +69,7 @@ namespace JobBars.UI {
             icon->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
 
-            Overlay = _UI.CreateImageNode();
+            Overlay = UI.CreateImageNode();
             Overlay->AtkResNode.Width = WIDTH;
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
@@ -80,7 +80,7 @@ namespace JobBars.UI {
             Overlay->WrapMode = 1;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
 
-            Border = _UI.CreateImageNode();
+            Border = UI.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -2;
