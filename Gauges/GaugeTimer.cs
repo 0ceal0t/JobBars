@@ -159,12 +159,7 @@ namespace JobBars.Gauges {
 
         public GaugeTimer WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
-            if (Configuration.Config.GetColorOverride(Name, out var color)) {
-                Visual.Color = color;
-            }
-            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
-                Visual.Type = type;
-            }
+            GetVisualConfig();
             return this;
         }
     }

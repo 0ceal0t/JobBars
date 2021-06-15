@@ -23,7 +23,7 @@ namespace JobBars.Views {
         }
 
         public void Draw(string _ID) {
-            var _enabled = !Configuration.Config.GaugeDisabled.Contains(Gauge.Name);
+            var enabled = !Configuration.Config.GaugeDisabled.Contains(Gauge.Name);
             string type = Gauge switch
             {
                 GaugeGCD _ => "GCDS",
@@ -33,9 +33,9 @@ namespace JobBars.Views {
                 _ => ""
             };
 
-            ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Gauge.Name} [{type}]");
-            if (ImGui.Checkbox("Enabled" + _ID + Gauge.Name, ref _enabled)) {
-                if (_enabled) {
+            ImGui.TextColored(enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Gauge.Name} [{type}]");
+            if (ImGui.Checkbox("Enabled" + _ID + Gauge.Name, ref enabled)) {
+                if (enabled) {
                     Configuration.Config.GaugeDisabled.Remove(Gauge.Name);
                 }
                 else {

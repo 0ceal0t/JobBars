@@ -111,14 +111,17 @@ namespace JobBars.Buffs {
             Triggers = triggers;
             return this;
         }
+
         public Buff WithCD(float cd) {
             CD = (cd - Duration);
             return this;
         }
+
         public Buff WithNoCD() {
             NoCD = true;
             return this;
         }
+
         public Buff WithColor(ElementColor color) {
             Color = color;
             return this;

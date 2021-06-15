@@ -23,11 +23,11 @@ namespace JobBars.Views {
         }
 
         public void Draw(string _ID) {
-            var _enabled = !Configuration.Config.BuffDisabled.Contains(Buff.Name);
+            var enabled = !Configuration.Config.BuffDisabled.Contains(Buff.Name);
 
-            ImGui.TextColored(_enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Buff.Name}");
-            if (ImGui.Checkbox("Enabled" + _ID + Buff.Name, ref _enabled)) {
-                if (_enabled) {
+            ImGui.TextColored(enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Buff.Name}");
+            if (ImGui.Checkbox("Enabled" + _ID + Buff.Name, ref enabled)) {
+                if (enabled) {
                     Configuration.Config.BuffDisabled.Remove(Buff.Name);
                 }
                 else {
