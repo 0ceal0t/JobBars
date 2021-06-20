@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace JobBars.Buffs {
     public unsafe class BuffManager {
         public Dictionary<JobIds, Buff[]> JobToBuffs;
-        public Buff[] CurrentGauges => JobToBuffs[CurrentJob];
+        public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
 
         private UIBuilder UI;
         private List<Buff> AllBuffs;

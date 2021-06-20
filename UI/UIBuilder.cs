@@ -296,11 +296,13 @@ namespace JobBars.UI {
             }
 
             UiHelper.ExpandNodeList(addon, 999);
+            nodeIdx = addon->UldManager.NodeListCount;
             // ======== CREATE GAUGES =======
             G_RootRes = CreateResNode();
             G_RootRes->Width = 256;
             G_RootRes->Height = 100;
             G_RootRes->Flags = 9395;
+            G_RootRes->Flags_2 = 4;
             addon->UldManager.NodeList[addon->UldManager.NodeListCount++] = G_RootRes;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
                 Gauges[idx] = new UIGauge(this, null);
@@ -338,6 +340,7 @@ namespace JobBars.UI {
             B_RootRes->Width = 256;
             B_RootRes->Height = 100;
             B_RootRes->Flags = 9395;
+            B_RootRes->Flags_2 = 4;
             B_RootRes->ParentNode = addon->RootNode;
             addon->UldManager.NodeList[addon->UldManager.NodeListCount++] = B_RootRes;
             int bIdx = 0;

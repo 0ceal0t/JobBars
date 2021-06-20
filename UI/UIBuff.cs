@@ -28,9 +28,9 @@ namespace JobBars.UI {
 
         public override void LoadExisting(AtkResNode* node) {
             RootRes = node;
-            TextNode = (AtkTextNode*)RootRes->ChildNode;
-            Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode;
-            Border = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
+            Overlay = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode;
+            Border = (AtkImageNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode;
+            TextNode = (AtkTextNode*)RootRes->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
             SetOffCD();
         }
 
@@ -56,29 +56,6 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
-
-            var icon = UI.CreateImageNode();
-            icon->AtkResNode.Width = WIDTH;
-            icon->AtkResNode.Height = HEIGHT;
-            icon->AtkResNode.X = 0;
-            icon->AtkResNode.Y = 0;
-            icon->PartId = PART_ID;
-            icon->PartsList = nameplateAddon->UldManager.PartsList;
-            icon->Flags = 0;
-            icon->WrapMode = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
-
-            Overlay = UI.CreateImageNode();
-            Overlay->AtkResNode.Width = WIDTH;
-            Overlay->AtkResNode.Height = 1;
-            Overlay->AtkResNode.X = 0;
-            Overlay->AtkResNode.Y = 0;
-            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
-            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
-            Overlay->Flags = 0;
-            Overlay->WrapMode = 1;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
 
             Border = UI.CreateImageNode();
             Border->AtkResNode.Width = 47;
@@ -90,17 +67,45 @@ namespace JobBars.UI {
             Border->Flags = 0;
             Border->WrapMode = 1;
             UiHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
+
+            Overlay = UI.CreateImageNode();
+            Overlay->AtkResNode.Width = WIDTH;
+            Overlay->AtkResNode.Height = 1;
+            Overlay->AtkResNode.X = 0;
+            Overlay->AtkResNode.Y = 0;
+            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
+            Overlay->PartsList = nameplateAddon->UldManager.PartsList;
+            Overlay->Flags = 0;
+            Overlay->WrapMode = 1;
+
+            var icon = UI.CreateImageNode();
+            icon->AtkResNode.Width = WIDTH;
+            icon->AtkResNode.Height = HEIGHT;
+            icon->AtkResNode.X = 0;
+            icon->AtkResNode.Y = 0;
+            icon->PartId = PART_ID;
+            icon->PartsList = nameplateAddon->UldManager.PartsList;
+            icon->Flags = 0;
+            icon->WrapMode = 1;
+
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)icon;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Overlay;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Border;
-            //
-            RootRes->ChildNode = (AtkResNode*)TextNode;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextNode;
 
             icon->AtkResNode.ParentNode = RootRes;
             Overlay->AtkResNode.ParentNode = RootRes;
             TextNode->AtkResNode.ParentNode = RootRes;
+            Border->AtkResNode.ParentNode = RootRes;
 
-            TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)icon;
+            RootRes->ChildNode = (AtkResNode*)icon;
             icon->AtkResNode.PrevSiblingNode = (AtkResNode*)Overlay;
             Overlay->AtkResNode.PrevSiblingNode = (AtkResNode*)Border;
+            Border->AtkResNode.PrevSiblingNode = (AtkResNode*)TextNode;
+
+            TextNode->AtkResNode.NextSiblingNode = (AtkResNode*)Border;
+            Border->AtkResNode.NextSiblingNode = (AtkResNode*)Overlay;
+            Overlay->AtkResNode.NextSiblingNode = (AtkResNode*)icon;
 
             UiHelper.SetText(TextNode, "");
         }

@@ -19,13 +19,14 @@ namespace JobBars.Gauges {
 
         public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
-        public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : new Gauge[0];
+        public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
         public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
             UI = ui;
             PluginInterface = pi;
 
             JobToGauges = new Dictionary<JobIds, Gauge[]>();
+            JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {
                 new GaugeGCD("No Mercy", 20, 9)
