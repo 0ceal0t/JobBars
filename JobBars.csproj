@@ -15,8 +15,8 @@
     <PropertyGroup Label="Feature">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Version>1.0.0.1</Version>
-        <AssemblyVersion>1.0.0.6</AssemblyVersion>
-        <FileVersion>1.0.0.6</FileVersion>
+        <AssemblyVersion>1.0.0.7</AssemblyVersion>
+        <FileVersion>1.0.0.7</FileVersion>
     </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
   </PropertyGroup>

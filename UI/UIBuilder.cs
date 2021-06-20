@@ -218,7 +218,7 @@ namespace JobBars.UI {
             var current_asset = BUFF_ASSET_START;
             var current_part = BUFF_PART_START;
             foreach (var icon in _Icons) {
-                AddPart(current_asset, current_part, (ushort)((40 - UIBuff.WIDTH) / 2), (ushort)((40 - UIBuff.HEIGHT) / 2), UIBuff.WIDTH, UIBuff.HEIGHT);
+                AddPart(current_asset, current_part, 1, 6, 37, 28);
                 IconToPartId[icon] = current_part;
                 current_asset++;
                 current_part++;
@@ -296,7 +296,6 @@ namespace JobBars.UI {
             }
 
             UiHelper.ExpandNodeList(addon, 999);
-            nodeIdx = addon->UldManager.NodeListCount;
             // ======== CREATE GAUGES =======
             G_RootRes = CreateResNode();
             G_RootRes->Width = 256;
