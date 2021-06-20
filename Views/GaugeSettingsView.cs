@@ -83,9 +83,12 @@ namespace JobBars.Views {
                     ImGui.EndCombo();
                 }
             }
-            // ====== TYPE (only for GCDs) ======
+            // ====== TYPE ======
             if (Gauge is GaugeGCD) {
                 DrawTypeOptions(Gauge, GaugeGCD.ValidGaugeVisualType, _ID);
+            }
+            else if(Gauge is GaugeCharges) {
+                DrawTypeOptions(Gauge, GaugeCharges.ValidGaugeVisualType, _ID);
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

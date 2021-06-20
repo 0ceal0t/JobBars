@@ -10,6 +10,8 @@ namespace JobBars.Gauges {
         private float CD;
         private int MaxCharges;
 
+        public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+
         public GaugeCharges(string name, float cd, int maxCharges) : base(name) {
             CD = cd;
             MaxCharges = maxCharges;
@@ -28,6 +30,14 @@ namespace JobBars.Gauges {
                     combo.SetDiamondValue(MaxCharges);
                     combo.SetText("0");
                     combo.SetPercent(0);
+                }
+                else if(UI is UIGauge gauge) {
+                    gauge.SetText("0");
+                    gauge.SetPercent(0);
+                }
+                else if(UI is UIDiamond diamond) {
+                    diamond.SetMaxValue(MaxCharges);
+                    diamond.SetValue(MaxCharges);
                 }
             }
         }
@@ -51,13 +61,29 @@ namespace JobBars.Gauges {
                         combo.SetText(((int)timeLeft).ToString());
                         combo.SetPercent((float)currentTime / CD);
                     }
+                    else if(UI is UIGauge gauge) {
+                        gauge.SetText(((int)timeLeft).ToString());
+                        gauge.SetPercent((float)currentTime / CD);
+                    }
+                    else if(UI is UIDiamond diamond) {
+                        diamond.SetValue(currentCharges);
+                    }
+
                     return;
                 }
             }
+
             if (UI is UIGaugeDiamondCombo comboInactive) {
                 comboInactive.SetDiamondValue(MaxCharges);
                 comboInactive.SetText("0");
                 comboInactive.SetPercent(0);
+            }
+            else if (UI is UIGauge gaugeInactive) {
+                gaugeInactive.SetText("0");
+                gaugeInactive.SetPercent(0);
+            }
+            else if (UI is UIDiamond diamondInactive) {
+                diamondInactive.SetValue(MaxCharges);
             }
         }
 
