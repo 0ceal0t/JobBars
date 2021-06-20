@@ -261,7 +261,7 @@ namespace JobBars {
             Animation.Tick();
 
             if (Party.Count < LastPartyCount) {
-                BManager?.SetJob(CurrentJob);
+                BManager.SetJob(CurrentJob);
             }
             LastPartyCount = Party.Count;
 

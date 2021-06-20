@@ -452,7 +452,6 @@ namespace JobBars.Gauges {
             foreach (var gauge in CurrentGauges) {
                 gauge.State = GaugeState.Inactive;
                 gauge.UI = null;
-                gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
             }
             UI.HideAllGauges();
             UI.Icon.Reset();
@@ -460,7 +459,9 @@ namespace JobBars.Gauges {
             CurrentJob = job;
             int enabledIdx = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
+                gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
                 if (!gauge.Enabled) { continue; }
+
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
                 if (!gauge.StartHidden) {
                     gauge.UI.Show();

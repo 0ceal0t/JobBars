@@ -37,6 +37,7 @@ namespace JobBars.UI {
             node->NextSiblingNode = null;
             node->Flags = 8243;
             node->Flags_2 = 1;
+            node->Flags_2 |= 4;
 
             return node;
         }
@@ -74,6 +75,8 @@ namespace JobBars.UI {
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
             node->AtkResNode.Flags = 8250;
+            node->AtkResNode.Flags_2 = 1;
+            node->AtkResNode.Flags_2 |= 4;
 
             node->TextId = 0;
             node->TextColor = UIColor.BYTE_White;
@@ -137,6 +140,8 @@ namespace JobBars.UI {
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
             node->AtkResNode.Flags = 8243;
+            node->AtkResNode.Flags_2 = 1;
+            node->AtkResNode.Flags_2 |= 4;
 
             return node;
         }
@@ -175,6 +180,8 @@ namespace JobBars.UI {
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
             node->AtkResNode.Flags = 8243;
+            node->AtkResNode.Flags_2 = 1;
+            node->AtkResNode.Flags_2 |= 4;
 
             return node;
         }

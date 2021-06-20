@@ -82,6 +82,7 @@ namespace JobBars.Helper {
             atkUnitBase->ScaleY = scaleY.Value;
             atkUnitBase->Flags |= 0x10;
             atkUnitBase->Flags_2 |= 0x1;
+            atkUnitBase->Flags_2 |= 0x4;
         }
 
         public static void ExpandNodeList(AtkComponentNode* componentNode, ushort addSize) {
