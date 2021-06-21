@@ -52,6 +52,49 @@ namespace JobBars {
 
         public static ClientInterface Client;
 
+        /*
+         * SIG LIST:
+         *  Lord have mercy when 6.0 comes
+         * =================================
+         * 
+         *  FFXIVClientInterface/ClientInterface.cs
+         *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
+         *  FFXIVClientInterface/Client/UI/Agent/AgentModule.cs
+         *      getAgentByInternalID (E8 ?? ?? ?? ?? 83 FF 0D)
+         *  FFXIVClientInterface/Client/Game/ActionManager.cs
+         *      BaseAddress (E8 ?? ?? ?? ?? 33 C0 E9 ?? ?? ?? ?? 8B 7D 0C)
+         *      GetRecastGroup (E8 ?? ?? ?? ?? 8B D0 48 8B CD 8B F0) 
+         *      GetGroupTimer (E8 ?? ?? ?? ?? 0F 57 FF 48 85 C0)
+         *      GetAdjustedActionId (E8 ?? ?? ?? ?? 8B F8 3B DF) 
+         *      
+         *  Helper/UiHelper.GameFunctions.cs
+         *      _atkTextNodeSetText (E8 ?? ?? ?? ?? 49 8B FC)
+         *      _gameAlloc (E8 ?? ?? ?? ?? 45 8D 67 23)
+         *      _getGameAllocator (E8 ?? ?? ?? ?? 8B 75 08)
+         *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
+         *      
+         *  JobBars.cs
+         *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
+         *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
+         *  UIIconManager.cs
+         *      setIconRecastPtr (40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23)
+         *      setIconRecastPtr2 (40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??)
+         *      setIconTextPtr (55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9)
+         *      setIconTextPtr2 (4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA)
+         *  UIBuilder.cs
+         *      loadAssetsPtr (E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??)
+         *      loadTexAllocPtr (48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48)
+         *      texUnallocPtr (E8 ?? ?? ?? ?? C6 43 10 02)
+         *      
+         *  PartyList/PartyList.cs
+         *      GroupManager (48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? ?? 76 50)
+         *      CrossRealmGroupManagerPtr (77 71 48 8B 05)
+         *      CompanionManagerPtr (4C 8B 15 ?? ?? ?? ?? 4C 8B C9)
+         *      GetCrossRealmMemberCountPtr (E8 ?? ?? ?? ?? 3C 01 77 4B)
+         *      GetCrossMemberByGrpIndexPtr (E8 ?? ?? ?? ?? 44 89 7C 24 ?? 4C 8B C8)
+         *      GetCompanionMemberCountPtr (E8 ?? ?? ?? ?? 8B D3 85 C0)
+         */
+
         public void Initialize(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
             Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
@@ -119,8 +162,9 @@ namespace JobBars {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
 
-            var isSelf = sourceId == PluginInterface.ClientState.LocalPlayer.ActorId;
-            var isPet = (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? sourceId == FindCharaPet() : false;
+            var selfId = PluginInterface.ClientState.LocalPlayer.ActorId;
+            var isSelf = sourceId == selfId;
+            var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? IsPet(sourceId, selfId) : false);
             var isParty = !isSelf && !isPet && IsInParty(sourceId);
 
             if(!(isSelf || isPet || isParty)) {
@@ -178,6 +222,10 @@ namespace JobBars {
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
                 if(entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
+                    if(entries[i].type == ActionEffectType.Gp_Or_Status) {
+                        PluginLog.Log("GP");
+                    }
+                    // idk what's up with Gp_Or_Status. sometimes the enum is wrong?
                     var buffItem = new Item
                     {
                         Id = entries[i].value,
@@ -187,7 +235,7 @@ namespace JobBars {
                     if(!isParty) { // don't let party members affect our gauge
                         GManager?.PerformAction(buffItem);
                     }
-                    if((int) tTarget == PluginInterface.ClientState.LocalPlayer.ActorId) { // only really care about buffs on us
+                    if((int) tTarget == selfId) { // only really care about buffs on us
                         BManager?.PerformAction(buffItem);
                     }
                 }
@@ -206,27 +254,23 @@ namespace JobBars {
             Reset();
         }
 
-        private int GetCharacterActorId() {
-            if (PluginInterface.ClientState.LocalPlayer != null)
-                return PluginInterface.ClientState.LocalPlayer.ActorId;
-            return 0;
-        }
-
-        private int FindCharaPet() {
-            int charaId = GetCharacterActorId();
-            foreach (Actor a in PluginInterface.ClientState.Actors) {
-                if (!(a is BattleNpc npc)) continue;
-                IntPtr actPtr = npc.Address;
-                if (actPtr == IntPtr.Zero) continue;
-                if (npc.OwnerId == charaId)
-                    return npc.ActorId;
+        private bool IsPet(int actorId, int ownerId) {
+            foreach (Actor actor in PluginInterface.ClientState.Actors) {
+                if(actor?.ActorId == actorId) {
+                    if(actor is BattleNpc npc) {
+                        if (npc.Address == IntPtr.Zero) return false;
+                        return npc.OwnerId == ownerId;
+                    }
+                    return false;
+                }
             }
-            return -1;
+            return false;
         }
 
         private bool IsInParty(int actorId) {
             foreach(var pMember in Party) {
-                if(pMember.Actor != null && pMember.Actor.ActorId == actorId) {
+                if (pMember.Actor == null) continue;
+                if(pMember.Actor.ActorId == actorId) {
                     return true;
                 }
             }
