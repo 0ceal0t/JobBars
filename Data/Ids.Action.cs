@@ -30,8 +30,8 @@ namespace JobBars.Data {
         NoMercy = 16138,
         // SCH
         Biolysis = 16540,
-        ArcBio = 164,
-        ArcBio2 = 178,
+        SchBio = 17864,
+        SchBio2 = 17865,
         ChainStratagem = 7436,
         // WHM
         Dia = 16532,
@@ -82,7 +82,8 @@ namespace JobBars.Data {
         Thunder3 = 153,
         Thunder4 = 7420,
         // SMN
-        // also has ArcBio + ArcBio2
+        ArcBio = 164,
+        ArcBio2 = 178,
         Bio3 = 7424,
         Miasma = 168,
         Miasma3 = 7425,

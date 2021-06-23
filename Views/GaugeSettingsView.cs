@@ -44,6 +44,20 @@ namespace JobBars.Views {
                 Configuration.Config.Save();
                 Manager.ResetJob(Job);
             }
+            // ===== ICON (TIMER ONLY + IF THERE IS AN ICON TO REPLACE) =====
+            if(Gauge is GaugeTimer Timer && Timer.ReplaceIcon) {
+                var iconEnabled = !Configuration.Config.GaugeIconDisabled.Contains(Gauge.Name);
+                if (ImGui.Checkbox("Icon Replacement Enabled" + _ID + Gauge.Name, ref iconEnabled)) {
+                    if (iconEnabled) {
+                        Configuration.Config.GaugeIconDisabled.Remove(Gauge.Name);
+                    }
+                    else {
+                        Configuration.Config.GaugeIconDisabled.Add(Gauge.Name);
+                    }
+                    Configuration.Config.Save();
+                    Manager.ResetJob(Job);
+                }
+            }
             // ===== ORDER =======
             int order = Gauge.Order;
             if (ImGui.InputInt("Order" + _ID + Gauge.Name, ref order)) {

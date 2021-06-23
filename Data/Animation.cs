@@ -8,14 +8,17 @@ namespace JobBars.Data {
     public class Animation {
 
         public static List<Animation> Anims = new List<Animation>();
-        public static void AddAnim(Action<float> function, float duration, float startValue, float endValue) {
-            Anims.Add(new Animation(function, duration, startValue, endValue));
+        public static Animation AddAnim(Action<float> function, float duration, float startValue, float endValue) {
+            var anim = new Animation(function, duration, startValue, endValue);
+            Anims.Add(anim);
+            return anim;
         }
         
         public static void Tick() {
             var currentTime = DateTime.Now;
 
             foreach(var item in Anims) {
+                if (item.Remove) continue;
                 var timeElapsed = (currentTime - item.Start).TotalSeconds;
                 if(timeElapsed > item.Duration) {
                     timeElapsed = item.Duration;
@@ -25,7 +28,11 @@ namespace JobBars.Data {
                 item.F((float) value);
             }
 
-            Anims.RemoveAll(x => (currentTime - x.Start).TotalSeconds >= x.Duration);
+            Anims.RemoveAll(x => (currentTime - x.Start).TotalSeconds >= x.Duration || x.Remove);
+        }
+
+        public static void Cleanup () {
+            Anims = new();
         }
 
         public Action<float> F;
@@ -33,6 +40,7 @@ namespace JobBars.Data {
         public float Duration;
         public float StartValue;
         public float EndValue;
+        public bool Remove = false;
 
         public Animation(Action<float> function, float duration, float startValue, float endValue) {
             F = function;
@@ -40,6 +48,10 @@ namespace JobBars.Data {
             Duration = duration;
             StartValue = startValue;
             EndValue = endValue;
+        }
+
+        public void Delete() {
+            Remove = true;
         }
     }
 }

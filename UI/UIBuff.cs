@@ -1,5 +1,6 @@
 ﻿using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace JobBars.UI {
         private AtkImageNode* Border;
         private string CurrentText = "";
 
-        static int BUFFS_HORIZONTAL = 5;
+        static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
 
         public UIBuff(UIBuilder _ui, ushort partId, AtkResNode* node = null) : base(_ui) {
             PART_ID = partId;

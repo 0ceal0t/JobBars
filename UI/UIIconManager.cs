@@ -192,6 +192,8 @@ namespace JobBars.UI {
                             IconRecastOverride.Add((IntPtr)cdOverlay);
                             IconComponentOverride.Add((IntPtr)icon->Component);
 
+                            UiHelper.Hide(icon->Component->UldManager.NodeList[2]);
+                            UiHelper.Hide(icon->Component->UldManager.NodeList[10]);
                             UiHelper.Hide(icon->Component->UldManager.NodeList[14]); // another image overlay :shrug:
                         }
                         else if(state == IconState.Running) {

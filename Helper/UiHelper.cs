@@ -72,7 +72,6 @@ namespace JobBars.Helper {
         public static void SetPosition(AtkResNode* node, float? x, float? y) {
             if (x != null) node->X = x.Value;
             if (y != null) node->Y = y.Value;
-            node->Flags |= 0x10;
             node->Flags_2 |= 0x1;
 
         }
@@ -80,7 +79,6 @@ namespace JobBars.Helper {
         public static void SetScale(AtkResNode* atkUnitBase, float? scaleX, float? scaleY) {
             atkUnitBase->ScaleX = scaleX.Value;
             atkUnitBase->ScaleY = scaleY.Value;
-            atkUnitBase->Flags |= 0x10;
             atkUnitBase->Flags_2 |= 0x1;
             atkUnitBase->Flags_2 |= 0x4;
         }

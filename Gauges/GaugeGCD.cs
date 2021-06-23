@@ -36,6 +36,10 @@ namespace JobBars.Gauges {
         public override void SetupVisual(bool resetValue = true) {
             UI?.SetColor(Visual.Color);
             if(resetValue) {
+                if (Configuration.Config.GaugeHideGCDInactive) {
+                    UI?.Hide();
+                }
+
                 if (UI is UIArrow arrows) {
                     arrows.SetMaxValue(MaxCounter);
                     arrows.SetValue(0);
@@ -56,7 +60,7 @@ namespace JobBars.Gauges {
                 float timeLeft = TimeLeft(Duration, time, buffDict);
                 if(timeLeft < 0) {
                     State = GaugeState.Finished;
-                     StopTime = time;
+                    StopTime = time;
                 }
 
                 if(UI is UIArrow arrows) {
@@ -83,6 +87,10 @@ namespace JobBars.Gauges {
                         gauge.SetText("0");
                         gauge.SetPercent(0);
                     }
+
+                    if (Configuration.Config.GaugeHideGCDInactive) {
+                        UI?.Hide();
+                    }
                 }
             }
         }
@@ -92,7 +100,9 @@ namespace JobBars.Gauges {
                 SetActive(action);
                 Duration = MaxDuration;
                 Counter = 0;
-                return;
+                if (Configuration.Config.GaugeHideGCDInactive) {
+                    UI?.Show();
+                }
             }
 
             if (

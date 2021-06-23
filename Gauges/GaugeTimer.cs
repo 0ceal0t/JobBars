@@ -11,8 +11,9 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
+        public bool IconEnabled = true;
         private UIIconManager Icon;
-        private bool ReplaceIcon = false;
+        public bool ReplaceIcon = false;
         private ActionIds[] ReplaceIconAction;
 
         private float Duration;
@@ -45,14 +46,14 @@ namespace JobBars.Gauges {
         }
 
         private void StartIcon() {
-            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
+            if (!IconEnabled || !ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
                 Icon.ActionIdToState[(uint)icon] = IconState.StartRunning;
             }
         }
 
         private void SetIcon(double current, float max) {
-            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
+            if (!IconEnabled || !ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {
@@ -63,7 +64,7 @@ namespace JobBars.Gauges {
         }
 
         private void ResetIcon() {
-            if (!ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
+            if (!IconEnabled || !ReplaceIcon || !Configuration.Config.GaugeIconReplacement) return;
             foreach (var icon in ReplaceIconAction) {
                 Icon.ActionIdToStatus[(uint)icon] = new IconProgress
                 {
@@ -88,22 +89,24 @@ namespace JobBars.Gauges {
                     ResetIcon();
                 }
 
+                bool inDanger = LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning && timeLeft != 0 && ShowLowWarning;
+                if (inDanger && Configuration.Config.SeNumber > 0) {
+                    UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
+                }
+
                 if (UI is UIGauge gauge) {
-                    if (LastTimeLeft >= LowTimerWarning && timeLeft < LowTimerWarning && timeLeft != 0 && ShowLowWarning) {
+                    if (inDanger) {
                         gauge.SetTextColor(Red);
-                        if(Configuration.Config.SeNumber > 0) {
-                            UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
-                        }
                     }
-                    else if (LastTimeLeft < LowTimerWarning && timeLeft >= LowTimerWarning) {
+                    else if (LastTimeLeft < LowTimerWarning && timeLeft >= LowTimerWarning) { // duration got refreshed
                         gauge.SetTextColor(NoColor);
                     }
 
                     gauge.SetText(((int)timeLeft).ToString());
                     gauge.SetPercent((float)timeLeft / MaxDuration);
-                    SetIcon(timeLeft, MaxDuration);
                 }
 
+                SetIcon(timeLeft, MaxDuration);
                 LastTimeLeft = timeLeft;
             }
         }
@@ -114,6 +117,10 @@ namespace JobBars.Gauges {
                 Duration = DefaultDuration;
                 StartIcon();
             }
+        }
+
+        public override bool DoProcessInput() {
+            return Enabled || IconEnabled;
         }
 
         public override int GetHeight() {

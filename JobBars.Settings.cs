@@ -111,23 +111,30 @@ namespace JobBars {
                 GManager.Reset();
                 Configuration.Config.Save();
             }
+
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
                 UI.SetGaugeScale(Configuration.Config.GaugeScale);
                 Configuration.Config.Save();
             }
-            if(ImGui.Checkbox("DoT Icon Replacement", ref Configuration.Config.GaugeIconReplacement)) {
+
+            if(ImGui.Checkbox("DoT Icon Replacement (Global)", ref Configuration.Config.GaugeIconReplacement)) {
                 GManager.Reset();
                 Configuration.Config.Save();
             }
             
             ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Sound effect # when DoTs are low (0 = off)",ref Configuration.Config.SeNumber,0)) {
+            if (ImGui.InputInt("Sound Effect # When DoTs Are Low (0 = off)", ref Configuration.Config.SeNumber,0)) {
                 if (Configuration.Config.SeNumber < 0) Configuration.Config.SeNumber = 0;
                 if (Configuration.Config.SeNumber >16) Configuration.Config.SeNumber = 16;
                 Configuration.Config.Save();
             }
 
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
+                GManager.Reset();
+                Configuration.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref Configuration.Config.GaugeHideGCDInactive)) {
                 GManager.Reset();
                 Configuration.Config.Save();
             }
@@ -170,8 +177,13 @@ namespace JobBars {
                 BManager.Reset();
                 Configuration.Config.Save();
             }
+
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
                 UI.SetBuffScale(Configuration.Config.BuffScale);
+                Configuration.Config.Save();
+            }
+            if(
+                ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
                 Configuration.Config.Save();
             }
 

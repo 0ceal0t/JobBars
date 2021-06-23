@@ -1,5 +1,6 @@
 ﻿using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -170,7 +171,9 @@ namespace JobBars.UI {
             else if(value < 0) {
                 value = 0;
             }
-            UiHelper.SetSize((AtkResNode*)BarMainNode, (int)(160 * value), 20);
+
+            var item = (AtkResNode*)BarMainNode;
+            UiHelper.SetSize(item, (int)(160 * value), 20);
         }
 
         public override void SetColor(ElementColor color) {

@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,8 @@ namespace JobBars.UI {
         public virtual void SetPosition(Vector2 pos) {
             UiHelper.SetPosition(RootRes, pos.X, pos.Y);
         }
+
+        public virtual void Cleanup() { }
 
         public abstract void SetColor(ElementColor color);
         public abstract int GetHeight(int param);

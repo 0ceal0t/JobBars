@@ -158,8 +158,8 @@ namespace JobBars.Gauges {
                     })
                     .WithReplaceIcon(new []
                     {
-                        ActionIds.ArcBio,
-                        ActionIds.ArcBio2,
+                        ActionIds.SchBio,
+                        ActionIds.SchBio2,
                         ActionIds.Biolysis
                     }, UI.Icon)
                     .WithVisual(GaugeVisual.Bar(UIColor.BlueGreen))
@@ -234,22 +234,26 @@ namespace JobBars.Gauges {
                 new GaugeGCD("Summon Bahamut", 21, 8)
                     .WithTriggers(new[]
                     {
-                        new Item(ActionIds.SummonBahamut)
+                        new Item(ActionIds.SummonBahamut),
+                        new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
                     })
                     .WithSpecificIncrement(new []
                     {
                         new Item(ActionIds.Wyrmwave)
                     })
+                    .WithNoRefresh()
                     .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
                 new GaugeGCD("Firebird Trance", 21, 8)
                     .WithTriggers(new []
                     {
-                        new Item(ActionIds.FirebirdTrance)
+                        new Item(ActionIds.FirebirdTrance),
+                        new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
                     })
                     .WithSpecificIncrement(new []
                     {
                         new Item(ActionIds.ScarletFlame)
                     })
+                    .WithNoRefresh()
                     .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
                     .WithStartHidden(),
                 new GaugeTimer("Bio", 30)
@@ -451,6 +455,7 @@ namespace JobBars.Gauges {
         public void SetJob(JobIds job) {
             foreach (var gauge in CurrentGauges) {
                 gauge.State = GaugeState.Inactive;
+                gauge.UI?.Cleanup();
                 gauge.UI = null;
             }
             UI.HideAllGauges();
@@ -460,6 +465,9 @@ namespace JobBars.Gauges {
             int enabledIdx = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
                 gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
+                if(gauge is GaugeTimer timer) { // turn off individual icon
+                    timer.IconEnabled = !Configuration.Config.GaugeIconDisabled.Contains(gauge.Name);
+                }
                 if (!gauge.Enabled) { continue; }
 
                 gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
@@ -527,7 +535,7 @@ namespace JobBars.Gauges {
         }
 
         public void PerformAction(Item action) {
-            foreach(var gauge in CurrentGauges.Where(x => x.Enabled)) {
+            foreach(var gauge in CurrentGauges.Where(x => x.DoProcessInput())) {
                 gauge.ProcessAction(action);
             }
         }
@@ -580,7 +588,7 @@ namespace JobBars.Gauges {
             }
 
             foreach(var gauge in CurrentGauges) {
-                if (!gauge.Enabled) { continue; }
+                if (!gauge.DoProcessInput()) { continue; }
                 gauge.Tick(currentTime, BuffDict);
             }
             UI.Icon.Update();

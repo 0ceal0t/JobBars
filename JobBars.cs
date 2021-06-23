@@ -100,12 +100,12 @@ namespace JobBars {
             Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             UIColor.SetupColors();
-            SetupActions();
 
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
 
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Config.Initialize(PluginInterface);
+            SetupActions();
             UI = new UIBuilder(pluginInterface);
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
@@ -117,6 +117,7 @@ namespace JobBars {
             actorControlSelfHook.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += BuildSettingsUI;
+            PluginInterface.UiBuilder.OnBuildUi += Animate;
             PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
@@ -133,10 +134,12 @@ namespace JobBars {
             actorControlSelfHook = null;
 
             PluginInterface.UiBuilder.OnBuildUi -= BuildSettingsUI;
+            PluginInterface.UiBuilder.OnBuildUi -= Animate;
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
+            Animation.Cleanup();
             UI.Dispose();
             Client.Dispose();
 
@@ -144,10 +147,12 @@ namespace JobBars {
         }
 
         private void SetupActions() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && x.IsPlayerAction);
+            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP);
             foreach(var item in sheet) {
+                var name = item.Name.ToString();
                 var attackType = item.ActionCategory.Value.Name.ToString();
-                if(attackType == "Spell" || attackType == "Weaponskill") {
+                var actionId = item.ActionCategory.Value.RowId;
+                if (actionId == 2 || actionId == 3) { // spell or weaponskill
                     GCDs.Add(item.RowId);
                 }
             }
@@ -221,11 +226,10 @@ namespace JobBars {
             }
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
-                if(entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
-                    if(entries[i].type == ActionEffectType.Gp_Or_Status) {
-                        PluginLog.Log("GP");
-                    }
+
+                if (entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
                     // idk what's up with Gp_Or_Status. sometimes the enum is wrong?
+
                     var buffItem = new Item
                     {
                         Id = entries[i].value,
@@ -241,6 +245,10 @@ namespace JobBars {
                 }
             }
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+        }
+
+        private void Animate() {
+            Animation.Tick();
         }
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
@@ -281,6 +289,7 @@ namespace JobBars {
             if (!Ready) {
                 if(Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
                     PluginLog.Log("LOGOUT");
+                    Animation.Cleanup();
                     Init = false;
                     CurrentJob = JobIds.OTHER;
                 }
@@ -289,6 +298,7 @@ namespace JobBars {
             var addon = UI._ADDON;
             if (!Init) {
                 if (addon == null) return;
+                PluginLog.Log("INIT");
                 UI.Setup();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
@@ -302,7 +312,6 @@ namespace JobBars {
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
             GManager.Tick();
             BManager.Tick();
-            Animation.Tick();
 
             if (Party.Count < LastPartyCount) {
                 BManager.SetJob(CurrentJob);

@@ -19,8 +19,6 @@ namespace JobBars.Data {
         // GNB
         NoMercy = 0x727,
         // SCH
-        ArcBio = 179,
-        ArcBio2 = 189,
         Biolysis = 1895,
         // WHM
         Aero = 143,
@@ -78,6 +76,8 @@ namespace JobBars.Data {
         Thunder3 = 163,
         Thunder4 = 1210,
         // SMN
+        ArcBio = 179,
+        ArcBio2 = 189,
         Bio3 = 1214,
         Miasma = 180,
         Miasma3 = 1215,

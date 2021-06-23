@@ -82,6 +82,10 @@ namespace JobBars.Gauges {
             }
         }
 
+        public virtual bool DoProcessInput() {
+            return Enabled;
+        }
+
         public abstract void SetupVisual(bool resetValue = true);
         public abstract void ProcessAction(Item action);
         public abstract void Tick(DateTime time, Dictionary<Item, float> buffDict);

@@ -190,14 +190,14 @@ namespace JobBars.Buffs {
                     {
                         new Item(ActionIds.SummonBahamut)
                     })
-                    .WithCD(60)
+                    .WithCD(120)
                     .WithColor(UIColor.LightBlue),
                 new Buff("Firebird Trance", IconIds.FirebirdTrance, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.FirebirdTrance)
                     })
-                    .WithCD(60)
+                    .WithCD(120)
                     .WithColor(UIColor.Orange)
             });
             // ======= SAM ==========
