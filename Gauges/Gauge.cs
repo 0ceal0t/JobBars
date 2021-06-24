@@ -40,19 +40,16 @@ namespace JobBars.Gauges {
             Triggers = new Item[0];
         }
 
-        public void SetActive(Item trigger) {
-            PerformHide();
-            LastActiveTrigger = trigger;
-            ActiveTime = DateTime.Now;
-            State = GaugeState.Active;
-        }
-
-        public unsafe void PerformHide() {
-            if(HideGauge != null && UiHelper.GetNodeVisible(UI.RootRes) == false) {
+        public unsafe void SetActive(Item trigger) {
+            if (HideGauge != null && UiHelper.GetNodeVisible(UI.RootRes) == false) {
                 UiHelper.SetPosition(UI.RootRes, HideGauge.UI.RootRes->X, HideGauge.UI.RootRes->Y);
                 HideGauge.UI.Hide();
                 UI.Show();
             }
+
+            LastActiveTrigger = trigger;
+            ActiveTime = DateTime.Now;
+            State = GaugeState.Active;
         }
 
         public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, float> buffDict) {

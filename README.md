@@ -1,5 +1,5 @@
 # JobBars
-A plugin for XIVQuickLauncher which provides extra job gauges and a party buff tracker
+A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges and a party buff tracker
 - Number of GCDs under buffs (such as Fight or Flight, Inner Release)
 - DoT tracker (such as Dia, Miasma)
 - Proc display (Verfire/Verstone Ready)
@@ -7,9 +7,6 @@ A plugin for XIVQuickLauncher which provides extra job gauges and a party buff t
 
 ## Usage
 To open the settings menu, use `/jobbars`
-
-## Why?
-Some people find these useful. If you only want some of them, gauges and be enabled and disabled in the settings menu.
 
 ## Jobs
 
@@ -84,9 +81,9 @@ Some people find these useful. If you only want some of them, gauges and be enab
 ## TODO
 - [ ] Glow around gauges
 - [ ] Split up party buffs and personal buffs
-- [ ] DRG Fang and Claw / Wheeling Thrust?
-- [ ] DRG Disembowel / Chaos Thrust? (probably not useful)
-- [ ] NIN GCDs under trick? (probably not useful)
+- [ ] Animate gauge movement
+- [ ] DoT tick timer
+- [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
 - [x] ~~Hide all buffs options~~
 - [x] ~~MCH number of charges of Gauss Round / Richochet~~
 - [x] ~~Track DoTs based on target~~

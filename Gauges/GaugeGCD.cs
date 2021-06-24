@@ -36,22 +36,16 @@ namespace JobBars.Gauges {
         public override void SetupVisual(bool resetValue = true) {
             UI?.SetColor(Visual.Color);
             if(resetValue) {
-                if (Configuration.Config.GaugeHideGCDInactive) {
-                    UI?.Hide();
-                }
-
                 if (UI is UIArrow arrows) {
                     arrows.SetMaxValue(MaxCounter);
-                    arrows.SetValue(0);
                 }
                 else if(UI is UIDiamond diamond) {
                     diamond.SetMaxValue(MaxCounter);
-                    diamond.SetValue(0);
                 }
-                else if (UI is UIGauge gauge) {
-                    gauge.SetText("0");
-                    gauge.SetPercent(0);
+                else if(UI is UIGauge gauge) {
+                    gauge.SetTextColor(UIColor.NoColor);
                 }
+                GCDInactive();
             }
         }
 
@@ -62,35 +56,12 @@ namespace JobBars.Gauges {
                     State = GaugeState.Finished;
                     StopTime = time;
                 }
-
-                if(UI is UIArrow arrows) {
-                    arrows.SetValue(Counter);
-                }
-                else if(UI is UIDiamond diamond) {
-                    diamond.SetValue(Counter);
-                }
-                else if(UI is UIGauge gauge) {
-                    gauge.SetText(Counter.ToString());
-                    gauge.SetPercent(((float)Counter) / MaxCounter);
-                }
+                SetValue(Counter);
             }
             else if(State == GaugeState.Finished) {
                 if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
                     State = GaugeState.Inactive;
-                    if (UI is UIArrow arrows) {
-                        arrows.SetValue(0);
-                    }
-                    else if(UI is UIDiamond diamond) {
-                        diamond.SetValue(0);
-                    }
-                    else if (UI is UIGauge gauge) {
-                        gauge.SetText("0");
-                        gauge.SetPercent(0);
-                    }
-
-                    if (Configuration.Config.GaugeHideGCDInactive) {
-                        UI?.Hide();
-                    }
+                    GCDInactive();
                 }
             }
         }
@@ -100,9 +71,7 @@ namespace JobBars.Gauges {
                 SetActive(action);
                 Duration = MaxDuration;
                 Counter = 0;
-                if (Configuration.Config.GaugeHideGCDInactive) {
-                    UI?.Show();
-                }
+                GCDActive();
             }
 
             if (
@@ -113,6 +82,32 @@ namespace JobBars.Gauges {
                 if (Counter < MaxCounter) {
                     Counter++;
                 }
+            }
+        }
+
+        private void GCDInactive() {
+            SetValue(0);
+            if (Configuration.Config.GaugeHideGCDInactive) {
+                UI?.Hide();
+            }
+        }
+
+        private void GCDActive() {
+            if (Configuration.Config.GaugeHideGCDInactive) {
+                UI?.Show();
+            }
+        }
+
+        private void SetValue(int value) {
+            if (UI is UIArrow arrows) {
+                arrows.SetValue(value);
+            }
+            else if (UI is UIDiamond diamond) {
+                diamond.SetValue(value);
+            }
+            else if (UI is UIGauge gauge) {
+                gauge.SetText(value.ToString());
+                gauge.SetPercent(((float)value) / MaxCounter);
             }
         }
 

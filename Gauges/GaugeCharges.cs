@@ -27,18 +27,14 @@ namespace JobBars.Gauges {
             if (resetValue) {
                 if (UI is UIGaugeDiamondCombo combo) {
                     combo.SetMaxValue(MaxCharges);
-                    combo.SetDiamondValue(MaxCharges);
-                    combo.SetText("0");
-                    combo.SetPercent(0);
-                }
-                else if(UI is UIGauge gauge) {
-                    gauge.SetText("0");
-                    gauge.SetPercent(0);
                 }
                 else if(UI is UIDiamond diamond) {
                     diamond.SetMaxValue(MaxCharges);
-                    diamond.SetValue(MaxCharges);
                 }
+                else if (UI is UIGauge gauge) {
+                    gauge.SetTextColor(UIColor.NoColor);
+                }
+                SetValue(MaxCharges, 0, 0);
             }
         }
 
@@ -56,38 +52,29 @@ namespace JobBars.Gauges {
                     var currentTime = recastTimer->Elapsed % CD;
                     var timeLeft = CD - currentTime;
 
-                    if (UI is UIGaugeDiamondCombo combo) {
-                        combo.SetDiamondValue(currentCharges);
-                        combo.SetText(((int)timeLeft).ToString());
-                        combo.SetPercent((float)currentTime / CD);
-                    }
-                    else if(UI is UIGauge gauge) {
-                        gauge.SetText(((int)timeLeft).ToString());
-                        gauge.SetPercent((float)currentTime / CD);
-                    }
-                    else if(UI is UIDiamond diamond) {
-                        diamond.SetValue(currentCharges);
-                    }
-
+                    SetValue(currentCharges, currentTime, (int)timeLeft);
                     return;
                 }
             }
-
-            if (UI is UIGaugeDiamondCombo comboInactive) {
-                comboInactive.SetDiamondValue(MaxCharges);
-                comboInactive.SetText("0");
-                comboInactive.SetPercent(0);
-            }
-            else if (UI is UIGauge gaugeInactive) {
-                gaugeInactive.SetText("0");
-                gaugeInactive.SetPercent(0);
-            }
-            else if (UI is UIDiamond diamondInactive) {
-                diamondInactive.SetValue(MaxCharges);
-            }
+            SetValue(MaxCharges, 0, 0); // none triggered
         }
 
         public override void ProcessAction(Item action) { }
+
+        private void SetValue(int diamondValue, float value, int textValue) {
+            if (UI is UIGaugeDiamondCombo combo) {
+                combo.SetDiamondValue(diamondValue);
+                combo.SetText(textValue.ToString());
+                combo.SetPercent((float)value / CD);
+            }
+            else if (UI is UIGauge gauge) {
+                gauge.SetText(textValue.ToString());
+                gauge.SetPercent((float)value / CD);
+            }
+            else if (UI is UIDiamond diamond) {
+                diamond.SetValue(diamondValue);
+            }
+        }
 
         public override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);

@@ -99,6 +99,9 @@ namespace JobBars.Data {
         // BLU
         SongOfTorment = 11386,
         PeculiarLight = 11421,
-        OffGuard = 11411
+        OffGuard = 11411,
+        Nightbloom = 23290,
+        BadBreath = 11388,
+        CondensedLibra = 18321
     }
 }

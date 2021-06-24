@@ -215,19 +215,19 @@ namespace JobBars.Buffs {
             });
             // ======= RDM ==========
             JobToBuffs.Add(JobIds.RDM, new Buff[] {
-                new Buff("Manafication", IconIds.Manafication, 20)
+                new Buff("Manafication", IconIds.Manafication, 10)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Manafication)
                     })
-                    .WithCD(120)
+                    .WithCD(110)
                     .WithColor(UIColor.DarkBlue),
-                new Buff("Embolden", IconIds.Embolden, 10)
+                new Buff("Embolden", IconIds.Embolden, 20)
                     .WithTriggers(new []
                     {
                         new Item(ActionIds.Embolden)
                     })
-                    .WithCD(110)
+                    .WithCD(120)
                     .WithColor(UIColor.White)
             });
             // ======= MCH ==========

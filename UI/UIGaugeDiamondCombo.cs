@@ -22,6 +22,17 @@ namespace JobBars.UI {
         public override void Init() { }
         public override unsafe void LoadExisting(AtkResNode* node) { }
 
+        public override void Hide() {
+            UiHelper.Hide(RootRes);
+            UiHelper.Hide(Diamond.RootRes);
+        }
+
+        public override void Show() {
+            UiHelper.Show(RootRes);
+            UiHelper.Show(Diamond.RootRes);
+        }
+
+
         public void SetText(string text) {
             Gauge.SetText(text);
         }

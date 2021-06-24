@@ -18,7 +18,7 @@ namespace JobBars.Gauges {
             DefaultVisual = Visual = new GaugeVisual
             {
                 Type = GaugeVisualType.Diamond,
-                Color = UIColor.White // this doesn't matter
+                Color = White // this doesn't matter
             };
         }
 

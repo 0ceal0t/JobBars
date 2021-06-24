@@ -87,5 +87,10 @@ namespace JobBars.Data {
         VerfireReady = 1234,
         VerstoneReady = 1235,
         // BLU
+        BluBleed = 1714,
+        Poison = 18,
+        AstralAttenuation = 2121,
+        UmbralAttenuation = 2122,
+        PhysicalAttenuation = 2123
     }
 }

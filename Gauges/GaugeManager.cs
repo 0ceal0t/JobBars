@@ -132,6 +132,11 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Combust2),
                         new Item(BuffIds.Combust3),
                     })
+                    .WithDurationDict(new Dictionary<Item, float>{
+                        { new Item(BuffIds.Combust) , 18 },
+                        { new Item(BuffIds.Combust2) , 30 },
+                        { new Item(BuffIds.Combust3) , 30 }
+                    })
                     .WithReplaceIcon(new []
                     { 
                         ActionIds.Combust1,
@@ -172,6 +177,11 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Aero),
                         new Item(BuffIds.Aero2),
                         new Item(BuffIds.Dia)
+                    })
+                    .WithDurationDict(new Dictionary<Item, float>{
+                        { new Item(BuffIds.Aero2) , 18 },
+                        { new Item(BuffIds.Aero) , 18 },
+                        { new Item(BuffIds.Dia) , 30 }
                     })
                     .WithReplaceIcon(new []
                     {
@@ -432,16 +442,33 @@ namespace JobBars.Gauges {
             });
             // ============ BLU ==================
             JobToGauges.Add(JobIds.BLU, new Gauge[] {
-                new GaugeTimer("Song of Torment", 30)
+                new GaugeProc("Condensed Libra")
+                    .WithProcs(new []
+                    {
+                        new Proc(BuffIds.AstralAttenuation, UIColor.White),
+                        new Proc(BuffIds.UmbralAttenuation, UIColor.DarkBlue),
+                        new Proc(BuffIds.PhysicalAttenuation, UIColor.Orange)
+                    }),
+                new GaugeTimer("Song of Torment/Nightbloom", 60)
                     .WithTriggers(new []
                     {
-                        new Item(ActionIds.SongOfTorment)
+                        new Item(BuffIds.BluBleed)
                     })
                     .WithReplaceIcon(new []
                     {
-                        ActionIds.SongOfTorment
+                        ActionIds.SongOfTorment // probably don't want to replace the nightbloom icon, since you want to see when it's off CD
                     }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Red))
+                    .WithVisual(GaugeVisual.Bar(UIColor.Red)),
+                new GaugeTimer("Bad Breath", 15)
+                    .WithTriggers(new []
+                    {
+                        new Item(BuffIds.Poison)
+                    })
+                    .WithReplaceIcon(new []
+                    {
+                        ActionIds.BadBreath
+                    }, UI.Icon)
+                    .WithVisual(GaugeVisual.Bar(UIColor.HealthGreen))
             });
 
             // ======== HIDING ===========

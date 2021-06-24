@@ -16,17 +16,16 @@ namespace JobBars.Gauges {
         public bool ReplaceIcon = false;
         private ActionIds[] ReplaceIconAction;
 
-        private float Duration;
         private float MaxDuration;
         private float DefaultDuration;
+        private Dictionary<Item, float> DurationDict = null;
 
         private bool ShowLowWarning = true;
         private float LastTimeLeft;
         private static float LowTimerWarning = 4.0f;
 
         public GaugeTimer(string name, float duration) : base(name) {
-            MaxDuration = duration;
-            DefaultDuration = MaxDuration;
+            MaxDuration = DefaultDuration = duration;
             DefaultVisual = Visual = new GaugeVisual
             {
                 Type = GaugeVisualType.Bar,
@@ -37,10 +36,9 @@ namespace JobBars.Gauges {
         public override void SetupVisual(bool resetValue = true) {
             UI?.SetColor(Visual.Color);
             if (resetValue) {
+                SetValue(0);
                 if (UI is UIGauge gauge) {
-                    gauge.SetText("0");
                     gauge.SetTextColor(NoColor);
-                    gauge.SetPercent(0);
                 }
             }
         }
@@ -76,7 +74,7 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
-            var timeLeft = TimeLeft(Duration, time, buffDict);
+            var timeLeft = TimeLeft(DefaultDuration, time, buffDict);
             if(timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
                 StartIcon();
@@ -101,11 +99,8 @@ namespace JobBars.Gauges {
                     else if (LastTimeLeft < LowTimerWarning && timeLeft >= LowTimerWarning) { // duration got refreshed
                         gauge.SetTextColor(NoColor);
                     }
-
-                    gauge.SetText(((int)timeLeft).ToString());
-                    gauge.SetPercent((float)timeLeft / MaxDuration);
                 }
-
+                SetValue(timeLeft);
                 SetIcon(timeLeft, MaxDuration);
                 LastTimeLeft = timeLeft;
             }
@@ -113,9 +108,18 @@ namespace JobBars.Gauges {
 
         public override void ProcessAction(Item action) {
             if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
+                if(DurationDict != null && DurationDict.TryGetValue(action, out var duration)) {
+                    MaxDuration = DefaultDuration = duration;
+                }
                 SetActive(action);
-                Duration = DefaultDuration;
                 StartIcon();
+            }
+        }
+
+        private void SetValue(float value) {
+            if (UI is UIGauge gauge) {
+                gauge.SetText(((int)value).ToString());
+                gauge.SetPercent((float)value / MaxDuration);
             }
         }
 
@@ -156,6 +160,14 @@ namespace JobBars.Gauges {
 
         public GaugeTimer WithDefaultDuration(float duration) {
             DefaultDuration = duration;
+            return this;
+        }
+
+        public GaugeTimer WithDurationDict(Dictionary<Item, float> dict) {
+            DurationDict = dict;
+            if(dict.Count != Triggers.Length) {
+                PluginLog.LogError("WARNING: duration dictionary and triggers do not match!");
+            }
             return this;
         }
 
