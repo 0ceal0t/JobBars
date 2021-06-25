@@ -25,24 +25,31 @@ namespace JobBars.Gauges {
         public override void SetupVisual(bool resetValue = true) {
             if (UI is UIDiamond diamond) {
                 diamond.SetParts(Size);
-                foreach(var proc in Procs) {
+                foreach (var proc in Procs) {
                     diamond.SetColor(proc.Color, proc.Idx);
-                    if(resetValue) {
-                        diamond.UnselectPart(proc.Idx);
-                    }
+                }
+            }
+
+            if(resetValue) {
+                foreach (var proc in Procs) {
+                    SetValue(proc.Idx, false);
                 }
             }
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
-            if (UI is UIDiamond diamond) {
-                foreach (var proc in Procs) {
-                    if (buffDict.ContainsKey(proc.Trigger)) {
-                        diamond.SelectPart(proc.Idx);
-                    }
-                    else {
-                        diamond.UnselectPart(proc.Idx);
-                    }
+        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+            foreach (var proc in Procs) {
+                SetValue(proc.Idx, buffDict.ContainsKey(proc.Trigger));
+            }
+        }
+
+        private void SetValue(int idx, bool value) {
+            if(UI is UIDiamond diamond) {
+                if (value) {
+                    diamond.SelectPart(idx);
+                }
+                else {
+                    diamond.UnselectPart(idx);
                 }
             }
         }

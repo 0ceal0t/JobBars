@@ -38,7 +38,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public unsafe override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
+        public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             foreach(var trigger in Triggers) {
                 if (trigger.Type == ItemType.Buff) continue;
 
@@ -92,7 +92,6 @@ namespace JobBars.Gauges {
 
         public GaugeCharges WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
-            GetVisualConfig();
             return this;
         }
     }

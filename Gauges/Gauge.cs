@@ -52,10 +52,10 @@ namespace JobBars.Gauges {
             State = GaugeState.Active;
         }
 
-        public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, float> buffDict) {
+        public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict) {
             if (LastActiveTrigger.Type == ItemType.Buff) {
-                if (buffDict.TryGetValue(LastActiveTrigger, out var duration)) { // duration exists, use that
-                    return duration;
+                if (buffDict.TryGetValue(LastActiveTrigger, out var elem)) { // duration exists, use that
+                    return elem.Duration;
                 }
                 else { // time isn't there, are we just waiting on it?
                     var timeSinceActive = (time - ActiveTime).TotalSeconds;
@@ -70,22 +70,13 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void GetVisualConfig() {
-            if (Configuration.Config.GetColorOverride(Name, out var color)) {
-                Visual.Color = color;
-            }
-            if (Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var type)) {
-                Visual.Type = type;
-            }
-        }
-
         public virtual bool DoProcessInput() {
             return Enabled;
         }
 
         public abstract void SetupVisual(bool resetValue = true);
         public abstract void ProcessAction(Item action);
-        public abstract void Tick(DateTime time, Dictionary<Item, float> buffDict);
+        public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
         public abstract int GetHeight();
         public abstract int GetWidth();
     }

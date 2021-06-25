@@ -36,10 +36,10 @@ namespace JobBars.Gauges {
         public override void SetupVisual(bool resetValue = true) {
             UI?.SetColor(Visual.Color);
             if (resetValue) {
-                SetValue(0);
                 if (UI is UIGauge gauge) {
                     gauge.SetTextColor(NoColor);
                 }
+                SetValue(0);
             }
         }
 
@@ -73,7 +73,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
+        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             var timeLeft = TimeLeft(DefaultDuration, time, buffDict);
             if(timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
@@ -178,7 +178,6 @@ namespace JobBars.Gauges {
 
         public GaugeTimer WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
-            GetVisualConfig();
             return this;
         }
     }

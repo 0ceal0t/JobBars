@@ -49,7 +49,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, float> buffDict) {
+        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             if (State == GaugeState.Active) {
                 float timeLeft = TimeLeft(Duration, time, buffDict);
                 if(timeLeft < 0) {
@@ -142,7 +142,6 @@ namespace JobBars.Gauges {
 
         public GaugeGCD WithVisual(GaugeVisual visual) {
             DefaultVisual = Visual = visual;
-            GetVisualConfig();
             return this;
         }
     }

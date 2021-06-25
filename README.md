@@ -32,7 +32,7 @@ To open the settings menu, use `/jobbars`
 + **Gauges**: Dia tracker
 
 ### <img src="Assets/JobIcons/AST.png" height="20px" width="20px"> AST
-+ **Gauges**: Combust Tracker, Upgraded Earthly Star
++ **Gauges**: Combust Tracker, Upgraded Earthly Star, Lightspeed
 + **Buffs**: Cards, Divination
 
 ### <img src="Assets/JobIcons/MNK.png" height="20px" width="20px"> MNK
@@ -67,7 +67,7 @@ To open the settings menu, use `/jobbars`
 + **Gauges**: Thunder 3+4 tracker, Fire and Thunder procs
 
 ### <img src="Assets/JobIcons/SMN.png" height="20px" width="20px"> SMN
-+ **Gauges**: Bio tracker, Miasma tracker, Wyrmwave and Scarlet Flame tracker
++ **Gauges**: Ruin 4 tracker, Bio tracker, Miasma tracker, Wyrmwave and Scarlet Flame tracker
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
 
 ### <img src="Assets/JobIcons/RDM.png" height="20px" width="20px"> RDM
@@ -75,7 +75,7 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Embolden, Manafication
 
 ### <img src="Assets/JobIcons/BLU.png" height="20px" width="20px"> BLU
-+ **Gauges**: Song of Torment tracker
++ **Gauges**: Song of Torment tracker, Bad Breath tracker, Condensed Libra tracker
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO

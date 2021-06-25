@@ -241,6 +241,12 @@ namespace JobBars.Gauges {
             });
             // ============ SMN ==================
             JobToGauges.Add(JobIds.SMN, new Gauge[] {
+                new GaugeStacks("Ruin 4", 4)
+                    .WithTriggers(new[]
+                    {
+                        new Item(BuffIds.Ruin4)
+                    })
+                    .WithVisual(GaugeVisual.Diamond(UIColor.DarkBlue)),
                 new GaugeGCD("Summon Bahamut", 21, 8)
                     .WithTriggers(new[]
                     {
@@ -472,11 +478,23 @@ namespace JobBars.Gauges {
             });
 
             // ======== HIDING ===========
-            JobToGauges[JobIds.SMN][0].HideGauge = JobToGauges[JobIds.SMN][1]; // bahamut + pheonix
-            JobToGauges[JobIds.SMN][1].HideGauge = JobToGauges[JobIds.SMN][0];
+            JobToGauges[JobIds.SMN][1].HideGauge = JobToGauges[JobIds.SMN][2]; // bahamut + pheonix
+            JobToGauges[JobIds.SMN][2].HideGauge = JobToGauges[JobIds.SMN][1];
 
             JobToGauges[JobIds.BLM][1].HideGauge = JobToGauges[JobIds.BLM][2]; // thunder 3 + thunder 4
             JobToGauges[JobIds.BLM][2].HideGauge = JobToGauges[JobIds.BLM][1];
+
+            // ======= PULL CONFIG VALUES =======
+            foreach(var job in JobToGauges) {
+                foreach(var gauge in job.Value) {
+                    if (Configuration.Config.GetColorOverride(gauge.Name, out var color)) {
+                        gauge.Visual.Color = color;
+                    }
+                    if (Configuration.Config.GaugeTypeOverride.TryGetValue(gauge.Name, out var type)) {
+                        gauge.Visual.Type = type;
+                    }
+                }
+            }
         }
 
         public void SetJob(JobIds job) {
@@ -570,7 +588,7 @@ namespace JobBars.Gauges {
         public void Tick() {
             var currentTime = DateTime.Now;
 
-            Dictionary<Item, float> BuffDict = new Dictionary<Item, float>();
+            Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
             /*foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
                 BuffDict[new Item
                 {
@@ -586,7 +604,10 @@ namespace JobBars.Gauges {
                 {
                     Id = (uint)status.EffectId,
                     Type = ItemType.Buff
-                }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
+                }] = new BuffElem {
+                    Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                    StackCount = status.StackCount
+                };
             }
 
             if (PluginInterface.ClientState.Targets.CurrentTarget != null) {
@@ -609,7 +630,11 @@ namespace JobBars.Gauges {
                         {
                             Id = (uint)status.EffectId,
                             Type = ItemType.Buff
-                        }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
+                        }] = new BuffElem
+                        {
+                            Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                            StackCount = status.StackCount
+                        };
                     }
                 }
             }
@@ -620,5 +645,10 @@ namespace JobBars.Gauges {
             }
             UI.Icon.Update();
         }
+    }
+
+    public struct BuffElem {
+        public float Duration;
+        public byte StackCount;
     }
 }

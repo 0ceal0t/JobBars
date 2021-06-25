@@ -20,7 +20,7 @@ namespace JobBars.UI {
         public UIIconManager Icon;
 
         public AtkResNode* G_RootRes = null;
-        private static int MAX_GAUGES = 4;
+        private static int MAX_GAUGES = 5;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;
         public UIDiamond[] Diamonds;

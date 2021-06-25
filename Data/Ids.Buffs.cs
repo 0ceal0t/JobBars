@@ -81,6 +81,7 @@ namespace JobBars.Data {
         Bio3 = 1214,
         Miasma = 180,
         Miasma3 = 1215,
+        Ruin4 = 1212,
         // RDM
         Manafication = 0x7b3,
         Embolden = 0x4d7,

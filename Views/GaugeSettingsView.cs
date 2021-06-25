@@ -30,6 +30,7 @@ namespace JobBars.Views {
                 GaugeTimer _ => "TIMER",
                 GaugeProc _ => "PROCS",
                 GaugeCharges _ => "CHARGES",
+                GaugeStacks _ => "STACKS",
                 _ => ""
             };
 
@@ -103,6 +104,9 @@ namespace JobBars.Views {
             }
             else if(Gauge is GaugeCharges) {
                 DrawTypeOptions(Gauge, GaugeCharges.ValidGaugeVisualType, _ID);
+            }
+            else if(Gauge is GaugeStacks) {
+                DrawTypeOptions(Gauge, GaugeStacks.ValidGaugeVisualType, _ID);
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

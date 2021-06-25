@@ -295,6 +295,7 @@ namespace JobBars {
                 }
                 return;
             }
+
             var addon = UI._ADDON;
             if (!Init) {
                 if (addon == null) return;
