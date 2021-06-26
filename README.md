@@ -82,8 +82,10 @@ To open the settings menu, use `/jobbars`
 - [ ] Glow around gauges
 - [ ] Split up party buffs and personal buffs
 - [ ] Animate gauge movement
+- [ ] GCD timer
 - [ ] DoT tick timer
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~Hide all gauges options~~
 - [x] ~~Hide all buffs options~~
 - [x] ~~MCH number of charges of Gauss Round / Richochet~~
 - [x] ~~Track DoTs based on target~~

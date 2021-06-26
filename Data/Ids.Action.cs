@@ -66,6 +66,7 @@ namespace JobBars.Data {
         BattleVoice = 118,
         RagingStrikes = 101,
         IronJaws = 3560,
+        Barrage = 107,
         // MCH
         Wildfire = 2878,
         Hypercharge = 0x4339,
@@ -73,6 +74,7 @@ namespace JobBars.Data {
         AutoCrossbow = 0x4071,
         GaussRound = 2874,
         Ricochet = 2890,
+        Reassemble = 2876,
         // DNC
         QuadTechFinish = 16196,
         Devilment = 16011,

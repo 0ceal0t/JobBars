@@ -142,6 +142,14 @@ namespace JobBars.Buffs {
                     Color = UIColor.Orange,
                     Triggers = new[] { new Item(ActionIds.BattleVoice) }
                 }),
+                new Buff("Barrage", new BuffProps
+                {
+                    CD = 80,
+                    Duration = 5,
+                    Icon = IconIds.Barrage,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(ActionIds.Barrage) }
+                }),
                 new Buff("Raging Strike", new BuffProps {
                     CD = 80,
                     Duration = 20,
@@ -236,7 +244,15 @@ namespace JobBars.Buffs {
                     Icon = IconIds.Wildfire,
                     Color = UIColor.Orange,
                     Triggers = new[] { new Item(ActionIds.Wildfire) }
-                })
+                }),
+                new Buff("Reassemble", new BuffProps
+                {
+                    CD = 55,
+                    Duration = 5,
+                    Icon = IconIds.Reassemble,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[] { new Item(ActionIds.Reassemble) }
+                }),
             });
             // ======= DNC ==========
             JobToBuffs.Add(JobIds.DNC, new Buff[] {
