@@ -314,6 +314,7 @@ namespace JobBars.Buffs {
                 })
             });
 
+            // ===== SETUP =========
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
                 foreach (var buff in jobEntry.Value) {
