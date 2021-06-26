@@ -213,8 +213,8 @@ namespace JobBars {
         }
 
         private void Reset() {
-            GManager.SetJob(CurrentJob);
-            BManager.SetJob(CurrentJob);
+            GManager?.SetJob(CurrentJob);
+            BManager?.SetJob(CurrentJob);
         }
 
         // ======= COMMANDS ============
