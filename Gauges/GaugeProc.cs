@@ -9,31 +9,43 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
+    public struct GaugeProcProps {
+        public Proc[] Procs;
+    }
+
+    public struct Proc {
+        public Item Trigger;
+        public ElementColor Color;
+        public int Idx;
+
+        public Proc(BuffIds buff, ElementColor color) {
+            Trigger = new Item(buff);
+            Color = color;
+            Idx = 0;
+        }
+    }
+
     public class GaugeProc : Gauge {
         private Proc[] Procs;
         private int Size;
 
-        public GaugeProc(string name) : base(name) {
-            Procs = new Proc[0];
-            DefaultVisual = Visual = new GaugeVisual
-            {
-                Type = GaugeVisualType.Diamond,
-                Color = White // this doesn't matter
-            };
+        public GaugeProc(string name, GaugeProcProps props) : base(name) {
+            Procs = props.Procs;
+            for (int idx = 0; idx < Procs.Length; idx++) {
+                Procs[idx].Idx = idx;
+            }
+            Size = Procs.Length;
         }
 
-        public override void SetupVisual(bool resetValue = true) {
+        public override void Setup() {
             if (UI is UIDiamond diamond) {
                 diamond.SetParts(Size);
                 foreach (var proc in Procs) {
                     diamond.SetColor(proc.Color, proc.Idx);
                 }
             }
-
-            if(resetValue) {
-                foreach (var proc in Procs) {
-                    SetValue(proc.Idx, false);
-                }
+            foreach (var proc in Procs) {
+                SetValue(proc.Idx, false);
             }
         }
 
@@ -64,26 +76,11 @@ namespace JobBars.Gauges {
             return UI == null ? 0 : UI.GetWidth(Size);
         }
 
-        // ===== BUILDER FUNCS =====
-        public GaugeProc WithProcs(Proc[] procs) {
-            Procs = procs;
-            for (int idx = 0; idx < Procs.Length; idx++) {
-                Procs[idx].Idx = idx;
-            }
-            Size = Procs.Length;
-            return this;
+        public override GaugeVisualType GetVisualType() {
+            return GaugeVisualType.Diamond;
         }
-    }
 
-    public struct Proc {
-        public Item Trigger;
-        public ElementColor Color;
-        public int Idx;
-
-        public Proc(BuffIds buff, ElementColor color) {
-            Trigger = new Item(buff);
-            Color = color;
-            Idx = 0;
+        public override void DrawGauge(string _ID, JobIds job) {
         }
     }
 }

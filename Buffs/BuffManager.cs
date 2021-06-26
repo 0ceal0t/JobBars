@@ -12,15 +12,21 @@ using System.Threading.Tasks;
 
 namespace JobBars.Buffs {
     public unsafe class BuffManager {
+        public static BuffManager Manager;
+
         public Dictionary<JobIds, Buff[]> JobToBuffs;
         public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
 
         private UIBuilder UI;
         private List<Buff> AllBuffs;
-        private JobIds CurrentJob = JobIds.OTHER;
+        public JobIds CurrentJob = JobIds.OTHER;
 
         public BuffManager(UIBuilder ui) {
+            Manager = this;
             UI = ui;
+            if (!Configuration.Config.BuffBarEnabled) {
+                UI.HideBuffs();
+            }
 
             JobToBuffs = new Dictionary<JobIds, Buff[]>();
             JobToBuffs.Add(JobIds.OTHER, new Buff[] { });
@@ -32,295 +38,287 @@ namespace JobBars.Buffs {
             });
             // ======= WAR ==========
             JobToBuffs.Add(JobIds.WAR, new Buff[] {
-                new Buff("Inner Release", IconIds.InnerRelease, 10)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.InnerRelease)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Orange)
+                new Buff("Inner Release", new BuffProps {
+                    CD = 90,
+                    Duration = 10,
+                    Icon = IconIds.InnerRelease,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.InnerRelease) }
+                })
             });
             JobToBuffs.Add(JobIds.DRK, new Buff[] {
-                new Buff("Delirium", IconIds.Delirium, 10)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Delirium)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Red),
-                new Buff("Living Shadow", IconIds.LivingShadow, 24)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.LivingShadow)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.Purple)
+                new Buff("Delirium", new BuffProps {
+                    CD = 90,
+                    Duration = 10,
+                    Icon = IconIds.Delirium,
+                    Color = UIColor.Red,
+                    Triggers = new[] { new Item(ActionIds.Delirium) }
+                }),
+                new Buff("Living Shadow", new BuffProps {
+                    CD = 120,
+                    Duration = 24,
+                    Icon = IconIds.LivingShadow,
+                    Color = UIColor.Purple,
+                    Triggers = new[] { new Item(ActionIds.LivingShadow) }
+                })
             });
             // ======= AST ==========
             JobToBuffs.Add(JobIds.AST, new Buff[] {
-                new Buff("The Balance", IconIds.TheBalance, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheBalance)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.Orange),
-                new Buff("The Bole", IconIds.TheBole, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheBole)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.BrightGreen),
-                new Buff("The Spear", IconIds.TheSpear, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheSpear)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.DarkBlue),
-                new Buff("The Spire", IconIds.TheSpire, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheSpire)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.Yellow),
-                new Buff("The Arrow", IconIds.TheArrow, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheArrow)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.LightBlue),
-                new Buff("The Ewer", IconIds.TheEwer, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.TheEwer)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.LightBlue),
-                new Buff("Lady of Crowns", IconIds.LadyOfCrowns, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.LadyOfCrowns)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.Purple),
-                new Buff("Lord of Crowns", IconIds.LordOfCrowns, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.LordOfCrowns)
-                    })
-                    .WithNoCD()
-                    .WithColor(UIColor.Red),
-                new Buff("Divination", IconIds.Divination, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Divination)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.Yellow)
+                new Buff("The Balance", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheBalance,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(BuffIds.TheBalance) }
+                }),
+                new Buff("The Bole", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheBole,
+                    Color = UIColor.BrightGreen,
+                    Triggers = new[] { new Item(BuffIds.TheBole) }
+                }),
+                new Buff("The Spear", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheSpear,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[] { new Item(BuffIds.TheSpear) }
+                }),
+                new Buff("The Spire", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheSpire,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(BuffIds.TheSpire) }
+                }),
+                new Buff("The Arrow", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheArrow,
+                    Color = UIColor.LightBlue,
+                    Triggers = new[] { new Item(BuffIds.TheArrow) }
+                }),
+                new Buff("The Ewer", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.TheEwer,
+                    Color = UIColor.LightBlue,
+                    Triggers = new[] { new Item(BuffIds.TheEwer) }
+                }),
+                new Buff("Lady of Crowns", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.LadyOfCrowns,
+                    Color = UIColor.Purple,
+                    Triggers = new[] { new Item(BuffIds.LadyOfCrowns) }
+                }),
+                new Buff("Lady of Crowns", new BuffProps {
+                    Duration = 15,
+                    Icon = IconIds.LordOfCrowns,
+                    Color = UIColor.Red,
+                    Triggers = new[] { new Item(BuffIds.LordOfCrowns) }
+                }),
+                new Buff("Divination", new BuffProps {
+                    CD = 120,
+                    Duration = 15,
+                    Icon = IconIds.Divination,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(ActionIds.Divination) }
+                })
             });
             // ======= SCH ==========
             JobToBuffs.Add(JobIds.SCH, new Buff[] {
-                new Buff("Chain Stratagem", IconIds.ChainStratagem, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.ChainStratagem)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.White)
+                new Buff("Chain Stratagem", new BuffProps {
+                    CD = 120,
+                    Duration = 15,
+                    Icon = IconIds.ChainStratagem,
+                    Color = UIColor.White,
+                    Triggers = new[] { new Item(ActionIds.ChainStratagem) }
+                })
             });
             // ======= WHM ==========
             JobToBuffs.Add(JobIds.WHM, new Buff[] {
             });
             // ======= BRD ==========
             JobToBuffs.Add(JobIds.BRD, new Buff[] {
-                new Buff("Battle Voice", IconIds.BattleVoice, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.BattleVoice)
-                    })
-                    .WithCD(180)
-                    .WithColor(UIColor.Orange),
-                new Buff("Raging Strikes", IconIds.RagingStrikes, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.RagingStrikes)
-                    })
-                    .WithCD(80)
-                    .WithColor(UIColor.Yellow)
+                new Buff("Battle Voice", new BuffProps {
+                    CD = 180,
+                    Duration = 20,
+                    Icon = IconIds.BattleVoice,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.BattleVoice) }
+                }),
+                new Buff("Raging Strike", new BuffProps {
+                    CD = 80,
+                    Duration = 20,
+                    Icon = IconIds.RagingStrikes,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(ActionIds.RagingStrikes) }
+                })
             });
             // ======= DRG ==========
             JobToBuffs.Add(JobIds.DRG, new Buff[] {
-                new Buff("Dragon Sight", IconIds.DragonSight, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.DragonSight)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.Orange),
-                new Buff("Battle Litany", IconIds.BattleLitany, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.BattleLitany)
-                    })
-                    .WithCD(180)
-                    .WithColor(UIColor.LightBlue),
-                new Buff("Lance Charge", IconIds.LanceCharge, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.LanceCharge)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Red)
+                new Buff("Dragon Sight", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.DragonSight,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.DragonSight) }
+                }),
+                new Buff("Battle Litany", new BuffProps {
+                    CD = 180,
+                    Duration = 20,
+                    Icon = IconIds.BattleLitany,
+                    Color = UIColor.LightBlue,
+                    Triggers = new[] { new Item(ActionIds.BattleLitany) }
+                }),
+                new Buff("Lance Charge", new BuffProps {
+                    CD = 90,
+                    Duration = 20,
+                    Icon = IconIds.LanceCharge,
+                    Color = UIColor.Red,
+                    Triggers = new[] { new Item(ActionIds.LanceCharge) }
+                })
             });
             // ======= SMN ==========
             JobToBuffs.Add(JobIds.SMN, new Buff[] {
-                new Buff("Devotion", IconIds.Devotion, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Devotion)
-                    })
-                    .WithCD(180)
-                    .WithColor(UIColor.Yellow),
-                new Buff("Summon Bahamut", IconIds.SummonBahamut, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.SummonBahamut)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.LightBlue),
-                new Buff("Firebird Trance", IconIds.FirebirdTrance, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.FirebirdTrance)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.Orange)
+                new Buff("Devotion", new BuffProps {
+                    CD = 180,
+                    Duration = 15,
+                    Icon = IconIds.Devotion,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(ActionIds.Devotion) }
+                }),
+                new Buff("Summon Bahamut", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.SummonBahamut,
+                    Color = UIColor.LightBlue,
+                    Triggers = new[] { new Item(ActionIds.SummonBahamut) }
+                }),
+                new Buff("Firebird Trance", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.FirebirdTrance,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.FirebirdTrance) }
+                })
             });
             // ======= SAM ==========
             JobToBuffs.Add(JobIds.SAM, new Buff[] {
-                new Buff("Double Midare", IconIds.DoubleMidare, 5)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.DoubleMidare)
-                    })
-                    .WithCD(60)
-                    .WithColor(UIColor.DarkBlue)
+                new Buff("Double Midare", new BuffProps {
+                    CD = 60,
+                    Duration = 5,
+                    Icon = IconIds.DoubleMidare,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[] { new Item(ActionIds.DoubleMidare) }
+                })
             });
             // ======= BLM ==========
             JobToBuffs.Add(JobIds.BLM, new Buff[] {
             });
             // ======= RDM ==========
             JobToBuffs.Add(JobIds.RDM, new Buff[] {
-                new Buff("Manafication", IconIds.Manafication, 10)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Manafication)
-                    })
-                    .WithCD(110)
-                    .WithColor(UIColor.DarkBlue),
-                new Buff("Embolden", IconIds.Embolden, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Embolden)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.White)
+                new Buff("Manafication", new BuffProps {
+                    CD = 110,
+                    Duration = 10,
+                    Icon = IconIds.Manafication,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[] { new Item(ActionIds.Manafication) }
+                }),
+                new Buff("Embolden", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.Embolden,
+                    Color = UIColor.White,
+                    Triggers = new[] { new Item(ActionIds.Embolden) }
+                })
             });
             // ======= MCH ==========
             JobToBuffs.Add(JobIds.MCH, new Buff[] {
-                new Buff("Wildfire", IconIds.Wildfire, 10)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Wildfire)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.Orange)
+                new Buff("Wildfire", new BuffProps {
+                    CD = 120,
+                    Duration = 10,
+                    Icon = IconIds.Wildfire,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.Wildfire) }
+                })
             });
             // ======= DNC ==========
             JobToBuffs.Add(JobIds.DNC, new Buff[] {
-                new Buff("Technical Finish", IconIds.TechnicalFinish, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.QuadTechFinish)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.PurplePink),
-                new Buff("Devilment", IconIds.Devilment, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Devilment)
-                    })
-                    .WithCD(120)
-                    .WithColor(UIColor.BrightGreen)
+                new Buff("Technical Finish", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.TechnicalFinish,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.QuadTechFinish) }
+                }),
+                new Buff("Devilment", new BuffProps {
+                    CD = 120,
+                    Duration = 20,
+                    Icon = IconIds.Devilment,
+                    Color = UIColor.BrightGreen,
+                    Triggers = new[] { new Item(ActionIds.Devilment) }
+                })
             });
             // ======= NIN ==========
             JobToBuffs.Add(JobIds.NIN, new Buff[] {
-                new Buff("Trick Attack", IconIds.TrickAttack, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.TrickAttack)
-                    })
-                    .WithCD(60)
-                    .WithColor(UIColor.Yellow),
-                new Buff("Bunshin", IconIds.Bunshin, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Bunshin)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Orange)
+                new Buff("Trick Attack", new BuffProps {
+                    CD = 60,
+                    Duration = 15,
+                    Icon = IconIds.TrickAttack,
+                    Color = UIColor.Yellow,
+                    Triggers = new[] { new Item(ActionIds.TrickAttack) }
+                }),
+                new Buff("Bunshin", new BuffProps {
+                    CD = 90,
+                    Duration = 15,
+                    Icon = IconIds.Bunshin,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.Bunshin) }
+                })
             });
             // ======= MNK ==========
             JobToBuffs.Add(JobIds.MNK, new Buff[] {
-                new Buff("Brotherhood", IconIds.Brotherhood, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Brotherhood)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Orange),
-                new Buff("Riddle of Fire", IconIds.RiddleOfFire, 20)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.RiddleOfFire)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Red),
-                new Buff("Perfect Balance", IconIds.PerfectBalance, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.PerfectBalance)
-                    })
-                    .WithCD(90)
-                    .WithColor(UIColor.Orange)
+                new Buff("Brotherhood", new BuffProps {
+                    CD = 90,
+                    Duration = 15,
+                    Icon = IconIds.Brotherhood,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.Brotherhood) }
+                }),
+                new Buff("Riddle of Fire", new BuffProps {
+                    CD = 90,
+                    Duration = 20,
+                    Icon = IconIds.RiddleOfFire,
+                    Color = UIColor.Red,
+                    Triggers = new[] { new Item(ActionIds.RiddleOfFire) }
+                }),
+                new Buff("Perfect Balance", new BuffProps {
+                    CD = 90,
+                    Duration = 15,
+                    Icon = IconIds.PerfectBalance,
+                    Color = UIColor.Orange,
+                    Triggers = new[] { new Item(ActionIds.PerfectBalance) }
+                })
             });
             // ======= BLU ==========
             JobToBuffs.Add(JobIds.BLU, new Buff[] {
-                new Buff("Off-Guard", IconIds.OffGuard, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.OffGuard)
-                    })
-                    .WithCD(60)
-                    .WithColor(UIColor.BrightGreen),
-                new Buff("Peculiar Light", IconIds.PeculiarLight, 15)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.PeculiarLight)
-                    })
-                    .WithCD(60)
-                    .WithColor(UIColor.Red)
+                new Buff("Off-Guard", new BuffProps {
+                    CD = 60,
+                    Duration = 15,
+                    Icon = IconIds.OffGuard,
+                    Color = UIColor.BrightGreen,
+                    Triggers = new[] { new Item(ActionIds.OffGuard) }
+                }),
+                new Buff("Peculiar Light", new BuffProps {
+                    CD = 60,
+                    Duration = 15,
+                    Icon = IconIds.PeculiarLight,
+                    Color = UIColor.Red,
+                    Triggers = new[] { new Item(ActionIds.PeculiarLight) }
+                })
             });
 
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
                 foreach (var buff in jobEntry.Value) {
                     buff.UI = UI.IconToBuff[buff.Icon];
-                    buff.SetupVisual();
+                    buff.Setup();
                     AllBuffs.Add(buff);
                 }
             }
@@ -328,10 +326,7 @@ namespace JobBars.Buffs {
 
         public void SetJob(JobIds job) {
             CurrentJob = job;
-            foreach(var buff in AllBuffs) {
-                buff.State = BuffState.Inactive;
-                buff.Enabled = !Configuration.Config.BuffDisabled.Contains(buff.Name);
-            }
+            AllBuffs.ForEach(buff => buff.Reset());
             UI.HideAllBuffs();
             SetPositionScale();
         }
@@ -347,6 +342,7 @@ namespace JobBars.Buffs {
 
         public void PerformAction(Item action) {
             if (!Configuration.Config.BuffBarEnabled) return;
+
             foreach (var buff in AllBuffs) {
                 if(!buff.Enabled) { continue; }
                 buff.ProcessAction(action);

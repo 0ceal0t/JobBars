@@ -9,105 +9,44 @@ using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public class GaugeGCD : Gauge {
-        public Item[] Increment;
-
-        private int Counter;
-        private int MaxCounter;
-
-        private float Duration;
-        private float MaxDuration;
-
-        private static int RESET_DELAY = 3;
-        private DateTime StopTime;
-
         public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        public GaugeGCD(string name, float duration, int max) : base(name) {
-            MaxDuration = duration;
-            MaxCounter = max;
-            Increment = new Item[0];
-            DefaultVisual = Visual = new GaugeVisual
-            {
-                Type = GaugeVisualType.Arrow,
-                Color = UIColor.LightBlue
-            };
+        private int MaxWidth;
+        private GaugeVisualType Type;
+        private SubGaugeGCD[] SubGauges;
+        public SubGaugeGCD ActiveSubGauge;
+
+        public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps props) : this(name, type, new[] { props }) { }
+        public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps[] props) : base(name) {
+            Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : type;
+            SubGauges = new SubGaugeGCD[props.Length];
+            for(int i = 0; i < props.Length; i++) {
+                if(props[i].MaxCounter > MaxWidth) {
+                    MaxWidth = props[i].MaxCounter;
+                }
+                string id = string.IsNullOrEmpty(props[i].SubName) ? Name : Name + "/" + props[i].SubName;
+                SubGauges[i] = new SubGaugeGCD(id, this, props[i]);
+            }
         }
 
-        public override void SetupVisual(bool resetValue = true) {
-            UI?.SetColor(Visual.Color);
-            if(resetValue) {
-                if (UI is UIArrow arrows) {
-                    arrows.SetMaxValue(MaxCounter);
-                }
-                else if(UI is UIDiamond diamond) {
-                    diamond.SetMaxValue(MaxCounter);
-                }
-                else if(UI is UIGauge gauge) {
-                    gauge.SetTextColor(UIColor.NoColor);
-                }
-                GCDInactive();
+        public override void Setup() {
+            foreach(var sg in SubGauges) {
+                sg.Reset();
             }
+            ActiveSubGauge = SubGauges[0];
+            ActiveSubGauge.UseSubGauge();
+            ActiveSubGauge.CheckInactive();
         }
 
         public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            if (State == GaugeState.Active) {
-                float timeLeft = TimeLeft(Duration, time, buffDict);
-                if(timeLeft < 0) {
-                    State = GaugeState.Finished;
-                    StopTime = time;
-                }
-                SetValue(Counter);
-            }
-            else if(State == GaugeState.Finished) {
-                if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
-                    State = GaugeState.Inactive;
-                    GCDInactive();
-                }
+            foreach(var sg in SubGauges) {
+                sg.Tick(time, buffDict);
             }
         }
 
         public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action) && (!(State == GaugeState.Active) || AllowRefresh)) { // START
-                SetActive(action);
-                Duration = MaxDuration;
-                Counter = 0;
-                GCDActive();
-            }
-
-            if (
-                (State == GaugeState.Active) &&
-                ((Increment.Length == 0 && action.Type == ItemType.GCD) || // just take any gcd
-                (Increment.Length > 0 && Increment.Contains(action))) // take specific gcds
-            ) {
-                if (Counter < MaxCounter) {
-                    Counter++;
-                }
-            }
-        }
-
-        private void GCDInactive() {
-            SetValue(0);
-            if (Configuration.Config.GaugeHideGCDInactive) {
-                UI?.Hide();
-            }
-        }
-
-        private void GCDActive() {
-            if (Configuration.Config.GaugeHideGCDInactive) {
-                UI?.Show();
-            }
-        }
-
-        private void SetValue(int value) {
-            if (UI is UIArrow arrows) {
-                arrows.SetValue(value);
-            }
-            else if (UI is UIDiamond diamond) {
-                diamond.SetValue(value);
-            }
-            else if (UI is UIGauge gauge) {
-                gauge.SetText(value.ToString());
-                gauge.SetPercent(((float)value) / MaxCounter);
+            foreach(var sg in SubGauges) {
+                sg.ProcessAction(action);
             }
         }
 
@@ -116,33 +55,22 @@ namespace JobBars.Gauges {
         }
 
         public override int GetWidth() {
-            return UI == null ? 0 : UI.GetWidth(MaxCounter);
+            return UI == null ? 0 : UI.GetWidth(MaxWidth);
         }
 
-        // ===== BUILDER FUNCS =====
-        public GaugeGCD WithTriggers(Item[] triggers) {
-            Triggers = triggers;
-            return this;
+        public override GaugeVisualType GetVisualType() {
+            return Type;
         }
 
-        public GaugeGCD WithSpecificIncrement(Item[] increment) {
-            Increment = increment;
-            return this;
-        }
-
-        public GaugeGCD WithStartHidden() {
-            StartHidden = true;
-            return this;
-        }
-
-        public GaugeGCD WithNoRefresh() {
-            AllowRefresh = false;
-            return this;
-        }
-
-        public GaugeGCD WithVisual(GaugeVisual visual) {
-            DefaultVisual = Visual = visual;
-            return this;
+        public override void DrawGauge(string _ID, JobIds job) {
+            foreach(var sg in SubGauges) {
+                sg.DrawSubGauge(_ID, job);
+            }
+            // ======== TYPE =============
+            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Type, out var newType)) {
+                Type = newType;
+                GaugeManager.Manager.ResetJob(job);
+            }
         }
     }
 }

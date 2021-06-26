@@ -20,7 +20,7 @@ namespace JobBars.UI {
         public UIIconManager Icon;
 
         public AtkResNode* G_RootRes = null;
-        private static int MAX_GAUGES = 5;
+        private static int MAX_GAUGES = 4;
         public UIGauge[] Gauges;
         public UIArrow[] Arrows;
         public UIDiamond[] Diamonds;
@@ -400,13 +400,29 @@ namespace JobBars.UI {
         }
 
         public void Hide() {
-            UiHelper.Hide(G_RootRes);
-            UiHelper.Hide(B_RootRes);
+            HideGauges();
+            HideBuffs();
         }
 
         public void Show() {
+            ShowGauges();
+            ShowBuffs();
+        }
+
+        public void ShowGauges() {
             UiHelper.Show(G_RootRes);
+        }
+
+        public void ShowBuffs() {
             UiHelper.Show(B_RootRes);
+        }
+
+        public void HideGauges() {
+            UiHelper.Hide(G_RootRes);
+        }
+
+        public void HideBuffs() {
+            UiHelper.Hide(B_RootRes);
         }
 
         public void HideAllGauges() {

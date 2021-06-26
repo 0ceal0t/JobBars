@@ -4,7 +4,6 @@ using ImGuiNET;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.UI;
-using JobBars.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,27 +15,8 @@ namespace JobBars {
         private bool GAUGE_LOCK = true;
         private bool BUFF_LOCK = true;
 
-        private JobGaugeSettingsView Gauge_SelectedJob;
-        private Dictionary<JobIds, JobGaugeSettingsView> JobGaugeSettings;
-
-        private JobBuffSettingsView Buff_SelectedJob;
-        private Dictionary<JobIds, JobBuffSettingsView> JobBuffSettings;
-
-        private void SetupSettings() {
-            Gauge_SelectedJob = null;
-            JobGaugeSettings = new();
-            foreach(var entry in GManager.JobToGauges) {
-                if (entry.Key == JobIds.OTHER) continue;
-                JobGaugeSettings[entry.Key] = new JobGaugeSettingsView(entry.Key, entry.Value, GManager);
-            }
-
-            Buff_SelectedJob = null;
-            JobBuffSettings = new();
-            foreach (var entry in BManager.JobToBuffs) {
-                if (entry.Key == JobIds.OTHER) continue;
-                JobBuffSettings[entry.Key] = new JobBuffSettingsView(entry.Key, entry.Value, BManager);
-            }
-        }
+        private JobIds Buff_JobSelected = JobIds.OTHER;
+        private JobIds Gauge_JobSelected = JobIds.OTHER;
 
         private void BuildSettingsUI() {
             if (!Ready || !Init) return;
@@ -61,7 +41,6 @@ namespace JobBars {
             if (!GAUGE_LOCK) {
                 if(Configuration.Config.GaugeSplit) {
                     foreach(var gauge in GManager.CurrentGauges) {
-                        if (gauge.StartHidden) continue;
                         if (DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, Configuration.Config.GetGaugeSplitPosition(gauge.Name), out var pos)) {
                             Configuration.Config.GaugeSplitPosition[gauge.Name] = pos;
                             Configuration.Config.Save();
@@ -107,6 +86,17 @@ namespace JobBars {
 
             // ===== GENERAL GAUGE =======
             ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK);
+
+            if (ImGui.Checkbox("Gauges Enabled" + _ID, ref Configuration.Config.GaugesEnabled)) {
+                Configuration.Config.Save();
+                if (Configuration.Config.GaugesEnabled) {
+                    UI.ShowGauges();
+                }
+                else {
+                    UI.HideGauges();
+                }
+            }
+
             if (ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
                 GManager.Reset();
                 Configuration.Config.Save();
@@ -118,7 +108,7 @@ namespace JobBars {
             }
 
             if(ImGui.Checkbox("DoT Icon Replacement (Global)", ref Configuration.Config.GaugeIconReplacement)) {
-                GManager.Reset();
+                UIIconManager.Manager.Reset();
                 Configuration.Config.Save();
             }
             
@@ -130,7 +120,7 @@ namespace JobBars {
             }
 
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
-                GManager.Reset();
+                GManager.SetPositionScale();
                 Configuration.Config.Save();
             }
 
@@ -140,7 +130,7 @@ namespace JobBars {
             }
             
             if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
-                GManager.Reset();
+                GManager.SetPositionScale();
                 Configuration.Config.Save();
             }
 
@@ -149,39 +139,51 @@ namespace JobBars {
             ImGui.SetColumnWidth(0, 150);
 
             ImGui.BeginChild(_ID + "Tree");
-            foreach(var job in JobGaugeSettings) {
-                if (ImGui.Selectable(job.Key + _ID + "/Job", Gauge_SelectedJob == job.Value)) {
-                    Gauge_SelectedJob = job.Value;
+            foreach(var job in GManager.JobToGauges.Keys) {
+                if (job == JobIds.OTHER) continue;
+                if (ImGui.Selectable(job + _ID + "/Job", Gauge_JobSelected == job)) {
+                    Gauge_JobSelected = job;
                 }
             }
             ImGui.EndChild();
             ImGui.NextColumn();
 
-            if (Gauge_SelectedJob == null) {
+            if (Gauge_JobSelected == JobIds.OTHER) {
                 ImGui.Text("Select a job...");
             }
             else {
-                Gauge_SelectedJob.Draw(_ID);
+                ImGui.BeginChild(_ID + "Selected");
+                foreach (var gauge in GManager.JobToGauges[Gauge_JobSelected]) {
+                    gauge.Draw(_ID, Gauge_JobSelected);
+                }
+                ImGui.EndChild();
             }
             ImGui.Columns(1);
             ImGui.EndChild();
         }
 
         private void DrawBuffSettings() {
-            if (GManager == null) return;
+            if (BManager == null) return;
             string _ID = "##JobBars_Buffs";
 
             // ===== GENERAL BUFFS =======
             ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK);
+
             if(ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
-                BManager.Reset();
                 Configuration.Config.Save();
+                if(Configuration.Config.BuffBarEnabled) {
+                    UI.ShowBuffs();
+                }
+                else {
+                    UI.HideBuffs();
+                }
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
                 UI.SetBuffScale(Configuration.Config.BuffScale);
                 Configuration.Config.Save();
             }
+
             if(
                 ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
                 Configuration.Config.Save();
@@ -193,19 +195,24 @@ namespace JobBars {
             ImGui.SetColumnWidth(0, 150);
 
             ImGui.BeginChild(_ID + "Tree");
-            foreach (var job in JobBuffSettings) {
-                if (ImGui.Selectable(job.Key + _ID + "/Job", Buff_SelectedJob == job.Value)) {
-                    Buff_SelectedJob = job.Value;
+            foreach (var job in BManager.JobToBuffs.Keys) {
+                if (job == JobIds.OTHER) continue;
+                if (ImGui.Selectable(job + _ID + "/Job", Buff_JobSelected == job)) {
+                    Buff_JobSelected = job;
                 }
             }
             ImGui.EndChild();
             ImGui.NextColumn();
 
-            if (Buff_SelectedJob == null) {
+            if (Buff_JobSelected == JobIds.OTHER) {
                 ImGui.Text("Select a job...");
             }
             else {
-                Buff_SelectedJob.Draw(_ID);
+                ImGui.BeginChild(_ID + "Selected");
+                foreach (var buff in BManager.JobToBuffs[Buff_JobSelected]) {
+                    buff.Draw(_ID, Buff_JobSelected);
+                }
+                ImGui.EndChild();
             }
             ImGui.Columns(1);
             ImGui.EndChild();

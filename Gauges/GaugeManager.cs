@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public unsafe class GaugeManager {
+        public static GaugeManager Manager;
         public DalamudPluginInterface PluginInterface;
         public UIBuilder UI;
 
@@ -22,40 +23,49 @@ namespace JobBars.Gauges {
         public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
         public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
+            Manager = this;
             UI = ui;
             PluginInterface = pi;
+            if(!Configuration.Config.GaugesEnabled) {
+                UI.HideGauges();
+            }
 
             JobToGauges = new Dictionary<JobIds, Gauge[]>();
             JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {
-                new GaugeGCD("No Mercy", 20, 9)
-                    .WithTriggers(new []
+                new GaugeGCD("No Mercy", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Orange,
+                    Triggers = new[]
                     {
-                        new Item(BuffIds.NoMercy) // buffs are more reliable for tracking gcds within a buff window than an action
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
+                        new Item(BuffIds.NoMercy)
+                    }
+                })
             });
             // ============ PLD ==================
             JobToGauges.Add(JobIds.PLD, new Gauge[] {
-                new GaugeGCD("Requiescat", 12, 5)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.Requiescat)
-                    })
-                    .WithSpecificIncrement(new []
+                new GaugeGCD("Requiescat", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 12,
+                    Color = UIColor.LightBlue,
+                    Increment = new[]
                     {
                         new Item(ActionIds.HolySpirit),
                         new Item(ActionIds.HolyCircle),
                         new Item(ActionIds.Confiteor)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
-                new GaugeGCD("Fight or Flight", 25, 11)
-                    .WithTriggers(new []
+                    },
+                    Triggers = new[]
                     {
-                        new Item(BuffIds.FightOrFlight)
-                    })
-                    .WithSpecificIncrement(new [] // has to be physical
+                        new Item(BuffIds.Requiescat)
+                    }
+                }),
+                new GaugeGCD("Fight or Flight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 11,
+                    MaxDuration = 25,
+                    Color = UIColor.Red,
+                    Increment = new[]
                     {
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
@@ -64,466 +74,571 @@ namespace JobBars.Gauges {
                         new Item(ActionIds.GoringBlade),
                         new Item(ActionIds.TotalEclipse),
                         new Item(ActionIds.Prominence)
-                    })
-                    .WithVisual(GaugeVisual.Bar(UIColor.Red)),
-                new GaugeTimer("Goring Blade", 21)
-                    .WithTriggers(new []
+                    },
+                    Triggers = new[]
+                    {
+                        new Item(BuffIds.FightOrFlight)
+                    }
+                }),
+                new GaugeTimer("Goring Blade", new SubGaugeTimerProps
+                {
+                    MaxDuration = 21,
+                    Color = UIColor.Orange,
+                    Triggers = new []
                     {
                         new Item(BuffIds.GoringBlade)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.GoringBlade
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Orange))
+                    }
+                })
             });
             // ============ WAR ==================
             JobToGauges.Add(JobIds.WAR, new Gauge[] {
-                new GaugeGCD("Inner Release", 10, 5)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.InnerRelease)
-                    })
-                    .WithSpecificIncrement(new []
+                new GaugeGCD("Inner Release", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 10,
+                    Color = UIColor.Orange,
+                    Increment = new[]
                     {
                         new Item(ActionIds.FellCleave),
                         new Item(ActionIds.Decimate)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
-                new GaugeTimer("Storm's Eye", 60)
-                    .WithTriggers(new []
+                    },
+                    Triggers = new[]
+                    {
+                        new Item(BuffIds.InnerRelease)
+                    }
+                }),
+                new GaugeTimer("Storm's Eye", new SubGaugeTimerProps
+                {
+                    MaxDuration = 60,
+                    DefaultDuration = 30,
+                    Color = UIColor.Red,
+                    Triggers = new []
                     {
                         new Item(BuffIds.StormsEye)
-                    })
-                    .WithDefaultDuration(30)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Red))
+                    }
+                })
             });
             // ============ DRK ==================
             JobToGauges.Add(JobIds.DRK, new Gauge[] {
-                new GaugeGCD("Delirium", 10, 5)
-                    .WithTriggers(new []
+                new GaugeGCD("Delirium", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 10,
+                    Color = UIColor.Red,
+                    Increment = new[]
                     {
-                        new Item(BuffIds.Delirium)
-                    })
-                    .WithSpecificIncrement(new []
-                    { 
                         new Item(ActionIds.BloodSpiller),
                         new Item(ActionIds.Quietus)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
-                new GaugeGCD("Blood Weapon", 10, 5)
-                    .WithTriggers(new []
+                    },
+                    Triggers = new[]
+                    {
+                        new Item(BuffIds.Delirium)
+                    }
+                }),
+                new GaugeGCD("Blood Weapon", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 10,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.BloodWeapon)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.DarkBlue))
+                    }
+                })
             });
             // ============ AST ==================
             JobToGauges.Add(JobIds.AST, new Gauge[] {
-                new GaugeProc("Earthly Star Primed")
-                    .WithProcs(new []
-                    {
+                new GaugeProc("Earthly Star Primed", new GaugeProcProps{
+                    Procs = new []{
                         new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
-                    }),
-                new GaugeTimer("Combust", 30)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Combust", new []{
+                    new SubGaugeTimerProps
                     {
-                        new Item(BuffIds.Combust),
-                        new Item(BuffIds.Combust2),
-                        new Item(BuffIds.Combust3),
-                    })
-                    .WithDurationDict(new Dictionary<Item, float>{
-                        { new Item(BuffIds.Combust) , 18 },
-                        { new Item(BuffIds.Combust2) , 30 },
-                        { new Item(BuffIds.Combust3) , 30 }
-                    })
-                    .WithReplaceIcon(new []
-                    { 
-                        ActionIds.Combust1,
-                        ActionIds.Combust2,
-                        ActionIds.Combust3
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.LightBlue)),
-                new GaugeTimer("Lightspeed", 15)
-                    .WithTriggers(new []
+                        MaxDuration = 30,
+                        Color = UIColor.LightBlue,
+                        SubName = "Combust 2+3",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Combust2),
+                            new Item(BuffIds.Combust3)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Combust1,
+                            ActionIds.Combust2,
+                            ActionIds.Combust3
+                        }
+                    },
+                    new SubGaugeTimerProps
+                    {
+                        MaxDuration = 18,
+                        Color = UIColor.LightBlue,
+                        SubName = "Combust 1",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Combust)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Combust1,
+                            ActionIds.Combust2,
+                            ActionIds.Combust3
+                        }
+                    }
+                }),
+                new GaugeTimer("Lightspeed", new SubGaugeTimerProps
+                {
+                    MaxDuration = 15,
+                    Color = UIColor.Yellow,
+                    HideLowWarning = true,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Lightspeed)
-                    })
-                    .WithVisual(GaugeVisual.Bar(UIColor.Yellow))
-                    .WithNoLowWarning()
+                    }
+                })
             });
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
-                new GaugeTimer("Biolysis", 30)
-                    .WithTriggers(new[]
+                new GaugeTimer("Biolysis", new SubGaugeTimerProps
+                {
+                    MaxDuration = 30,
+                    Color = UIColor.BlueGreen,
+                    Triggers = new []
                     {
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
                         new Item(BuffIds.Biolysis)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.SchBio,
                         ActionIds.SchBio2,
                         ActionIds.Biolysis
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.BlueGreen))
+                    }
+                })
             });
             // ============ WHM ==================
             JobToGauges.Add(JobIds.WHM, new Gauge[] {
-                new GaugeTimer("Dia", 30)
-                    .WithTriggers(new []
+                new GaugeTimer("Dia", new []{
+                    new SubGaugeTimerProps
                     {
-                        new Item(BuffIds.Aero),
-                        new Item(BuffIds.Aero2),
-                        new Item(BuffIds.Dia)
-                    })
-                    .WithDurationDict(new Dictionary<Item, float>{
-                        { new Item(BuffIds.Aero2) , 18 },
-                        { new Item(BuffIds.Aero) , 18 },
-                        { new Item(BuffIds.Dia) , 30 }
-                    })
-                    .WithReplaceIcon(new []
+                        MaxDuration = 30,
+                        Color = UIColor.LightBlue,
+                        SubName = "Dia",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Dia)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Dia,
+                            ActionIds.Aero,
+                            ActionIds.Aero2
+                        }
+                    },
+                    new SubGaugeTimerProps
                     {
-                        ActionIds.Aero,
-                        ActionIds.Aero2,
-                        ActionIds.Dia
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.LightBlue))
+                        MaxDuration = 18,
+                        Color = UIColor.LightBlue,
+                        SubName = "Aero 1+2",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Aero),
+                            new Item(BuffIds.Aero2)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Dia,
+                            ActionIds.Aero,
+                            ActionIds.Aero2
+                        }
+                    }
+                })
             });
             // ============ BRD ==================
             JobToGauges.Add(JobIds.BRD, new Gauge[] {
-                new GaugeTimer("Caustic Bite", 30)
-                    .WithTriggers(new[]{
+                new GaugeTimer("Caustic Bite", new SubGaugeTimerProps
+                {
+                    MaxDuration = 30,
+                    Color = UIColor.Purple,
+                    Triggers = new []
+                    {
                         new Item(BuffIds.CausticBite),
-                        new Item(BuffIds.VenomousBite),
-                    })
-                    .WithReplaceIcon(new []
+                        new Item(BuffIds.VenomousBite)
+                    },
+                    Icons = new []
                     {
                         ActionIds.CausticBite,
                         ActionIds.VenomousBite
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Purple)),
-                new GaugeTimer("Stormbite", 30)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Stormbite", new SubGaugeTimerProps
+                {
+                    MaxDuration = 30,
+                    Color = UIColor.LightBlue,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Windbite),
                         new Item(BuffIds.Stormbite),
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.Windbite,
                         ActionIds.Stormbite
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.LightBlue)),
-                new GaugeGCD("Raging Strikes", 20, 9)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeGCD("Raging Strikes", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Orange,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.RagingStrikes)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
+                    }
+                })
             });
             // ============ DRG ==================
             JobToGauges.Add(JobIds.DRG, new Gauge[] {
-                new GaugeGCD("Lance Charge", 20, 9)
-                    .WithTriggers(new[]
+                new GaugeGCD("Lance Charge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Red,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.LanceCharge)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
-                new GaugeGCD("Dragon Sight", 20, 9)
-                    .WithTriggers(new[]
+                    }
+                }),
+                new GaugeGCD("Dragon Sight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Orange,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.RightEye),
                         new Item(BuffIds.RightEye2)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
+                    }
+                })
             });
             // ============ SMN ==================
             JobToGauges.Add(JobIds.SMN, new Gauge[] {
-                new GaugeStacks("Ruin 4", 4)
-                    .WithTriggers(new[]
-                    {
+                new GaugeStacks("Ruin 4", new GaugeStacksProps{
+                    MaxStacks = 4,
+                    Triggers = new []{
                         new Item(BuffIds.Ruin4)
-                    })
-                    .WithVisual(GaugeVisual.Diamond(UIColor.DarkBlue)),
-                new GaugeGCD("Summon Bahamut", 21, 8)
-                    .WithTriggers(new[]
+                    },
+                    Type = GaugeVisualType.Diamond,
+                    Color = UIColor.DarkBlue
+                }),
+                new GaugeGCD("Summon Bahamut", GaugeVisualType.Arrow, new []{
+                    new SubGaugeGCDProps
                     {
-                        new Item(ActionIds.SummonBahamut),
-                        new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
-                    })
-                    .WithSpecificIncrement(new []
+                        MaxCounter = 8,
+                        MaxDuration = 21,
+                        Color = UIColor.LightBlue,
+                        SubName = "Bahamut",
+                        Increment = new []
+                        {
+                            new Item(ActionIds.Wyrmwave)
+                        },
+                        Triggers = new[]
+                        {
+                            new Item(ActionIds.SummonBahamut),
+                            new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
+                        }
+                    }, 
+                    new SubGaugeGCDProps
                     {
-                        new Item(ActionIds.Wyrmwave)
-                    })
-                    .WithNoRefresh()
-                    .WithVisual(GaugeVisual.Arrow(UIColor.LightBlue)),
-                new GaugeGCD("Firebird Trance", 21, 8)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.FirebirdTrance),
-                        new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
-                    })
-                    .WithSpecificIncrement(new []
-                    {
-                        new Item(ActionIds.ScarletFlame)
-                    })
-                    .WithNoRefresh()
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange))
-                    .WithStartHidden(),
-                new GaugeTimer("Bio", 30)
-                    .WithTriggers(new []
+                        MaxCounter = 8,
+                        MaxDuration = 21,
+                        Color = UIColor.Orange,
+                        SubName = "Phoenix",
+                        Increment = new []
+                        {
+                            new Item(ActionIds.ScarletFlame)
+                        },
+                        Triggers = new[]
+                        {
+                            new Item(ActionIds.FirebirdTrance),
+                            new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
+                        }
+                    }
+                }),
+                new GaugeTimer("Bio", new SubGaugeTimerProps
+                {
+                    MaxDuration = 30,
+                    Color = UIColor.HealthGreen,
+                    Triggers = new []
                     {
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
-                        new Item(BuffIds.Bio3),
-                    })
-                    .WithReplaceIcon(new []
+                        new Item(BuffIds.Bio3)
+                    },
+                    Icons = new []
                     {
                         ActionIds.ArcBio,
                         ActionIds.ArcBio2,
                         ActionIds.Bio3
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.HealthGreen)),
-                new GaugeTimer("Miasma", 30)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Miasma", new SubGaugeTimerProps
+                {
+                    MaxDuration = 30,
+                    Color = UIColor.BlueGreen,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Miasma),
-                        new Item(BuffIds.Miasma3),
-                    })
-                    .WithReplaceIcon(new []
+                        new Item(BuffIds.Miasma3)
+                    },
+                    Icons = new []
                     {
                         ActionIds.Miasma,
                         ActionIds.Miasma3
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.BlueGreen))
+                    }
+                })
             });
             // ============ SAM ==================
             JobToGauges.Add(JobIds.SAM, new Gauge[] {
-                new GaugeTimer("Jinpu", 40)
-                    .WithTriggers(new []
+                new GaugeTimer("Jinpu", new SubGaugeTimerProps
+                {
+                    MaxDuration = 40,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Jinpu)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.Jinpu
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.DarkBlue)),
-                new GaugeTimer("Shifu", 40)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Shifu", new SubGaugeTimerProps
+                {
+                    MaxDuration = 40,
+                    Color = UIColor.Red,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Shifu)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.Shifu
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Red)),
-                new GaugeTimer("Higanbana", 60)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Higanbana", new SubGaugeTimerProps
+                {
+                    MaxDuration = 60,
+                    Color = UIColor.Orange,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Higanbana)
-                    })
-                    .WithVisual(GaugeVisual.Bar(UIColor.Orange)),
+                    }
+                })
             });
             // ============ BLM ==================
             JobToGauges.Add(JobIds.BLM, new Gauge[] {
-                new GaugeProc("Firestarter/Thundercloud")
-                    .WithProcs(new []
+                new GaugeProc("Firestarter/Thundercloud", new GaugeProcProps{
+                    Procs = new []{
+                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
+                    }
+                }),
+                new GaugeTimer("Thunder", new []{
+                    new SubGaugeTimerProps
                     {
-                        new Proc(BuffIds.Thundercloud, UIColor.DarkBlue),
-                        new Proc(BuffIds.Firestarter, UIColor.Orange)
-                    }),
-                new GaugeTimer("Thunder 3", 24)
-                    .WithTriggers(new []
+                        MaxDuration = 24,
+                        Color = UIColor.DarkBlue,
+                        SubName = "Thunder 3",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Thunder3),
+                            new Item(BuffIds.Thunder)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Thunder3,
+                            ActionIds.Thunder
+                        }
+                    },
+                    new SubGaugeTimerProps
                     {
-                        new Item(BuffIds.Thunder3),
-                        new Item(BuffIds.Thunder)
-                    })
-                    .WithReplaceIcon(new []
-                    {
-                        ActionIds.Thunder3,
-                        ActionIds.Thunder
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.DarkBlue)),
-                new GaugeTimer("Thunder 4", 18)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.Thunder4),
-                        new Item(BuffIds.Thunder2)
-                    })
-                    .WithReplaceIcon(new []
-                    {
-                        ActionIds.Thunder4,
-                        ActionIds.Thunder2
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Purple))
-                    .WithStartHidden()
+                        MaxDuration = 18,
+                        Color = UIColor.Purple,
+                        SubName = "Thunder 4",
+                        Triggers = new []
+                        {
+                            new Item(BuffIds.Thunder4),
+                            new Item(BuffIds.Thunder2)
+                        },
+                        Icons = new[]
+                        {
+                            ActionIds.Thunder4,
+                            ActionIds.Thunder2
+                        }
+                    }
+                })
             });
             // ============ RDM ==================
             JobToGauges.Add(JobIds.RDM, new Gauge[] {
-                new GaugeGCD("Manafication", 10, 5)
-                    .WithTriggers(new []
-                    {
-                        new Item(BuffIds.Manafication)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.DarkBlue)),
-                new GaugeProc("Verfire/Verstone")
-                    .WithProcs(new []
-                    {
+                new GaugeProc("Verfire/Verstone", new GaugeProcProps{
+                    Procs = new []{
                         new Proc(BuffIds.VerstoneReady, UIColor.White),
                         new Proc(BuffIds.VerfireReady, UIColor.Red)
-                    })
+                    }
+                }),
+                new GaugeGCD("Manafication", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 10,
+                    Color = UIColor.DarkBlue,
+                    Triggers = new[]
+                    {
+                        new Item(BuffIds.Manafication)
+                    }
+                })
             });
             // ============ MCH ==================
             JobToGauges.Add(JobIds.MCH, new Gauge[] {
-                new GaugeGCD("Hypercharge", 9, 5)
-                    .WithTriggers(new []
-                    {
-                        new Item(ActionIds.Hypercharge)
-                    })
-                    .WithSpecificIncrement(new []
+                new GaugeGCD("Hypercharge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 9,
+                    Color = UIColor.Orange,
+                    Increment = new[]
                     {
                         new Item(ActionIds.AutoCrossbow),
                         new Item(ActionIds.HeatBlast)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
-                new GaugeGCD("Wildfire", 10, 6)
-                    .WithTriggers(new []
+                    },
+                    Triggers = new[]
+                    {
+                        new Item(ActionIds.Hypercharge)
+                    }
+                }),
+                new GaugeGCD("Wildfire", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 6,
+                    MaxDuration = 10,
+                    Color = UIColor.Red,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.Wildfire)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red)),
-                new GaugeCharges("Gauss Round Charges", 30, 3)
-                    .WithTriggers(new []
-                    {
+                    }
+                }),
+                new GaugeCharges("Gauss Round Charges", new GaugeChargesProps {
+                    CD = 30,
+                    MaxCharges = 3,
+                    Triggers = new []{
                         new Item(ActionIds.GaussRound)
-                    })
-                    .WithVisual(GaugeVisual.BarDiamondCombo(UIColor.Red)),
-                new GaugeCharges("Ricochet Charges", 30, 3)
-                    .WithTriggers(new []
-                    {
+                    },
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Color = UIColor.Red
+                }),
+                new GaugeCharges("Ricochet Charges", new GaugeChargesProps {
+                    CD = 30,
+                    MaxCharges = 3,
+                    Triggers = new []{
                         new Item(ActionIds.Ricochet)
-                    })
-                    .WithVisual(GaugeVisual.BarDiamondCombo(UIColor.LightBlue))
+                    },
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Color = UIColor.LightBlue
+                })
             });
             // ============ DNC ==================
             JobToGauges.Add(JobIds.DNC, new Gauge[] {
-                new GaugeProc("Dancer Procs")
-                    .WithProcs(new []
-                    {
+                new GaugeProc("Dancer Procs", new GaugeProcProps{
+                    Procs = new []{
                         new Proc(BuffIds.FlourishingCascade, UIColor.BrightGreen),
                         new Proc(BuffIds.FlourishingFountain, UIColor.Yellow),
                         new Proc(BuffIds.FlourishingWindmill, UIColor.DarkBlue),
                         new Proc(BuffIds.FlourishingShower, UIColor.Red),
                         new Proc(BuffIds.FlourishingFanDance, UIColor.HealthGreen)
-                    })
+                    }
+                })
             });
             // ============ NIN ==================
             JobToGauges.Add(JobIds.NIN, new Gauge[] {
-                new GaugeGCD("Bunshin", 15, 5)
-                    .WithTriggers(new []
+                new GaugeGCD("Bunshin", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 5,
+                    MaxDuration = 15,
+                    Color = UIColor.Red,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.Bunshin)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red))
+                    }
+                })
             });
             // ============ MNK ==================
             JobToGauges.Add(JobIds.MNK, new Gauge[] {
-                new GaugeGCD("Perfect Balance", 15, 6)
-                    .WithTriggers(new []
+                new GaugeGCD("Perfect Balance", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 6,
+                    MaxDuration = 15,
+                    Color = UIColor.Orange,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.PerfectBalance)
-                    })
-                    .WithNoRefresh()
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Orange)),
-                new GaugeGCD("Riddle of Fire", 20, 9)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeGCD("Riddle of Fire", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Red,
+                    Triggers = new[]
                     {
                         new Item(BuffIds.RiddleOfFire)
-                    })
-                    .WithVisual(GaugeVisual.Arrow(UIColor.Red))
+                    }
+                })
             });
             // ============ BLU ==================
             JobToGauges.Add(JobIds.BLU, new Gauge[] {
-                new GaugeProc("Condensed Libra")
-                    .WithProcs(new []
-                    {
+                new GaugeProc("Condensed Libra", new GaugeProcProps{
+                    Procs = new []{
                         new Proc(BuffIds.AstralAttenuation, UIColor.White),
                         new Proc(BuffIds.UmbralAttenuation, UIColor.DarkBlue),
                         new Proc(BuffIds.PhysicalAttenuation, UIColor.Orange)
-                    }),
-                new GaugeTimer("Song of Torment/Nightbloom", 60)
-                    .WithTriggers(new []
+                    }
+                }),
+                new GaugeTimer("Song of Torment/Nightbloom", new SubGaugeTimerProps
+                {
+                    MaxDuration = 60,
+                    Color = UIColor.Red,
+                    Triggers = new []
                     {
                         new Item(BuffIds.BluBleed)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
-                        ActionIds.SongOfTorment // probably don't want to replace the nightbloom icon, since you want to see when it's off CD
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.Red)),
-                new GaugeTimer("Bad Breath", 15)
-                    .WithTriggers(new []
+                        ActionIds.SongOfTorment
+                    }
+                }),
+                new GaugeTimer("Bad Breath", new SubGaugeTimerProps
+                {
+                    MaxDuration = 15,
+                    Color = UIColor.HealthGreen,
+                    Triggers = new []
                     {
                         new Item(BuffIds.Poison)
-                    })
-                    .WithReplaceIcon(new []
+                    },
+                    Icons = new []
                     {
                         ActionIds.BadBreath
-                    }, UI.Icon)
-                    .WithVisual(GaugeVisual.Bar(UIColor.HealthGreen))
+                    }
+                })
             });
-
-            // ======== HIDING ===========
-            JobToGauges[JobIds.SMN][1].HideGauge = JobToGauges[JobIds.SMN][2]; // bahamut + pheonix
-            JobToGauges[JobIds.SMN][2].HideGauge = JobToGauges[JobIds.SMN][1];
-
-            JobToGauges[JobIds.BLM][1].HideGauge = JobToGauges[JobIds.BLM][2]; // thunder 3 + thunder 4
-            JobToGauges[JobIds.BLM][2].HideGauge = JobToGauges[JobIds.BLM][1];
-
-            // ======= PULL CONFIG VALUES =======
-            foreach(var job in JobToGauges) {
-                foreach(var gauge in job.Value) {
-                    if (Configuration.Config.GetColorOverride(gauge.Name, out var color)) {
-                        gauge.Visual.Color = color;
-                    }
-                    if (Configuration.Config.GaugeTypeOverride.TryGetValue(gauge.Name, out var type)) {
-                        gauge.Visual.Type = type;
-                    }
-                }
-            }
         }
 
         public void SetJob(JobIds job) {
+            //===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) {
-                gauge.State = GaugeState.Inactive;
                 gauge.UI?.Cleanup();
                 gauge.UI = null;
             }
             UI.HideAllGauges();
             UI.Icon.Reset();
-
+            //====== SET UP NEW =======
             CurrentJob = job;
-            int enabledIdx = 0;
-            foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
-                gauge.Enabled = !Configuration.Config.GaugeDisabled.Contains(gauge.Name);
-                if(gauge is GaugeTimer timer) { // turn off individual icon
-                    timer.IconEnabled = !Configuration.Config.GaugeIconDisabled.Contains(gauge.Name);
-                }
-                if (!gauge.Enabled) { continue; }
-
-                gauge.UI = GetUI(enabledIdx, gauge.Visual.Type);
-                if (!gauge.StartHidden) {
-                    gauge.UI.Show();
-                    enabledIdx++;
-                }
-                else {
-                    gauge.UI.Hide();
-                }
-                gauge.SetupVisual();
+            int idx = 0;
+            foreach(var gauge in CurrentGauges) {
+                gauge.UI = GetUI(idx, gauge.GetVisualType());
+                gauge.SetupUI();
+                idx++;
             }
             SetPositionScale();
         }
@@ -533,22 +648,19 @@ namespace JobBars.Gauges {
             UI.SetGaugeScale(Configuration.Config.GaugeScale);
 
             int totalPosition = 0;
-            foreach (var gauge in CurrentGauges.OrderBy(g => g.Order)) {
-                if (!gauge.Enabled) { continue; }
-                if (!gauge.StartHidden) {
-                    if (Configuration.Config.GaugeSplit) { // SPLIT
-                        gauge.UI.SetSplitPosition(Configuration.Config.GetGaugeSplitPosition(gauge.Name));
+            foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
+                if (Configuration.Config.GaugeSplit) { // SPLIT
+                    gauge.UI.SetSplitPosition(Configuration.Config.GetGaugeSplitPosition(gauge.Name));
+                }
+                else {
+                    if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
+                        gauge.UI.SetPosition(new Vector2(totalPosition, gauge.UI.GetHorizontalYOffset()));
+                        totalPosition += gauge.GetWidth();
                     }
-                    else {
-                        if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
-                            gauge.UI.SetPosition(new Vector2(totalPosition, gauge.UI.GetHorizontalYOffset()));
-                            totalPosition += gauge.GetWidth();
-                        }
-                        else { // VERTICAL
-                            int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
-                            gauge.UI.SetPosition(new Vector2(xPosition, totalPosition));
-                            totalPosition += gauge.GetHeight();
-                        }
+                    else { // VERTICAL
+                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
+                        gauge.UI.SetPosition(new Vector2(xPosition, totalPosition));
+                        totalPosition += gauge.GetHeight();
                     }
                 }
             }
@@ -580,14 +692,16 @@ namespace JobBars.Gauges {
         }
 
         public void PerformAction(Item action) {
-            foreach(var gauge in CurrentGauges.Where(x => x.DoProcessInput())) {
+            if (!Configuration.Config.GaugesEnabled) return;
+            foreach (var gauge in CurrentGauges.Where(x => x.DoProcessInput())) {
                 gauge.ProcessAction(action);
             }
         }
 
         public void Tick() {
-            var currentTime = DateTime.Now;
+            if (!Configuration.Config.GaugesEnabled) return;
 
+            var currentTime = DateTime.Now;
             Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
             /*foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
                 BuffDict[new Item

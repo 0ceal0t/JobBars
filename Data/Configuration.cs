@@ -19,10 +19,12 @@ namespace JobBars.Data {
         public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
         public Dictionary<string, Vector2> GaugeSplitPosition = new();
 
+        public bool GaugesEnabled = true;
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
         public HashSet<string> GaugeDisabled = new();
         public HashSet<string> GaugeIconDisabled = new();
+
         public Dictionary<string, string> GaugeColorOverride = new();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new();
         public Dictionary<string, int> GaugeOrderOverride = new();
@@ -32,6 +34,7 @@ namespace JobBars.Data {
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
         public float BuffScale = 1.0f;
         public int BuffHorizontal = 5;
+
         public HashSet<string> BuffDisabled = new();
         public bool BuffBarEnabled = true;
 

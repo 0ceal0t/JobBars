@@ -9,34 +9,36 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
+    public struct GaugeStacksProps {
+        public int MaxStacks;
+        public Item[] Triggers;
+        public GaugeVisualType Type;
+        public ElementColor Color;
+    }
+
     public class GaugeStacks : Gauge {
-        private int MaxStacks;
+        private GaugeStacksProps Props;
 
         public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        public GaugeStacks(string name, int maxStacks) : base(name) {
-            MaxStacks = maxStacks;
-            DefaultVisual = Visual = new GaugeVisual
-            {
-                Type = GaugeVisualType.Diamond,
-                Color = White
-            };
+        public GaugeStacks(string name, GaugeStacksProps props) : base(name) {
+            Props = props;
+            Props.Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : Props.Type;
+            Props.Color = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.Color;
         }
 
-        public override void SetupVisual(bool resetValue = true) {
-            UI?.SetColor(Visual.Color);
-            if(resetValue) {
-                if (UI is UIDiamond diamond) {
-                    diamond.SetParts(MaxStacks);
-                }
-                else if (UI is UIArrow arrow) {
-                    arrow.SetMaxValue(MaxStacks);
-                }
-                else if (UI is UIGauge gauge) {
-                    gauge.SetTextColor(NoColor);
-                }
-                SetValue(0);
+        public override void Setup() {
+            UI.SetColor(Props.Color);
+            if (UI is UIDiamond diamond) {
+                diamond.SetParts(Props.MaxStacks);
             }
+            else if (UI is UIArrow arrow) {
+                arrow.SetMaxValue(Props.MaxStacks);
+            }
+            else if (UI is UIGauge gauge) {
+                gauge.SetTextColor(NoColor);
+            }
+            SetValue(0);
         }
 
         private void SetValue(int value) {
@@ -48,12 +50,12 @@ namespace JobBars.Gauges {
             }
             else if (UI is UIGauge gauge) {
                 gauge.SetText(value.ToString());
-                gauge.SetPercent(((float)value) / MaxStacks);
+                gauge.SetPercent(((float)value) / Props.MaxStacks);
             }
         }
 
         public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach(var trigger in Triggers) {
+            foreach(var trigger in Props.Triggers) {
                 if(buffDict.TryGetValue(trigger, out var elem)) {
                     SetValue(elem.StackCount);
                 }
@@ -70,18 +72,26 @@ namespace JobBars.Gauges {
         }
 
         public override int GetWidth() {
-            return UI == null ? 0 : UI.GetWidth(MaxStacks);
+            return UI == null ? 0 : UI.GetWidth(Props.MaxStacks);
         }
 
-        // ===== BUILDER FUNCS =====
-        public GaugeStacks WithTriggers(Item[] triggers) {
-            Triggers = triggers;
-            return this;
+        public override GaugeVisualType GetVisualType() {
+            return Props.Type;
         }
 
-        public GaugeStacks WithVisual(GaugeVisual visual) {
-            DefaultVisual = Visual = visual;
-            return this;
+        public override void DrawGauge(string _ID, JobIds job) {
+            // ======== COLOR =============
+            if (DrawColorOptions(_ID, Name, Props.Color, out var newColor)) {
+                Props.Color = newColor;
+                if (job == GaugeManager.Manager.CurrentJob) {
+                    UI?.SetColor(Props.Color);
+                }
+            }
+            // ======== TYPE =============
+            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {
+                Props.Type = newType;
+                GaugeManager.Manager.ResetJob(job);
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ namespace JobBars {
         private PList Party; // TEMP
         private int LastPartyCount = 0;
 
-        private bool Ready => (PluginInterface.ClientState != null && PluginInterface.ClientState.LocalPlayer != null);
+        private bool Ready => PluginInterface.ClientState.LocalPlayer != null;
         private bool Init = false;
 
         private Vector2 LastPosition;
@@ -303,7 +303,6 @@ namespace JobBars {
                 UI.Setup();
                 GManager = new GaugeManager(PluginInterface, UI);
                 BManager = new BuffManager(UI);
-                SetupSettings();
                 UI.HideAllBuffs();
                 UI.HideAllGauges();
                 Init = true;

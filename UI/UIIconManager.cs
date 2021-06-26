@@ -25,6 +25,7 @@ namespace JobBars.UI {
     }
 
     public unsafe class UIIconManager {
+        public static UIIconManager Manager;
         public DalamudPluginInterface PluginInterface;
         public ClientInterface Client;
         private readonly string[] AllActionBars = {
@@ -64,6 +65,7 @@ namespace JobBars.UI {
         static int MILLIS_LOOP = 250;
 
         public UIIconManager(DalamudPluginInterface pluginInterface, ClientInterface client) {
+            Manager = this;
             PluginInterface = pluginInterface;
             Client = client;
 
@@ -90,7 +92,10 @@ namespace JobBars.UI {
         }
 
         public void Reset() {
-            foreach(var ptr in ToCleanup) {
+            ActionIdToStatus.Clear();
+            ActionIdToState.Clear();
+
+            foreach (var ptr in ToCleanup) {
                 Cleanup(ptr);
             }
             ToCleanup.Clear();
@@ -98,9 +103,6 @@ namespace JobBars.UI {
             IconRecastOverride.Clear();
             IconComponentOverride.Clear();
             IconTextOverride.Clear();
-
-            ActionIdToStatus.Clear();
-            ActionIdToState.Clear();
         }
 
         public void Dispose() {
@@ -164,8 +166,8 @@ namespace JobBars.UI {
                 for (var i = 0; i < ab->HotbarSlotCount; i++) {
                     var slot = ab->ActionBarSlotsAction[i];
                     var slotStruct = hotbarModule.GetBarSlot(bar, i);
-                    if(slotStruct != null && slotStruct->CommandType == HotbarSlotType.Action && ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) {
-                        var state = ActionIdToState[slotStruct->CommandId];
+                    if (slotStruct != null && slotStruct->CommandType == HotbarSlotType.Action && ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) {
+                        var state = ActionIdToState.TryGetValue(slotStruct->CommandId, out var _s) ? _s : IconState.StartRunning;
 
                         var icon = slot.Icon;
                         var cdOverlay = (AtkImageNode*) icon->Component->UldManager.NodeList[5];
@@ -227,8 +229,8 @@ namespace JobBars.UI {
             }
 
             foreach(var bump in TO_BUMP) { // necessary because there could be multiple of the same icon :/
-                var current = ActionIdToState[bump];
-                if(current == IconState.StartRunning) {
+                var current = ActionIdToState.TryGetValue(bump, out var _s) ? _s : IconState.StartRunning;
+                if (current == IconState.StartRunning) {
                     ActionIdToState[bump] = IconState.Running;
                 }
                 else if(current == IconState.DoneRunning) {
