@@ -45,11 +45,7 @@ namespace JobBars.Gauges {
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             foreach(var trigger in Props.Triggers) {
                 if (trigger.Type == ItemType.Buff) continue;
-
-                var adjustedActionId = JobBars.Client.ActionManager.GetAdjustedActionId(trigger.Id);
-                var recastGroup = (int)JobBars.Client.ActionManager.GetRecastGroup(0x01, adjustedActionId) + 1;
-                if (recastGroup == 0 || recastGroup == 58) continue;
-                var recastTimer = JobBars.Client.ActionManager.GetGroupRecastTime(recastGroup);
+                if (!JobBars.GetRecast(trigger.Id, out var recastTimer)) continue;
 
                 if(recastTimer->IsActive == 1) {
                     var currentCharges = (int)Math.Floor(recastTimer->Elapsed / Props.CD);

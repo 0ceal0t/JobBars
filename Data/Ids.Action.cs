@@ -67,6 +67,7 @@ namespace JobBars.Data {
         RagingStrikes = 101,
         IronJaws = 3560,
         Barrage = 107,
+        BloodLetter = 110,
         // MCH
         Wildfire = 2878,
         Hypercharge = 0x4339,

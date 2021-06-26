@@ -23,6 +23,11 @@ namespace JobBars.Gauges {
             Color = color;
             Idx = 0;
         }
+        public Proc(ActionIds action, ElementColor color) {
+            Trigger = new Item(action);
+            Color = color;
+            Idx = 0;
+        }
     }
 
     public class GaugeProc : Gauge {
@@ -49,9 +54,14 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             foreach (var proc in Procs) {
-                SetValue(proc.Idx, buffDict.ContainsKey(proc.Trigger));
+                if(proc.Trigger.Type == ItemType.Buff) {
+                    SetValue(proc.Idx, buffDict.ContainsKey(proc.Trigger));
+                }
+                else {
+                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) ? timer->IsActive != 1  : false);
+                }
             }
         }
 

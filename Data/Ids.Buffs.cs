@@ -59,6 +59,7 @@ namespace JobBars.Data {
         Stormbite = 1201,
         Windbite = 129,
         CausticBite = 124,
+        StraightShotReady = 122,
         // MCH
         Wildfire = 0x79a,
         // DNC
