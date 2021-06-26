@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+
+    <ItemGroup>
+        <InputAssemblies Include="$(OutputPath)FFXIVClientInterface.dll" />
+        <InputAssemblies Include="$(OutputPath)FFXIVClientStructs.dll" />
+        <InputAssemblies Include="$(OutputPath)JobBars.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <LibraryAssemblies Include="$(OutputPath)" />
+        <LibraryAssemblies Include="$(APPDATA)\XIVLauncher\addon\Hooks\dev" />
+    </ItemGroup>
+
+    <ILRepack
+        Parallel="true"
+        Internalize="true"
+        InternalizeExclude="@(DoNotInternalizeAssemblies)"
+        InputAssemblies="@(InputAssemblies)"
+        LibraryPath="@(LibraryAssemblies)"
+        TargetKind="Dll"
+        OutputFile="$(OutputPath)\Output\JobBars.dll"
+    />
+
+    </Target>
+</Project>
