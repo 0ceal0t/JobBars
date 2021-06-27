@@ -40,7 +40,7 @@ namespace JobBars {
         private PList Party; // TEMP
         private int LastPartyCount = 0;
 
-        private bool Ready => PluginInterface.ClientState.LocalPlayer != null;
+        private bool Ready => PluginInterface.ClientState?.LocalPlayer != null;
         private bool Init = false;
 
         private Vector2 LastPosition;
@@ -134,6 +134,9 @@ namespace JobBars {
             PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
+
+            GManager = null;
+            BManager = null;
 
             Animation.Cleanup();
             UI.Dispose();

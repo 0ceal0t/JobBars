@@ -1,15 +1,20 @@
 # JobBars
 A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges and a party buff tracker
-- Number of GCDs under buffs (such as Fight or Flight, Inner Release)
-- DoT tracker (such as Dia, Miasma)
+- Number of GCDs under buffs (Fight or Flight, Inner Release)
+- DoT tracker (Dia, Miasma)
 - Proc display (Verfire/Verstone Ready)
 - Number of charges (Ricochet, Gauss Round)
 - Number of stacks (Ruin IV)
+- Party buffs coming off of cooldown
 
 https://user-images.githubusercontent.com/18051158/123529151-a4f9e100-d6bb-11eb-9197-b16f7b827689.mp4
 
+**Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
+
 ## Usage
 To open the settings menu, use `/jobbars`
+
+> Note: you must have your HP/MP visible for this plugin to work properly
 
 ## Jobs
 
@@ -18,24 +23,24 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Delerium, Living Shadow
 
 ### <img src="Assets/JobIcons/WAR.png" height="20px" width="20px"> WAR
-+ **Gauges**: GCDS used in Inner Release, Storm's Eye tracker
++ **Gauges**: GCDS used in Inner Release, Storm's Eye
 + **Buffs**: Inner Release
 
 ### <img src="Assets/JobIcons/PLD.png" height="20px" width="20px"> PLD
-+ **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade tracker
++ **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
 
 ### <img src="Assets/JobIcons/GNB.png" height="20px" width="20px"> GNB
 + **Gauges**: GCDS used in No Mercy
 
 ### <img src="Assets/JobIcons/SCH.png" height="20px" width="20px"> SCH
-+ **Gauges**: Biolysis tracker
++ **Gauges**: Biolysis
 + **Buffs**: Chain Stratagem
 
 ### <img src="Assets/JobIcons/WHM.png" height="20px" width="20px"> WHM
-+ **Gauges**: Dia tracker
++ **Gauges**: Dia
 
 ### <img src="Assets/JobIcons/AST.png" height="20px" width="20px"> AST
-+ **Gauges**: Combust Tracker, Upgraded Earthly Star, Lightspeed
++ **Gauges**: Combust, Upgraded Earthly Star, Lightspeed
 + **Buffs**: Cards, Divination
 
 ### <img src="Assets/JobIcons/MNK.png" height="20px" width="20px"> MNK
@@ -51,11 +56,11 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Trick Attack, Bunshin
 
 ### <img src="Assets/JobIcons/SAM.png" height="20px" width="20px"> SAM
-+ **Gauges**: Jinpu tracker, Shifu tracker, Higanbana tracker
++ **Gauges**: Jinpu, Shifu, Higanbana
 + **Buffs**: Double Midare
 
 ### <img src="Assets/JobIcons/BRD.png" height="20px" width="20px"> BRD
-+ **Gauges**: GCDS used in Raging Strikes, Caustic Bite tracker, Stormbite tracker
++ **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
 + **Buffs**: Battle Voice, Raging Strikes
 
 ### <img src="Assets/JobIcons/MCH.png" height="20px" width="20px"> MCH
@@ -67,10 +72,10 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Technical Step, Devilment
 
 ### <img src="Assets/JobIcons/BLM.png" height="20px" width="20px"> BLM
-+ **Gauges**: Thunder 3+4 tracker, Fire and Thunder procs
++ **Gauges**: Thunder 3+4, Fire and Thunder procs
 
 ### <img src="Assets/JobIcons/SMN.png" height="20px" width="20px"> SMN
-+ **Gauges**: Ruin 4 tracker, Bio tracker, Miasma tracker, Wyrmwave and Scarlet Flame tracker
++ **Gauges**: Ruin 4, Bio, Miasma, Wyrmwave and Scarlet Flame
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
 
 ### <img src="Assets/JobIcons/RDM.png" height="20px" width="20px"> RDM
@@ -78,7 +83,7 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Embolden, Manafication
 
 ### <img src="Assets/JobIcons/BLU.png" height="20px" width="20px"> BLU
-+ **Gauges**: Song of Torment tracker, Bad Breath tracker, Condensed Libra tracker
++ **Gauges**: Song of Torment, Bad Breath, Condensed Libra
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO

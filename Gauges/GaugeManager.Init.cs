@@ -40,7 +40,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Requiescat)
                     }
                 }),
-                new GaugeGCD("Fight or Flight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCD("Fight or Flight", GaugeVisualType.Bar, new SubGaugeGCDProps {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,

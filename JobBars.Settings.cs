@@ -30,10 +30,12 @@ namespace JobBars {
                     DrawGaugeSettings();
                     ImGui.EndTabItem();
                 }
-                if (ImGui.BeginTabItem("Party Member Buffs" + _ID)) {
+
+                if (ImGui.BeginTabItem("Buffs" + _ID)) {
                     DrawBuffSettings();
                     ImGui.EndTabItem();
                 }
+
                 ImGui.EndTabBar();
                 ImGui.End();
             }
@@ -86,6 +88,7 @@ namespace JobBars {
 
             // ===== GENERAL GAUGE =======
             ImGui.Checkbox("Locked" + _ID, ref GAUGE_LOCK);
+            ImGui.SameLine();
 
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref Configuration.Config.GaugesEnabled)) {
                 Configuration.Config.Save();
@@ -96,6 +99,7 @@ namespace JobBars {
                     UI.HideGauges();
                 }
             }
+            ImGui.SameLine();
 
             if (ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
                 GManager.Reset();
@@ -123,14 +127,15 @@ namespace JobBars {
                 GManager.SetPositionScale();
                 Configuration.Config.Save();
             }
+            ImGui.SameLine();
+
+            if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
+                GManager.SetPositionScale();
+                Configuration.Config.Save();
+            }
 
             if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref Configuration.Config.GaugeHideGCDInactive)) {
                 GManager.Reset();
-                Configuration.Config.Save();
-            }
-            
-            if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
-                GManager.SetPositionScale();
                 Configuration.Config.Save();
             }
 
@@ -168,8 +173,9 @@ namespace JobBars {
 
             // ===== GENERAL BUFFS =======
             ImGui.Checkbox("Locked" + _ID, ref BUFF_LOCK);
+            ImGui.SameLine();
 
-            if(ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
+            if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
                 Configuration.Config.Save();
                 if(Configuration.Config.BuffBarEnabled) {
                     UI.ShowBuffs();
@@ -184,15 +190,16 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            if(ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
+            if (ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
                 Configuration.Config.Save();
             }
 
-            if(ImGui.Checkbox("Right-to-Left" + _ID, ref Configuration.Config.BuffRightToLeft)) {
+            if (ImGui.Checkbox("Right-to-Left" + _ID, ref Configuration.Config.BuffRightToLeft)) {
                 Configuration.Config.Save();
             }
+            ImGui.SameLine();
 
-            if(ImGui.Checkbox("Bottom-to-Top" + _ID, ref Configuration.Config.BuffBottomToTop)) {
+            if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref Configuration.Config.BuffBottomToTop)) {
                 Configuration.Config.Save();
             }
 

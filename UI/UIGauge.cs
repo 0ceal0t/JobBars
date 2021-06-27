@@ -16,7 +16,7 @@ namespace JobBars.UI {
         private AtkNineGridNode* BarMainNode;
         private string CurrentText;
 
-        private float LastPercent = 0;
+        private float LastPercent = 1;
         private Animation Anim = null;
 
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
