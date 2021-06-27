@@ -16,6 +16,9 @@ namespace JobBars.UI {
         private AtkNineGridNode* BarMainNode;
         private string CurrentText;
 
+        private float LastPercent = 0;
+        private Animation Anim = null;
+
         public UIGauge(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
         }
@@ -172,8 +175,19 @@ namespace JobBars.UI {
                 value = 0;
             }
 
+            var difference = Math.Abs(value - LastPercent);
+            if (difference == 0) return;
+
+
             var item = (AtkResNode*)BarMainNode;
-            UiHelper.SetSize(item, (int)(160 * value), 20);
+            Anim?.Delete();
+            if(difference > 0.1f) {
+                Anim = Animation.AddAnim(f => UiHelper.SetSize(item, (int)(160 * f), 20), 0.2f, LastPercent, value);
+            }
+            else {
+                UiHelper.SetSize(item, (int)(160 * value), 20);
+            }
+            LastPercent = value;
         }
 
         public override void SetColor(ElementColor color) {

@@ -4,6 +4,9 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - DoT tracker (such as Dia, Miasma)
 - Proc display (Verfire/Verstone Ready)
 - Number of charges (Ricochet, Gauss Round)
+- Number of stacks (Ruin IV)
+
+https://user-images.githubusercontent.com/18051158/123529151-a4f9e100-d6bb-11eb-9197-b16f7b827689.mp4
 
 ## Usage
 To open the settings menu, use `/jobbars`
