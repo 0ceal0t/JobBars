@@ -52,7 +52,7 @@ namespace JobBars.Gauges {
                     var currentTime = recastTimer->Elapsed % Props.CD;
                     var timeLeft = Props.CD - currentTime;
 
-                    SetValue(currentCharges, currentTime, (int)timeLeft);
+                    SetValue(currentCharges, currentTime, (int)Math.Round(timeLeft));
                     return;
                 }
             }

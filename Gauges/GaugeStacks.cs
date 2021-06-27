@@ -30,7 +30,7 @@ namespace JobBars.Gauges {
         public override void Setup() {
             UI.SetColor(Props.Color);
             if (UI is UIDiamond diamond) {
-                diamond.SetParts(Props.MaxStacks);
+                diamond.SetMaxValue(Props.MaxStacks);
             }
             else if (UI is UIArrow arrow) {
                 arrow.SetMaxValue(Props.MaxStacks);

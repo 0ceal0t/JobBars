@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
 using System;
@@ -121,10 +122,10 @@ namespace JobBars.UI {
         public void SetMaxValue(int value) {
             for(int idx = 0; idx < MAX; idx++) {
                 if(idx < value) {
-                    UIBuilder.RecurseHide(Ticks[idx], false, false); // show
+                    UiHelper.Show(Ticks[idx]);
                 }
                 else {
-                    UIBuilder.RecurseHide(Ticks[idx], true, false);
+                    UiHelper.Hide(Ticks[idx]);
                 }
             }
         }
@@ -132,14 +133,14 @@ namespace JobBars.UI {
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
-                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], false); // show
-                    if(idx >= LastValue) { // newly added
+                    UiHelper.Show(Selected[idx]);
+                    if (idx >= LastValue) { // newly added
                         var item = (AtkResNode*)Selected[idx];
                         Animation.AddAnim((float f) => UiHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
                     }
                 }
                 else {
-                    UIBuilder.RecurseHide((AtkResNode*)Selected[idx], true);
+                    UiHelper.Hide(Selected[idx]);
                 }
             }
             LastValue = value;

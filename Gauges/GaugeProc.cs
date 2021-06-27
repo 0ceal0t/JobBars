@@ -10,6 +10,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public struct GaugeProcProps {
+        public bool ShowText;
         public Proc[] Procs;
     }
 
@@ -31,44 +32,47 @@ namespace JobBars.Gauges {
     }
 
     public class GaugeProc : Gauge {
-        private Proc[] Procs;
+        private GaugeProcProps Props;
         private int Size;
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
-            Procs = props.Procs;
-            for (int idx = 0; idx < Procs.Length; idx++) {
-                Procs[idx].Idx = idx;
+            Props = props;
+            for (int idx = 0; idx < Props.Procs.Length; idx++) {
+                Props.Procs[idx].Idx = idx;
             }
-            Size = Procs.Length;
+            Size = Props.Procs.Length;
         }
 
         public override void Setup() {
             if (UI is UIDiamond diamond) {
-                diamond.SetParts(Size);
-                foreach (var proc in Procs) {
+                diamond.SetMaxValue(Size, showText: Props.ShowText);
+                foreach (var proc in Props.Procs) {
                     diamond.SetColor(proc.Color, proc.Idx);
                 }
             }
-            foreach (var proc in Procs) {
+            foreach (var proc in Props.Procs) {
                 SetValue(proc.Idx, false);
             }
         }
 
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach (var proc in Procs) {
+            foreach (var proc in Props.Procs) {
                 if(proc.Trigger.Type == ItemType.Buff) {
-                    SetValue(proc.Idx, buffDict.ContainsKey(proc.Trigger));
+                    SetValue(proc.Idx, buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
-                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) ? timer->IsActive != 1  : false);
+                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) ? timer->IsActive != 1 : false);
                 }
             }
         }
 
-        private void SetValue(int idx, bool value) {
+        private void SetValue(int idx, bool value, float duration = 0) {
             if(UI is UIDiamond diamond) {
                 if (value) {
                     diamond.SelectPart(idx);
+                    if(Props.ShowText) {
+                        diamond.SetText(idx, ((int)Math.Round(duration)).ToString());
+                    }
                 }
                 else {
                     diamond.UnselectPart(idx);

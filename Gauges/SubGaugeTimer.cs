@@ -148,7 +148,7 @@ namespace JobBars.Gauges {
 
         private void SetValue(float value) {
             if (UI is UIGauge gauge) {
-                gauge.SetText(((int)value).ToString());
+                gauge.SetText(((int)Math.Round(value)).ToString());
                 gauge.SetPercent((float)value / Props.MaxDuration);
             }
         }

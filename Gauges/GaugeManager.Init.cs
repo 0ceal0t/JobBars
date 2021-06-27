@@ -425,8 +425,10 @@ namespace JobBars.Gauges {
             // ============ BLM ==================
             JobToGauges.Add(JobIds.BLM, new Gauge[] {
                 new GaugeProc("Firestarter/Thundercloud", new GaugeProcProps{
+                    ShowText = true,
                     Procs = new []{
-                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
+                        new Proc(BuffIds.Firestarter, UIColor.Orange),
+                        new Proc(BuffIds.Thundercloud, UIColor.LightBlue)
                     }
                 }),
                 new GaugeTimer("Thunder", new []{
