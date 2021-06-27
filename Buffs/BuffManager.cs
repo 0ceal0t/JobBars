@@ -21,7 +21,6 @@ namespace JobBars.Buffs {
             if (!Configuration.Config.BuffBarEnabled) {
                 UI.HideBuffs();
             }
-
             // ===== SETUP =========
             Init();
             AllBuffs = new List<Buff>();
