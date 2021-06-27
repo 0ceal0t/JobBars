@@ -110,7 +110,10 @@ namespace JobBars.UI {
             var position_x = idx % BUFFS_HORIZONTAL;
             var position_y = (idx - position_x) / BUFFS_HORIZONTAL;
 
-            UiHelper.SetPosition(RootRes, (WIDTH + 7) * position_x, (HEIGHT + 5) * position_y);
+            int xMod = Configuration.Config.BuffRightToLeft ? -1 : 1;
+            int yMod = Configuration.Config.BuffBottomToTop ? -1 : 1;
+
+            UiHelper.SetPosition(RootRes, xMod * (WIDTH + 7) * position_x, yMod * (HEIGHT + 5) * position_y);
         }
 
         public void SetOnCD() {

@@ -184,8 +184,15 @@ namespace JobBars {
                 Configuration.Config.Save();
             }
 
-            if(
-                ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
+            if(ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
+                Configuration.Config.Save();
+            }
+
+            if(ImGui.Checkbox("Right-to-Left" + _ID, ref Configuration.Config.BuffRightToLeft)) {
+                Configuration.Config.Save();
+            }
+
+            if(ImGui.Checkbox("Bottom-to-Top" + _ID, ref Configuration.Config.BuffBottomToTop)) {
                 Configuration.Config.Save();
             }
 

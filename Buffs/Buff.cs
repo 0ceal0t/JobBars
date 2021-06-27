@@ -14,9 +14,9 @@ namespace JobBars.Buffs {
     public enum BuffState {
         Inactive, // hidden
         Active, // bright, show countdown
+        OffCD, // bright, no text
         OnCD_Hidden, 
-        OnCD_Visible, // dark, show countdown
-        OffCD // bright, no text
+        OnCD_Visible // dark, show countdown
     };
 
     public struct BuffProps {
@@ -33,10 +33,10 @@ namespace JobBars.Buffs {
         public bool Enabled;
 
         private BuffProps Props;
-        private BuffState State = BuffState.Inactive;
         private DateTime StateTime;
 
         public IconIds Icon => Props.Icon;
+        public BuffState State = BuffState.Inactive;
         public bool Visible => (State == BuffState.Active || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
 
         public Buff(string name, BuffProps props) {

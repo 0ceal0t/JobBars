@@ -33,7 +33,10 @@ namespace JobBars.Data {
 
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
         public float BuffScale = 1.0f;
+
         public int BuffHorizontal = 5;
+        public bool BuffRightToLeft = false;
+        public bool BuffBottomToTop = false;
 
         public HashSet<string> BuffDisabled = new();
         public bool BuffBarEnabled = true;

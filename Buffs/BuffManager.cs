@@ -2,6 +2,7 @@
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
@@ -63,7 +64,7 @@ namespace JobBars.Buffs {
             var currentTime = DateTime.Now;
 
             var idx = 0;
-            foreach (var buff in AllBuffs) {
+            foreach (var buff in AllBuffs.OrderBy(b => b.State)) {
                 if (!buff.Enabled) { continue; }
                 buff.Tick(currentTime);
                 if (buff.Visible) {
