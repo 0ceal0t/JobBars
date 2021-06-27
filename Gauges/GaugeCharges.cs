@@ -2,9 +2,6 @@
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
@@ -12,6 +9,8 @@ namespace JobBars.Gauges {
         public float CD;
         public int MaxCharges;
         public Item[] Triggers;
+        public Item[] DiamondTriggers;
+        public Dictionary<Item,float> CdDictionary;
         public GaugeVisualType Type;
         public ElementColor Color;
     }
@@ -23,6 +22,7 @@ namespace JobBars.Gauges {
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
+            Props.CdDictionary ??= new Dictionary<Item, float>();
             Props.Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : Props.Type;
             Props.Color = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.Color;
         }
@@ -39,37 +39,107 @@ namespace JobBars.Gauges {
             else if (UI is UIGauge gauge) {
                 gauge.SetTextColor(NoColor);
             }
-            SetValue(Props.MaxCharges, 0, 0);
-        }
+            SetValue(Props.MaxCharges, 0, 0x9999f, 0);
 
-        public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach(var trigger in Props.Triggers) {
-                if (trigger.Type == ItemType.Buff) continue;
-                if (!JobBars.GetRecast(trigger.Id, out var recastTimer)) continue;
-
-                if(recastTimer->IsActive == 1) {
-                    var currentCharges = (int)Math.Floor(recastTimer->Elapsed / Props.CD);
-                    var currentTime = recastTimer->Elapsed % Props.CD;
-                    var timeLeft = Props.CD - currentTime;
-
-                    SetValue(currentCharges, currentTime, (int)timeLeft);
-                    return;
+            foreach (var trigger in Props.Triggers)
+            {
+                if (!Props.CdDictionary.TryGetValue(trigger, out _))
+                {
+                    Props.CdDictionary.Add(trigger,Props.CD);
                 }
             }
-            SetValue(Props.MaxCharges, 0, 0); // none triggered
+            foreach (var trigger in Props.DiamondTriggers)
+            {
+                if (!Props.CdDictionary.TryGetValue(trigger, out _))
+                {
+                    Props.CdDictionary.Add(trigger,Props.CD);
+                }
+            }
+        }
+
+        public override unsafe void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict)
+        {
+            var diamondCount = 0;
+            foreach (var trigger in Props.DiamondTriggers)
+            {
+                if (trigger.Type == ItemType.Buff)
+                {
+                    if (buffDict.TryGetValue(trigger, out var buffElem))
+                    {
+                        if (buffElem.Duration > 0)
+                        {
+                            diamondCount = buffElem.StackCount;
+                            if (diamondCount == 0) diamondCount = 1;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!JobBars.GetRecast(trigger.Id, out var recastTimer)) continue;
+                    if(recastTimer->IsActive == 1) {
+
+                        var currentCharges = (int)Math.Floor(recastTimer->Elapsed / Props.CD);
+                        if (currentCharges > 0) diamondCount = currentCharges;
+                    }
+                    else
+                    {
+                        diamondCount = Props.MaxCharges;
+                    }
+                }
+            }
+
+            Item item = new();
+            float shortest = 0x9999f; 
+            foreach(var trigger in Props.Triggers) {
+                if (trigger.Type == ItemType.Buff)
+                {
+                    if (!Props.CdDictionary.TryGetValue(trigger, out var cd)) continue;
+                    if (!buffDict.TryGetValue(trigger, out var buffElem)) continue;
+                    var timeLeft = buffElem.Duration;
+                    if (timeLeft <= 0) continue;
+                    if (timeLeft < shortest)
+                    {
+                        item = trigger;
+                        shortest = timeLeft;
+                    }
+                }
+                else
+                {
+                    if (!JobBars.GetRecast(trigger.Id, out var recastTimer)) continue;
+                    if(recastTimer->IsActive == 1)
+                    {
+                        if (!Props.CdDictionary.TryGetValue(trigger, out var cd)) continue;
+                        var currentTime = recastTimer->Elapsed % cd;
+                        var timeLeft = cd - currentTime;
+                        if (timeLeft < shortest)
+                        {
+                            item = trigger;
+                            shortest = timeLeft;
+                        }
+                    }
+                }
+            }
+
+            if (shortest < 0x9990f)
+            {
+                Props.CdDictionary.TryGetValue(item, out var cd);
+                SetValue(diamondCount, shortest, cd, shortest);
+                return;
+            }
+            SetValue(diamondCount, 0, 0x9999f, 0); // none triggered
         }
 
         public override void ProcessAction(Item action) { }
 
-        private void SetValue(int diamondValue, float value, int textValue) {
+        private void SetValue(int diamondValue, float value, float cd , float textValue) {
             if (UI is UIGaugeDiamondCombo combo) {
                 combo.SetDiamondValue(diamondValue);
-                combo.SetText(textValue.ToString());
-                combo.SetPercent((float)value / Props.CD);
+                combo.SetText(textValue.ToString("0.0"));
+                combo.SetPercent((float)value / cd);
             }
             else if (UI is UIGauge gauge) {
-                gauge.SetText(textValue.ToString());
-                gauge.SetPercent((float)value / Props.CD);
+                gauge.SetText(textValue.ToString("0.0"));
+                gauge.SetPercent((float)value / cd);
             }
             else if (UI is UIDiamond diamond) {
                 diamond.SetValue(diamondValue);

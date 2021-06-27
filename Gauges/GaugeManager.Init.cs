@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImGuiScene;
 
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
@@ -426,7 +427,8 @@ namespace JobBars.Gauges {
             JobToGauges.Add(JobIds.BLM, new Gauge[] {
                 new GaugeProc("Firestarter/Thundercloud", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
+                        new Proc(BuffIds.Firestarter, UIColor.Orange),
+                        new Proc(BuffIds.Thundercloud, UIColor.LightBlue)
                     }
                 }),
                 new GaugeTimer("Thunder", new []{
@@ -462,6 +464,32 @@ namespace JobBars.Gauges {
                             ActionIds.Thunder2
                         }
                     }
+                }),
+                new GaugeCharges("Thunders",new GaugeChargesProps()
+                {
+                    MaxCharges = 1,
+                    Triggers = new []
+                    {
+                        new Item(BuffIds.Thunder),
+                        new Item(BuffIds.Thunder2),
+                        new Item(BuffIds.Thunder3),
+                        new Item(BuffIds.Thunder4),
+                        new Item(BuffIds.Thundercloud)
+                    },
+                    CdDictionary = new Dictionary<Item, float>()
+                    {
+                        {new Item(BuffIds.Thunder), 24 },
+                        {new Item(BuffIds.Thunder2), 18 },
+                        {new Item(BuffIds.Thunder3), 24 },
+                        {new Item(BuffIds.Thunder4), 18 },
+                        { new Item(BuffIds.Thundercloud), 18}
+                    },
+                    DiamondTriggers = new []
+                    {
+                        new Item(BuffIds.Thundercloud)
+                    },
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Color = UIColor.LightBlue
                 })
             });
             // ============ RDM ==================
@@ -513,6 +541,10 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(ActionIds.GaussRound)
                     },
+                    DiamondTriggers =  new []
+                    {
+                        new Item(ActionIds.GaussRound)
+                    },
                     Type = GaugeVisualType.BarDiamondCombo,
                     Color = UIColor.Red
                 }),
@@ -520,6 +552,9 @@ namespace JobBars.Gauges {
                     CD = 30,
                     MaxCharges = 3,
                     Triggers = new []{
+                        new Item(ActionIds.Ricochet)
+                    },
+                    DiamondTriggers = new []{
                         new Item(ActionIds.Ricochet)
                     },
                     Type = GaugeVisualType.BarDiamondCombo,
