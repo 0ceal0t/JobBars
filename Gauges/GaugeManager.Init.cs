@@ -478,8 +478,8 @@ namespace JobBars.Gauges {
                     },
                     CdDictionary = new Dictionary<Item, float>()
                     {
-                        {new Item(BuffIds.Thunder), 24 },
-                        {new Item(BuffIds.Thunder2), 18 },
+                        {new Item(BuffIds.Thunder), 18 },
+                        {new Item(BuffIds.Thunder2), 12 },
                         {new Item(BuffIds.Thunder3), 24 },
                         {new Item(BuffIds.Thunder4), 18 },
                         { new Item(BuffIds.Thundercloud), 18}
