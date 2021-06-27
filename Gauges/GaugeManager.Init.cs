@@ -541,10 +541,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(ActionIds.GaussRound)
                     },
-                    DiamondTriggers =  new []
-                    {
-                        new Item(ActionIds.GaussRound)
-                    },
                     Type = GaugeVisualType.BarDiamondCombo,
                     Color = UIColor.Red
                 }),
@@ -552,9 +548,6 @@ namespace JobBars.Gauges {
                     CD = 30,
                     MaxCharges = 3,
                     Triggers = new []{
-                        new Item(ActionIds.Ricochet)
-                    },
-                    DiamondTriggers = new []{
                         new Item(ActionIds.Ricochet)
                     },
                     Type = GaugeVisualType.BarDiamondCombo,

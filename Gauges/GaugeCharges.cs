@@ -23,6 +23,7 @@ namespace JobBars.Gauges {
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
             Props.CdDictionary ??= new Dictionary<Item, float>();
+            Props.DiamondTriggers ??= Props.Triggers;
             Props.Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : Props.Type;
             Props.Color = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.Color;
         }
