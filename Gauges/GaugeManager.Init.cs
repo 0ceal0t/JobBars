@@ -129,8 +129,10 @@ namespace JobBars.Gauges {
             // ============ AST ==================
             JobToGauges.Add(JobIds.AST, new Gauge[] {
                 new GaugeProc("Earthly Star Primed", new GaugeProcProps{
+                    ShowText = true,
                     Procs = new []{
-                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
+                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue),
+                        new Proc(BuffIds.Lightspeed, UIColor.Yellow),
                     }
                 }),
                 new GaugeTimer("Combust", new []{
@@ -166,16 +168,6 @@ namespace JobBars.Gauges {
                             ActionIds.Combust2,
                             ActionIds.Combust3
                         }
-                    }
-                }),
-                new GaugeTimer("Lightspeed", new SubGaugeTimerProps
-                {
-                    MaxDuration = 15,
-                    Color = UIColor.Yellow,
-                    HideLowWarning = true,
-                    Triggers = new []
-                    {
-                        new Item(BuffIds.Lightspeed)
                     }
                 })
             });
