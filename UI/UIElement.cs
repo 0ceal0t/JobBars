@@ -30,6 +30,15 @@ namespace JobBars.UI {
         public abstract void Init();
         public abstract void LoadExisting(AtkResNode* node);
 
+        public void SetVisible(bool value) {
+            if(value) {
+                Show();
+            }
+            else {
+                Hide();
+            }
+        }
+
         public virtual void Hide() {
             UiHelper.Hide(RootRes);
         }

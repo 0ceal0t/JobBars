@@ -82,12 +82,7 @@ namespace JobBars.Gauges {
 
         public void CheckInactive() {
             if(Configuration.Config.GaugeHideGCDInactive) {
-                if(State == GaugeState.Inactive) {
-                    UI.Hide();
-                }
-                else {
-                    UI.Show();
-                }
+                UI.SetVisible(State != GaugeState.Inactive);
             }
         }
 

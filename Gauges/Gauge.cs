@@ -30,6 +30,7 @@ namespace JobBars.Gauges {
         public UIElement UI;
         public bool Enabled;
         public int Order;
+        public int NumSlots = 1;
 
         public Gauge(string name) {
             Name = name;
@@ -56,12 +57,7 @@ namespace JobBars.Gauges {
         }
 
         public void SetupUI() {
-            if(Enabled) {
-                UI.Show();
-            }
-            else {
-                UI.Hide();
-            }
+            UI.SetVisible(Enabled);
             Setup();
         }
 
@@ -88,6 +84,7 @@ namespace JobBars.Gauges {
                 GaugeStacks _ => "STACKS",
                 _ => ""
             };
+
             // ======== ENABLED/DISABLED =========
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
             if (ImGui.Checkbox("Enabled" + _ID, ref Enabled)) {
@@ -108,6 +105,7 @@ namespace JobBars.Gauges {
                     GaugeManager.Manager.SetPositionScale();
                 }
             }
+
             // ===== ORDER =======
             if (ImGui.InputInt("Order" + _ID, ref Order)) {
                 if (Order <= -1) {
@@ -125,6 +123,12 @@ namespace JobBars.Gauges {
 
             DrawGauge(_ID, job);
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+        }
+
+        public void SetSplitPosition(Vector2 pos) {
+            Configuration.Config.GaugeSplitPosition[Name] = pos;
+            Configuration.Config.Save();
+            UI?.SetSplitPosition(pos);
         }
 
         public bool DrawTypeOptions(string _ID, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {

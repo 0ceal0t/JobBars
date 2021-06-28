@@ -44,34 +44,28 @@ namespace JobBars {
                 if(Configuration.Config.GaugeSplit) {
                     foreach(var gauge in GManager.CurrentGauges) {
                         if (DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, Configuration.Config.GetGaugeSplitPosition(gauge.Name), out var pos)) {
-                            Configuration.Config.GaugeSplitPosition[gauge.Name] = pos;
-                            Configuration.Config.Save();
-                            gauge.UI?.SetSplitPosition(pos);
+                            gauge.SetSplitPosition(pos);
                         }
                     }
                     
                 }
                 else {
-                    if(DrawPositionView("##GaugePosition", "Gauge Bar Position", Configuration.Config.GaugePosition, out var pos)) {
-                        Configuration.Config.GaugePosition = pos;
-                        Configuration.Config.Save();
-                        UI?.SetGaugePosition(pos);
+                    if(DrawPositionView("##GaugePosition", "Gauge Bar", Configuration.Config.GaugePosition, out var pos)) {
+                        SetGaugePosition(pos);
                     }
                 }
             }
             // ====== BUFF POSITION =======
             if (!BUFF_LOCK) {
-                if(DrawPositionView("##BuffPosition", "Buff Bar Position", Configuration.Config.BuffPosition, out var pos)) {
-                    Configuration.Config.BuffPosition = pos;
-                    Configuration.Config.Save();
-                    UI?.SetBuffPosition(pos);
+                if(DrawPositionView("##BuffPosition", "Buff Bar", Configuration.Config.BuffPosition, out var pos)) {
+                    SetBuffPosition(pos);
                 }
             }
         }
 
-        private bool DrawPositionView(string _ID, string text, Vector2 position, out Vector2 newPosition) {
+        private static bool DrawPositionView(string _ID, string text, Vector2 position, out Vector2 newPosition) {
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGui.SetNextWindowPos(position, ImGuiCond.FirstUseEver);
+            ImGui.SetNextWindowPos(position, ImGuiCond.Once);
             ImGui.SetNextWindowSize(new Vector2(200, 200));
             ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
             ImGui.Begin(_ID, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize);
@@ -80,6 +74,18 @@ namespace JobBars {
             ImGui.PopStyleVar(1);
             ImGui.End();
             return newPosition != position;
+        }
+
+        private void SetGaugePosition(Vector2 pos) {
+            Configuration.Config.GaugePosition = pos;
+            Configuration.Config.Save();
+            UI?.SetGaugePosition(pos);
+        }
+
+        private void SetBuffPosition(Vector2 pos) {
+            Configuration.Config.BuffPosition = pos;
+            Configuration.Config.Save();
+            UI?.SetBuffPosition(pos);
         }
 
         private void DrawGaugeSettings() {

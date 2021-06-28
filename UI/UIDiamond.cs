@@ -63,19 +63,22 @@ namespace JobBars.UI {
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Selected[idx];
 
                 Text[idx] = UI.CreateTextNode();
-                Text[idx]->FontSize = 12;
-                Text[idx]->LineSpacing = 12;
+                Text[idx]->FontSize = 14;
+                Text[idx]->LineSpacing = 14;
                 Text[idx]->AlignmentFontType = 4;
-                Text[idx]->TextId = 0;
-                Text[idx]->SheetType = 0;
-                Text[idx]->TextFlags = 8;
-                Text[idx]->TextFlags2 = 0;
                 Text[idx]->AtkResNode.Width = 32;
                 Text[idx]->AtkResNode.Height = 32;
-                Text[idx]->AtkResNode.Y = 16;
-                Text[idx]->AtkResNode.X = -1;
+                Text[idx]->AtkResNode.Y = 20;
+                Text[idx]->AtkResNode.X = 0;
                 Text[idx]->AtkResNode.Flags |= 0x10;
                 Text[idx]->AtkResNode.Flags_2 = 1;
+                Text[idx]->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor
+                {
+                    R = 40,
+                    G = 40,
+                    B = 40,
+                    A = 255
+                };
                 nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Text[idx];
 
                 var selectedImage = UI.CreateImageNode();
@@ -144,6 +147,7 @@ namespace JobBars.UI {
         }
 
         public void SetMaxValue(int value, bool showText = false) {
+            SetSpacing(showText ? 5 : 0);
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
                     UiHelper.Show(Ticks[idx]);
@@ -157,6 +161,12 @@ namespace JobBars.UI {
                 else {
                     UiHelper.Hide(Ticks[idx]);
                 }
+            }
+        }
+
+        private void SetSpacing(int space) {
+            for(int idx = 0; idx < MAX; idx++) {
+                Ticks[idx]->X = (20 + space) * idx;
             }
         }
 
@@ -192,7 +202,7 @@ namespace JobBars.UI {
         }
 
         public override int GetHeight(int param) {
-            return 35;
+            return 40;
         }
 
         public override int GetWidth(int param) {
