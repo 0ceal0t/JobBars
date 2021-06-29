@@ -44,7 +44,7 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Cards, Divination
 
 ### <img src="Assets/JobIcons/MNK.png" height="20px" width="20px"> MNK
-+ **Gauges**: GCDS used in Riddle of Fire, GCDS used in Perfect Balance
++ **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
 + **Buffs**: Brotherhood, Riddle of Fire
 
 ### <img src="Assets/JobIcons/DRG.png" height="20px" width="20px"> DRG
@@ -61,11 +61,11 @@ To open the settings menu, use `/jobbars`
 
 ### <img src="Assets/JobIcons/BRD.png" height="20px" width="20px"> BRD
 + **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
-+ **Buffs**: Battle Voice, Raging Strikes
++ **Buffs**: Battle Voice, Raging Strikes, Barrage
 
 ### <img src="Assets/JobIcons/MCH.png" height="20px" width="20px"> MCH
 + **Gauges**: GCDS used in Hypercharge, GCDS used in Wildfire, Charges of Ricochet, Charges of Gauss Round
-+ **Buffs**: Wildfire
++ **Buffs**: Wildfire, Reassemble
 
 ### <img src="Assets/JobIcons/DNC.png" height="20px" width="20px"> DNC
 + **Gauges**: Procs

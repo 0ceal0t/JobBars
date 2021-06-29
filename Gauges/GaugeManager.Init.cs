@@ -17,8 +17,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.NoMercy)
                     }
                 })
@@ -29,14 +28,12 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 12,
                     Color = UIColor.LightBlue,
-                    Increment = new[]
-                    {
+                    Increment = new []{
                         new Item(ActionIds.HolySpirit),
                         new Item(ActionIds.HolyCircle),
                         new Item(ActionIds.Confiteor)
                     },
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Requiescat)
                     }
                 }),
@@ -44,8 +41,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,
-                    Increment = new[]
-                    {
+                    Increment = new []{
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
                         new Item(ActionIds.RoyalAuthority),
@@ -54,21 +50,17 @@ namespace JobBars.Gauges {
                         new Item(ActionIds.TotalEclipse),
                         new Item(ActionIds.Prominence)
                     },
-                    Triggers = new[]
-                    {
+                    Triggers = new[] {
                         new Item(BuffIds.FightOrFlight)
                     }
                 }),
-                new GaugeTimer("Goring Blade", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Goring Blade", new SubGaugeTimerProps {
                     MaxDuration = 21,
                     Color = UIColor.Orange,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.GoringBlade)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.GoringBlade
                     }
                 })
@@ -79,23 +71,19 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.Orange,
-                    Increment = new[]
-                    {
+                    Increment = new []{
                         new Item(ActionIds.FellCleave),
                         new Item(ActionIds.Decimate)
                     },
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.InnerRelease)
                     }
                 }),
-                new GaugeTimer("Storm's Eye", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Storm's Eye", new SubGaugeTimerProps {
                     MaxDuration = 60,
                     DefaultDuration = 30,
                     Color = UIColor.Red,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.StormsEye)
                     }
                 })
@@ -106,13 +94,11 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.Red,
-                    Increment = new[]
-                    {
+                    Increment = new []{
                         new Item(ActionIds.BloodSpiller),
                         new Item(ActionIds.Quietus)
                     },
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Delirium)
                     }
                 }),
@@ -120,8 +106,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.DarkBlue,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.BloodWeapon)
                     }
                 })
@@ -133,66 +118,55 @@ namespace JobBars.Gauges {
                         new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
                     }
                 }),
-                new GaugeTimer("Combust", new []{
-                    new SubGaugeTimerProps
-                    {
+                new GaugeTimer("Combust", new [] {
+                    new SubGaugeTimerProps {
                         MaxDuration = 30,
                         Color = UIColor.LightBlue,
                         SubName = "Combust 2+3",
-                        Triggers = new []
-                        {
+                        Triggers = new []{
                             new Item(BuffIds.Combust2),
                             new Item(BuffIds.Combust3)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Combust1,
                             ActionIds.Combust2,
                             ActionIds.Combust3
                         }
                     },
-                    new SubGaugeTimerProps
-                    {
+                    new SubGaugeTimerProps {
                         MaxDuration = 18,
                         Color = UIColor.LightBlue,
                         SubName = "Combust 1",
-                        Triggers = new []
-                        {
+                        Triggers = new []{
                             new Item(BuffIds.Combust)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Combust1,
                             ActionIds.Combust2,
                             ActionIds.Combust3
                         }
                     },
                 }),
-                new GaugeTimer("Lightspeed", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Lightspeed", new SubGaugeTimerProps {
                     MaxDuration = 15,
                     Color = UIColor.Yellow,
                     HideLowWarning = true,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Lightspeed)
                     }
                 })
             });
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
-                new GaugeTimer("Biolysis", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Biolysis", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.BlueGreen,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
                         new Item(BuffIds.Biolysis)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.SchBio,
                         ActionIds.SchBio2,
                         ActionIds.Biolysis
@@ -202,34 +176,28 @@ namespace JobBars.Gauges {
             // ============ WHM ==================
             JobToGauges.Add(JobIds.WHM, new Gauge[] {
                 new GaugeTimer("Dia", new []{
-                    new SubGaugeTimerProps
-                    {
+                    new SubGaugeTimerProps {
                         MaxDuration = 30,
                         Color = UIColor.LightBlue,
                         SubName = "Dia",
-                        Triggers = new []
-                        {
+                        Triggers = new []{
                             new Item(BuffIds.Dia)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Dia,
                             ActionIds.Aero,
                             ActionIds.Aero2
                         }
                     },
-                    new SubGaugeTimerProps
-                    {
+                    new SubGaugeTimerProps {
                         MaxDuration = 18,
                         Color = UIColor.LightBlue,
                         SubName = "Aero 1+2",
-                        Triggers = new []
-                        {
+                        Triggers = new [] {
                             new Item(BuffIds.Aero),
                             new Item(BuffIds.Aero2)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Dia,
                             ActionIds.Aero,
                             ActionIds.Aero2
@@ -239,38 +207,32 @@ namespace JobBars.Gauges {
             });
             // ============ BRD ==================
             JobToGauges.Add(JobIds.BRD, new Gauge[] {
-                new GaugeProc("Straight Shot Ready/BloodLetter", new GaugeProcProps{
+                new GaugeProc("Straight Shot Ready/BloodLetter", new GaugeProcProps {
                     Procs = new []{
                         new Proc(BuffIds.StraightShotReady, UIColor.Yellow),
                         new Proc(ActionIds.BloodLetter, UIColor.Red)
                     }
                 }),
-                new GaugeTimer("Caustic Bite", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Caustic Bite", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.Purple,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.CausticBite),
                         new Item(BuffIds.VenomousBite)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.CausticBite,
                         ActionIds.VenomousBite
                     }
                 }),
-                new GaugeTimer("Stormbite", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Stormbite", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.LightBlue,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Windbite),
                         new Item(BuffIds.Stormbite),
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.Windbite,
                         ActionIds.Stormbite
                     }
@@ -279,8 +241,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.RagingStrikes)
                     }
                 })
@@ -291,8 +252,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Red,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.LanceCharge)
                     }
                 }),
@@ -300,8 +260,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.RightEye),
                         new Item(BuffIds.RightEye2)
                     }
@@ -309,7 +268,7 @@ namespace JobBars.Gauges {
             });
             // ============ SMN ==================
             JobToGauges.Add(JobIds.SMN, new Gauge[] {
-                new GaugeStacks("Ruin 4", new GaugeStacksProps{
+                new GaugeStacks("Ruin 4", new GaugeStacksProps {
                     MaxStacks = 4,
                     Triggers = new []{
                         new Item(BuffIds.Ruin4)
@@ -318,67 +277,55 @@ namespace JobBars.Gauges {
                     Color = UIColor.DarkBlue
                 }),
                 new GaugeGCD("Summon Bahamut", GaugeVisualType.Arrow, new []{
-                    new SubGaugeGCDProps
-                    {
+                    new SubGaugeGCDProps {
                         MaxCounter = 8,
                         MaxDuration = 21,
                         Color = UIColor.LightBlue,
                         SubName = "Bahamut",
-                        Increment = new []
-                        {
+                        Increment = new []{
                             new Item(ActionIds.Wyrmwave)
                         },
-                        Triggers = new[]
-                        {
+                        Triggers = new []{
                             new Item(ActionIds.SummonBahamut),
                             new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
                         }
                     },
-                    new SubGaugeGCDProps
-                    {
+                    new SubGaugeGCDProps {
                         MaxCounter = 8,
                         MaxDuration = 21,
                         Color = UIColor.Orange,
                         SubName = "Phoenix",
-                        Increment = new []
-                        {
+                        Increment = new []{
                             new Item(ActionIds.ScarletFlame)
                         },
-                        Triggers = new[]
-                        {
+                        Triggers = new []{
                             new Item(ActionIds.FirebirdTrance),
                             new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
                         }
                     }
                 }),
-                new GaugeTimer("Bio", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Bio", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.HealthGreen,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
                         new Item(BuffIds.Bio3)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.ArcBio,
                         ActionIds.ArcBio2,
                         ActionIds.Bio3
                     }
                 }),
-                new GaugeTimer("Miasma", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Miasma", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.BlueGreen,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Miasma),
                         new Item(BuffIds.Miasma3)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.Miasma,
                         ActionIds.Miasma3
                     }
@@ -386,24 +333,24 @@ namespace JobBars.Gauges {
             });
             // ============ SAM ==================
             JobToGauges.Add(JobIds.SAM, new Gauge[] {
-                new GaugeTimer("Jinpu", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Jinpu", new SubGaugeTimerProps {
                     MaxDuration = 40,
                     Color = UIColor.DarkBlue,
-                    Triggers = new [] { new Item(BuffIds.Jinpu) }
+                    Triggers = new []{
+                        new Item(BuffIds.Jinpu)
+                    }
                 }),
-                new GaugeTimer("Shifu", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Shifu", new SubGaugeTimerProps {
                     MaxDuration = 40,
                     Color = UIColor.Red,
-                    Triggers = new [] { new Item(BuffIds.Shifu) }
+                    Triggers = new []{
+                        new Item(BuffIds.Shifu)
+                    }
                 }),
-                new GaugeTimer("Higanbana", new SubGaugeTimerProps
-                {
+                new GaugeTimer("Higanbana", new SubGaugeTimerProps {
                     MaxDuration = 60,
                     Color = UIColor.Orange,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Higanbana)
                     }
                 })
@@ -423,13 +370,11 @@ namespace JobBars.Gauges {
                         MaxDuration = 24,
                         Color = UIColor.DarkBlue,
                         SubName = "Thunder 3",
-                        Triggers = new []
-                        {
+                        Triggers = new []{
                             new Item(BuffIds.Thunder3),
                             new Item(BuffIds.Thunder)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Thunder3,
                             ActionIds.Thunder
                         }
@@ -439,13 +384,11 @@ namespace JobBars.Gauges {
                         MaxDuration = 18,
                         Color = UIColor.Purple,
                         SubName = "Thunder 4",
-                        Triggers = new []
-                        {
+                        Triggers = new []{
                             new Item(BuffIds.Thunder4),
                             new Item(BuffIds.Thunder2)
                         },
-                        Icons = new[]
-                        {
+                        Icons = new []{
                             ActionIds.Thunder4,
                             ActionIds.Thunder2
                         }
@@ -464,8 +407,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.DarkBlue,
-                    Triggers = new[]
-                    {
+                    Triggers = new[] {
                         new Item(BuffIds.Manafication)
                     }
                 })
@@ -476,13 +418,11 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 9,
                     Color = UIColor.Orange,
-                    Increment = new[]
-                    {
+                    Increment = new []{
                         new Item(ActionIds.AutoCrossbow),
                         new Item(ActionIds.HeatBlast)
                     },
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(ActionIds.Hypercharge)
                     }
                 }),
@@ -490,8 +430,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 6,
                     MaxDuration = 10,
                     Color = UIColor.Red,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Wildfire)
                     }
                 }),
@@ -499,7 +438,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.Red,
                     Type = GaugeVisualType.BarDiamondCombo,
                     SameColor = true,
-                    Parts = new[] {
+                    Parts = new []{
                         new GaugesChargesPartProps {
                             Bar = true,
                             Diamond = true,
@@ -513,7 +452,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
                     SameColor = true,
-                    Parts = new[] {
+                    Parts = new []{
                         new GaugesChargesPartProps {
                             Bar = true,
                             Diamond = true,
@@ -542,8 +481,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 15,
                     Color = UIColor.Red,
-                    Triggers = new[]
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Bunshin)
                     }
                 })
@@ -554,41 +492,53 @@ namespace JobBars.Gauges {
                 {
                     MaxDuration = 15,
                     Color = UIColor.PurplePink,
-                    Triggers = new [] { new Item(BuffIds.TwinSnakes) }
+                    Triggers = new []{
+                        new Item(BuffIds.TwinSnakes)
+                    }
                 }),
                 new GaugeTimer("Demolish", new SubGaugeTimerProps
                 {
                     MaxDuration = 18,
                     Color = UIColor.Orange,
-                    Triggers = new [] { new Item(BuffIds.Demolish) }
+                    Triggers = new [] {
+                        new Item(BuffIds.Demolish)
+                    }
                 }),
                 new GaugeCharges("True North / Riddle of Earth", new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
-                    Parts = new[] {
+                    Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
                             MaxCharges = 3,
                             Color = UIColor.Yellow,
                             CD = 30,
-                            Triggers = new[] { new Item(ActionIds.RiddleOfEarth) }
+                            Triggers = new []{
+                                new Item(ActionIds.RiddleOfEarth)
+                            }
                         },
                         new GaugesChargesPartProps {
                             Diamond = true,
                             MaxCharges = 2,
                             Color = UIColor.White,
                             CD = 45,
-                            Triggers = new[] { new Item(ActionIds.TrueNorth) }
+                            Triggers = new []{
+                                new Item(ActionIds.TrueNorth)
+                            }
                         },
                         new GaugesChargesPartProps {
                             Bar = true,
                             Duration = 10,
-                            Triggers = new[] { new Item(BuffIds.RiddleOfEarth) }
+                            Triggers = new []{
+                                new Item(BuffIds.RiddleOfEarth)
+                            }
                         },
                         new GaugesChargesPartProps {
                             Bar = true,
                             Duration = 10,
-                            Triggers = new[] { new Item(BuffIds.TrueNorth) }
+                            Triggers = new []{
+                                new Item(BuffIds.TrueNorth)
+                            }
                         }
                     }
                 }),
@@ -606,12 +556,10 @@ namespace JobBars.Gauges {
                 {
                     MaxDuration = 60,
                     Color = UIColor.Red,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.BluBleed)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.SongOfTorment
                     }
                 }),
@@ -619,12 +567,10 @@ namespace JobBars.Gauges {
                 {
                     MaxDuration = 15,
                     Color = UIColor.HealthGreen,
-                    Triggers = new []
-                    {
+                    Triggers = new []{
                         new Item(BuffIds.Poison)
                     },
-                    Icons = new []
-                    {
+                    Icons = new []{
                         ActionIds.BadBreath
                     }
                 })
