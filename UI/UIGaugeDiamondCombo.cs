@@ -49,8 +49,29 @@ namespace JobBars.UI {
             Diamond.SetMaxValue(value);
         }
 
+        public void SetDiamondValue(int value, int start, int count) {
+            Diamond.SetValue(value, start, count);
+        }
+
         public void SetDiamondValue(int value) {
             Diamond.SetValue(value);
+        }
+
+        public override void SetColor(ElementColor color) {
+            SetGaugeColor(color);
+            SetDiamondColor(color);
+        }
+
+        public void SetGaugeColor(ElementColor color) {
+            Gauge.SetColor(color);
+        }
+
+        public void SetDiamondColor(ElementColor color) {
+            Diamond.SetColor(color);
+        }
+
+        public void SetDiamondColor(ElementColor color, int start, int count) {
+            Diamond.SetColor(color, start, count);
         }
 
         public override int GetHeight(int param) {
@@ -63,11 +84,6 @@ namespace JobBars.UI {
 
         public override int GetHorizontalYOffset() {
             return Gauge.GetHorizontalYOffset();
-        }
-
-        public override void SetColor(ElementColor color) {
-            Gauge.SetColor(color);
-            Diamond.SetColor(color);
         }
 
         public override void SetSplitPosition(Vector2 pos) {

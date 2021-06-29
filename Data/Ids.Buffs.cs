@@ -41,6 +41,10 @@ namespace JobBars.Data {
         // MNK
         PerfectBalance = 0x6e,
         RiddleOfFire = 0x49d,
+        RiddleOfEarth = 1179,
+        TrueNorth = 1250,
+        TwinSnakes = 101,
+        Demolish = 246,
         // DRG
         LanceCharge = 0x748,
         BattleLitany = 0x312,

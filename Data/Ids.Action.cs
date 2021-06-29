@@ -46,6 +46,10 @@ namespace JobBars.Data {
         Brotherhood = 7396,
         PerfectBalance = 69,
         RiddleOfFire = 7395,
+        TrueNorth = 7546,
+        RiddleOfEarth = 7394,
+        TwinSnakes = 61,
+        Demolish = 66,
         // DRG
         DragonSight = 7398,
         BattleLitany = 3557,

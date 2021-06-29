@@ -137,7 +137,11 @@ namespace JobBars.UI {
         }
 
         public override void SetColor(ElementColor color) {
-            for(int idx = 0; idx < MAX; idx++) {
+            SetColor(color, 0, MAX);
+        }
+
+        public void SetColor(ElementColor color, int start, int count) {
+            for (int idx = start; idx < (start + count); idx++) {
                 SetColor(color, idx);
             }
         }
@@ -171,8 +175,12 @@ namespace JobBars.UI {
         }
 
         public void SetValue(int value) {
-            for (int idx = 0; idx < MAX; idx++) {
-                if (idx < value) {
+            SetValue(value, 0, MAX);
+        }
+
+        public void SetValue(int value, int start, int count) {
+            for (int idx = start; idx < (start + count); idx++) {
+                if (idx < (value + start)) {
                     UiHelper.Show(Selected[idx]);
                 }
                 else {

@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using Dalamud.Plugin;
+using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -8,71 +9,143 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
-    public struct GaugeChargesProps {
-        public float CD;
-        public int MaxCharges;
+    public struct GaugesChargesPartProps {
         public Item[] Triggers;
-        public GaugeVisualType Type;
+        public float Duration;
+        public float CD;
+        public bool Bar;
+        public bool Diamond;
+        public int MaxCharges;
         public ElementColor Color;
+    }
+
+    public struct GaugeChargesProps {
+        public GaugesChargesPartProps[] Parts;
+        public GaugeVisualType Type;
+        public ElementColor BarColor;
+        public bool SameColor;
     }
 
     public class GaugeCharges : Gauge {
         private GaugeChargesProps Props;
+        private int TotalDiamonds;
 
         public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
             Props.Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : Props.Type;
-            Props.Color = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.Color;
+            Props.BarColor = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.BarColor;
+            RefreshSameColor();
+
+            TotalDiamonds = 0;
+            foreach(var part in Props.Parts) {
+                if(part.Diamond) {
+                    TotalDiamonds += part.MaxCharges;
+                }
+            }
         }
 
         public override void Setup() {
-            UI.SetColor(Props.Color);
             if (UI is UIGaugeDiamondCombo combo) {
+                combo.SetGaugeColor(Props.BarColor);
+                SetupDiamondColors();
                 combo.SetTextColor(NoColor);
-                combo.SetMaxValue(Props.MaxCharges);
+                combo.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIDiamond diamond) {
-                diamond.SetMaxValue(Props.MaxCharges);
+                SetupDiamondColors();
+                diamond.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIGauge gauge) {
+                gauge.SetColor(Props.BarColor);
                 gauge.SetTextColor(NoColor);
             }
-            SetValue(Props.MaxCharges, 0, 0);
+            SetGaugeValue(0, 0);
+            SetDiamondValue(0, 0, TotalDiamonds);
+        }
+
+        private void SetupDiamondColors() {
+            int diamondIdx = 0;
+            foreach(var part in Props.Parts) {
+                if(part.Diamond) {
+                    if (UI is UIGaugeDiamondCombo combo) {
+                        combo.SetDiamondColor(part.Color, diamondIdx, part.MaxCharges);
+                    }
+                    else if (UI is UIDiamond diamond) {
+                        diamond.SetColor(part.Color, diamondIdx, part.MaxCharges);
+                    }
+                    diamondIdx += part.MaxCharges;
+                }
+            }
+        }
+
+        private void RefreshSameColor() {
+            if (Props.SameColor) {
+                for (int i = 0; i < Props.Parts.Length; i++) {
+                    Props.Parts[i].Color = Props.BarColor;
+                }
+            }
         }
 
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach(var trigger in Props.Triggers) {
-                if (trigger.Type == ItemType.Buff) continue;
-                if (!JobBars.GetRecast(trigger.Id, out var recastTimer)) continue;
-
-                if(recastTimer->IsActive == 1) {
-                    var currentCharges = (int)Math.Floor(recastTimer->Elapsed / Props.CD);
-                    var currentTime = recastTimer->Elapsed % Props.CD;
-                    var timeLeft = Props.CD - currentTime;
-
-                    SetValue(currentCharges, currentTime, (int)Math.Round(timeLeft));
-                    return;
+            bool barAssigned = false;
+            int diamondIdx = 0;
+            foreach(var part in Props.Parts) {
+                foreach (var trigger in part.Triggers) {
+                    if (trigger.Type == ItemType.Buff) {
+                        var buffExists = buffDict.TryGetValue(trigger, out var buff);
+                        if (part.Bar && !barAssigned && buffExists) {
+                            barAssigned = true;
+                            SetGaugeValue(buff.Duration / part.Duration, (int)Math.Round(buff.Duration));
+                        }
+                        if (part.Diamond) {
+                            SetDiamondValue(buffExists ? buff.StackCount : 0, diamondIdx, part.MaxCharges);
+                            diamondIdx += part.MaxCharges;
+                        }
+                        if (buffExists) break;
+                    }
+                    else {
+                        var foundRecast = JobBars.GetRecast(trigger.Id, out var recastTimer);
+                        var recastActive = foundRecast && recastTimer->IsActive == 1;
+                        if (part.Bar && !barAssigned && recastActive) {
+                            barAssigned = true;
+                            var currentTime = recastTimer->Elapsed % part.CD;
+                            var timeLeft = part.CD - currentTime;
+                            SetGaugeValue(currentTime / part.CD, (int)Math.Round(timeLeft));
+                        }
+                        if (part.Diamond) {
+                            SetDiamondValue(recastActive ? (int)Math.Floor(recastTimer->Elapsed / part.CD) : part.MaxCharges, diamondIdx, part.MaxCharges);
+                            diamondIdx += part.MaxCharges;
+                        }
+                        if (recastActive) break;
+                    }
                 }
             }
-            SetValue(Props.MaxCharges, 0, 0); // none triggered
+            if(!barAssigned) {
+                SetGaugeValue(0, 0);
+            }
         }
 
         public override void ProcessAction(Item action) { }
 
-        private void SetValue(int diamondValue, float value, int textValue) {
+        private void SetDiamondValue(int value, int start, int max) {
             if (UI is UIGaugeDiamondCombo combo) {
-                combo.SetDiamondValue(diamondValue);
+                combo.SetDiamondValue(value, start, max);
+            }
+            else if (UI is UIDiamond diamond) {
+                diamond.SetValue(value, start, max);
+            }
+        }
+
+        private void SetGaugeValue(float value, int textValue) {
+            if (UI is UIGaugeDiamondCombo combo) {
                 combo.SetText(textValue.ToString());
-                combo.SetPercent((float)value / Props.CD);
+                combo.SetPercent(value);
             }
             else if (UI is UIGauge gauge) {
                 gauge.SetText(textValue.ToString());
-                gauge.SetPercent((float)value / Props.CD);
-            }
-            else if (UI is UIDiamond diamond) {
-                diamond.SetValue(diamondValue);
+                gauge.SetPercent(value);
             }
         }
 
@@ -90,10 +163,12 @@ namespace JobBars.Gauges {
 
         public override void DrawGauge(string _ID, JobIds job) {
             // ======== COLOR =============
-            if (DrawColorOptions(_ID, Name, Props.Color, out var newColor)) {
-                Props.Color = newColor;
+            if (DrawColorOptions(_ID, Name, Props.BarColor, out var newColor)) {
+                Props.BarColor = newColor;
                 if (job == GaugeManager.Manager.CurrentJob) {
-                    UI?.SetColor(Props.Color);
+                    UI?.SetColor(Props.BarColor);
+                    RefreshSameColor();
+                    SetupDiamondColors();
                 }
             }
             // ======== TYPE =============
