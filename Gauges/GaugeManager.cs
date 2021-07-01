@@ -103,11 +103,15 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void Tick() {
+        public void Tick(bool inCombat) {
             if (!Configuration.Config.GaugesEnabled) return;
+            if (Configuration.Config.GaugesHideOutOfCombat) {
+                if (inCombat) UI.ShowGauges();
+                else UI.HideGauges();
+            }
 
-            var currentTime = DateTime.Now;
             Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
+            var currentTime = DateTime.Now;
             /*foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
                 BuffDict[new Item
                 {

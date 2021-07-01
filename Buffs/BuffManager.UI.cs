@@ -16,20 +16,23 @@ namespace JobBars.Buffs {
             string _ID = "##JobBars_Buffs";
 
             ImGui.Checkbox("Locked" + _ID, ref LOCKED);
-            ImGui.SameLine();
 
+            ImGui.SameLine();
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
                 Configuration.Config.Save();
-                if (Configuration.Config.BuffBarEnabled) {
-                    UI.ShowBuffs();
-                }
-                else {
-                    UI.HideBuffs();
-                }
+                if (Configuration.Config.BuffBarEnabled) UI.ShowBuffs();
+                else UI.HideBuffs();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
-                UI.SetBuffScale(Configuration.Config.BuffScale);
+                SetPositionScale();
+                Configuration.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref Configuration.Config.BuffHideOutOfCombat)) {
+                if (!Configuration.Config.BuffHideOutOfCombat && Configuration.Config.BuffBarEnabled) { // since they might be hidden
+                    UI.ShowBuffs();
+                }
                 Configuration.Config.Save();
             }
 
@@ -40,8 +43,8 @@ namespace JobBars.Buffs {
             if (ImGui.Checkbox("Right-to-Left" + _ID, ref Configuration.Config.BuffRightToLeft)) {
                 Configuration.Config.Save();
             }
-            ImGui.SameLine();
 
+            ImGui.SameLine();
             if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref Configuration.Config.BuffBottomToTop)) {
                 Configuration.Config.Save();
             }

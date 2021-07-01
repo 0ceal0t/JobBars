@@ -15,7 +15,7 @@ namespace JobBars {
 
         private void BuildSettingsUI() {
             if (!Ready || !Init) return;
-            // ====== SETTINGS =======
+
             string _ID = "##JobBars_Settings";
             ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);

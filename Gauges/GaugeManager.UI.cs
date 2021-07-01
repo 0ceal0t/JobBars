@@ -17,31 +17,40 @@ namespace JobBars.Gauges {
             string _ID = "##JobBars_Gauges";
 
             ImGui.Checkbox("Locked" + _ID, ref LOCKED);
-            ImGui.SameLine();
 
+            ImGui.SameLine();
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref Configuration.Config.GaugesEnabled)) {
+                if (Configuration.Config.GaugesEnabled) UI.ShowGauges();
+                else UI.HideGauges();
                 Configuration.Config.Save();
-                if (Configuration.Config.GaugesEnabled) {
-                    UI.ShowGauges();
-                }
-                else {
-                    UI.HideGauges();
-                }
             }
-            ImGui.SameLine();
 
+            ImGui.SameLine();
             if (ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
-                Reset();
+                SetPositionScale();
                 Configuration.Config.Save();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
-                UI.SetGaugeScale(Configuration.Config.GaugeScale);
+                SetPositionScale();
                 Configuration.Config.Save();
             }
 
             if (ImGui.Checkbox("DoT Icon Replacement (Global)", ref Configuration.Config.GaugeIconReplacement)) {
                 UIIconManager.Manager.Reset();
+                Configuration.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref Configuration.Config.GaugeHideGCDInactive)) {
+                Reset();
+                Configuration.Config.Save();
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref Configuration.Config.GaugesHideOutOfCombat)) {
+                if(!Configuration.Config.GaugesHideOutOfCombat && Configuration.Config.GaugesEnabled) { // since they might be hidden
+                    UI.ShowGauges();
+                }
                 Configuration.Config.Save();
             }
 
@@ -56,15 +65,10 @@ namespace JobBars.Gauges {
                 SetPositionScale();
                 Configuration.Config.Save();
             }
-            ImGui.SameLine();
 
+            ImGui.SameLine();
             if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
                 SetPositionScale();
-                Configuration.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref Configuration.Config.GaugeHideGCDInactive)) {
-                Reset();
                 Configuration.Config.Save();
             }
 

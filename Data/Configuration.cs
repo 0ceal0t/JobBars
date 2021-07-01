@@ -20,6 +20,7 @@ namespace JobBars.Data {
         public Dictionary<string, Vector2> GaugeSplitPosition = new();
 
         public bool GaugesEnabled = true;
+        public bool GaugesHideOutOfCombat = false;
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
         public HashSet<string> GaugeDisabled = new();
@@ -34,12 +35,14 @@ namespace JobBars.Data {
         public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
         public float BuffScale = 1.0f;
 
+        public bool BuffBarEnabled = true;
+        public bool BuffHideOutOfCombat = false;
+        public HashSet<string> BuffDisabled = new();
+
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
 
-        public HashSet<string> BuffDisabled = new();
-        public bool BuffBarEnabled = true;
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;

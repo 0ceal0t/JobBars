@@ -58,11 +58,15 @@ namespace JobBars.Buffs {
             }
         }
 
-        public void Tick() {
+        public void Tick(bool inCombat) {
             if (!Configuration.Config.BuffBarEnabled) return;
-            var currentTime = DateTime.Now;
+            if(Configuration.Config.BuffHideOutOfCombat) {
+                if (inCombat) UI.ShowBuffs();
+                else UI.HideBuffs();
+            }
 
             var idx = 0;
+            var currentTime = DateTime.Now;
             foreach (var buff in AllBuffs.OrderBy(b => b.State)) {
                 if (!buff.Enabled) { continue; }
                 buff.Tick(currentTime);
