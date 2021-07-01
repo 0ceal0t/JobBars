@@ -83,7 +83,7 @@ namespace JobBars.Buffs {
                     Color = UIColor.Purple,
                     Triggers = new []{ new Item(BuffIds.LadyOfCrowns) }
                 }),
-                new Buff("Lady of Crowns", new BuffProps {
+                new Buff("Lord of Crowns", new BuffProps {
                     Duration = 15,
                     Icon = IconIds.LordOfCrowns,
                     Color = UIColor.Red,

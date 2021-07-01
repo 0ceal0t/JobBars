@@ -223,7 +223,7 @@ namespace JobBars {
         // ======= COMMANDS ============
         public void SetupCommands() {
             PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnCommand) {
-                HelpMessage = $"Open config window for {this.Name}",
+                HelpMessage = $"Open config window for {Name}",
                 ShowInHelp = true
             });
         }
