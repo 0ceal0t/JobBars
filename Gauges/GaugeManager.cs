@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Structs;
 using Dalamud.Plugin;
 using JobBars.Data;
+using JobBars.PartyList;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -103,8 +104,9 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void Tick(bool inCombat) {
+        public void Tick(PList party, bool inCombat) {
             if (!Configuration.Config.GaugesEnabled) return;
+
             if (Configuration.Config.GaugesHideOutOfCombat) {
                 if (inCombat) UI.ShowGauges();
                 else UI.HideGauges();
@@ -112,52 +114,21 @@ namespace JobBars.Gauges {
 
             Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
             var currentTime = DateTime.Now;
-            /*foreach(var status in PluginInterface.ClientState.LocalPlayer.StatusEffects) {
-                BuffDict[new Item
-                {
-                    Id = (uint)status.EffectId,
-                    Type = ItemType.Buff
-                }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
-            }*/
-            var selfBuffAddr = PluginInterface.ClientState.LocalPlayer.Address + ActorOffsets.UIStatusEffects;
-            for (int i = 0; i < 30; i++) {
-                var addr = selfBuffAddr + i * 0xC;
-                var status = (StatusEffect)Marshal.PtrToStructure(addr, typeof(StatusEffect));
-                BuffDict[new Item
-                {
-                    Id = (uint)status.EffectId,
-                    Type = ItemType.Buff
-                }] = new BuffElem {
-                    Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
-                    StackCount = status.StackCount
-                };
-            }
+            int ownerId = PluginInterface.ClientState.LocalPlayer.ActorId;
+
+            AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
             if (PluginInterface.ClientState.Targets.CurrentTarget != null) {
-                /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
-                    if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
-                        BuffDict[new Item
-                        {
-                            Id = (uint)status.EffectId,
-                            Type = ItemType.Buff
-                        }] = status.Duration > 0 ? status.Duration : status.Duration * -1;
-                    }
-                }*/
+                AddBuffs(PluginInterface.ClientState.Targets.CurrentTarget, ownerId, BuffDict);
+            }
 
-                var buffAddr = PluginInterface.ClientState.Targets.CurrentTarget.Address + ActorOffsets.UIStatusEffects;
-                for(int i = 0; i < 30; i++) {
-                    var addr = buffAddr + i * 0xC;
-                    var status = (StatusEffect) Marshal.PtrToStructure(addr, typeof(StatusEffect));
-                    if (status.OwnerId.Equals(PluginInterface.ClientState.LocalPlayer?.ActorId)) {
-                        BuffDict[new Item
-                        {
-                            Id = (uint)status.EffectId,
-                            Type = ItemType.Buff
-                        }] = new BuffElem
-                        {
-                            Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
-                            StackCount = status.StackCount
-                        };
+            if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
+                var actorTable = PluginInterface.ClientState.Actors;
+                foreach(var pMember in party) {
+                    for(int i = 0; i < actorTable.Length; i++) {
+                        if (actorTable[i].ActorId == pMember.ActorId) {
+                            AddBuffs(actorTable[i], ownerId, BuffDict);
+                        }
                     }
                 }
             }
@@ -167,6 +138,39 @@ namespace JobBars.Gauges {
                 gauge.Tick(currentTime, BuffDict);
             }
             UI.Icon.Update();
+        }
+
+        private void AddBuffs(Dalamud.Game.ClientState.Actors.Types.Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
+            if (actor == null) return;
+            /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
+                if (status.OwnerId.Equals(ownerId)) {
+                    buffDict[new Item
+                    {
+                        Id = (uint)status.EffectId,
+                        Type = ItemType.Buff
+                    }] = new BuffElem
+                    {
+                        Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                        StackCount = status.StackCount
+                    };
+                }
+            }*/
+            var buffAddr = actor.Address + ActorOffsets.UIStatusEffects;
+            for (int i = 0; i < 30; i++) {
+                var addr = buffAddr + i * 0xC;
+                var status = (StatusEffect)Marshal.PtrToStructure(addr, typeof(StatusEffect));
+                if (status.OwnerId.Equals(ownerId)) {
+                    buffDict[new Item
+                    {
+                        Id = (uint)status.EffectId,
+                        Type = ItemType.Buff
+                    }] = new BuffElem
+                    {
+                        Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                        StackCount = status.StackCount
+                    };
+                }
+            }
         }
     }
 

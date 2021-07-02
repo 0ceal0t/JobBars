@@ -9,9 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JobBars.PartyList {
-    /// <summary>
-    /// A PartyList.
-    /// </summary>
     public class PList : IReadOnlyCollection<PartyMember> {
         private DalamudPluginInterface PluginInterface;
 
@@ -27,11 +24,7 @@ namespace JobBars.PartyList {
         public IntPtr CrossRealmGroupManagerPtr { get; private set; }
         public IntPtr CompanionManagerPtr { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PartyList"/> class.
-        /// </summary>
-        /// <param name="dalamud">A Dalamud.</param>
-        /// <param name="addressResolver">A ClientStateAddressResolver.</param>
+
         public PList(DalamudPluginInterface pi, SigScanner sig) {
             PluginInterface = pi;
 
@@ -51,7 +44,6 @@ namespace JobBars.PartyList {
         private delegate IntPtr GetCrossMemberByGrpIndexDelegate(int index, int group);
         private delegate byte GetCompanionMemberCountDelegate(IntPtr manager);
 
-        /// <inheritdoc/>
         public int Count {
             get {
                 var count = this.getCrossPartyMemberCount();
@@ -65,10 +57,6 @@ namespace JobBars.PartyList {
             }
         }
 
-        /// <summary>
-        /// Gets the PartyMember at the specified index or null.
-        /// </summary>
-        /// <param name="index">The index.</param>
         public PartyMember this[int index] {
             get {
                 if (index < 0 || index >= this.Count)
@@ -78,29 +66,27 @@ namespace JobBars.PartyList {
                     var member = this.getCrossMemberByGrpIndex(index, -1);
                     if (member == IntPtr.Zero)
                         return null;
-                    return PartyMember.CrossRealmMember(PluginInterface.ClientState.Actors, member);
+                    return PartyMember.CrossRealmMember(member);
                 }
 
                 if (this.GetRegularMemberCount() > 1) {
                     var member = GroupManager + (0x230 * index);
-                    return PartyMember.RegularMember(PluginInterface.ClientState.Actors, member);
+                    return PartyMember.RegularMember(member);
                 }
 
                 if (this.GetCompanionMemberCount() > 0) {
                     if (index >= 3) // return a dummy player member if it's not one of the npcs
                         return PartyMember.LocalPlayerMember(PluginInterface);
                     var member = Marshal.ReadIntPtr(CompanionManagerPtr) + (0x198 * index);
-                    return PartyMember.CompanionMember(PluginInterface.ClientState.Actors, member);
+                    return PartyMember.CompanionMember(member);
                 }
 
                 return null;
             }
         }
 
-        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-        /// <inheritdoc/>
         public IEnumerator<PartyMember> GetEnumerator() {
             for (var i = 0; i < this.Count; i++) {
                 var member = this[i];

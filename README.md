@@ -87,12 +87,12 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
-- [ ] Better bar placement options
 - [ ] Glow around gauges
 - [ ] Split up party buffs and personal buffs
 - [ ] GCD timer
 - [ ] DoT tick timer
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~Better bar placement options~~
 - [x] ~~Animate gauge movement~~ (kinda)
 - [x] ~~Hide all gauges options~~
 - [x] ~~Hide all buffs options~~

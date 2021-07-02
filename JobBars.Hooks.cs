@@ -109,6 +109,7 @@ namespace JobBars {
         }
 
         private bool IsPet(int actorId, int ownerId) {
+            if (actorId == 0) return false;
             foreach (Actor actor in PluginInterface.ClientState.Actors) {
                 if (actor?.ActorId == actorId) {
                     if (actor is BattleNpc npc) {
@@ -122,9 +123,10 @@ namespace JobBars {
         }
 
         private bool IsInParty(int actorId) {
+            if (actorId == 0) return false;
             foreach (var pMember in Party) {
-                if (pMember.Actor == null) continue;
-                if (pMember.Actor.ActorId == actorId) {
+                if (pMember.ActorId == 0) continue;
+                if (pMember.ActorId == actorId) {
                     return true;
                 }
             }

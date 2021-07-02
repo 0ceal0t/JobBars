@@ -20,6 +20,7 @@ namespace JobBars.Data {
         NoMercy = 0x727,
         // SCH
         Biolysis = 1895,
+        Excog = 1220,
         // WHM
         Aero = 143,
         Aero2 = 144,
@@ -50,6 +51,8 @@ namespace JobBars.Data {
         BattleLitany = 0x312,
         RightEye = 0x776,
         RightEye2 = 0x5ad,
+        Disembowel = 1914,
+        ChaosThrust = 118,
         // NIN
         TrickAttack = 0x27e,
         Bunshin = 0x7a2,
@@ -92,6 +95,7 @@ namespace JobBars.Data {
         Embolden = 0x4d7,
         VerfireReady = 1234,
         VerstoneReady = 1235,
+        Acceleration = 1238,
         // BLU
         BluBleed = 1714,
         Poison = 18,

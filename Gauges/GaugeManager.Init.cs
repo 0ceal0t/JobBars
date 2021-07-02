@@ -158,6 +158,11 @@ namespace JobBars.Gauges {
             });
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
+                new GaugeProc("Excog", new GaugeProcProps{
+                    Procs = new []{
+                        new Proc(BuffIds.Excog, UIColor.BrightGreen)
+                    }
+                }),
                 new GaugeTimer("Biolysis", new SubGaugeTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.BlueGreen,
@@ -248,21 +253,40 @@ namespace JobBars.Gauges {
             });
             // ============ DRG ==================
             JobToGauges.Add(JobIds.DRG, new Gauge[] {
-                new GaugeGCD("Lance Charge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
-                    MaxCounter = 9,
-                    MaxDuration = 20,
-                    Color = UIColor.Red,
+                new GaugeTimer("Disembowel", new SubGaugeTimerProps {
+                    MaxDuration = 30,
+                    Color = UIColor.Yellow,
                     Triggers = new []{
-                        new Item(BuffIds.LanceCharge)
+                        new Item(BuffIds.Disembowel)
                     }
                 }),
-                new GaugeGCD("Dragon Sight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
-                    MaxCounter = 9,
-                    MaxDuration = 20,
-                    Color = UIColor.Orange,
+                new GaugeTimer("Chaos Thrust", new SubGaugeTimerProps {
+                    MaxDuration = 24,
+                    Color = UIColor.Purple,
                     Triggers = new []{
-                        new Item(BuffIds.RightEye),
-                        new Item(BuffIds.RightEye2)
+                        new Item(BuffIds.ChaosThrust)
+                    }
+                }),
+                new GaugeCharges("True North (DRG)", new GaugeChargesProps {
+                    BarColor = UIColor.White,
+                    SameColor = true,
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Parts = new []{
+                        new GaugesChargesPartProps {
+                            Diamond = true,
+                            MaxCharges = 2,
+                            CD = 45,
+                            Triggers = new []{
+                                new Item(ActionIds.TrueNorth)
+                            }
+                        },
+                        new GaugesChargesPartProps {
+                            Bar = true,
+                            Duration = 10,
+                            Triggers = new []{
+                                new Item(BuffIds.TrueNorth)
+                            }
+                        }
                     }
                 })
             });
@@ -353,6 +377,28 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.Higanbana)
                     }
+                }),
+                new GaugeCharges("True North (SAM)", new GaugeChargesProps {
+                    BarColor = UIColor.White,
+                    SameColor = true,
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Parts = new []{
+                        new GaugesChargesPartProps {
+                            Diamond = true,
+                            MaxCharges = 2,
+                            CD = 45,
+                            Triggers = new []{
+                                new Item(ActionIds.TrueNorth)
+                            }
+                        },
+                        new GaugesChargesPartProps {
+                            Bar = true,
+                            Duration = 10,
+                            Triggers = new []{
+                                new Item(BuffIds.TrueNorth)
+                            }
+                        }
+                    }
                 })
             });
             // ============ BLM ==================
@@ -410,7 +456,15 @@ namespace JobBars.Gauges {
                     Triggers = new[] {
                         new Item(BuffIds.Manafication)
                     }
-                })
+                }),
+                new GaugeStacks("Acceleration", new GaugeStacksProps {
+                    MaxStacks = 3,
+                    Triggers = new []{
+                        new Item(BuffIds.Acceleration)
+                    },
+                    Type = GaugeVisualType.Diamond,
+                    Color = UIColor.PurplePink
+                }),
             });
             // ============ MCH ==================
             JobToGauges.Add(JobIds.MCH, new Gauge[] {
@@ -484,10 +538,40 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.Bunshin)
                     }
+                }),
+                new GaugeCharges("True North (NIN)", new GaugeChargesProps {
+                    BarColor = UIColor.White,
+                    SameColor = true,
+                    Type = GaugeVisualType.BarDiamondCombo,
+                    Parts = new []{
+                        new GaugesChargesPartProps {
+                            Diamond = true,
+                            MaxCharges = 2,
+                            CD = 45,
+                            Triggers = new []{
+                                new Item(ActionIds.TrueNorth)
+                            }
+                        },
+                        new GaugesChargesPartProps {
+                            Bar = true,
+                            Duration = 10,
+                            Triggers = new []{
+                                new Item(BuffIds.TrueNorth)
+                            }
+                        }
+                    }
                 })
             });
             // ============ MNK ==================
             JobToGauges.Add(JobIds.MNK, new Gauge[] {
+                new GaugeGCD("Perfect Balance", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 6,
+                    MaxDuration = 15,
+                    Color = UIColor.Orange,
+                    Triggers = new []{
+                        new Item(BuffIds.PerfectBalance)
+                    }
+                }),
                 new GaugeTimer("Twin Snakes", new SubGaugeTimerProps
                 {
                     MaxDuration = 15,

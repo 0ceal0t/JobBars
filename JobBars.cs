@@ -189,7 +189,7 @@ namespace JobBars {
 
             SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.ConditionFlag.InCombat];
-            GManager.Tick(inCombat);
+            GManager.Tick(Party, inCombat);
             BManager.Tick(inCombat);
 
             if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
