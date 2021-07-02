@@ -253,18 +253,21 @@ namespace JobBars.Gauges {
             });
             // ============ DRG ==================
             JobToGauges.Add(JobIds.DRG, new Gauge[] {
-                new GaugeTimer("Disembowel", new SubGaugeTimerProps {
-                    MaxDuration = 30,
-                    Color = UIColor.Yellow,
+                new GaugeGCD("Lance Charge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Red,
                     Triggers = new []{
-                        new Item(BuffIds.Disembowel)
+                        new Item(BuffIds.LanceCharge)
                     }
                 }),
-                new GaugeTimer("Chaos Thrust", new SubGaugeTimerProps {
-                    MaxDuration = 24,
-                    Color = UIColor.Purple,
+                new GaugeGCD("Dragon Sight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                    MaxCounter = 9,
+                    MaxDuration = 20,
+                    Color = UIColor.Orange,
                     Triggers = new []{
-                        new Item(BuffIds.ChaosThrust)
+                        new Item(BuffIds.RightEye),
+                        new Item(BuffIds.RightEye2)
                     }
                 }),
                 new GaugeCharges("True North (DRG)", new GaugeChargesProps {
