@@ -25,6 +25,7 @@ namespace JobBars.Data {
         public bool GaugeHideGCDInactive = false;
         public HashSet<string> GaugeDisabled = new();
         public HashSet<string> GaugeIconDisabled = new();
+        public HashSet<string> GaugeInvert = new();
 
         public Dictionary<string, string> GaugeColorOverride = new();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new();

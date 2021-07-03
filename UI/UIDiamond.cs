@@ -14,6 +14,8 @@ namespace JobBars.UI {
         private AtkResNode*[] Ticks;
         private AtkTextNode*[] Text;
 
+        private bool TextVisible = false;
+
         public UIDiamond(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
             Setup(node);
         }
@@ -151,6 +153,7 @@ namespace JobBars.UI {
         }
 
         public void SetMaxValue(int value, bool showText = false) {
+            TextVisible = showText;
             SetSpacing(showText ? 5 : 0);
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
@@ -210,7 +213,7 @@ namespace JobBars.UI {
         }
 
         public override int GetHeight(int param) {
-            return 40;
+            return TextVisible ? 40 : 32;
         }
 
         public override int GetWidth(int param) {

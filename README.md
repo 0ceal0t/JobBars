@@ -88,10 +88,12 @@ To open the settings menu, use `/jobbars`
 
 ## TODO
 - [ ] Glow around gauges
+- [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs
 - [ ] GCD timer
 - [ ] DoT tick timer
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~Add invert counter option to GCDs~~
 - [x] ~~Better bar placement options~~
 - [x] ~~Animate gauge movement~~ (kinda)
 - [x] ~~Hide all gauges options~~

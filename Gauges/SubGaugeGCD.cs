@@ -1,4 +1,5 @@
 ﻿using Dalamud.Plugin;
+using ImGuiNET;
 using JobBars.Data;
 using JobBars.UI;
 using System;
@@ -31,6 +32,8 @@ namespace JobBars.Gauges {
         private static int RESET_DELAY = 3;
         private DateTime StopTime;
 
+        private bool Invert;
+
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
         private UIElement UI => Gauge.UI;
@@ -40,6 +43,7 @@ namespace JobBars.Gauges {
             Gauge = gauge;
             Props = props;
             Props.Color = Configuration.Config.GetColorOverride(Id, out var newColor) ? newColor : Props.Color;
+            Invert = Configuration.Config.GaugeInvert.Contains(id);
         }
 
         public void Reset() {
@@ -68,7 +72,7 @@ namespace JobBars.Gauges {
                     State = GaugeState.Finished;
                     StopTime = time;
                 }
-                SetValue(Counter);
+                SetValue(Invert ? Props.MaxCounter - Counter : Counter);
             }
             else if(State == GaugeState.Finished) {
                 if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
@@ -126,13 +130,19 @@ namespace JobBars.Gauges {
 
         public void DrawSubGauge(string _ID, JobIds job) {
             //============ COLOR ===================
-            var colorTitle = "Color" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
-            if(Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: colorTitle)) {
+            var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
+            if(Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: "Color" + suffix)) {
                 Props.Color = newColor;
                 if(Gauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
                     UI?.SetColor(Props.Color);
                 }
-            }   
+            }
+            //========== INVERT ====================
+            if(ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Invert)) {
+                if (Invert) Configuration.Config.GaugeInvert.Add(Id);
+                else Configuration.Config.GaugeInvert.Remove(Id);
+                Configuration.Config.Save();
+            }
         }
     }
 }
