@@ -35,7 +35,7 @@ namespace JobBars.Gauges {
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
         private bool InDanger = false;
-        private static float LOW_TIME_WARNING = 4.0f;
+        private static float LOW_TIME_WARNING => Configuration.Config.GaugeLowTimerWarning;
 
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
@@ -112,7 +112,7 @@ namespace JobBars.Gauges {
                     ResetIcon();
                 }
 
-                bool inDanger = timeLeft < LOW_TIME_WARNING && !Props.HideLowWarning && timeLeft > 0;
+                bool inDanger = timeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !Props.HideLowWarning && timeLeft > 0;
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
                 if(inDanger && beforeOk) {
                     if (Configuration.Config.SeNumber > 0) {

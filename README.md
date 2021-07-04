@@ -33,7 +33,7 @@ To open the settings menu, use `/jobbars`
 + **Gauges**: GCDS used in No Mercy
 
 ### <img src="Assets/JobIcons/SCH.png" height="20px" width="20px"> SCH
-+ **Gauges**: Biolysis
++ **Gauges**: Excog, Biolysis
 + **Buffs**: Chain Stratagem
 
 ### <img src="Assets/JobIcons/WHM.png" height="20px" width="20px"> WHM
@@ -48,15 +48,15 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Brotherhood, Riddle of Fire
 
 ### <img src="Assets/JobIcons/DRG.png" height="20px" width="20px"> DRG
-+ **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight
++ **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight, Charges + time left on True North
 + **Buffs**: Battle Litany, Dragonsight, Lance Charge
 
 ### <img src="Assets/JobIcons/NIN.png" height="20px" width="20px"> NIN
-+ **Gauges**: GCDS used in Bunshin
++ **Gauges**: GCDS used in Bunshin, Charges + time left on True North
 + **Buffs**: Trick Attack, Bunshin
 
 ### <img src="Assets/JobIcons/SAM.png" height="20px" width="20px"> SAM
-+ **Gauges**: Jinpu, Shifu, Higanbana
++ **Gauges**: Jinpu, Shifu, Higanbana, Charges + time left on True North
 + **Buffs**: Double Midare
 
 ### <img src="Assets/JobIcons/BRD.png" height="20px" width="20px"> BRD
@@ -79,7 +79,7 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
 
 ### <img src="Assets/JobIcons/RDM.png" height="20px" width="20px"> RDM
-+ **Gauges**: GCDS used in Manification, Fire and Stone procs
++ **Gauges**: GCDS used in Manification, Fire and Stone procs, Acceleration stacks
 + **Buffs**: Embolden, Manafication
 
 ### <img src="Assets/JobIcons/BLU.png" height="20px" width="20px"> BLU

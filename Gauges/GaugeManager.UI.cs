@@ -36,6 +36,8 @@ namespace JobBars.Gauges {
                 Configuration.Config.Save();
             }
 
+            JobBars.Separator(); // =====================================
+
             if (ImGui.Checkbox("DoT Icon Replacement (Global)", ref Configuration.Config.GaugeIconReplacement)) {
                 UIIconManager.Manager.Reset();
                 Configuration.Config.Save();
@@ -54,12 +56,22 @@ namespace JobBars.Gauges {
                 Configuration.Config.Save();
             }
 
+            JobBars.Separator(); // =====================================
+
+            ImGui.SetNextItemWidth(50f);
+            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref Configuration.Config.GaugeLowTimerWarning)) {
+                Configuration.Config.Save();
+            }
+
+            ImGui.SameLine();
             ImGui.SetNextItemWidth(25f);
             if (ImGui.InputInt("Sound Effect # When DoTs Are Low (0 = off)", ref Configuration.Config.SeNumber, 0)) {
                 if (Configuration.Config.SeNumber < 0) Configuration.Config.SeNumber = 0;
                 if (Configuration.Config.SeNumber > 16) Configuration.Config.SeNumber = 16;
                 Configuration.Config.Save();
             }
+
+            JobBars.Separator(); // =====================================
 
             if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
                 SetPositionScale();

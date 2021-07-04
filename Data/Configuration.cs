@@ -26,6 +26,7 @@ namespace JobBars.Data {
         public HashSet<string> GaugeDisabled = new();
         public HashSet<string> GaugeIconDisabled = new();
         public HashSet<string> GaugeInvert = new();
+        public float GaugeLowTimerWarning = 4.0f;
 
         public Dictionary<string, string> GaugeColorOverride = new();
         public Dictionary<string, GaugeVisualType> GaugeTypeOverride = new();

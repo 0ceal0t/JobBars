@@ -52,5 +52,9 @@ namespace JobBars {
             ImGui.End();
             return newPosition != position;
         }
+
+        public static void Separator() {
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2); ImGui.Separator(); ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+        }
     }
 }

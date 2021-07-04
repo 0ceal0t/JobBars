@@ -29,6 +29,8 @@ namespace JobBars.Buffs {
                 Configuration.Config.Save();
             }
 
+            JobBars.Separator(); // =====================================
+
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref Configuration.Config.BuffHideOutOfCombat)) {
                 if (!Configuration.Config.BuffHideOutOfCombat && Configuration.Config.BuffBarEnabled) { // since they might be hidden
                     UI.ShowBuffs();
@@ -36,7 +38,10 @@ namespace JobBars.Buffs {
                 Configuration.Config.Save();
             }
 
-            if (ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal)) {
+            JobBars.Separator(); // =====================================
+
+            ImGui.SetNextItemWidth(25f);
+            if (ImGui.InputInt("Buffs Per Line" + _ID, ref Configuration.Config.BuffHorizontal, 0)) {
                 Configuration.Config.Save();
             }
 
