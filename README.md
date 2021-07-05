@@ -87,6 +87,8 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
+- [ ] Hide based on level
+- [ ] How many people got hit by buffs
 - [ ] Glow around gauges
 - [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs

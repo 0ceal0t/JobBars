@@ -114,6 +114,7 @@ namespace JobBars.Gauges {
 
             Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
             var currentTime = DateTime.Now;
+
             int ownerId = PluginInterface.ClientState.LocalPlayer.ActorId;
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
@@ -125,7 +126,11 @@ namespace JobBars.Gauges {
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
                 var actorTable = PluginInterface.ClientState.Actors;
                 foreach(var pMember in party) {
-                    for(int i = 0; i < actorTable.Length; i++) {
+                    if (pMember == null) continue;
+
+                    for (int i = 0; i < actorTable.Length; i++) {
+                        if (actorTable[i] == null) continue;
+
                         if (actorTable[i].ActorId == pMember.ActorId) {
                             AddBuffs(actorTable[i], ownerId, BuffDict);
                         }
