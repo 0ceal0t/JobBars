@@ -28,8 +28,10 @@ namespace JobBars {
         private GaugeManager GManager;
         private BuffManager BManager;
         private Configuration Config;
-        private JobIds CurrentJob = JobIds.OTHER;
         private HashSet<uint> GCDs = new HashSet<uint>();
+
+        private JobIds CurrentJob = JobIds.OTHER;
+        private byte LastLevel = 0;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
@@ -187,16 +189,33 @@ namespace JobBars {
                 return;
             }
 
-            SetJob(PluginInterface.ClientState.LocalPlayer.ClassJob);
+            // ======== SWITCH JOB ============
+            var level = PluginInterface.ClientState.LocalPlayer.Level;
+            var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
+            JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
+            if (job != CurrentJob) {
+                CurrentJob = job;
+                LastLevel = level; // switching to a different job, might have a different level
+                PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
+                Reset();
+            }
+            else if(level != LastLevel) {
+                LastLevel = level;
+                // TODO
+            }
+
+            // ========= TICK =============
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.ConditionFlag.InCombat];
             GManager.Tick(Party, inCombat);
             BManager.Tick(inCombat);
 
+            // ========= PARTY CHANGE ===========
             if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
                 BManager.SetJob(CurrentJob);
             }
             LastPartyCount = Party.Count;
 
+            // ========= HUD LAYOUT CHANGE ==========
             var currentPosition = UiHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
             var currentScale = UiHelper.GetNodeScale(addon->RootNode);
             if(currentPosition != LastPosition || currentScale != LastScale) {
@@ -205,15 +224,6 @@ namespace JobBars {
             }
             LastPosition = currentPosition;
             LastScale = currentScale;
-        }
-
-        private void SetJob(ClassJob jobId) {
-            JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
-            if (job != CurrentJob) {
-                CurrentJob = job;
-                PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                Reset();
-            }
         }
 
         private void Reset() {

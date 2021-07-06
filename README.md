@@ -87,6 +87,7 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
+- [ ] support crossbar for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
 - [ ] Glow around gauges

@@ -21,13 +21,12 @@
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
   </PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Assets\**" />
 	  <Compile Remove="lib\**" />
+	  <EmbeddedResource Remove="Assets\**" />
 	  <EmbeddedResource Remove="lib\**" />
+	  <None Remove="Assets\**" />
 	  <None Remove="lib\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="lib\FFXIVClientInterface\FFXIVClientInterface.csproj" />
-	  <ProjectReference Include="lib\FFXIVClientStructs\FFXIVClientStructs.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="Dalamud">
@@ -62,11 +61,12 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Assets\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
 	  <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\FFXIVClientInterface\FFXIVClientInterface.csproj" />
+	  <ProjectReference Include="..\FFXIVClientStructs\FFXIVClientStructs.csproj" />
 	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="xcopy /Y &quot;$(TargetDir)JobBars.json&quot; &quot;$(TargetDir)Output&quot;" />

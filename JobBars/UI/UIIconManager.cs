@@ -40,8 +40,8 @@ namespace JobBars.UI {
             "_ActionBar08",
             "_ActionBar09",
             "_ActionCross",
-            "_ActionDoubleCrossL",
-            "_ActionDoubleCrossR",
+            //"_ActionDoubleCrossL",
+            //"_ActionDoubleCrossR",
         };
         public Dictionary<uint, IconProgress> ActionIdToStatus = new Dictionary<uint, IconProgress>();
         public Dictionary<uint, IconState> ActionIdToState = new Dictionary<uint, IconState>();
@@ -73,7 +73,8 @@ namespace JobBars.UI {
             IconComponentOverride = new HashSet<IntPtr>();
             IconTextOverride = new HashSet<IntPtr>();
 
-            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23"); // changes recast partId for gcds
+            // changes recast partId for gcds
+            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23");
             setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);
             setIconRecastHook.Enable();
 
@@ -82,11 +83,13 @@ namespace JobBars.UI {
             setIconRecastHook2 = new Hook<SetIconRecastDelegate2>(setIconRecastPtr2, (SetIconRecastDelegate2)SetIconRecast2);
             setIconRecastHook2.Enable();
 
-            IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9"); // sets icon text for abilities which use mp, like Combust
+            // sets icon text for abilities which use mp, like Combust
+            IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9");
             setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, (SetIconRecastTextDelegate)SetIconRecastText);
             setIconRecastTextHook.Enable();
 
-            IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA"); // sets icon text for other abilities, like Goring blade
+            // sets icon text for other abilities, like Goring blade
+            IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA");
             setIconRecastTextHook2 = new Hook<SetIconRecastTextDelegate2>(setIconTextPtr2, (SetIconRecastTextDelegate2)SetIconRecastText2);
             setIconRecastTextHook2.Enable();
         }
@@ -162,10 +165,19 @@ namespace JobBars.UI {
                 var actionBar = AllActionBars[abIndex];
                 var ab = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(actionBar, 1);
                 if (ab == null || ab->ActionBarSlotsAction == null) continue;
-                var bar = abIndex > 10 ? null : hotbarModule.GetBar(abIndex, HotBarType.Normal);
+
+                HotBar* bar = null;
+                if(abIndex < 10) {
+                    bar = hotbarModule.GetBar(abIndex, HotBarType.Normal);
+                }
+                else {
+                    bar = hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
+                }
+
                 for (var i = 0; i < ab->HotbarSlotCount; i++) {
                     var slot = ab->ActionBarSlotsAction[i];
                     var slotStruct = hotbarModule.GetBarSlot(bar, i);
+
                     if (slotStruct != null && slotStruct->CommandType == HotbarSlotType.Action && ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) {
                         var state = ActionIdToState.TryGetValue(slotStruct->CommandId, out var _s) ? _s : IconState.StartRunning;
 
