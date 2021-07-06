@@ -43,6 +43,7 @@ namespace JobBars.Buffs {
             Name = name;
             Props = props;
             Enabled = !Configuration.Config.BuffDisabled.Contains(Name);
+            if(Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
         }
 
         public void Setup() {
