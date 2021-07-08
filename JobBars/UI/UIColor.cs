@@ -76,9 +76,11 @@ namespace JobBars.UI {
         public static ElementColor White = new ElementColor("White", 150, 140, 140, 100, 100, 100);
         public static ElementColor DarkBlue = new ElementColor("Dark Blue", 65516, 65516, 120, 100, 100, 100);
         public static ElementColor NoColor= new ElementColor("No Color", 0, 0, 0, 100, 100, 100);
+
         public static Dictionary<string, ElementColor> AllColors = new Dictionary<string, ElementColor>();
 
         public static void SetupColors() {
+            AllColors = new();
             AllColors.Add(MpPink.Name, MpPink);
             AllColors.Add(HealthGreen.Name, HealthGreen);
             AllColors.Add(Purple.Name, Purple);

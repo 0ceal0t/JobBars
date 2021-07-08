@@ -73,7 +73,6 @@ namespace JobBars.Helper {
             if (x != null) node->X = x.Value;
             if (y != null) node->Y = y.Value;
             node->Flags_2 |= 0x1;
-
         }
 
         public static void SetScale(AtkResNode* atkUnitBase, float? scaleX, float? scaleY) {

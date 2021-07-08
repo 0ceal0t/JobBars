@@ -95,7 +95,7 @@ namespace JobBars.Gauges {
         }
 
         public bool NoIcon() {
-            return (!IconEnabled || (Props.Icons == null) || !Configuration.Config.GaugeIconReplacement);
+            return !IconEnabled || (Props.Icons == null) || !Configuration.Config.GaugeIconReplacement;
         }
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
@@ -168,10 +168,10 @@ namespace JobBars.Gauges {
                 var iconTitle = "Icon Replacement" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
                 if (ImGui.Checkbox(iconTitle + _ID + Props.SubName, ref IconEnabled)) {
                     if (IconEnabled) {
-                        Configuration.Config.GaugeIconDisabled.Remove(Gauge.Name);
+                        Configuration.Config.GaugeIconDisabled.Remove(Id);
                     }
                     else {
-                        Configuration.Config.GaugeIconDisabled.Add(Gauge.Name);
+                        Configuration.Config.GaugeIconDisabled.Add(Id);
                         if (GaugeManager.Manager.CurrentJob == job) {
                             UIIconManager.Manager.Reset();
                         }

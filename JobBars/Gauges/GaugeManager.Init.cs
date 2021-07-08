@@ -254,7 +254,7 @@ namespace JobBars.Gauges {
             // ============ DRG ==================
             JobToGauges.Add(JobIds.DRG, new Gauge[] {
                 new GaugeGCD("Lance Charge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
-                    MaxCounter = 9,
+                    MaxCounter = 8,
                     MaxDuration = 20,
                     Color = UIColor.Red,
                     Triggers = new []{
@@ -262,7 +262,7 @@ namespace JobBars.Gauges {
                     }
                 }),
                 new GaugeGCD("Dragon Sight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
-                    MaxCounter = 9,
+                    MaxCounter = 8,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
                     Triggers = new []{
