@@ -16,10 +16,11 @@ namespace JobBars {
         private void BuildSettingsUI() {
             if (!Ready || !Init) return;
 
+            if (!Visible) return;
+
             string _ID = "##JobBars_Settings";
-            ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);
-            if (Visible && ImGui.Begin("JobBars Settings", ref Visible)) {
+            if (ImGui.Begin("JobBars Settings", ref Visible)) {
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {
                     GManager?.Draw();
