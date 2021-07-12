@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
             Props.Color = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.Color;
         }
 
-        public override void Setup() {
+        protected override void Setup() {
             UI.SetColor(Props.Color);
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Props.MaxStacks);
@@ -62,11 +62,11 @@ namespace JobBars.Gauges {
 
         public override void ProcessAction(Item action) { }
 
-        public override int GetHeight() {
+        protected override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);
         }
 
-        public override int GetWidth() {
+        protected override int GetWidth() {
             return UI == null ? 0 : UI.GetWidth(Props.MaxStacks);
         }
 
@@ -74,7 +74,7 @@ namespace JobBars.Gauges {
             return Props.Type;
         }
 
-        public override void DrawGauge(string _ID, JobIds job) {
+        protected override void DrawGauge(string _ID, JobIds job) {
             // ======== COLOR =============
             if (DrawColorOptions(_ID, Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;

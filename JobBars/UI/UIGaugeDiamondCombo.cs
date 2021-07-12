@@ -96,6 +96,11 @@ namespace JobBars.UI {
             UiHelper.SetPosition(Diamond.RootRes, x, y + 10);
         }
 
+        public override void SetScale(float scale) {
+            UiHelper.SetScale(Gauge.RootRes, scale, scale);
+            UiHelper.SetScale(Diamond.RootRes, scale, scale);
+        }
+
         public override void SetPosition(Vector2 pos) {
             UiHelper.SetPosition(Gauge.RootRes, pos.X, pos.Y);
             UiHelper.SetPosition(Diamond.RootRes, pos.X, pos.Y + 10);

@@ -28,14 +28,16 @@ namespace JobBars.Gauges {
     public abstract class Gauge {
         public string Name;
         public UIElement UI;
+
         public bool Enabled;
         public int Order;
-        public int NumSlots = 1;
+        public float Scale;
 
         public Gauge(string name) {
             Name = name;
             Enabled = !Configuration.Config.GaugeDisabled.Contains(Name);
             Order = Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
+            Scale = Configuration.Config.GaugeIndividualScale.TryGetValue(name, out var newScale) ? newScale : 1;
         }
 
         public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
@@ -58,21 +60,26 @@ namespace JobBars.Gauges {
 
         public void SetupUI() {
             UI.SetVisible(Enabled);
+            UI.SetScale(Scale);
             Setup();
         }
+        protected abstract void Setup();
 
         public virtual bool DoProcessInput() {
             return Enabled;
         }
+        public abstract void ProcessAction(Item action);
 
         public abstract GaugeVisualType GetVisualType();
-        public abstract void Setup();
-        public abstract void ProcessAction(Item action);
-        public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
-        public abstract int GetHeight();
-        public abstract int GetWidth();
 
-        public abstract void DrawGauge(string _ID, JobIds job);
+        public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
+
+        public int Height => UI == null ? 0 : (int)(Scale * GetWidth());
+        public int Width => UI == null ? 0 : (int)(Scale * GetHeight());
+        protected abstract int GetHeight();
+        protected abstract int GetWidth();
+
+        protected abstract void DrawGauge(string _ID, JobIds job);
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
             string type = this switch
@@ -116,6 +123,22 @@ namespace JobBars.Gauges {
                     Configuration.Config.GaugeOrderOverride[Name] = Order;
                 }
                 Configuration.Config.Save();
+                if (job == GaugeManager.Manager.CurrentJob) {
+                    GaugeManager.Manager.SetPositionScale();
+                }
+            }
+
+            // ====== SCALE ========
+            if (ImGui.InputFloat("Scale" + _ID, ref Scale)) {
+                if(Scale <= 0.1f) { Scale = 0.1f; }
+                if(Scale == 1) {
+                    Configuration.Config.GaugeIndividualScale.Remove(Name);
+                }
+                else {
+                    Configuration.Config.GaugeIndividualScale[Name] = Scale;
+                }
+                Configuration.Config.Save();
+                UI?.SetScale(Scale);
                 if (job == GaugeManager.Manager.CurrentJob) {
                     GaugeManager.Manager.SetPositionScale();
                 }

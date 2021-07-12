@@ -61,12 +61,12 @@ namespace JobBars.Gauges {
                 else {
                     if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
                         gauge.UI.SetPosition(new Vector2(totalPosition, gauge.UI.GetHorizontalYOffset()));
-                        totalPosition += gauge.GetWidth();
+                        totalPosition += gauge.Width;
                     }
                     else { // VERTICAL
-                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.GetWidth() : 0;
+                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.Width : 0;
                         gauge.UI.SetPosition(new Vector2(xPosition, totalPosition));
-                        totalPosition += gauge.GetHeight();
+                        totalPosition += gauge.Height;
                     }
                 }
             }

@@ -18,6 +18,7 @@ namespace JobBars.Data {
         public bool GaugeSplit = false;
         public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
         public Dictionary<string, Vector2> GaugeSplitPosition = new();
+        public Dictionary<string, float> GaugeIndividualScale = new();
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;

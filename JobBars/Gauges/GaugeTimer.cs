@@ -36,7 +36,7 @@ namespace JobBars.Gauges {
             IconEnabled = false;
         }
 
-        public override void Setup() {
+        protected override void Setup() {
             foreach (var sg in SubGauges) {
                 sg.Reset();
             }
@@ -60,11 +60,11 @@ namespace JobBars.Gauges {
             return Enabled|| IconEnabled;
         }
 
-        public override int GetHeight() {
+        protected override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);
         }
 
-        public override int GetWidth() {
+        protected override int GetWidth() {
             return UI == null ? 0 : UI.GetWidth(0);
         }
 
@@ -72,7 +72,7 @@ namespace JobBars.Gauges {
             return GaugeVisualType.Bar;
         }
 
-        public override void DrawGauge(string _ID, JobIds job) {
+        protected override void DrawGauge(string _ID, JobIds job) {
             foreach (var sg in SubGauges) {
                 sg.DrawSubGauge(_ID, job);
             }

@@ -46,7 +46,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Setup() {
+        protected override void Setup() {
             if (UI is UIGaugeDiamondCombo combo) {
                 combo.SetGaugeColor(Props.BarColor);
                 SetupDiamondColors();
@@ -149,11 +149,11 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override int GetHeight() {
+        protected override int GetHeight() {
             return UI == null ? 0 : UI.GetHeight(0);
         }
 
-        public override int GetWidth() {
+        protected override int GetWidth() {
             return UI == null ? 0 : UI.GetWidth(0);
         }
 
@@ -161,7 +161,7 @@ namespace JobBars.Gauges {
             return Props.Type;
         }
 
-        public override void DrawGauge(string _ID, JobIds job) {
+        protected override void DrawGauge(string _ID, JobIds job) {
             // ======== COLOR =============
             if (DrawColorOptions(_ID, Name, Props.BarColor, out var newColor)) {
                 Props.BarColor = newColor;

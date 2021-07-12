@@ -57,6 +57,10 @@ namespace JobBars.UI {
             UiHelper.SetPosition(RootRes, pos.X, pos.Y);
         }
 
+        public virtual void SetScale(float scale) {
+            UiHelper.SetScale(RootRes, scale, scale);
+        }
+
         public virtual void Cleanup() { }
 
         public abstract void SetColor(ElementColor color);
