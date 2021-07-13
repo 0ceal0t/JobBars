@@ -11,6 +11,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIGauge : UIElement {
+        private AtkResNode* TextContainer;
         private AtkTextNode* TextNode;
         private AtkNineGridNode* TextBlurNode;
         private AtkNineGridNode* BarMainNode;
@@ -25,8 +26,9 @@ namespace JobBars.UI {
 
         public override void LoadExisting(AtkResNode* node) {
             RootRes = node;
-            TextNode = (AtkTextNode*)RootRes->ChildNode->PrevSiblingNode->ChildNode;
-            TextBlurNode = (AtkNineGridNode*)RootRes->ChildNode->PrevSiblingNode->ChildNode->PrevSiblingNode;
+            TextContainer = RootRes->ChildNode->PrevSiblingNode;
+            TextNode = (AtkTextNode*)TextContainer->ChildNode;
+            TextBlurNode = (AtkNineGridNode*)TextContainer->ChildNode->PrevSiblingNode;
             BarMainNode = (AtkNineGridNode*)RootRes->ChildNode->ChildNode->PrevSiblingNode->ChildNode;
         }
 
@@ -109,12 +111,12 @@ namespace JobBars.UI {
             barContainer->NextSiblingNode = (AtkResNode*)bg;
 
             // ======== TEXT ==========
-            var textContainer = UI.CreateResNode();
-            textContainer->X = 112;
-            textContainer->Y = 6;
-            textContainer->Width = 47;
-            textContainer->Height = 40;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = textContainer;
+            TextContainer = UI.CreateResNode();
+            TextContainer->X = 112;
+            TextContainer->Y = 6;
+            TextContainer->Width = 47;
+            TextContainer->Height = 40;
+            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = TextContainer;
 
             TextNode = UI.CreateTextNode();
             TextNode->AtkResNode.X = 14;
@@ -129,6 +131,8 @@ namespace JobBars.UI {
             TextBlurNode->AtkResNode.Height = 40;
             TextBlurNode->AtkResNode.X = 0;
             TextBlurNode->AtkResNode.Y = 0;
+            TextBlurNode->AtkResNode.OriginX = 0;
+            TextBlurNode->AtkResNode.OriginY = 0;
             TextBlurNode->PartID = UIBuilder.GAUGE_TEXT_BLUR_PART;
             TextBlurNode->PartsList = nameplateAddon->UldManager.PartsList;
             TextBlurNode->TopOffset = 0;
@@ -137,21 +141,21 @@ namespace JobBars.UI {
             TextBlurNode->LeftOffset = 28;
             nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)TextBlurNode;
             // ====== TEXT SETUP =========
-            textContainer->ChildCount = 2;
-            textContainer->ChildNode = (AtkResNode*)TextNode;
-            TextNode->AtkResNode.ParentNode = textContainer;
-            TextBlurNode->AtkResNode.ParentNode = textContainer;
+            TextContainer->ChildCount = 2;
+            TextContainer->ChildNode = (AtkResNode*)TextNode;
+            TextNode->AtkResNode.ParentNode = TextContainer;
+            TextBlurNode->AtkResNode.ParentNode = TextContainer;
             TextNode->AtkResNode.PrevSiblingNode = (AtkResNode*)TextBlurNode;
 
             // ====== CONTAINER SETUP ======
-            gaugeContainer->PrevSiblingNode = textContainer;
-            textContainer->NextSiblingNode = gaugeContainer;
+            gaugeContainer->PrevSiblingNode = TextContainer;
+            TextContainer->NextSiblingNode = gaugeContainer;
 
             // ====== ROOT SETUP =====
             RootRes->ChildNode = gaugeContainer;
             gaugeContainer->ParentNode = RootRes;
-            textContainer->ParentNode = RootRes;
-            RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + textContainer->ChildCount + 2);
+            TextContainer->ParentNode = RootRes;
+            RootRes->ChildCount = (ushort)(gaugeContainer->ChildCount + TextContainer->ChildCount + 2);
         }
 
         public void SetText(string text) {
@@ -159,8 +163,16 @@ namespace JobBars.UI {
                 UiHelper.SetText(TextNode, text);
                 CurrentText = text;
             }
-            UiHelper.SetSize((AtkResNode*)TextBlurNode, 30 + 16 * text.Length, 40);
-            UiHelper.SetPosition((AtkResNode*)TextBlurNode, -16 * (text.Length - 1), 0);
+
+            int size = text.Length * 17;
+            UiHelper.SetPosition(TextContainer, 129 - size, 6);
+            UiHelper.SetSize(TextContainer, 30 + size, 40);
+
+            UiHelper.SetPosition((AtkResNode*)TextBlurNode, 0, 0);
+            UiHelper.SetSize((AtkResNode*)TextBlurNode, 30 + size, 40);
+
+            UiHelper.SetPosition((AtkResNode*)TextNode, 14, 5);
+            UiHelper.SetSize((AtkResNode*)TextNode, size, 30);
         }
 
         public void SetTextColor(ElementColor color) {

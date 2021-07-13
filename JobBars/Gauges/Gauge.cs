@@ -74,8 +74,8 @@ namespace JobBars.Gauges {
 
         public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
 
-        public int Height => UI == null ? 0 : (int)(Scale * GetWidth());
-        public int Width => UI == null ? 0 : (int)(Scale * GetHeight());
+        public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
+        public int Width => UI == null ? 0 : (int)(Scale * GetWidth());
         protected abstract int GetHeight();
         protected abstract int GetWidth();
 

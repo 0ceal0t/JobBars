@@ -71,17 +71,19 @@ namespace JobBars.Gauges {
                 Configuration.Config.Save();
             }
 
-            JobBars.Separator(); // =====================================
+            if(!Configuration.Config.GaugeSplit) {
+                JobBars.Separator(); // =====================================
 
-            if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
-                SetPositionScale();
-                Configuration.Config.Save();
-            }
+                if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
+                    SetPositionScale();
+                    Configuration.Config.Save();
+                }
 
-            ImGui.SameLine();
-            if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
-                SetPositionScale();
-                Configuration.Config.Save();
+                ImGui.SameLine();
+                if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
+                    SetPositionScale();
+                    Configuration.Config.Save();
+                }
             }
 
             ImGui.BeginChild(_ID + "/Child", ImGui.GetContentRegionAvail(), true);
