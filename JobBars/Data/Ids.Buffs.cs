@@ -25,6 +25,7 @@ namespace JobBars.Data {
         Aero = 143,
         Aero2 = 144,
         Dia = 1871,
+        PresenceOfMind = 157,
         // AST
         TheBalance = 0x75a,
         TheBole = 0x75b,

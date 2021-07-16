@@ -43,7 +43,9 @@ namespace JobBars.UI {
         public TexUnallocDelegate TexUnalloc;
 
         public AtkUnitBase* _ADDON => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
-        public uint nodeIdx = 99990001;
+
+        public static uint nodeIdx_START = 89990001;
+        public uint nodeIdx = nodeIdx_START;
 
         public static ushort ASSET_START = 1;
         public static ushort PART_START = 7;
@@ -107,31 +109,28 @@ namespace JobBars.UI {
             }
         }
 
-        public static void RecurseHide(AtkResNode* node, bool hide = true, bool siblings = true) {
-            if (hide) {
-                UiHelper.Hide(node);
-            }
-            else {
-                UiHelper.Show(node);
-            }
-
-            if (node->ChildNode != null) {
-                RecurseHide(node->ChildNode, hide);
-            }
-            if (siblings && node->PrevSiblingNode != null) {
-                RecurseHide(node->PrevSiblingNode, hide);
-            }
-        }
-
         public bool IsInitialized() {
             var addon = _ADDON;
-            if(addon != null && addon->UldManager.NodeListCount > 4) {
+            if(addon != null && addon->UldManager.NodeListCount >= 6) {
                 return true;
             }
             return false;
         }
 
         public void Setup() {
+            var addon = _ADDON;
+
+            if (addon->UldManager.NodeListCount != 4) {
+                for (int idx = 0; idx < addon->UldManager.NodeListCount; idx++) {
+                    var node = addon->UldManager.NodeList[idx];
+                    if (node->NodeID == nodeIdx_START) { // found existing gauge_root node
+                        LoadExisting(node);
+                        return;
+                    }
+                }
+                // didn't find it, must not be initialized yet
+            }
+
             SetupTex();
             SetupPart();
             Init();
@@ -181,9 +180,6 @@ namespace JobBars.UI {
         }
 
         private void SetupTex() {
-            var addon = _ADDON;
-            if (addon->UldManager.NodeListCount > 4) return;
-
             List<string> assets = new List<string>();
             assets.Add("ui/uld/Parameter_Gauge.tex"); // existing asset
             assets.Add("ui/uld/Parameter_Gauge.tex");
@@ -201,7 +197,6 @@ namespace JobBars.UI {
 
         private void SetupPart() {
             var addon = _ADDON;
-            if (addon->UldManager.NodeListCount > 4) return;
 
             addon->UldManager.PartsList->Parts = ExpandPartList(addon->UldManager, 99);
             AddPart(GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
@@ -258,12 +253,11 @@ namespace JobBars.UI {
             }
         }
 
-        private void LoadExisting() {
+        private void LoadExisting(AtkResNode* gaugeRoot) {
             PluginLog.Log("===== LOAD EXISTING =====");
 
-            var addon = _ADDON;
             // ===== LOAD EXISTING GAUGES =====
-            G_RootRes = addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode->PrevSiblingNode;
+            G_RootRes = gaugeRoot;
             UiHelper.Show(G_RootRes);
 
             var n = G_RootRes->ChildNode;
@@ -275,6 +269,7 @@ namespace JobBars.UI {
                 Diamonds[idx] = new UIDiamond(this, n);
                 n = n->PrevSiblingNode;
             }
+
             // ====== LOAD EXISTING BUFFS =======
             B_RootRes = G_RootRes->PrevSiblingNode;
             UiHelper.Show(B_RootRes);
@@ -290,11 +285,8 @@ namespace JobBars.UI {
 
         private void Init() {
             var addon = _ADDON;
-            if (addon->UldManager.NodeListCount > 4) {
-                LoadExisting();
-                return;
-            }
 
+            nodeIdx = nodeIdx_START;
             UiHelper.ExpandNodeList(addon, 999);
             // ======== CREATE GAUGES =======
             G_RootRes = CreateResNode();

@@ -32,7 +32,6 @@ namespace JobBars.UI {
             UiHelper.Show(Diamond.RootRes);
         }
 
-
         public void SetText(string text) {
             Gauge.SetText(text);
         }

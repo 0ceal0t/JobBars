@@ -208,6 +208,14 @@ namespace JobBars.Gauges {
                             ActionIds.Aero2
                         }
                     }
+                }),
+                new GaugeTimer("Presence of Mind", new SubGaugeTimerProps {
+                    MaxDuration = 15,
+                    Color = UIColor.Red,
+                    HideLowWarning = true,
+                    Triggers = new []{
+                        new Item(BuffIds.PresenceOfMind)
+                    }
                 })
             });
             // ============ BRD ==================
