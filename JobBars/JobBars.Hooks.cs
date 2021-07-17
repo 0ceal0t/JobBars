@@ -36,7 +36,9 @@ namespace JobBars {
             if (!isParty) { // don't let party members affect our gauge
                 GManager?.PerformAction(actionItem);
             }
-            BManager?.PerformAction(actionItem);
+            if (isSelf || Configuration.Config.BuffIncludeParty) {
+                BManager?.PerformAction(actionItem);
+            }
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
             int effectsEntries = 0;
@@ -89,7 +91,10 @@ namespace JobBars {
                     if (!isParty) { // don't let party members affect our gauge
                         GManager?.PerformAction(buffItem);
                     }
-                    if ((int)tTarget == selfId) { // only really care about buffs on us
+
+                    // only care about buffs that we are getting
+                    // ignore if we don't care about party members' CDs
+                    if ((int)tTarget == selfId && Configuration.Config.BuffIncludeParty) {
                         BManager?.PerformAction(buffItem);
                     }
                 }

@@ -40,6 +40,7 @@ namespace JobBars.Data {
 
         public bool BuffBarEnabled = true;
         public bool BuffHideOutOfCombat = false;
+        public bool BuffIncludeParty = true;
         public HashSet<string> BuffDisabled = new();
 
         public int BuffHorizontal = 5;

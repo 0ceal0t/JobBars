@@ -38,6 +38,11 @@ namespace JobBars.Buffs {
                 Configuration.Config.Save();
             }
 
+            if (ImGui.Checkbox("Show Party Members' CDs and Buffs", ref Configuration.Config.BuffIncludeParty)) {
+                Reset();
+                Configuration.Config.Save();
+            }
+
             JobBars.Separator(); // =====================================
 
             ImGui.SetNextItemWidth(25f);
