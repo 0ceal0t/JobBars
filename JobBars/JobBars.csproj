@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup Label="Target">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <TargetFramework>net472</TargetFramework>
+        <PlatformTarget>x64</PlatformTarget>
+        <TargetFramework>net5.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <Platforms>AnyCPU;x64</Platforms>
         <Configurations>Debug;Release</Configurations>
@@ -33,7 +33,6 @@
             <Private>false</Private>
             <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
 		</Reference>
-		<Reference Include="Microsoft.CSharp" />
         <Reference Include="Newtonsoft.Json">
             <Private>false</Private>
             <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
@@ -69,6 +68,6 @@
 	  <ProjectReference Include="..\FFXIVClientStructs\FFXIVClientStructs.csproj" />
 	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="xcopy /Y &quot;$(TargetDir)JobBars.json&quot; &quot;$(TargetDir)Output&quot;" />
+	  <Exec Command="mkdir &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)JobBars.json&quot; &quot;$(TargetDir)Output&quot;" />
 	</Target>
 </Project>

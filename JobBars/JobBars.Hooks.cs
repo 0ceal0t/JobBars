@@ -17,7 +17,7 @@ namespace JobBars {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
 
-            var selfId = PluginInterface.ClientState.LocalPlayer.ActorId;
+            var selfId = (int) PluginInterface.ClientState.LocalPlayer.ActorId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? IsPet(sourceId, selfId) : false);
             var isParty = !isSelf && !isPet && IsInParty(sourceId);

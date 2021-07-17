@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Structs;
+﻿using Dalamud.Game.ClientState.Actors.Types;
+using Dalamud.Game.ClientState.Structs;
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.PartyList;
@@ -115,7 +116,7 @@ namespace JobBars.Gauges {
             Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
             var currentTime = DateTime.Now;
 
-            int ownerId = PluginInterface.ClientState.LocalPlayer.ActorId;
+            int ownerId = (int) PluginInterface.ClientState.LocalPlayer.ActorId;
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 

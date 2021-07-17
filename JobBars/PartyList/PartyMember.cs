@@ -61,7 +61,7 @@ namespace JobBars.PartyList {
             var player = pi.ClientState.LocalPlayer;
             return new PartyMember
             {
-                ActorId = player.ActorId,
+                ActorId = (int) player.ActorId,
                 Address = player?.Address ?? IntPtr.Zero,
             };
         }

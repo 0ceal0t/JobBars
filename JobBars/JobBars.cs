@@ -12,7 +12,6 @@ using JobBars.UI;
 using Dalamud.Hooking;
 using JobBars.Data;
 using JobBars.Gauges;
-using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
 using JobBars.PartyList;
 using FFXIVClientInterface;
