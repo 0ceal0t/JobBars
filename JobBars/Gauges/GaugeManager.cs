@@ -147,7 +147,7 @@ namespace JobBars.Gauges {
 
         private void AddBuffs(Dalamud.Game.ClientState.Actors.Types.Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
-            /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) {
+            /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) { // USE THIS IN .NET5
                 if (status.OwnerId.Equals(ownerId)) {
                     buffDict[new Item
                     {

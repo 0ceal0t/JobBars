@@ -10,6 +10,22 @@ using System.Threading.Tasks;
 
 namespace JobBars.PartyList {
     public class PartyMember {
+
+        [StructLayout(LayoutKind.Explicit)] //idk about size
+        private unsafe struct RegularMemberStruct {
+            [FieldOffset(0x1A8)] public int ActorId;
+        }
+
+        [StructLayout(LayoutKind.Explicit)] //idk about size
+        private unsafe struct CrossRealmMemberStruct {
+            [FieldOffset(0x10)] public int ActorId;
+        }
+
+        [StructLayout(LayoutKind.Explicit)] //idk about size
+        private unsafe struct CompanionMemberStruct {
+            [FieldOffset(0x0)] public int ActorId;
+        }
+
         private PartyMember() {
         }
 
@@ -17,36 +33,33 @@ namespace JobBars.PartyList {
 
         public IntPtr Address { get; private set; }
 
-        internal static PartyMember RegularMember(IntPtr memberAddress) {
-            var member = new PartyMember
+        internal unsafe static PartyMember RegularMember(IntPtr memberAddress) {
+            return new PartyMember
             {
-                ActorId = Marshal.ReadInt32(memberAddress, 0x1A8),
+                ActorId = ((RegularMemberStruct*)memberAddress)->ActorId,
                 Address = memberAddress,
             };
-            return member;
         }
 
-        internal static PartyMember CrossRealmMember(IntPtr crossMemberAddress) {
-            var member = new PartyMember
+        internal unsafe static PartyMember CrossRealmMember(IntPtr crossMemberAddress) {
+            return new PartyMember
             {
-                ActorId = Marshal.ReadInt32(crossMemberAddress, 0x10),
+                ActorId = ((CrossRealmMemberStruct*)crossMemberAddress)->ActorId,
                 Address = crossMemberAddress,
             };
-            return member;
         }
 
-        internal static PartyMember CompanionMember(IntPtr companionMemberAddress) {
-            var member = new PartyMember
+        internal unsafe static PartyMember CompanionMember(IntPtr companionMemberAddress) {
+            return new PartyMember
             {
-                ActorId = Marshal.ReadInt32(companionMemberAddress, 0),
+                ActorId = ((CompanionMemberStruct*)companionMemberAddress)->ActorId,
                 Address = companionMemberAddress,
             };
-            return member;
         }
 
         internal static PartyMember LocalPlayerMember(DalamudPluginInterface pi) {
             var player = pi.ClientState.LocalPlayer;
-            return new PartyMember()
+            return new PartyMember
             {
                 ActorId = player.ActorId,
                 Address = player?.Address ?? IntPtr.Zero,

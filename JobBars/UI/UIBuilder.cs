@@ -117,7 +117,7 @@ namespace JobBars.UI {
             return false;
         }
 
-        public void Setup() {
+        public bool Setup() {
             var addon = _ADDON;
 
             if (addon->UldManager.NodeListCount != 4) {
@@ -125,23 +125,27 @@ namespace JobBars.UI {
                     var node = addon->UldManager.NodeList[idx];
                     if (node->NodeID == nodeIdx_START) { // found existing gauge_root node
                         LoadExisting(node);
-                        return;
+                        return true;
                     }
                 }
                 // didn't find it, must not be initialized yet
             }
 
-            SetupTex();
+            if (!SetupTex()) return false;
             SetupPart();
             Init();
+
+            return true;
         }
 
-        private void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
+        private bool LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
             var numPaths = paths.Length;
             var addon = _ADDON;
+            if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) return false;
             AtkUldAsset* oldAssets = addon->UldManager.Assets;
 
             var allocator = UiHelper._getGameAllocator();
+
             var assetMapping = LoadTexAlloc(allocator, 4 * numPaths, 16);
             for(int i = 0; i < numPaths; i++) {
                 Marshal.WriteInt32(assetMapping + 4 * i, i + 1); // 0->1, 1->2, etc.
@@ -177,9 +181,10 @@ namespace JobBars.UI {
 
             addon->UldManager.LoadedState = 3; // maybe reset this after the parts are set up? idk
             TexUnalloc(new IntPtr(oldAssets) + 0x8); // unallocate the old AtkTexture
+            return true;
         }
 
-        private void SetupTex() {
+        private bool SetupTex() {
             List<string> assets = new List<string>();
             assets.Add("ui/uld/Parameter_Gauge.tex"); // existing asset
             assets.Add("ui/uld/Parameter_Gauge.tex");
@@ -192,7 +197,7 @@ namespace JobBars.UI {
                 var path = string.Format("ui/icon/{0:D3}000/{1}{2:D6}.tex", _icon / 1000, "", _icon);
                 assets.Add(path);
             }
-            LoadAssets(assets.ToArray());
+            return LoadAssets(assets.ToArray());
         }
 
         private void SetupPart() {

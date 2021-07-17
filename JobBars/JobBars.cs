@@ -180,12 +180,13 @@ namespace JobBars {
             if (!Init) {
                 if (addon == null) return;
                 PluginLog.Log("INIT");
-                UI.Setup();
-                GManager = new GaugeManager(PluginInterface, UI);
-                BManager = new BuffManager(UI);
-                UI.HideAllBuffs();
-                UI.HideAllGauges();
-                Init = true;
+                if(UI.Setup()) {
+                    GManager = new GaugeManager(PluginInterface, UI);
+                    BManager = new BuffManager(UI);
+                    UI.HideAllBuffs();
+                    UI.HideAllGauges();
+                    Init = true;
+                }
                 return;
             }
 
