@@ -37,15 +37,4 @@ namespace JobBars.GameStructs {
         public byte flags;
         public ushort value;
     }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct StatusItem {
-        public uint Unk1;
-        public uint CurrentHP;
-        public uint MapHP;
-        public uint CurrentMP;
-        public uint MaxMP;
-        public uint Unk_Shields;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)] public StatusEffect[] Status;
-    }
 }

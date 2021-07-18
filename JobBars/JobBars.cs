@@ -90,6 +90,9 @@ namespace JobBars {
          *      GetCrossRealmMemberCountPtr (E8 ?? ?? ?? ?? 3C 01 77 4B)
          *      GetCrossMemberByGrpIndexPtr (E8 ?? ?? ?? ?? 44 89 7C 24 ?? 4C 8B C8)
          *      GetCompanionMemberCountPtr (E8 ?? ?? ?? ?? 8B D3 85 C0)
+         *      
+         *  GaugeManager (TargetManager from Dalamud)
+         *      48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB
          */
 
         public void Initialize(DalamudPluginInterface pluginInterface) {

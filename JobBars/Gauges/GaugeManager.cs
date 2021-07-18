@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.ClientState.Structs;
+using Dalamud.Memory;
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.PartyList;
@@ -20,11 +21,15 @@ namespace JobBars.Gauges {
         public JobIds CurrentJob = JobIds.OTHER;
         public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
+        public IntPtr TargetAddress;
+
         public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
             Manager = this;
             UI = ui;
             PluginInterface = pi;
-            if(!Configuration.Config.GaugesEnabled) {
+            TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
+
+            if (!Configuration.Config.GaugesEnabled) {
                 UI.HideGauges();
             }
             //===== SETUP =======
@@ -120,8 +125,9 @@ namespace JobBars.Gauges {
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
-            if (PluginInterface.ClientState.Targets.CurrentTarget != null) {
-                AddBuffs(PluginInterface.ClientState.Targets.CurrentTarget, ownerId, BuffDict);
+            var prevEnemy = GetPreviousEnemyTarget();
+            if(prevEnemy != null) {
+                AddBuffs(prevEnemy, ownerId, BuffDict);
             }
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
@@ -146,37 +152,33 @@ namespace JobBars.Gauges {
             UI.Icon.Update();
         }
 
-        private void AddBuffs(Dalamud.Game.ClientState.Actors.Types.Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
+        private void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
-            /*foreach (var status in PluginInterface.ClientState.Targets.CurrentTarget.StatusEffects) { // USE THIS IN .NET5
-                if (status.OwnerId.Equals(ownerId)) {
-                    buffDict[new Item
-                    {
-                        Id = (uint)status.EffectId,
-                        Type = ItemType.Buff
-                    }] = new BuffElem
-                    {
-                        Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
-                        StackCount = status.StackCount
-                    };
-                }
-            }*/
-            var buffAddr = actor.Address + ActorOffsets.UIStatusEffects;
-            for (int i = 0; i < 30; i++) {
-                var addr = buffAddr + i * 0xC;
-                var status = (StatusEffect)Marshal.PtrToStructure(addr, typeof(StatusEffect));
-                if (status.OwnerId.Equals(ownerId)) {
-                    buffDict[new Item
-                    {
-                        Id = (uint)status.EffectId,
-                        Type = ItemType.Buff
-                    }] = new BuffElem
-                    {
-                        Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
-                        StackCount = status.StackCount
-                    };
+
+            if(actor is Chara charaActor) {
+                var statusEffects = MemoryHelper.Read<StatusEffect>(charaActor.Address + ActorOffsets.UIStatusEffects, 30, true);
+                foreach(var status in statusEffects) {
+                    if(status.OwnerId == ownerId) {
+                        buffDict[new Item
+                        {
+                            Id = (uint)status.EffectId,
+                            Type = ItemType.Buff
+                        }] = new BuffElem
+                        {
+                            Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                            StackCount = status.StackCount
+                        };
+                    }
                 }
             }
+        }
+
+        private Actor GetPreviousEnemyTarget() {
+            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
+            if (actorAddress == IntPtr.Zero)
+                return null;
+
+            return PluginInterface.ClientState.Actors.CreateActorReference(actorAddress);
         }
     }
 
