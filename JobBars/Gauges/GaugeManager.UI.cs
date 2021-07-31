@@ -50,7 +50,7 @@ namespace JobBars.Gauges {
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref Configuration.Config.GaugesHideOutOfCombat)) {
-                if(!Configuration.Config.GaugesHideOutOfCombat && Configuration.Config.GaugesEnabled) { // since they might be hidden
+                if (!Configuration.Config.GaugesHideOutOfCombat && Configuration.Config.GaugesEnabled) { // since they might be hidden
                     UI.ShowGauges();
                 }
                 Configuration.Config.Save();
@@ -71,7 +71,7 @@ namespace JobBars.Gauges {
                 Configuration.Config.Save();
             }
 
-            if(!Configuration.Config.GaugeSplit) {
+            if (!Configuration.Config.GaugeSplit) {
                 JobBars.Separator(); // =====================================
 
                 if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {

@@ -11,7 +11,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
-        private SubGaugeTimer[] SubGauges;
+        private readonly SubGaugeTimer[] SubGauges;
         public SubGaugeTimer ActiveSubGauge;
 
         private bool IconEnabled = false;
@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
         }
 
         public void RefreshIconEnabled() {
-            foreach(var sg in SubGauges) {
+            foreach (var sg in SubGauges) {
                 if (!sg.NoIcon()) {
                     IconEnabled = true;
                     return;
@@ -57,7 +57,7 @@ namespace JobBars.Gauges {
         }
 
         public override bool DoProcessInput() {
-            return Enabled|| IconEnabled;
+            return Enabled || IconEnabled;
         }
 
         protected override int GetHeight() {

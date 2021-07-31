@@ -23,13 +23,13 @@ namespace JobBars.Gauges {
 
     public class SubGaugeGCD {
         private SubGaugeGCDProps Props;
-        private GaugeGCD Gauge;
-        private string Id;
+        private readonly GaugeGCD Gauge;
+        private readonly string Id;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
 
-        private static int RESET_DELAY = 3;
+        private static readonly int RESET_DELAY = 3;
         private DateTime StopTime;
 
         private bool Invert;
@@ -67,14 +67,14 @@ namespace JobBars.Gauges {
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             if (State == GaugeState.Active) {
-                float timeLeft = Gauge.TimeLeft(Props.MaxDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
-                if(timeLeft < 0) {
+                float timeLeft = Gauges.Gauge.TimeLeft(Props.MaxDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
+                if (timeLeft < 0) {
                     State = GaugeState.Finished;
                     StopTime = time;
                 }
                 SetValue(Invert ? Props.MaxCounter - Counter : Counter);
             }
-            else if(State == GaugeState.Finished) {
+            else if (State == GaugeState.Finished) {
                 if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
                     State = GaugeState.Inactive;
                     Counter = 0;
@@ -85,7 +85,7 @@ namespace JobBars.Gauges {
         }
 
         public void CheckInactive() {
-            if(Configuration.Config.GaugeHideGCDInactive) {
+            if (Configuration.Config.GaugeHideGCDInactive) {
                 UI.SetVisible(State != GaugeState.Inactive);
             }
         }
@@ -105,8 +105,8 @@ namespace JobBars.Gauges {
 
             if (
                 (State == GaugeState.Active) &&
-                (   (Props.Increment == null && action.Type == ItemType.GCD) || // just take any gcd
-                    (Props.Increment != null && Props.Increment.Contains(action))   ) // take specific gcds
+                ((Props.Increment == null && action.Type == ItemType.GCD) || // just take any gcd
+                    (Props.Increment != null && Props.Increment.Contains(action))) // take specific gcds
             ) {
                 if (Counter < Props.MaxCounter) {
                     Counter++;
@@ -131,14 +131,14 @@ namespace JobBars.Gauges {
         public void DrawSubGauge(string _ID, JobIds job) {
             //============ COLOR ===================
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
-            if(Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: "Color" + suffix)) {
+            if (Gauges.Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: "Color" + suffix)) {
                 Props.Color = newColor;
-                if(Gauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
+                if (Gauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
                     UI?.SetColor(Props.Color);
                 }
             }
             //========== INVERT ====================
-            if(ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Invert)) {
+            if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Invert)) {
                 if (Invert) Configuration.Config.GaugeInvert.Add(Id);
                 else Configuration.Config.GaugeInvert.Remove(Id);
                 Configuration.Config.Save();

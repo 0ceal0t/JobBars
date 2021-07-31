@@ -16,7 +16,6 @@ using JobBars.Buffs;
 using JobBars.PartyList;
 using FFXIVClientInterface;
 
-#pragma warning disable CS0659
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public string Name => "JobBars";
@@ -27,7 +26,7 @@ namespace JobBars {
         private GaugeManager GManager;
         private BuffManager BManager;
         private Configuration Config;
-        private HashSet<uint> GCDs = new HashSet<uint>();
+        private readonly HashSet<uint> GCDs = new();
 
         private JobIds CurrentJob = JobIds.OTHER;
         private byte LastLevel = 0;
@@ -47,7 +46,7 @@ namespace JobBars {
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
-        public static ClientInterface Client;
+        public static ClientInterface Client { get; private set; }
 
         /*
          * SIG LIST:
@@ -153,7 +152,7 @@ namespace JobBars {
             var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
-            foreach(var item in sheet) {
+            foreach (var item in sheet) {
                 var name = item.Name.ToString();
                 var attackType = item.ActionCategory.Value.Name.ToString();
                 var actionId = item.ActionCategory.Value.RowId;
@@ -169,7 +168,7 @@ namespace JobBars {
 
         private void FrameworkOnUpdate(Framework framework) {
             if (!Ready) {
-                if(Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
+                if (Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
                     PluginLog.Log("LOGOUT");
                     Animation.Cleanup();
                     Init = false;
@@ -178,11 +177,11 @@ namespace JobBars {
                 return;
             }
 
-            var addon = UI._ADDON;
+            var addon = UI.ADDON;
             if (!Init) {
                 if (addon == null) return;
                 PluginLog.Log("INIT");
-                if(UI.Setup()) {
+                if (UI.Setup()) {
                     GManager = new GaugeManager(PluginInterface, UI);
                     BManager = new BuffManager(UI);
                     UI.HideAllBuffs();
@@ -202,7 +201,7 @@ namespace JobBars {
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
                 Reset();
             }
-            else if(level != LastLevel) {
+            else if (level != LastLevel) {
                 LastLevel = level;
                 // TODO
             }
@@ -221,7 +220,7 @@ namespace JobBars {
             // ========= HUD LAYOUT CHANGE ==========
             var currentPosition = UiHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
             var currentScale = UiHelper.GetNodeScale(addon->RootNode);
-            if(currentPosition != LastPosition || currentScale != LastScale) {
+            if (currentPosition != LastPosition || currentScale != LastScale) {
                 GManager.SetPositionScale();
                 BManager.SetPositionScale();
             }

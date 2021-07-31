@@ -15,7 +15,7 @@ namespace JobBars.Buffs {
         Inactive, // hidden
         Active, // bright, show countdown
         OffCD, // bright, no text
-        OnCD_Hidden, 
+        OnCD_Hidden,
         OnCD_Visible // dark, show countdown
     };
 
@@ -43,7 +43,7 @@ namespace JobBars.Buffs {
             Name = name;
             Props = props;
             Enabled = !Configuration.Config.BuffDisabled.Contains(Name);
-            if(Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
+            if (Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
         }
 
         public void Setup() {
@@ -64,11 +64,11 @@ namespace JobBars.Buffs {
         }
 
         public void Tick(DateTime time) {
-            if(State == BuffState.Active) {
+            if (State == BuffState.Active) {
                 var timeleft = Props.Duration - (time - StateTime).TotalSeconds;
 
-                if(timeleft <= 0) { // buff over, either hide or go on cd
-                    if(Props.CD == null) {
+                if (timeleft <= 0) { // buff over, either hide or go on cd
+                    if (Props.CD == null) {
                         State = BuffState.Inactive;
                         UI.Hide();
                     }
@@ -78,7 +78,7 @@ namespace JobBars.Buffs {
                         UI.SetOnCD();
                         UI.SetText(((int)Props.CD.Value).ToString());
                         UI.SetPercent(1.0f);
-                        if(State == BuffState.OnCD_Hidden) {
+                        if (State == BuffState.OnCD_Hidden) {
                             UI.Hide();
                         }
                     }
@@ -88,20 +88,20 @@ namespace JobBars.Buffs {
                     UI.SetText(((int)timeleft).ToString());
                 }
             }
-            else if(State == BuffState.OnCD_Hidden) { // on CD, but don't show it yet since it's more than 30 seconds away
+            else if (State == BuffState.OnCD_Hidden) { // on CD, but don't show it yet since it's more than 30 seconds away
                 var timeleft = Props.CD.Value - (time - StateTime).TotalSeconds;
 
-                if(timeleft < 30) {
+                if (timeleft < 30) {
                     State = BuffState.OnCD_Visible;
                     UI.Show();
                     UI.SetPercent((float)(timeleft / Props.CD.Value));
                     UI.SetText(((int)timeleft).ToString());
                 }
             }
-            else if(State == BuffState.OnCD_Visible) { // on CD, now close to being off CD
+            else if (State == BuffState.OnCD_Visible) { // on CD, now close to being off CD
                 var timeleft = Props.CD.Value - (time - StateTime).TotalSeconds;
 
-                if(timeleft <= 0) { // back off CD
+                if (timeleft <= 0) { // back off CD
                     State = BuffState.OffCD;
                     UI.SetOffCD();
                     UI.SetText("");
@@ -114,7 +114,7 @@ namespace JobBars.Buffs {
             }
         }
 
-        public void Draw(string id, JobIds job) {
+        public void Draw(string id) {
             var _ID = id + Name;
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name}");

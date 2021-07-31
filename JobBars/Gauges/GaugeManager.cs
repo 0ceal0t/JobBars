@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
-        public static GaugeManager Manager;
+        public static GaugeManager Manager { get; private set; }
         public DalamudPluginInterface PluginInterface;
         public UIBuilder UI;
 
@@ -47,7 +47,7 @@ namespace JobBars.Gauges {
             //====== SET UP NEW =======
             CurrentJob = job;
             int idx = 0;
-            foreach(var gauge in CurrentGauges) {
+            foreach (var gauge in CurrentGauges) {
                 gauge.UI = GetUI(idx, gauge.GetVisualType());
                 gauge.SetupUI();
                 idx++;
@@ -79,18 +79,13 @@ namespace JobBars.Gauges {
         }
 
         public UIElement GetUI(int idx, GaugeVisualType type) {
-            switch(type) {
-                case GaugeVisualType.Arrow:
-                    return UI.Arrows[idx];
-                case GaugeVisualType.Bar:
-                    return UI.Gauges[idx];
-                case GaugeVisualType.Diamond:
-                    return UI.Diamonds[idx];
-                case GaugeVisualType.BarDiamondCombo:
-                    return new UIGaugeDiamondCombo(UI, UI.Gauges[idx], UI.Diamonds[idx]); // kind of scuffed, but oh well
-                default:
-                    return null;
-            }
+            return type switch {
+                GaugeVisualType.Arrow => UI.Arrows[idx],
+                GaugeVisualType.Bar => UI.Gauges[idx],
+                GaugeVisualType.Diamond => UI.Diamonds[idx],
+                GaugeVisualType.BarDiamondCombo => new UIGaugeDiamondCombo(UI, UI.Gauges[idx], UI.Diamonds[idx]),// kind of scuffed, but oh well
+                _ => null,
+            };
         }
 
         public void Reset() {
@@ -98,7 +93,7 @@ namespace JobBars.Gauges {
         }
 
         public void ResetJob(JobIds job) {
-            if(job == CurrentJob) {
+            if (job == CurrentJob) {
                 SetJob(job);
             }
         }
@@ -118,53 +113,49 @@ namespace JobBars.Gauges {
                 else UI.HideGauges();
             }
 
-            Dictionary<Item, BuffElem> BuffDict = new Dictionary<Item, BuffElem>();
+            Dictionary<Item, BuffElem> BuffDict = new();
             var currentTime = DateTime.Now;
 
-            int ownerId = (int) PluginInterface.ClientState.LocalPlayer.ActorId;
+            int ownerId = (int)PluginInterface.ClientState.LocalPlayer.ActorId;
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
             var prevEnemy = GetPreviousEnemyTarget();
-            if(prevEnemy != null) {
+            if (prevEnemy != null) {
                 AddBuffs(prevEnemy, ownerId, BuffDict);
             }
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                var actorTable = PluginInterface.ClientState.Actors;
-                foreach(var pMember in party) {
+                foreach (var pMember in party) {
                     if (pMember == null) continue;
 
-                    for (int i = 0; i < actorTable.Length; i++) {
-                        if (actorTable[i] == null) continue;
-
-                        if (actorTable[i].ActorId == pMember.ActorId) {
-                            AddBuffs(actorTable[i], ownerId, BuffDict);
+                    foreach (var actor in PluginInterface.ClientState.Actors) {
+                        if (actor == null) continue;
+                        if (actor.ActorId == pMember.ActorId) {
+                            AddBuffs(actor, ownerId, BuffDict);
                         }
                     }
                 }
             }
 
-            foreach(var gauge in CurrentGauges) {
+            foreach (var gauge in CurrentGauges) {
                 if (!gauge.DoProcessInput()) { continue; }
                 gauge.Tick(currentTime, BuffDict);
             }
             UI.Icon.Update();
         }
 
-        private void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
+        private static void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
 
-            if(actor is Chara charaActor) {
+            if (actor is Chara charaActor) {
                 var statusEffects = MemoryHelper.Read<StatusEffect>(charaActor.Address + ActorOffsets.UIStatusEffects, 30, true);
-                foreach(var status in statusEffects) {
-                    if(status.OwnerId == ownerId) {
-                        buffDict[new Item
-                        {
+                foreach (var status in statusEffects) {
+                    if (status.OwnerId == ownerId) {
+                        buffDict[new Item {
                             Id = (uint)status.EffectId,
                             Type = ItemType.Buff
-                        }] = new BuffElem
-                        {
+                        }] = new BuffElem {
                             Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
                             StackCount = status.StackCount
                         };

@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using System;
+using JobBars.Data;
 using JobBars.UI;
 using System.Collections.Generic;
 
@@ -6,13 +7,11 @@ namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
         private void Init() {
             JobToBuffs = new Dictionary<JobIds, Buff[]>();
-            JobToBuffs.Add(JobIds.OTHER, new Buff[] { });
+            JobToBuffs.Add(JobIds.OTHER, Array.Empty<Buff>());
             // ======= GNB ==========
-            JobToBuffs.Add(JobIds.GNB, new Buff[] {
-            });
+            JobToBuffs.Add(JobIds.GNB, Array.Empty<Buff>());
             // ======= PLD ==========
-            JobToBuffs.Add(JobIds.PLD, new Buff[]  {
-            });
+            JobToBuffs.Add(JobIds.PLD, Array.Empty<Buff>());
             // ======= WAR ==========
             JobToBuffs.Add(JobIds.WAR, new Buff[] {
                 new Buff("Inner Release", new BuffProps {
@@ -108,8 +107,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= WHM ==========
-            JobToBuffs.Add(JobIds.WHM, new Buff[] {
-            });
+            JobToBuffs.Add(JobIds.WHM, Array.Empty<Buff>());
             // ======= BRD ==========
             JobToBuffs.Add(JobIds.BRD, new Buff[] {
                 new Buff("Battle Voice", new BuffProps {
@@ -194,8 +192,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= BLM ==========
-            JobToBuffs.Add(JobIds.BLM, new Buff[] {
-            });
+            JobToBuffs.Add(JobIds.BLM, Array.Empty<Buff>());
             // ======= RDM ==========
             JobToBuffs.Add(JobIds.RDM, new Buff[] {
                 new Buff("Manafication", new BuffProps {

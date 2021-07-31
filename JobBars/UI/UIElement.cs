@@ -16,7 +16,7 @@ namespace JobBars.UI {
         public UIElement(UIBuilder ui) {
             UI = ui;
         }
-        
+
         public void Setup(AtkResNode* node = null) {
             if (node == null) {
                 Init();
@@ -31,7 +31,7 @@ namespace JobBars.UI {
         public abstract void LoadExisting(AtkResNode* node);
 
         public void SetVisible(bool value) {
-            if(value) {
+            if (value) {
                 Show();
             }
             else {

@@ -17,9 +17,9 @@ namespace JobBars {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
 
-            var selfId = (int) PluginInterface.ClientState.LocalPlayer.ActorId;
+            var selfId = (int)PluginInterface.ClientState.LocalPlayer.ActorId;
             var isSelf = sourceId == selfId;
-            var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) ? IsPet(sourceId, selfId) : false);
+            var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId));
             var isParty = !isSelf && !isPet && IsInParty(sourceId);
 
             if (!(isSelf || isPet || isParty)) {
@@ -27,8 +27,7 @@ namespace JobBars {
                 return;
             }
 
-            var actionItem = new Item
-            {
+            var actionItem = new Item {
                 Id = id,
                 Type = (GCDs.Contains(id) ? ItemType.GCD : ItemType.OGCD)
             };
@@ -68,7 +67,7 @@ namespace JobBars {
                 targetEntries = 32;
             }
 
-            List<EffectEntry> entries = new List<EffectEntry>(effectsEntries);
+            List<EffectEntry> entries = new(effectsEntries);
             for (int i = 0; i < effectsEntries; i++) {
                 entries.Add(*(EffectEntry*)(effectArray + i * 8));
             }
@@ -82,8 +81,7 @@ namespace JobBars {
                 if (entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
                     // idk what's up with Gp_Or_Status. sometimes the enum is wrong?
 
-                    var buffItem = new Item
-                    {
+                    var buffItem = new Item {
                         Id = entries[i].value,
                         Type = ItemType.Buff
                     };

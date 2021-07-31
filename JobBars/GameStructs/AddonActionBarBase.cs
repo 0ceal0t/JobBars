@@ -29,5 +29,5 @@ namespace JobBars.GameStructs {
         [FieldOffset(0xB0)] public AtkResNode* RecastOverlayContainer;
         [FieldOffset(0xB8)] public byte* PopUpHelpTextPtr; // Null when slot is empty
     }
-    
+
 }

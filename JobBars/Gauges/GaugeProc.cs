@@ -33,7 +33,7 @@ namespace JobBars.Gauges {
 
     public class GaugeProc : Gauge {
         private GaugeProcProps Props;
-        private int Size;
+        private readonly int Size;
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
@@ -57,20 +57,20 @@ namespace JobBars.Gauges {
 
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             foreach (var proc in Props.Procs) {
-                if(proc.Trigger.Type == ItemType.Buff) {
+                if (proc.Trigger.Type == ItemType.Buff) {
                     SetValue(proc.Idx, buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
-                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) ? timer->IsActive != 1 : false);
+                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
                 }
             }
         }
 
         private void SetValue(int idx, bool value, float duration = 0) {
-            if(UI is UIDiamond diamond) {
+            if (UI is UIDiamond diamond) {
                 if (value) {
                     diamond.SelectPart(idx);
-                    if(Props.ShowText) {
+                    if (Props.ShowText) {
                         diamond.SetText(idx, ((int)Math.Round(duration)).ToString());
                     }
                 }

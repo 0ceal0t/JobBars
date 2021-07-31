@@ -40,7 +40,7 @@ namespace JobBars.Gauges {
             Scale = Configuration.Config.GaugeIndividualScale.TryGetValue(name, out var newScale) ? newScale : 1;
         }
 
-        public float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
             if (lastActiveTrigger.Type == ItemType.Buff) {
                 if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
                     return elem.Duration;
@@ -82,8 +82,7 @@ namespace JobBars.Gauges {
         protected abstract void DrawGauge(string _ID, JobIds job);
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
-            string type = this switch
-            {
+            string type = this switch {
                 GaugeGCD _ => "GCDS",
                 GaugeTimer _ => "TIMER",
                 GaugeProc _ => "PROCS",
@@ -97,7 +96,7 @@ namespace JobBars.Gauges {
             if (ImGui.Checkbox("Enabled" + _ID, ref Enabled)) {
                 if (Enabled) {
                     Configuration.Config.GaugeDisabled.Remove(Name);
-                    if(job == GaugeManager.Manager.CurrentJob) {
+                    if (job == GaugeManager.Manager.CurrentJob) {
                         UI?.Show();
                     }
                 }
@@ -130,8 +129,8 @@ namespace JobBars.Gauges {
 
             // ====== SCALE ========
             if (ImGui.InputFloat("Scale" + _ID, ref Scale)) {
-                if(Scale <= 0.1f) { Scale = 0.1f; }
-                if(Scale == 1) {
+                if (Scale <= 0.1f) { Scale = 0.1f; }
+                if (Scale == 1) {
                     Configuration.Config.GaugeIndividualScale.Remove(Name);
                 }
                 else {
@@ -170,7 +169,7 @@ namespace JobBars.Gauges {
             return false;
         }
 
-        public bool DrawColorOptions(string _ID, string lookupId, ElementColor currentColor, out ElementColor newColor, string title = "Color") {
+        public static bool DrawColorOptions(string _ID, string lookupId, ElementColor currentColor, out ElementColor newColor, string title = "Color") {
             newColor = NoColor;
             if (ImGui.BeginCombo(title + _ID, currentColor.Name)) {
                 foreach (var entry in AllColors) {

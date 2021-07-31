@@ -11,7 +11,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIArrow : UIElement {
-        private static int MAX = 12;
+        private static readonly int MAX = 12;
         private AtkImageNode*[] Selected;
         private AtkResNode*[] Ticks;
         private int LastValue = 0;
@@ -24,7 +24,7 @@ namespace JobBars.UI {
             Selected = new AtkImageNode*[MAX];
             Ticks = new AtkResNode*[MAX];
 
-            var nameplateAddon = UI._ADDON;
+            var nameplateAddon = UI.ADDON;
 
             RootRes = UI.CreateResNode();
             RootRes->X = 0;
@@ -91,9 +91,9 @@ namespace JobBars.UI {
             // ====== SETUP ROOT =======
             RootRes->ChildNode = Ticks[0];
             RootRes->ChildCount = (ushort)(4 * MAX);
-            for(int idx = 0; idx < MAX; idx++) {
+            for (int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->ParentNode = RootRes;
-                if(idx < (MAX - 1)) {
+                if (idx < (MAX - 1)) {
                     Ticks[idx]->PrevSiblingNode = Ticks[idx + 1];
                 }
             }
@@ -105,7 +105,7 @@ namespace JobBars.UI {
 
             RootRes = node;
             var n = RootRes->ChildNode;
-            for(int i = 0; i < MAX; i++) {
+            for (int i = 0; i < MAX; i++) {
                 if (n == null) continue;
                 Ticks[i] = n;
                 Selected[i] = (AtkImageNode*)n->ChildNode->PrevSiblingNode->ChildNode;
@@ -114,14 +114,14 @@ namespace JobBars.UI {
         }
 
         public override void SetColor(ElementColor color) {
-            foreach(var item in Selected) {
+            foreach (var item in Selected) {
                 UIColor.SetColor((AtkResNode*)item, color);
             }
         }
 
         public void SetMaxValue(int value) {
-            for(int idx = 0; idx < MAX; idx++) {
-                if(idx < value) {
+            for (int idx = 0; idx < MAX; idx++) {
+                if (idx < value) {
                     UiHelper.Show(Ticks[idx]);
                 }
                 else {

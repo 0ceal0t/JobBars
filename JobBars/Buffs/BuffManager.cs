@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
-        public static BuffManager Manager;
+        public static BuffManager Manager { get; private set; }
 
         public Dictionary<JobIds, Buff[]> JobToBuffs;
         public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
 
-        private UIBuilder UI;
-        private List<Buff> AllBuffs;
+        private readonly UIBuilder UI;
+        private readonly List<Buff> AllBuffs;
         public JobIds CurrentJob = JobIds.OTHER;
 
         public BuffManager(UIBuilder ui) {
@@ -53,14 +53,14 @@ namespace JobBars.Buffs {
             if (!Configuration.Config.BuffBarEnabled) return;
 
             foreach (var buff in AllBuffs) {
-                if(!buff.Enabled) { continue; }
+                if (!buff.Enabled) { continue; }
                 buff.ProcessAction(action);
             }
         }
 
         public void Tick(bool inCombat) {
             if (!Configuration.Config.BuffBarEnabled) return;
-            if(Configuration.Config.BuffHideOutOfCombat) {
+            if (Configuration.Config.BuffHideOutOfCombat) {
                 if (inCombat) UI.ShowBuffs();
                 else UI.HideBuffs();
             }

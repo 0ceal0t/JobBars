@@ -80,8 +80,7 @@ namespace JobBars.UI {
 
             node->TextId = 0;
             node->TextColor = UIColor.BYTE_White;
-            node->EdgeColor = new ByteColor
-            {
+            node->EdgeColor = new ByteColor {
                 R = 157,
                 G = 131,
                 B = 91,

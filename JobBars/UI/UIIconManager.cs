@@ -25,7 +25,7 @@ namespace JobBars.UI {
     }
 
     public unsafe class UIIconManager {
-        public static UIIconManager Manager;
+        public static UIIconManager Manager { get; private set;  }
         public DalamudPluginInterface PluginInterface;
         public ClientInterface Client;
         private readonly string[] AllActionBars = {
@@ -43,26 +43,23 @@ namespace JobBars.UI {
             //"_ActionDoubleCrossL",
             //"_ActionDoubleCrossR",
         };
-        public Dictionary<uint, IconProgress> ActionIdToStatus = new Dictionary<uint, IconProgress>();
-        public Dictionary<uint, IconState> ActionIdToState = new Dictionary<uint, IconState>();
-        HashSet<IntPtr> ToCleanup = new HashSet<IntPtr>();
-
-        HashSet<IntPtr> IconRecastOverride;
+        public Dictionary<uint, IconProgress> ActionIdToStatus = new();
+        public Dictionary<uint, IconState> ActionIdToState = new();
+        readonly HashSet<IntPtr> ToCleanup = new();
+        readonly HashSet<IntPtr> IconRecastOverride;
         private delegate void SetIconRecastDelegate(IntPtr icon);
-        private Hook<SetIconRecastDelegate> setIconRecastHook;
-
-        HashSet<IntPtr> IconComponentOverride;
+        private readonly Hook<SetIconRecastDelegate> setIconRecastHook;
+        readonly HashSet<IntPtr> IconComponentOverride;
         private delegate IntPtr SetIconRecastDelegate2(IntPtr icon);
-        private Hook<SetIconRecastDelegate2> setIconRecastHook2;
-
-        HashSet<IntPtr> IconTextOverride;
+        private readonly Hook<SetIconRecastDelegate2> setIconRecastHook2;
+        readonly HashSet<IntPtr> IconTextOverride;
         private delegate void SetIconRecastTextDelegate(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6);
-        private Hook<SetIconRecastTextDelegate> setIconRecastTextHook;
+        private readonly Hook<SetIconRecastTextDelegate> setIconRecastTextHook;
 
         private delegate void SetIconRecastTextDelegate2(IntPtr text, IntPtr a2);
-        private Hook<SetIconRecastTextDelegate2> setIconRecastTextHook2;
+        private readonly Hook<SetIconRecastTextDelegate2> setIconRecastTextHook2;
 
-        static int MILLIS_LOOP = 250;
+        static readonly int MILLIS_LOOP = 250;
 
         public UIIconManager(DalamudPluginInterface pluginInterface, ClientInterface client) {
             Manager = this;
@@ -125,7 +122,7 @@ namespace JobBars.UI {
         }
 
         public IntPtr SetIconRecast2(IntPtr icon) {
-            if(IconComponentOverride.Contains(icon)) {
+            if (IconComponentOverride.Contains(icon)) {
                 return (IntPtr)0;
             }
             return setIconRecastHook2.Original(icon);
@@ -158,7 +155,7 @@ namespace JobBars.UI {
             var actionManager = Client.ActionManager;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
 
-            HashSet<uint> TO_BUMP = new HashSet<uint>();
+            HashSet<uint> TO_BUMP = new();
 
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
                 if (actionManager == null || hotbarModule == null) return;
@@ -167,7 +164,7 @@ namespace JobBars.UI {
                 if (ab == null || ab->ActionBarSlotsAction == null) continue;
 
                 HotBar* bar = null;
-                if(abIndex < 10) {
+                if (abIndex < 10) {
                     bar = hotbarModule.GetBar(abIndex, HotBarType.Normal);
                 }
                 else {
@@ -182,12 +179,12 @@ namespace JobBars.UI {
                         var state = ActionIdToState.TryGetValue(slotStruct->CommandId, out var _s) ? _s : IconState.StartRunning;
 
                         var icon = slot.Icon;
-                        var cdOverlay = (AtkImageNode*) icon->Component->UldManager.NodeList[5];
+                        var cdOverlay = (AtkImageNode*)icon->Component->UldManager.NodeList[5];
                         var dashOverlay = (AtkImageNode*)icon->Component->UldManager.NodeList[9];
-                        var iconImage = (AtkImageNode*)icon->Component->UldManager.NodeList[0]; 
+                        var iconImage = (AtkImageNode*)icon->Component->UldManager.NodeList[0];
                         var bottomLeftText = (AtkTextNode*)icon->Component->UldManager.NodeList[13];
 
-                        if(state == IconState.StartRunning) {
+                        if (state == IconState.StartRunning) {
                             ToCleanup.Add((IntPtr)icon);
                             TO_BUMP.Add(slotStruct->CommandId);
 
@@ -210,13 +207,13 @@ namespace JobBars.UI {
                             UiHelper.Hide(icon->Component->UldManager.NodeList[10]);
                             UiHelper.Hide(icon->Component->UldManager.NodeList[14]); // another image overlay :shrug:
                         }
-                        else if(state == IconState.Running) {
+                        else if (state == IconState.Running) {
                             UiHelper.Show(cdOverlay);
                             cdOverlay->PartId = (ushort)(81 - (float)(iconProgress.Current / iconProgress.Max) * 80);
                             UiHelper.SetText(bottomLeftText, ((int)iconProgress.Current).ToString());
                             UiHelper.Show(bottomLeftText);
                         }
-                        else if(state == IconState.DoneRunning) {
+                        else if (state == IconState.DoneRunning) {
                             TO_BUMP.Add(slotStruct->CommandId);
 
                             IconTextOverride.Remove((IntPtr)bottomLeftText);
@@ -228,7 +225,7 @@ namespace JobBars.UI {
                             UiHelper.Show(dashOverlay);
                             UiHelper.Hide(bottomLeftText);
                         }
-                        else if(state == IconState.Waiting) {
+                        else if (state == IconState.Waiting) {
                             UiHelper.Show(dashOverlay);
 
                             var time = DateTime.Now;
@@ -240,12 +237,12 @@ namespace JobBars.UI {
                 }
             }
 
-            foreach(var bump in TO_BUMP) { // necessary because there could be multiple of the same icon :/
+            foreach (var bump in TO_BUMP) { // necessary because there could be multiple of the same icon :/
                 var current = ActionIdToState.TryGetValue(bump, out var _s) ? _s : IconState.StartRunning;
                 if (current == IconState.StartRunning) {
                     ActionIdToState[bump] = IconState.Running;
                 }
-                else if(current == IconState.DoneRunning) {
+                else if (current == IconState.DoneRunning) {
                     ActionIdToState[bump] = IconState.Waiting;
                 }
             }

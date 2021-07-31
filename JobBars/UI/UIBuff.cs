@@ -11,10 +11,10 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIBuff : UIElement {
-        public static ushort WIDTH = 37;
-        public static ushort HEIGHT = 28;
+        public static readonly ushort WIDTH = 37;
+        public static readonly ushort HEIGHT = 28;
 
-        private ushort PART_ID;
+        private readonly ushort PART_ID;
         private AtkTextNode* TextNode;
         private AtkImageNode* Overlay;
         private AtkImageNode* Border;
@@ -36,7 +36,7 @@ namespace JobBars.UI {
         }
 
         public override void Init() {
-            var nameplateAddon = UI._ADDON;
+            var nameplateAddon = UI.ADDON;
 
             // ======= CONTAINERS =========
             RootRes = UI.CreateResNode();
@@ -113,7 +113,7 @@ namespace JobBars.UI {
             int xMod = Configuration.Config.BuffRightToLeft ? -1 : 1;
             int yMod = Configuration.Config.BuffBottomToTop ? -1 : 1;
 
-            UiHelper.SetPosition(RootRes, xMod * (WIDTH + 7) * position_x, yMod * (HEIGHT + 5) * position_y);
+            UiHelper.SetPosition(RootRes, xMod * (WIDTH + 9) * position_x, yMod * (HEIGHT + 7) * position_y);
         }
 
         public void SetOnCD() {

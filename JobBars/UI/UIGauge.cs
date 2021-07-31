@@ -33,7 +33,7 @@ namespace JobBars.UI {
         }
 
         public override void Init() {
-            var nameplateAddon = UI._ADDON;
+            var nameplateAddon = UI.ADDON;
 
             // ======= CONTAINERS =========
             RootRes = UI.CreateResNode();
@@ -159,7 +159,7 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            if(text != CurrentText) {
+            if (text != CurrentText) {
                 UiHelper.SetText(TextNode, text);
                 CurrentText = text;
             }
@@ -180,10 +180,10 @@ namespace JobBars.UI {
         }
 
         public void SetPercent(float value) {
-            if(value > 1) {
+            if (value > 1) {
                 value = 1;
             }
-            else if(value < 0) {
+            else if (value < 0) {
                 value = 0;
             }
 
@@ -193,7 +193,7 @@ namespace JobBars.UI {
 
             var item = (AtkResNode*)BarMainNode;
             Anim?.Delete();
-            if(difference > 0.1f) {
+            if (difference > 0.1f) {
                 Anim = Animation.AddAnim(f => UiHelper.SetSize(item, (int)(160 * f), 20), 0.2f, LastPercent, value);
             }
             else {

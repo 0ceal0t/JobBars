@@ -13,7 +13,7 @@ namespace FFXIVClientInterface {
         
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate UiModuleStruct* GetUiModuleDelegate();
-        private GetUiModuleDelegate getUiModule;
+        private readonly GetUiModuleDelegate getUiModule;
         
         private UiModule uiModule;
         public UiModule UiModule {

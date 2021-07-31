@@ -28,9 +28,9 @@ namespace JobBars.Gauges {
 
     public class GaugeCharges : Gauge {
         private GaugeChargesProps Props;
-        private int TotalDiamonds;
+        private readonly int TotalDiamonds;
 
-        public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+        public static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
@@ -39,8 +39,8 @@ namespace JobBars.Gauges {
             RefreshSameColor();
 
             TotalDiamonds = 0;
-            foreach(var part in Props.Parts) {
-                if(part.Diamond) {
+            foreach (var part in Props.Parts) {
+                if (part.Diamond) {
                     TotalDiamonds += part.MaxCharges;
                 }
             }
@@ -67,8 +67,8 @@ namespace JobBars.Gauges {
 
         private void SetupDiamondColors() {
             int diamondIdx = 0;
-            foreach(var part in Props.Parts) {
-                if(part.Diamond) {
+            foreach (var part in Props.Parts) {
+                if (part.Diamond) {
                     if (UI is UIGaugeDiamondCombo combo) {
                         combo.SetDiamondColor(part.Color, diamondIdx, part.MaxCharges);
                     }
@@ -91,7 +91,7 @@ namespace JobBars.Gauges {
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             bool barAssigned = false;
             int diamondIdx = 0;
-            foreach(var part in Props.Parts) {
+            foreach (var part in Props.Parts) {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = buffDict.TryGetValue(trigger, out var buff);
@@ -122,7 +122,7 @@ namespace JobBars.Gauges {
                     }
                 }
             }
-            if(!barAssigned) {
+            if (!barAssigned) {
                 SetGaugeValue(0, 0);
             }
         }

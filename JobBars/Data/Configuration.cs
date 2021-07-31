@@ -16,7 +16,7 @@ namespace JobBars.Data {
         public bool GaugeHorizontal = false;
         public bool GaugeAlignRight = false;
         public bool GaugeSplit = false;
-        public Vector2 GaugePosition { get; set; } = new Vector2(200, 200);
+        public Vector2 GaugePosition { get; set; } = new Vector2(0, 0);
         public Dictionary<string, Vector2> GaugeSplitPosition = new();
         public Dictionary<string, float> GaugeIndividualScale = new();
 
@@ -35,7 +35,7 @@ namespace JobBars.Data {
 
         public int SeNumber = 0;
 
-        public Vector2 BuffPosition { get; set; } = new Vector2(300, 300);
+        public Vector2 BuffPosition { get; set; } = new Vector2(0, 0);
         public float BuffScale = 1.0f;
 
         public bool BuffBarEnabled = true;
@@ -50,8 +50,8 @@ namespace JobBars.Data {
 
         [NonSerialized]
         private DalamudPluginInterface _pluginInterface;
-        [NonSerialized]
-        public static Configuration Config;
+
+        public static Configuration Config { get; private set; }
 
         public bool GetColorOverride(string gaugeName, out ElementColor color) {
             color = new ElementColor();
@@ -66,7 +66,7 @@ namespace JobBars.Data {
         }
 
         public Vector2 GetGaugeSplitPosition(string gaugeName) {
-            return GaugeSplitPosition.TryGetValue(gaugeName, out var value) ? value : new Vector2(200, 200);
+            return GaugeSplitPosition.TryGetValue(gaugeName, out var value) ? value : new Vector2(0, 0);
         }
 
         public void Initialize(DalamudPluginInterface pluginInterface) {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.PartyList {
     public class PList : IReadOnlyCollection<PartyMember> {
-        private DalamudPluginInterface PluginInterface;
+        private readonly DalamudPluginInterface PluginInterface;
 
         private readonly GetPartyMemberCountDelegate getCrossPartyMemberCount;
         private readonly GetCompanionMemberCountDelegate getCompanionMemberCount;

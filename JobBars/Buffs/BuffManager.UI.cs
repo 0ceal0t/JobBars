@@ -80,7 +80,7 @@ namespace JobBars.Buffs {
             else {
                 ImGui.BeginChild(_ID + "Selected");
                 foreach (var buff in JobToBuffs[SettingsJobSelected]) {
-                    buff.Draw(_ID, SettingsJobSelected);
+                    buff.Draw(_ID);
                 }
                 ImGui.EndChild();
             }

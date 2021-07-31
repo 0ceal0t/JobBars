@@ -53,7 +53,7 @@ namespace JobBars.Helper {
             var ptr = Marshal.AllocHGlobal(bytes.Length + 1);
             Marshal.Copy(bytes, 0, ptr, bytes.Length);
             Marshal.WriteByte(ptr, bytes.Length, 0);
-            _atkTextNodeSetText(textNode, (byte*) ptr);
+            AtkTextNodeSetText(textNode, (byte*)ptr);
             Marshal.FreeHGlobal(ptr);
         }
 
@@ -64,8 +64,8 @@ namespace JobBars.Helper {
         }
 
         public static void SetSize(AtkResNode* node, int? width, int? height) {
-            if (width != null && width >= ushort.MinValue && width <= ushort.MaxValue) node->Width = (ushort) width.Value;
-            if (height != null && height >= ushort.MinValue && height <= ushort.MaxValue) node->Height = (ushort) height.Value;
+            if (width != null && width >= ushort.MinValue && width <= ushort.MaxValue) node->Width = (ushort)width.Value;
+            if (height != null && height >= ushort.MinValue && height <= ushort.MaxValue) node->Height = (ushort)height.Value;
             node->Flags_2 |= 0x1;
         }
 
@@ -83,7 +83,7 @@ namespace JobBars.Helper {
         }
 
         public static void ExpandNodeList(AtkComponentNode* componentNode, ushort addSize) {
-            var newNodeList = ExpandNodeList(componentNode->Component->UldManager.NodeList, componentNode->Component->UldManager.NodeListCount, (ushort) (componentNode->Component->UldManager.NodeListCount + addSize));
+            var newNodeList = ExpandNodeList(componentNode->Component->UldManager.NodeList, componentNode->Component->UldManager.NodeListCount, (ushort)(componentNode->Component->UldManager.NodeListCount + addSize));
             componentNode->Component->UldManager.NodeList = newNodeList;
         }
 
@@ -103,8 +103,7 @@ namespace JobBars.Helper {
         }
 
         public static AtkResNode* CloneNode(AtkResNode* original) {
-            var size = original->Type switch
-            {
+            var size = original->Type switch {
                 NodeType.Res => sizeof(AtkResNode),
                 NodeType.Image => sizeof(AtkImageNode),
                 NodeType.Text => sizeof(AtkTextNode),
@@ -131,7 +130,7 @@ namespace JobBars.Helper {
         public static T* CleanAlloc<T>() where T : unmanaged {
             var alloc = Alloc(sizeof(T));
             Marshal.Copy(new byte[sizeof(T)], 0, alloc, sizeof(T));
-            return (T*) alloc;
+            return (T*)alloc;
         }
     }
 }

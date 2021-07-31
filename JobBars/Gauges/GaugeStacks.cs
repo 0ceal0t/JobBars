@@ -19,7 +19,7 @@ namespace JobBars.Gauges {
     public class GaugeStacks : Gauge {
         private GaugeStacksProps Props;
 
-        public static GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+        public static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
         public GaugeStacks(string name, GaugeStacksProps props) : base(name) {
             Props = props;
@@ -55,7 +55,7 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach(var trigger in Props.Triggers) {
+            foreach (var trigger in Props.Triggers) {
                 SetValue(buffDict.TryGetValue(trigger, out var elem) ? elem.StackCount : 0);
             }
         }

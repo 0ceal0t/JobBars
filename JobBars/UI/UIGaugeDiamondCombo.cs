@@ -10,9 +10,9 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIGaugeDiamondCombo : UIElement {
-        private UIGauge Gauge;
-        private UIDiamond Diamond;
-        
+        private readonly UIGauge Gauge;
+        private readonly UIDiamond Diamond;
+
         public UIGaugeDiamondCombo(UIBuilder _ui, UIGauge gauge, UIDiamond diamond) : base(_ui) {
             Gauge = gauge;
             Diamond = diamond;

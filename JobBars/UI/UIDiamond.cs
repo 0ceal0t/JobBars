@@ -9,7 +9,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIDiamond : UIElement {
-        private static int MAX = 12;
+        private static readonly int MAX = 12;
         private AtkResNode*[] Selected;
         private AtkResNode*[] Ticks;
         private AtkTextNode*[] Text;
@@ -25,7 +25,7 @@ namespace JobBars.UI {
             Ticks = new AtkResNode*[MAX];
             Text = new AtkTextNode*[MAX];
 
-            var nameplateAddon = UI._ADDON;
+            var nameplateAddon = UI.ADDON;
 
             RootRes = UI.CreateResNode();
             RootRes->X = 0;
@@ -74,8 +74,7 @@ namespace JobBars.UI {
                 Text[idx]->AtkResNode.X = 0;
                 Text[idx]->AtkResNode.Flags |= 0x10;
                 Text[idx]->AtkResNode.Flags_2 = 1;
-                Text[idx]->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor
-                {
+                Text[idx]->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor {
                     R = 40,
                     G = 40,
                     B = 40,
@@ -158,7 +157,7 @@ namespace JobBars.UI {
             for (int idx = 0; idx < MAX; idx++) {
                 if (idx < value) {
                     UiHelper.Show(Ticks[idx]);
-                    if(showText) {
+                    if (showText) {
                         UiHelper.Show(Text[idx]);
                     }
                     else {
@@ -172,7 +171,7 @@ namespace JobBars.UI {
         }
 
         private void SetSpacing(int space) {
-            for(int idx = 0; idx < MAX; idx++) {
+            for (int idx = 0; idx < MAX; idx++) {
                 Ticks[idx]->X = (20 + space) * idx;
             }
         }

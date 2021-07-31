@@ -10,7 +10,7 @@ namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         private void Init() {
             JobToGauges = new Dictionary<JobIds, Gauge[]>();
-            JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
+            JobToGauges.Add(JobIds.OTHER, Array.Empty<Gauge>());
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {
                 new GaugeGCD("No Mercy", GaugeVisualType.Arrow, new SubGaugeGCDProps {

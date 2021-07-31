@@ -26,12 +26,12 @@ namespace JobBars.Gauges {
 
     public class SubGaugeTimer {
         private SubGaugeTimerProps Props;
-        private GaugeTimer Gauge;
-        private string Id;
+        private readonly GaugeTimer Gauge;
+        private readonly string Id;
 
         private bool IconEnabled;
 
-        private float DefaultDuration;
+        private readonly float DefaultDuration;
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
         private bool InDanger = false;
@@ -74,8 +74,7 @@ namespace JobBars.Gauges {
         private void SetIcon(double current, float max) {
             if (NoIcon()) return;
             foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress
-                {
+                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress {
                     Current = current,
                     Max = max
                 };
@@ -85,8 +84,7 @@ namespace JobBars.Gauges {
         private void ResetIcon() {
             if (NoIcon()) return;
             foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress
-                {
+                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress {
                     Current = 0,
                     Max = 1
                 };
@@ -99,8 +97,8 @@ namespace JobBars.Gauges {
         }
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            var timeLeft = Gauge.TimeLeft(DefaultDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
-            if(timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
+            var timeLeft = Gauges.Gauge.TimeLeft(DefaultDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
+            if (timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
                 StartIcon();
             }
@@ -114,12 +112,12 @@ namespace JobBars.Gauges {
 
                 bool inDanger = timeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !Props.HideLowWarning && timeLeft > 0;
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
-                if(inDanger && beforeOk) {
+                if (inDanger && beforeOk) {
                     if (Configuration.Config.SeNumber > 0) {
-                        UiHelper._playSe(Configuration.Config.SeNumber + 36, 0, 0);
+                        UiHelper.PlaySe(Configuration.Config.SeNumber + 36, 0, 0);
                     }
                 }
-                if(UI is UIGauge gauge) {
+                if (UI is UIGauge gauge) {
                     gauge.SetTextColor(inDanger ? Red : NoColor);
                 }
 
@@ -139,7 +137,7 @@ namespace JobBars.Gauges {
                 InDanger = false;
 
                 StartIcon();
-                if(Gauge.ActiveSubGauge != this) {
+                if (Gauge.ActiveSubGauge != this) {
                     Gauge.ActiveSubGauge = this;
                     UseSubGauge();
                 }
@@ -156,7 +154,7 @@ namespace JobBars.Gauges {
         public void DrawSubGauge(string _ID, JobIds job) {
             //============ COLOR ===============
             var colorTitle = "Color" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
-            if (Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: colorTitle)) {
+            if (Gauges.Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: colorTitle)) {
                 Props.Color = newColor;
                 if (Gauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
                     UI?.SetColor(Props.Color);
@@ -164,7 +162,7 @@ namespace JobBars.Gauges {
             }
 
             //============ ICON =============
-            if(Props.Icons != null) {
+            if (Props.Icons != null) {
                 var iconTitle = "Icon Replacement" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
                 if (ImGui.Checkbox(iconTitle + _ID + Props.SubName, ref IconEnabled)) {
                     if (IconEnabled) {

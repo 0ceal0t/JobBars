@@ -34,24 +34,21 @@ namespace JobBars.PartyList {
         public IntPtr Address { get; private set; }
 
         internal unsafe static PartyMember RegularMember(IntPtr memberAddress) {
-            return new PartyMember
-            {
+            return new PartyMember {
                 ActorId = ((RegularMemberStruct*)memberAddress)->ActorId,
                 Address = memberAddress,
             };
         }
 
         internal unsafe static PartyMember CrossRealmMember(IntPtr crossMemberAddress) {
-            return new PartyMember
-            {
+            return new PartyMember {
                 ActorId = ((CrossRealmMemberStruct*)crossMemberAddress)->ActorId,
                 Address = crossMemberAddress,
             };
         }
 
         internal unsafe static PartyMember CompanionMember(IntPtr companionMemberAddress) {
-            return new PartyMember
-            {
+            return new PartyMember {
                 ActorId = ((CompanionMemberStruct*)companionMemberAddress)->ActorId,
                 Address = companionMemberAddress,
             };
@@ -59,9 +56,8 @@ namespace JobBars.PartyList {
 
         internal static PartyMember LocalPlayerMember(DalamudPluginInterface pi) {
             var player = pi.ClientState.LocalPlayer;
-            return new PartyMember
-            {
-                ActorId = (int) player.ActorId,
+            return new PartyMember {
+                ActorId = (int)player.ActorId,
                 Address = player?.Address ?? IntPtr.Zero,
             };
         }

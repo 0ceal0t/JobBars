@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public class UIColor {
-        public static ByteColor BYTE_White = new ByteColor
-        {
+        public static readonly ByteColor BYTE_White = new() {
             R = 255,
             G = 255,
             B = 255,
             A = 255
         };
 
-        public static ByteColor BYTE_Transparent = new ByteColor
-        {
+        public static readonly ByteColor BYTE_Transparent = new() {
             R = 0,
             G = 0,
             B = 0,
@@ -63,21 +61,21 @@ namespace JobBars.UI {
         }
 
         // ======== COLORS ======
-        public static ElementColor MpPink = new ElementColor("MP Pink", 120, 0, 60, 90, 75, 75);
-        public static ElementColor HealthGreen = new ElementColor("Health Green", 20, 75, 0, 80, 80, 40);
-        public static ElementColor Purple = new ElementColor("Purple", 50, 0, 150, 80, 75, 80);
-        public static ElementColor Red = new ElementColor("Red", 150, 0, 0, 80, 80, 80);
-        public static ElementColor LightBlue = new ElementColor("Light Blue", 0, 100, 140, 80, 100, 100);
-        public static ElementColor Orange = new ElementColor("Orange", 120, 50, 65506, 100, 100, 100);
-        public static ElementColor PurplePink = new ElementColor("Purple-Pink", 80, 65476, 50, 100, 100, 100);
-        public static ElementColor BlueGreen = new ElementColor("Blue-Green", 65456, 50, 90, 80, 80, 40);
-        public static ElementColor BrightGreen = new ElementColor("Bright Green", 65486, 100, 0, 90, 100, 100);
-        public static ElementColor Yellow = new ElementColor("Yellow", 130, 100, 65516, 100, 100, 100);
-        public static ElementColor White = new ElementColor("White", 150, 140, 140, 100, 100, 100);
-        public static ElementColor DarkBlue = new ElementColor("Dark Blue", 65516, 65516, 120, 100, 100, 100);
-        public static ElementColor NoColor= new ElementColor("No Color", 0, 0, 0, 100, 100, 100);
+        public static readonly ElementColor MpPink = new("MP Pink", 120, 0, 60, 90, 75, 75);
+        public static readonly ElementColor HealthGreen = new("Health Green", 20, 75, 0, 80, 80, 40);
+        public static readonly ElementColor Purple = new("Purple", 50, 0, 150, 80, 75, 80);
+        public static readonly ElementColor Red = new("Red", 150, 0, 0, 80, 80, 80);
+        public static readonly ElementColor LightBlue = new("Light Blue", 0, 100, 140, 80, 100, 100);
+        public static readonly ElementColor Orange = new("Orange", 120, 50, 65506, 100, 100, 100);
+        public static readonly ElementColor PurplePink = new("Purple-Pink", 80, 65476, 50, 100, 100, 100);
+        public static readonly ElementColor BlueGreen = new("Blue-Green", 65456, 50, 90, 80, 80, 40);
+        public static readonly ElementColor BrightGreen = new("Bright Green", 65486, 100, 0, 90, 100, 100);
+        public static readonly ElementColor Yellow = new("Yellow", 130, 100, 65516, 100, 100, 100);
+        public static readonly ElementColor White = new("White", 150, 140, 140, 100, 100, 100);
+        public static readonly ElementColor DarkBlue = new("Dark Blue", 65516, 65516, 120, 100, 100, 100);
+        public static readonly ElementColor NoColor = new("No Color", 0, 0, 0, 100, 100, 100);
 
-        public static Dictionary<string, ElementColor> AllColors = new Dictionary<string, ElementColor>();
+        public static Dictionary<string, ElementColor> AllColors { get; private set; } = new();
 
         public static void SetupColors() {
             AllColors = new();
