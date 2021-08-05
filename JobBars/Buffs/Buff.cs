@@ -1,13 +1,10 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.Gauges;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Buffs {

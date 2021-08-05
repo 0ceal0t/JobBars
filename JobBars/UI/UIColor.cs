@@ -44,6 +44,9 @@ namespace JobBars.UI {
             }
         }
 
+        public unsafe static void SetColor(AtkTextNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
+        public unsafe static void SetColor(AtkNineGridNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
+        public unsafe static void SetColor(AtkImageNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkResNode* node, ElementColor color) {
             node->AddRed = color.AddRed;
             node->AddGreen = color.AddGreen;

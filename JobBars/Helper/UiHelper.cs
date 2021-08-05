@@ -3,6 +3,8 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using FFXIVClientStructs.FFXIV.Component.GUI.ULD;
 
@@ -29,38 +31,25 @@ namespace JobBars.Helper {
             return scale;
         }
 
-        public static unsafe bool GetNodeVisible(AtkResNode* node) {
-            if (node == null) return false;
-            while (node != null) {
-                if ((node->Flags & (short)NodeFlags.Visible) != (short)NodeFlags.Visible) return false;
-                node = node->ParentNode;
-            }
-            return true;
-        }
-
         public static void Hide(AtkResNode* node) {
             node->Flags &= ~0x10;
             node->Flags_2 |= 0x1;
         }
+
         public static void Show(AtkResNode* node) {
             node->Flags |= 0x10;
             node->Flags_2 |= 0x1;
         }
 
-        public static void SetText(AtkTextNode* textNode, SeString str) {
-            if (!Ready) return;
-            var bytes = str.Encode();
-            var ptr = Marshal.AllocHGlobal(bytes.Length + 1);
-            Marshal.Copy(bytes, 0, ptr, bytes.Length);
-            Marshal.WriteByte(ptr, bytes.Length, 0);
-            AtkTextNodeSetText(textNode, (byte*)ptr);
-            Marshal.FreeHGlobal(ptr);
+        public static void SetVisibility(AtkResNode* node, bool visiblity) {
+            if (visiblity) Show(node);
+            else Hide(node);
         }
 
-        public static void SetText(AtkTextNode* textNode, string str) {
-            if (!Ready) return;
-            var seStr = new SeString(new Payload[] { new TextPayload(str) });
-            SetText(textNode, seStr);
+        public static void Link(AtkResNode* next, AtkResNode* prev) {
+            if (next == null || prev == null) return;
+            next->PrevSiblingNode = prev;
+            prev->NextSiblingNode = next;
         }
 
         public static void SetSize(AtkResNode* node, int? width, int? height) {
@@ -80,26 +69,6 @@ namespace JobBars.Helper {
             atkUnitBase->ScaleY = scaleY.Value;
             atkUnitBase->Flags_2 |= 0x1;
             atkUnitBase->Flags_2 |= 0x4;
-        }
-
-        public static void ExpandNodeList(AtkComponentNode* componentNode, ushort addSize) {
-            var newNodeList = ExpandNodeList(componentNode->Component->UldManager.NodeList, componentNode->Component->UldManager.NodeListCount, (ushort)(componentNode->Component->UldManager.NodeListCount + addSize));
-            componentNode->Component->UldManager.NodeList = newNodeList;
-        }
-
-        public static void ExpandNodeList(AtkUnitBase* atkUnitBase, ushort addSize) {
-            var newNodeList = ExpandNodeList(atkUnitBase->UldManager.NodeList, atkUnitBase->UldManager.NodeListCount, (ushort)(atkUnitBase->UldManager.NodeListCount + addSize));
-            atkUnitBase->UldManager.NodeList = newNodeList;
-        }
-
-        private static AtkResNode** ExpandNodeList(AtkResNode** originalList, ushort originalSize, ushort newSize = 0) {
-            if (newSize <= originalSize) newSize = (ushort)(originalSize + 1);
-            var oldListPtr = new IntPtr(originalList);
-            var newListPtr = Alloc((ulong)((newSize + 1) * 8));
-            var clone = new IntPtr[originalSize];
-            Marshal.Copy(oldListPtr, clone, 0, originalSize);
-            Marshal.Copy(clone, 0, newListPtr, originalSize);
-            return (AtkResNode**)(newListPtr);
         }
 
         public static AtkResNode* CloneNode(AtkResNode* original) {
@@ -125,12 +94,6 @@ namespace JobBars.Helper {
             newNode->PrevSiblingNode = null;
             newNode->NextSiblingNode = null;
             return newNode;
-        }
-
-        public static T* CleanAlloc<T>() where T : unmanaged {
-            var alloc = Alloc(sizeof(T));
-            Marshal.Copy(new byte[sizeof(T)], 0, alloc, sizeof(T));
-            return (T*)alloc;
         }
     }
 }

@@ -6,9 +6,6 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace JobBars.Helper {
     public unsafe partial class UiHelper {
 
-        private delegate void AtkTextNodeSetTextDelegate(AtkTextNode* textNode, void* a2);
-        private static AtkTextNodeSetTextDelegate AtkTextNodeSetText;
-
         public delegate IntPtr GameAllocDelegate(ulong size, IntPtr unk, IntPtr allocator, IntPtr alignment);
         public static GameAllocDelegate GameAlloc { get; private set; }
 
@@ -22,7 +19,6 @@ namespace JobBars.Helper {
         public static bool Ready { get; private set; } = false;
 
         public static void Setup(SigScanner scanner) {
-            AtkTextNodeSetText = Marshal.GetDelegateForFunctionPointer<AtkTextNodeSetTextDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 49 8B FC"));
             GameAlloc = Marshal.GetDelegateForFunctionPointer<GameAllocDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 45 8D 67 23"));
             GetGameAllocator = Marshal.GetDelegateForFunctionPointer<GetGameAllocatorDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 8B 75 08"));
             PlaySe = Marshal.GetDelegateForFunctionPointer<PlaySeDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
@@ -35,9 +31,7 @@ namespace JobBars.Helper {
         }
 
         public static IntPtr Alloc(int size) {
-            if (size <= 0) throw new ArgumentException("Allocation size must be positive.");
             return Alloc((ulong)size);
         }
-
     }
 }

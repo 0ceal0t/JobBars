@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using FFXIVClientInterface.Client.UI.Agent;
 using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientInterface.Misc;
 
@@ -34,15 +33,7 @@ namespace FFXIVClientInterface.Client.UI {
             return wrapper;
         }
         
-        public ConfigModule ConfigModule => GetModuleSingleton<ConfigModule>(Data->vtbl->GetConfigModule);
         public RaptureHotbarModule RaptureHotbarModule => GetModuleSingleton<RaptureHotbarModule>(Data->vtbl->GetRaptureHotbarModule);
-        public RaptureGearsetModule RaptureGearsetModule => GetModuleSingleton<RaptureGearsetModule>(Data->vtbl->GetRaptureGearsetModule);
-        public RaptureMacroModule RaptureMacroModule => GetModuleSingleton<RaptureMacroModule>(Data->vtbl->GetRaptureMacroModule);
-        public ItemOrderModule ItemOrderModule => GetModuleSingleton<ItemOrderModule>(Data->vtbl->GetItemOrderModule);
-        public ItemFinderModule ItemFinderModule => GetModuleSingleton<ItemFinderModule>(Data->vtbl->GetItemFinderModule);
-        public RaptureShellModule RaptureShellModule => GetModuleSingleton<RaptureShellModule>(Data->vtbl->GetRaptureShellModule);
-        public AgentModule AgentModule => GetModuleSingleton<AgentModule>(Data->vtbl->GetAgentModule);
-        
         
         public override void Dispose() {
             foreach (var m in structWrappers) {
@@ -54,6 +45,45 @@ namespace FFXIVClientInterface.Client.UI {
     
     [StructLayout(LayoutKind.Explicit, Size = 0xDE750)]
     public unsafe struct UiModuleStruct {
-        [FieldOffset(0x00000)] public VirtualTable.UiModule* vtbl;
+        [FieldOffset(0x00000)] public UiModuleVtbl* vtbl;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Size = 0x658)]
+    public unsafe struct UiModuleVtbl {
+        public void* vf0; // dtor
+        public void* vf1;
+        public void* vf2;
+        public void* vf3;
+        public void* vf4;
+        public void* vf5;
+        public void* vf6;
+        public void* vf7;
+        public void* vf8;
+        public IntPtr GetRaptureShellModule;
+        public void* vf10;
+        public void* vf11;
+        public IntPtr GetRaptureMacroModule;
+        public IntPtr GetRaptureHotbarModule;
+        public IntPtr GetRaptureGearsetModule;
+        public void* vf15;
+        public IntPtr GetItemOrderModule;
+        public IntPtr GetItemFinderModule;
+        public IntPtr GetConfigModule;
+        public void* vf19;
+        public void* vf20;
+        public void* vf21;
+        public void* vf22;
+        public void* vf23;
+        public void* vf24;
+        public void* vf25;
+        public void* vf26;
+        public void* vf27;
+        public void* vf28;
+        public void* vf29;
+        public void* vf30;
+        public void* vf31;
+        public void* vf32;
+        public void* vf33;
+        public IntPtr GetAgentModule;
     }
 }

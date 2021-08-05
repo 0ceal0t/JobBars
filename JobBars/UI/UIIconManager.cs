@@ -1,6 +1,7 @@
 ﻿using Dalamud.Hooking;
 using Dalamud.Plugin;
 using FFXIVClientInterface;
+using FFXIVClientInterface.Client.Game;
 using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
@@ -26,6 +27,7 @@ namespace JobBars.UI {
 
     public unsafe class UIIconManager {
         public static UIIconManager Manager { get; private set;  }
+
         public DalamudPluginInterface PluginInterface;
         public ClientInterface Client;
         private readonly string[] AllActionBars = {
@@ -46,12 +48,15 @@ namespace JobBars.UI {
         public Dictionary<uint, IconProgress> ActionIdToStatus = new();
         public Dictionary<uint, IconState> ActionIdToState = new();
         readonly HashSet<IntPtr> ToCleanup = new();
+
         readonly HashSet<IntPtr> IconRecastOverride;
         private delegate void SetIconRecastDelegate(IntPtr icon);
         private readonly Hook<SetIconRecastDelegate> setIconRecastHook;
+
         readonly HashSet<IntPtr> IconComponentOverride;
         private delegate IntPtr SetIconRecastDelegate2(IntPtr icon);
         private readonly Hook<SetIconRecastDelegate2> setIconRecastHook2;
+
         readonly HashSet<IntPtr> IconTextOverride;
         private delegate void SetIconRecastTextDelegate(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6);
         private readonly Hook<SetIconRecastTextDelegate> setIconRecastTextHook;
@@ -61,10 +66,20 @@ namespace JobBars.UI {
 
         static readonly int MILLIS_LOOP = 250;
 
-        public UIIconManager(DalamudPluginInterface pluginInterface, ClientInterface client) {
-            Manager = this;
+        public static void Initialize(DalamudPluginInterface pluginInterface) {
+            Manager = new UIIconManager(pluginInterface);
+        }
+
+        public static void Dispose() {
+            Manager?.DisposeInstance();
+            Manager = null;
+        }
+
+        // ======== INSTANCE ======
+
+        public UIIconManager(DalamudPluginInterface pluginInterface) {
+            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
             PluginInterface = pluginInterface;
-            Client = client;
 
             IconRecastOverride = new HashSet<IntPtr>();
             IconComponentOverride = new HashSet<IntPtr>();
@@ -72,22 +87,22 @@ namespace JobBars.UI {
 
             // changes recast partId for gcds
             IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23");
-            setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, (SetIconRecastDelegate)SetIconRecast);
+            setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, SetIconRecast);
             setIconRecastHook.Enable();
 
             // this is for stuff like thunder during thundercloud procs. god this sig is nasty
             IntPtr setIconRecastPtr2 = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??");
-            setIconRecastHook2 = new Hook<SetIconRecastDelegate2>(setIconRecastPtr2, (SetIconRecastDelegate2)SetIconRecast2);
+            setIconRecastHook2 = new Hook<SetIconRecastDelegate2>(setIconRecastPtr2, SetIconRecast2);
             setIconRecastHook2.Enable();
 
             // sets icon text for abilities which use mp, like Combust
             IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9");
-            setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, (SetIconRecastTextDelegate)SetIconRecastText);
+            setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, SetIconRecastText);
             setIconRecastTextHook.Enable();
 
             // sets icon text for other abilities, like Goring blade
             IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA");
-            setIconRecastTextHook2 = new Hook<SetIconRecastTextDelegate2>(setIconTextPtr2, (SetIconRecastTextDelegate2)SetIconRecastText2);
+            setIconRecastTextHook2 = new Hook<SetIconRecastTextDelegate2>(setIconTextPtr2, SetIconRecastText2);
             setIconRecastTextHook2.Enable();
         }
 
@@ -95,9 +110,7 @@ namespace JobBars.UI {
             ActionIdToStatus.Clear();
             ActionIdToState.Clear();
 
-            foreach (var ptr in ToCleanup) {
-                Cleanup(ptr);
-            }
+            foreach (var ptr in ToCleanup) Cleanup(ptr);
             ToCleanup.Clear();
 
             IconRecastOverride.Clear();
@@ -105,7 +118,7 @@ namespace JobBars.UI {
             IconTextOverride.Clear();
         }
 
-        public void Dispose() {
+        public void DisposeInstance() {
             setIconRecastTextHook.Disable();
             setIconRecastTextHook.Dispose();
 
@@ -119,6 +132,7 @@ namespace JobBars.UI {
             setIconRecastHook2.Dispose();
 
             Reset();
+            Manager = null;
         }
 
         public IntPtr SetIconRecast2(IntPtr icon) {
@@ -150,7 +164,7 @@ namespace JobBars.UI {
         }
 
         // visuals get messed up when icons are dragged around, but there's not much I can do
-        public void Update() {
+        public void Tick() {
             if (ActionIdToStatus.Count == 0) return;
             var actionManager = Client.ActionManager;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
@@ -160,16 +174,11 @@ namespace JobBars.UI {
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
                 if (actionManager == null || hotbarModule == null) return;
                 var actionBar = AllActionBars[abIndex];
+
                 var ab = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(actionBar, 1);
                 if (ab == null || ab->ActionBarSlotsAction == null) continue;
 
-                HotBar* bar = null;
-                if (abIndex < 10) {
-                    bar = hotbarModule.GetBar(abIndex, HotBarType.Normal);
-                }
-                else {
-                    bar = hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
-                }
+                HotBar* bar = (abIndex < 10) ? hotbarModule.GetBar(abIndex, HotBarType.Normal) : hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
 
                 for (var i = 0; i < ab->HotbarSlotCount; i++) {
                     var slot = ab->ActionBarSlotsAction[i];
@@ -210,7 +219,7 @@ namespace JobBars.UI {
                         else if (state == IconState.Running) {
                             UiHelper.Show(cdOverlay);
                             cdOverlay->PartId = (ushort)(81 - (float)(iconProgress.Current / iconProgress.Max) * 80);
-                            UiHelper.SetText(bottomLeftText, ((int)iconProgress.Current).ToString());
+                            bottomLeftText->SetText(((int)iconProgress.Current).ToString());
                             UiHelper.Show(bottomLeftText);
                         }
                         else if (state == IconState.DoneRunning) {
@@ -259,6 +268,15 @@ namespace JobBars.UI {
             ResetColor(iconImage);
             UiHelper.Hide(cdOverlay);
             UiHelper.Hide(dashOverlay);
+        }
+
+        public bool GetRecast(uint action, out RecastTimer* timer) {
+            timer = (RecastTimer*)IntPtr.Zero;
+            var adjustedActionId = Client.ActionManager.GetAdjustedActionId(action);
+            var recastGroup = (int)Client.ActionManager.GetRecastGroup(0x01, adjustedActionId) + 1;
+            if (recastGroup == 0 || recastGroup == 58) return false;
+            timer = Client.ActionManager.GetGroupRecastTime(recastGroup);
+            return true;
         }
 
         private void ResetColor(AtkImageNode* iconImage) {

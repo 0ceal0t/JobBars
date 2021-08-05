@@ -1,47 +1,72 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.Helper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIDiamond : UIElement {
-        private static readonly int MAX = 12;
-        private AtkResNode*[] Selected;
-        private AtkResNode*[] Ticks;
-        private AtkTextNode*[] Text;
 
-        private bool TextVisible = false;
+        private class TickStruct {
+            public AtkResNode* MainTick;
+            public AtkImageNode* Background;
+            public AtkResNode* SelectedContainer;
+            public AtkImageNode* Selected;
+            public AtkTextNode* Text;
 
-        public UIDiamond(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
-            Setup(node);
+            public void Dispose() {
+                if(Text != null) {
+                    Text->AtkResNode.Destroy(true);
+                    Text = null;
+                }
+
+                if (Selected != null) {
+                    Selected->AtkResNode.Destroy(true);
+                    Selected = null;
+                }
+
+                if (SelectedContainer != null) {
+                    SelectedContainer->Destroy(true);
+                    SelectedContainer = null;
+                }
+
+                if (Background != null) {
+                    Background->AtkResNode.Destroy(true);
+                    Background = null;
+                }
+
+                if (MainTick != null) {
+                    MainTick->Destroy(true);
+                    MainTick = null;
+                }
+            }
         }
 
-        public override void Init() {
-            Selected = new AtkResNode*[MAX];
-            Ticks = new AtkResNode*[MAX];
-            Text = new AtkTextNode*[MAX];
+        private static readonly int MAX = 12;
+        private List<TickStruct> Ticks;
+        private bool TextVisible = false;
 
-            var nameplateAddon = UI.ADDON;
+        public UIDiamond(UIBuilder ui) : base(ui) {
+            Ticks = new();
+
+            var addon = UI.ADDON;
 
             RootRes = UI.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
+
+            TickStruct lastTick = null;
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
-                Ticks[idx] = UI.CreateResNode();
-                Ticks[idx]->X = 20 * idx;
-                Ticks[idx]->Y = 0;
-                Ticks[idx]->Width = 32;
-                Ticks[idx]->Height = 32;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Ticks[idx];
+                var tick = UI.CreateResNode();
+                tick->X = 20 * idx;
+                tick->Y = 0;
+                tick->Width = 32;
+                tick->Height = 32;
 
                 var bg = UI.CreateImageNode();
                 bg->AtkResNode.Width = 32;
@@ -49,91 +74,95 @@ namespace JobBars.UI {
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
                 bg->PartId = UIBuilder.DIAMOND_BG;
-                bg->PartsList = nameplateAddon->UldManager.PartsList;
+                bg->PartsList = addon->UldManager.PartsList;
                 bg->Flags = 0;
                 bg->WrapMode = 1;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
 
                 // ======== SELECTED ========
-                Selected[idx] = UI.CreateResNode();
-                Selected[idx]->X = 0;
-                Selected[idx]->Y = 0;
-                Selected[idx]->Width = 32;
-                Selected[idx]->Height = 32;
-                Selected[idx]->OriginX = 16;
-                Selected[idx]->OriginY = 16;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Selected[idx];
+                var selectedContainer = UI.CreateResNode();
+                selectedContainer->X = 0;
+                selectedContainer->Y = 0;
+                selectedContainer->Width = 32;
+                selectedContainer->Height = 32;
+                selectedContainer->OriginX = 16;
+                selectedContainer->OriginY = 16;
 
-                Text[idx] = UI.CreateTextNode();
-                Text[idx]->FontSize = 14;
-                Text[idx]->LineSpacing = 14;
-                Text[idx]->AlignmentFontType = 4;
-                Text[idx]->AtkResNode.Width = 32;
-                Text[idx]->AtkResNode.Height = 32;
-                Text[idx]->AtkResNode.Y = 20;
-                Text[idx]->AtkResNode.X = 0;
-                Text[idx]->AtkResNode.Flags |= 0x10;
-                Text[idx]->AtkResNode.Flags_2 = 1;
-                Text[idx]->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor {
+                var text = UI.CreateTextNode();
+                text->FontSize = 14;
+                text->LineSpacing = 14;
+                text->AlignmentFontType = 4;
+                text->AtkResNode.Width = 32;
+                text->AtkResNode.Height = 32;
+                text->AtkResNode.Y = 20;
+                text->AtkResNode.X = 0;
+                text->AtkResNode.Flags |= 0x10;
+                text->AtkResNode.Flags_2 = 1;
+                text->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor {
                     R = 40,
                     G = 40,
                     B = 40,
                     A = 255
                 };
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Text[idx];
 
-                var selectedImage = UI.CreateImageNode();
-                selectedImage->AtkResNode.Width = 32;
-                selectedImage->AtkResNode.Height = 32;
-                selectedImage->AtkResNode.X = 0;
-                selectedImage->AtkResNode.Y = 0;
-                selectedImage->AtkResNode.OriginX = 16;
-                selectedImage->AtkResNode.OriginY = 16;
-                selectedImage->PartId = UIBuilder.DIAMOND_FG;
-                selectedImage->PartsList = nameplateAddon->UldManager.PartsList;
-                selectedImage->Flags = 0;
-                selectedImage->WrapMode = 1;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)selectedImage;
+                var selected = UI.CreateImageNode();
+                selected->AtkResNode.Width = 32;
+                selected->AtkResNode.Height = 32;
+                selected->AtkResNode.X = 0;
+                selected->AtkResNode.Y = 0;
+                selected->AtkResNode.OriginX = 16;
+                selected->AtkResNode.OriginY = 16;
+                selected->PartId = UIBuilder.DIAMOND_FG;
+                selected->PartsList = addon->UldManager.PartsList;
+                selected->Flags = 0;
+                selected->WrapMode = 1;
 
                 // ======== SELECTED SETUP ========
-                Selected[idx]->ChildCount = 2;
-                Selected[idx]->ChildNode = (AtkResNode*)selectedImage;
-                selectedImage->AtkResNode.PrevSiblingNode = (AtkResNode*)Text[idx];
-                selectedImage->AtkResNode.ParentNode = Selected[idx];
-                Text[idx]->AtkResNode.ParentNode = Selected[idx];
+                selectedContainer->ChildCount = 2;
+                selectedContainer->ChildNode = (AtkResNode*)selected;
+
+                UiHelper.Link((AtkResNode*)selected, (AtkResNode*)text);
+
+                selected->AtkResNode.ParentNode = selectedContainer;
+                text->AtkResNode.ParentNode = selectedContainer;
 
                 // ======= SETUP TICKS =====
-                Ticks[idx]->ChildCount = 4;
-                Ticks[idx]->ChildNode = (AtkResNode*)bg;
-                bg->AtkResNode.PrevSiblingNode = Selected[idx];
-                bg->AtkResNode.ParentNode = Ticks[idx];
-                Selected[idx]->ParentNode = Ticks[idx];
+                tick->ChildCount = 4;
+                tick->ChildNode = (AtkResNode*)bg;
+                tick->ParentNode = RootRes;
+
+                UiHelper.Link((AtkResNode*)bg, selectedContainer);
+
+                bg->AtkResNode.ParentNode = tick;
+                selectedContainer->ParentNode = tick;
+
+                var newTick = new TickStruct {
+                    MainTick = tick,
+                    Background = bg,
+                    Selected = selected,
+                    SelectedContainer = selectedContainer,
+                    Text = text
+                };
+                Ticks.Add(newTick);
+
+                if (lastTick != null) UiHelper.Link(lastTick.MainTick, newTick.MainTick);
+                lastTick = newTick;
             }
 
             // ====== SETUP ROOT =======
-            RootRes->ChildNode = Ticks[0];
+            RootRes->ChildNode = Ticks[0].MainTick;
             RootRes->ChildCount = (ushort)(5 * MAX);
-            for (int idx = 0; idx < MAX; idx++) {
-                Ticks[idx]->ParentNode = RootRes;
-                if (idx < (MAX - 1)) {
-                    Ticks[idx]->PrevSiblingNode = Ticks[idx + 1];
-                }
-            }
         }
 
-        public override void LoadExisting(AtkResNode* node) {
-            Selected = new AtkResNode*[MAX];
-            Ticks = new AtkResNode*[MAX];
-            Text = new AtkTextNode*[MAX];
+        public override void Dispose() {
+            for (int idx = 0; idx < MAX; idx++) {
+                Ticks[idx].Dispose();
+                Ticks[idx] = null;
+            }
+            Ticks = null;
 
-            RootRes = node;
-            var n = RootRes->ChildNode;
-            for (int i = 0; i < MAX; i++) {
-                if (n == null) continue;
-                Ticks[i] = n;
-                Selected[i] = n->ChildNode->PrevSiblingNode;
-                Text[i] = (AtkTextNode*)Selected[i]->ChildNode->PrevSiblingNode;
-                n = n->PrevSiblingNode;
+            if (RootRes != null) {
+                RootRes->Destroy(true);
+                RootRes = null;
             }
         }
 
@@ -148,31 +177,22 @@ namespace JobBars.UI {
         }
 
         public void SetColor(ElementColor color, int idx) {
-            UIColor.SetColor(Selected[idx]->ChildNode, color);
+            UIColor.SetColor(Ticks[idx].Selected, color);
         }
 
         public void SetMaxValue(int value, bool showText = false) {
             TextVisible = showText;
             SetSpacing(showText ? 5 : 0);
+
             for (int idx = 0; idx < MAX; idx++) {
-                if (idx < value) {
-                    UiHelper.Show(Ticks[idx]);
-                    if (showText) {
-                        UiHelper.Show(Text[idx]);
-                    }
-                    else {
-                        UiHelper.Hide(Text[idx]);
-                    }
-                }
-                else {
-                    UiHelper.Hide(Ticks[idx]);
-                }
+                UiHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
+                if (idx < value) UiHelper.SetVisibility(Ticks[idx].Text, showText);
             }
         }
 
         private void SetSpacing(int space) {
             for (int idx = 0; idx < MAX; idx++) {
-                Ticks[idx]->X = (20 + space) * idx;
+                Ticks[idx].MainTick->X = (20 + space) * idx;
             }
         }
 
@@ -182,33 +202,28 @@ namespace JobBars.UI {
 
         public void SetValue(int value, int start, int count) {
             for (int idx = start; idx < (start + count); idx++) {
-                if (idx < (value + start)) {
-                    UiHelper.Show(Selected[idx]);
-                }
-                else {
-                    UiHelper.Hide(Selected[idx]);
-                }
+                UiHelper.SetVisibility(Ticks[idx].SelectedContainer, idx < (value + start));
             }
         }
 
         public void SelectPart(int idx) {
-            UiHelper.Show(Selected[idx]);
+            UiHelper.Show(Ticks[idx].SelectedContainer);
         }
 
         public void UnselectPart(int idx) {
-            UiHelper.Hide(Selected[idx]);
+            UiHelper.Hide(Ticks[idx].SelectedContainer);
         }
 
         public void SetText(int idx, string text) {
-            UiHelper.SetText(Text[idx], text);
+            Ticks[idx].Text->SetText(text);
         }
 
         public void ShowText(int idx) {
-            UiHelper.Show(Text[idx]);
+            UiHelper.Show(Ticks[idx].Text);
         }
 
         public void HideText(int idx) {
-            UiHelper.Hide(Text[idx]);
+            UiHelper.Hide(Ticks[idx].Text);
         }
 
         public override int GetHeight(int param) {

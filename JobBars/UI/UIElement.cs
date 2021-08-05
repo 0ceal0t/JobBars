@@ -11,32 +11,18 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public abstract unsafe class UIElement {
-        public UIBuilder UI;
+        protected UIBuilder UI;
+        public AtkResNode* RootRes;
 
         public UIElement(UIBuilder ui) {
             UI = ui;
         }
 
-        public void Setup(AtkResNode* node = null) {
-            if (node == null) {
-                Init();
-            }
-            else {
-                LoadExisting(node);
-            }
-        }
-
-        public AtkResNode* RootRes;
-        public abstract void Init();
-        public abstract void LoadExisting(AtkResNode* node);
+        public abstract void Dispose();
 
         public void SetVisible(bool value) {
-            if (value) {
-                Show();
-            }
-            else {
-                Hide();
-            }
+            if (value) Show();
+            else Hide();
         }
 
         public virtual void Hide() {

@@ -64,15 +64,6 @@ namespace FFXIVClientInterface.Client.UI.Misc {
             return null;
         }
 
-        public int GetBarCount(HotBarType type = HotBarType.All) {
-            var count = 0;
-            if ((type & HotBarType.Normal) != HotBarType.None) count += 10;
-            if ((type & HotBarType.Cross) != HotBarType.None) count += 8;
-            if ((type & HotBarType.NormalPet) != HotBarType.None) count++;
-            if ((type & HotBarType.CrossPet) != HotBarType.None) count++;
-            return count;
-        }
-
         public HotBarSlot* GetBarSlot(HotBar* bar, int slotIndex) {
             if (bar == null) return null;
             return slotIndex switch {
@@ -166,7 +157,6 @@ namespace FFXIVClientInterface.Client.UI.Misc {
     [StructLayout(LayoutKind.Explicit, Size = 0xE0)]
     public unsafe struct HotBarSlot {
         [FieldOffset(0x00)] public Utf8String PopUpHelp;
-        // [FieldOffset(0x68)]
         
         [FieldOffset(0xB8)] public uint CommandId;
         [FieldOffset(0xBC)] public uint IconA;

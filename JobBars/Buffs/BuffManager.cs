@@ -18,10 +18,8 @@ namespace JobBars.Buffs {
         public BuffManager(UIBuilder ui) {
             Manager = this;
             UI = ui;
-            if (!Configuration.Config.BuffBarEnabled) {
-                UI.HideBuffs();
-            }
-            // ===== SETUP =========
+            if (!Configuration.Config.BuffBarEnabled) UI.HideBuffs();
+
             Init();
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {

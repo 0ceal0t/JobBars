@@ -1,6 +1,4 @@
 ﻿using Dalamud.Game.ClientState.Actors.Types;
-using Dalamud.Game.ClientState.Structs;
-using Dalamud.Memory;
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.PartyList;
@@ -29,10 +27,7 @@ namespace JobBars.Gauges {
             PluginInterface = pi;
             TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
 
-            if (!Configuration.Config.GaugesEnabled) {
-                UI.HideGauges();
-            }
-            //===== SETUP =======
+            if (!Configuration.Config.GaugesEnabled) UI.HideGauges();
             Init();
         }
 
@@ -43,7 +38,8 @@ namespace JobBars.Gauges {
                 gauge.UI = null;
             }
             UI.HideAllGauges();
-            UI.Icon.Reset();
+            UIIconManager.Manager.Reset();
+
             //====== SET UP NEW =======
             CurrentJob = job;
             int idx = 0;
@@ -142,15 +138,13 @@ namespace JobBars.Gauges {
                 if (!gauge.DoProcessInput()) { continue; }
                 gauge.Tick(currentTime, BuffDict);
             }
-            UI.Icon.Update();
+            UIIconManager.Manager.Tick();
         }
 
         private static void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
-
             if (actor is Chara charaActor) {
-                var statusEffects = MemoryHelper.Read<StatusEffect>(charaActor.Address + ActorOffsets.UIStatusEffects, 30, true);
-                foreach (var status in statusEffects) {
+                foreach (var status in charaActor.StatusEffects) {
                     if (status.OwnerId == ownerId) {
                         buffDict[new Item {
                             Id = (uint)status.EffectId,

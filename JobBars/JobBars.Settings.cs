@@ -41,11 +41,12 @@ namespace JobBars {
 
         public static bool DrawPositionView(string _ID, string text, Vector2 position, out Vector2 newPosition) {
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGui.SetNextWindowPos(position, ImGuiCond.FirstUseEver);
+            var minPosition = ImGuiHelpers.MainViewport.Pos;
+            ImGui.SetNextWindowPos(position + minPosition, ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowSize(new Vector2(200, 200));
             ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
             ImGui.Begin(text + _ID, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
-            newPosition = ImGui.GetWindowPos();
+            newPosition = ImGui.GetWindowPos() - minPosition;
             if (ImGui.InputFloat2("Position" + _ID, ref newPosition)) {
                 ImGui.SetWindowPos(text + _ID, newPosition);
             }

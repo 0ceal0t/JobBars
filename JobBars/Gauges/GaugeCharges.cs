@@ -106,7 +106,7 @@ namespace JobBars.Gauges {
                         if (buffExists) break;
                     }
                     else {
-                        var foundRecast = JobBars.GetRecast(trigger.Id, out var recastTimer);
+                        var foundRecast = UIIconManager.Manager.GetRecast(trigger.Id, out var recastTimer);
                         var recastActive = foundRecast && recastTimer->IsActive == 1;
                         if (part.Bar && !barAssigned && recastActive) {
                             barAssigned = true;

@@ -2,45 +2,65 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIArrow : UIElement {
-        private static readonly int MAX = 12;
-        private AtkImageNode*[] Selected;
-        private AtkResNode*[] Ticks;
-        private int LastValue = 0;
 
-        public UIArrow(UIBuilder _ui, AtkResNode* node = null) : base(_ui) {
-            Setup(node);
+        private class TickStruct {
+            public AtkResNode* MainTick;
+            public AtkImageNode* Background;
+            public AtkResNode* SelectedContainer;
+            public AtkImageNode* Selected;
+
+            public void Dispose() {
+                if (Selected != null) {
+                    Selected->AtkResNode.Destroy(true);
+                    Selected = null;
+                }
+
+                if (SelectedContainer != null) {
+                    SelectedContainer->Destroy(true);
+                    SelectedContainer = null;
+                }
+
+                if (Background != null) {
+                    Background->AtkResNode.Destroy(true);
+                    Background = null;
+                }
+
+                if (MainTick != null) {
+                    MainTick->Destroy(true);
+                    MainTick = null;
+                }
+            }
         }
 
-        public override void Init() {
-            Selected = new AtkImageNode*[MAX];
-            Ticks = new AtkResNode*[MAX];
+        private static readonly int MAX = 12;
+        private List<TickStruct> Ticks;
+        private int LastValue = 0;
 
-            var nameplateAddon = UI.ADDON;
+        public UIArrow(UIBuilder ui) : base(ui) {
+            Ticks = new();
+
+            var addon = UI.ADDON;
 
             RootRes = UI.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
-            nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = RootRes;
+
+            TickStruct lastTick = null;
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
-                Ticks[idx] = UI.CreateResNode();
-                Ticks[idx]->X = 18 * idx;
-                Ticks[idx]->Y = 0;
-                Ticks[idx]->Width = 32;
-                Ticks[idx]->Height = 32;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = Ticks[idx];
+                var tick = UI.CreateResNode();
+                tick->X = 18 * idx;
+                tick->Y = 0;
+                tick->Width = 32;
+                tick->Height = 32;
 
                 var bg = UI.CreateImageNode();
                 bg->AtkResNode.Width = 32;
@@ -48,10 +68,9 @@ namespace JobBars.UI {
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
                 bg->PartId = UIBuilder.ARROW_BG;
-                bg->PartsList = nameplateAddon->UldManager.PartsList;
+                bg->PartsList = addon->UldManager.PartsList;
                 bg->Flags = 0;
                 bg->WrapMode = 1;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)bg;
 
                 // ======== SELECTED ========
                 var selectedContainer = UI.CreateResNode();
@@ -61,86 +80,83 @@ namespace JobBars.UI {
                 selectedContainer->Height = 32;
                 selectedContainer->OriginX = 16;
                 selectedContainer->OriginY = 16;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = selectedContainer;
 
-                Selected[idx] = UI.CreateImageNode();
-                Selected[idx]->AtkResNode.Width = 32;
-                Selected[idx]->AtkResNode.Height = 32;
-                Selected[idx]->AtkResNode.X = 0;
-                Selected[idx]->AtkResNode.Y = 0;
-                Selected[idx]->AtkResNode.OriginX = 16;
-                Selected[idx]->AtkResNode.OriginY = 16;
-                Selected[idx]->PartId = UIBuilder.ARROW_FG;
-                Selected[idx]->PartsList = nameplateAddon->UldManager.PartsList;
-                Selected[idx]->Flags = 0;
-                Selected[idx]->WrapMode = 1;
-                nameplateAddon->UldManager.NodeList[nameplateAddon->UldManager.NodeListCount++] = (AtkResNode*)Selected[idx];
+                var selected = UI.CreateImageNode();
+                selected->AtkResNode.Width = 32;
+                selected->AtkResNode.Height = 32;
+                selected->AtkResNode.X = 0;
+                selected->AtkResNode.Y = 0;
+                selected->AtkResNode.OriginX = 16;
+                selected->AtkResNode.OriginY = 16;
+                selected->PartId = UIBuilder.ARROW_FG;
+                selected->PartsList = addon->UldManager.PartsList;
+                selected->Flags = 0;
+                selected->WrapMode = 1;
+
                 // ======== SELECTED SETUP ========
                 selectedContainer->ChildCount = 1;
-                selectedContainer->ChildNode = (AtkResNode*)Selected[idx];
-                Selected[idx]->AtkResNode.ParentNode = selectedContainer;
+                selectedContainer->ChildNode = (AtkResNode*)selected;
+                selected->AtkResNode.ParentNode = selectedContainer;
 
                 // ======= SETUP TICKS =====
-                Ticks[idx]->ChildCount = 3;
-                Ticks[idx]->ChildNode = (AtkResNode*)bg;
-                bg->AtkResNode.PrevSiblingNode = selectedContainer;
-                bg->AtkResNode.ParentNode = Ticks[idx];
-                selectedContainer->ParentNode = Ticks[idx];
+                tick->ChildCount = 3;
+                tick->ChildNode = (AtkResNode*)bg;
+                tick->ParentNode = RootRes;
+
+                UiHelper.Link((AtkResNode*)bg, selectedContainer);
+
+                bg->AtkResNode.ParentNode = tick;
+                selectedContainer->ParentNode = tick;
+
+                var newTick = new TickStruct {
+                    MainTick = tick,
+                    Background = bg,
+                    Selected = selected,
+                    SelectedContainer = selectedContainer
+                };
+                Ticks.Add(newTick);
+
+                if (lastTick != null) UiHelper.Link(lastTick.MainTick, newTick.MainTick);
+                lastTick = newTick;
             }
 
             // ====== SETUP ROOT =======
-            RootRes->ChildNode = Ticks[0];
+            RootRes->ChildNode = Ticks[0].MainTick;
             RootRes->ChildCount = (ushort)(4 * MAX);
-            for (int idx = 0; idx < MAX; idx++) {
-                Ticks[idx]->ParentNode = RootRes;
-                if (idx < (MAX - 1)) {
-                    Ticks[idx]->PrevSiblingNode = Ticks[idx + 1];
-                }
-            }
         }
 
-        public override void LoadExisting(AtkResNode* node) {
-            Selected = new AtkImageNode*[MAX];
-            Ticks = new AtkResNode*[MAX];
+        public override void Dispose() {
+            for (int idx = 0; idx < MAX; idx++) {
+                Ticks[idx].Dispose();
+                Ticks[idx] = null;
+            }
+            Ticks = null;
 
-            RootRes = node;
-            var n = RootRes->ChildNode;
-            for (int i = 0; i < MAX; i++) {
-                if (n == null) continue;
-                Ticks[i] = n;
-                Selected[i] = (AtkImageNode*)n->ChildNode->PrevSiblingNode->ChildNode;
-                n = n->PrevSiblingNode;
+            if (RootRes != null) {
+                RootRes->Destroy(true);
+                RootRes = null;
             }
         }
 
         public override void SetColor(ElementColor color) {
-            foreach (var item in Selected) {
-                UIColor.SetColor((AtkResNode*)item, color);
+            foreach (var tick in Ticks) {
+                UIColor.SetColor(tick.Selected, color);
             }
         }
 
         public void SetMaxValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                if (idx < value) {
-                    UiHelper.Show(Ticks[idx]);
-                }
-                else {
-                    UiHelper.Hide(Ticks[idx]);
-                }
+                UiHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
             }
         }
 
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                if (idx < value) {
-                    UiHelper.Show(Selected[idx]);
-                    if (idx >= LastValue) { // newly added
-                        var item = (AtkResNode*)Selected[idx];
-                        Animation.AddAnim((float f) => UiHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
-                    }
-                }
-                else {
-                    UiHelper.Hide(Selected[idx]);
+                UiHelper.SetVisibility(Ticks[idx].Selected, idx < value);
+
+                if (idx < value && idx >= LastValue) { // newly added
+                    var item = (AtkResNode*)Ticks[idx].Selected;
+                    Animation.AddAnim((float f) => UiHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
                 }
             }
             LastValue = value;

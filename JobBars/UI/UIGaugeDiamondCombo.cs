@@ -19,8 +19,7 @@ namespace JobBars.UI {
             RootRes = gauge.RootRes;
         }
 
-        public override void Init() { }
-        public override unsafe void LoadExisting(AtkResNode* node) { }
+        public override void Dispose() { }
 
         public override void Hide() {
             UiHelper.Hide(RootRes);

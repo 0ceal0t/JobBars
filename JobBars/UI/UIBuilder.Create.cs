@@ -1,15 +1,21 @@
 ﻿using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public AtkResNode* CreateResNode() {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
-            var node = UiHelper.CloneNode(addon->RootNode);
+            var node = (AtkResNode*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkResNode), 8);
+            if (node == null) {
+                PluginLog.Debug("Failed to allocate memory for res node");
+                return null;
+            }
+            IMemorySpace.Memset(node, 0, (ulong)sizeof(AtkResNode));
+            node->Ctor();
 
-            node->NodeID = (nodeIdx++);
+            node->NodeID = (NodeIdx++);
             node->Type = NodeType.Res;
             node->ScaleX = 1;
             node->ScaleY = 1;
@@ -38,15 +44,21 @@ namespace JobBars.UI {
             node->Flags = 8243;
             node->Flags_2 = 1;
             node->Flags_2 |= 4;
+            node->DrawFlags = 0;
 
             return node;
         }
 
         public AtkTextNode* CreateTextNode() {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
-            var node = UiHelper.CloneNode((AtkTextNode*)addon->RootNode->ChildNode->PrevSiblingNode->PrevSiblingNode);
+            var node = (AtkTextNode*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkTextNode), 8);
+            if (node == null) {
+                PluginLog.Debug("Failed to allocate memory for res node");
+                return null;
+            }
+            IMemorySpace.Memset(node, 0, (ulong)sizeof(AtkTextNode));
+            node->Ctor();
 
-            node->AtkResNode.NodeID = (nodeIdx++);
+            node->AtkResNode.NodeID = (NodeIdx++);
             node->AtkResNode.Type = NodeType.Text;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;
@@ -77,6 +89,7 @@ namespace JobBars.UI {
             node->AtkResNode.Flags = 8250;
             node->AtkResNode.Flags_2 = 1;
             node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.DrawFlags = 8;
 
             node->TextId = 0;
             node->TextColor = UIColor.BYTE_White;
@@ -93,24 +106,23 @@ namespace JobBars.UI {
             node->TextFlags = 16;
             node->TextFlags2 = 0;
 
-            var newStrPtr = UiHelper.Alloc(64);
-            node->NodeText.StringPtr = (byte*)newStrPtr;
-            node->NodeText.BufSize = 64;
-            node->NodeText.BufUsed = 0;
-            node->NodeText.StringLength = 0;
-            node->NodeText.Unk = 256;
-
-            UiHelper.SetText(node, "");
+            node->SetText("");
 
             return node;
         }
 
         public AtkImageNode* CreateImageNode() {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
-            var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
-            var node = (AtkImageNode*)UiHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[0]);
+            var node = (AtkImageNode*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkImageNode), 8);
+            if (node == null) {
+                PluginLog.Debug("Failed to allocate memory for image node");
+                return null;
+            }
+            IMemorySpace.Memset(node, 0, (ulong)sizeof(AtkImageNode));
+            node->Ctor();
 
-            node->AtkResNode.NodeID = (nodeIdx++);
+            node->WrapMode = 1;
+
+            node->AtkResNode.NodeID = (NodeIdx++);
             node->AtkResNode.Type = NodeType.Image;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;
@@ -141,16 +153,20 @@ namespace JobBars.UI {
             node->AtkResNode.Flags = 8243;
             node->AtkResNode.Flags_2 = 1;
             node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.DrawFlags = 12;
 
             return node;
         }
 
         public AtkNineGridNode* CreateNineNode() {
+
             var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
             var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
             var node = (AtkNineGridNode*)UiHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[3]);
 
-            node->AtkResNode.NodeID = (nodeIdx++);
+            node->PartsTypeRenderType = 128;
+
+            node->AtkResNode.NodeID = (NodeIdx++);
             node->AtkResNode.Type = NodeType.NineGrid;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;
@@ -181,6 +197,7 @@ namespace JobBars.UI {
             node->AtkResNode.Flags = 8243;
             node->AtkResNode.Flags_2 = 1;
             node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.DrawFlags = 8;
 
             return node;
         }

@@ -4,7 +4,6 @@ using JobBars.GameStructs;
 using JobBars.Data;
 using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.ClientState.Actors.Types.NonPlayer;
-using FFXIVClientInterface.Client.Game;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -136,15 +135,6 @@ namespace JobBars {
                 }
             }
             return false;
-        }
-
-        public static bool GetRecast(uint action, out RecastTimer* timer) {
-            timer = (RecastTimer*)IntPtr.Zero;
-            var adjustedActionId = Client.ActionManager.GetAdjustedActionId(action);
-            var recastGroup = (int)Client.ActionManager.GetRecastGroup(0x01, adjustedActionId) + 1;
-            if (recastGroup == 0 || recastGroup == 58) return false;
-            timer = Client.ActionManager.GetGroupRecastTime(recastGroup);
-            return true;
         }
     }
 }

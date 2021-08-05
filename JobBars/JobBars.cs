@@ -1,5 +1,4 @@
 ﻿using Dalamud.Plugin;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +13,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
 using JobBars.PartyList;
-using FFXIVClientInterface;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -46,8 +45,6 @@ namespace JobBars {
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
-        public static ClientInterface Client { get; private set; }
-
         /*
          * SIG LIST:
          *  Lord have mercy when 6.0 comes
@@ -55,8 +52,6 @@ namespace JobBars {
          * 
          *  FFXIVClientInterface/ClientInterface.cs
          *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
-         *  FFXIVClientInterface/Client/UI/Agent/AgentModule.cs
-         *      getAgentByInternalID (E8 ?? ?? ?? ?? 83 FF 0D)
          *  FFXIVClientInterface/Client/Game/ActionManager.cs
          *      BaseAddress (E8 ?? ?? ?? ?? 33 C0 E9 ?? ?? ?? ?? 8B 7D 0C)
          *      GetRecastGroup (E8 ?? ?? ?? ?? 8B D0 48 8B CD 8B F0) 
@@ -64,7 +59,6 @@ namespace JobBars {
          *      GetAdjustedActionId (E8 ?? ?? ?? ?? 8B F8 3B DF) 
          *      
          *  Helper/UiHelper.GameFunctions.cs
-         *      _atkTextNodeSetText (E8 ?? ?? ?? ?? 49 8B FC)
          *      _gameAlloc (E8 ?? ?? ?? ?? 45 8D 67 23)
          *      _getGameAllocator (E8 ?? ?? ?? ?? 8B 75 08)
          *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
@@ -96,7 +90,10 @@ namespace JobBars {
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
+
+            if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
+
+            UIIconManager.Initialize(pluginInterface);
             UiHelper.Setup(pluginInterface.TargetModuleScanner);
             UIColor.SetupColors();
 
@@ -105,14 +102,13 @@ namespace JobBars {
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Config.Initialize(PluginInterface);
             SetupActions();
-            UI = new UIBuilder(pluginInterface);
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
-            receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, (ReceiveActionEffectDelegate)ReceiveActionEffect);
+            receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             receiveActionEffectHook.Enable();
 
             IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
-            actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
+            actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             actorControlSelfHook.Enable();
 
             PluginInterface.UiBuilder.OnBuildUi += BuildSettingsUI;
@@ -142,8 +138,8 @@ namespace JobBars {
             BManager = null;
 
             Animation.Cleanup();
+            UIIconManager.Dispose();
             UI.Dispose();
-            Client.Dispose();
 
             RemoveCommands();
         }
@@ -167,20 +163,26 @@ namespace JobBars {
         }
 
         private void FrameworkOnUpdate(Framework framework) {
+            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+
             if (!Ready) {
-                if (Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
-                    PluginLog.Log("LOGOUT");
+                if (Init && addon == null) { // a logout, need to recreate everything once we're done
+                    PluginLog.Log("==== LOGOUT ===");
                     Animation.Cleanup();
+
                     Init = false;
                     CurrentJob = JobIds.OTHER;
                 }
                 return;
             }
 
-            var addon = UI.ADDON;
+            if (addon == null || addon->RootNode == null) return;
             if (!Init) {
-                if (addon == null) return;
-                PluginLog.Log("INIT");
+                PluginLog.Log("==== INIT ====");
+                UI?.Dispose(); // free any existing resources
+                UIIconManager.Manager.Reset();
+
+                UI = new UIBuilder(PluginInterface);
                 if (UI.Setup()) {
                     GManager = new GaugeManager(PluginInterface, UI);
                     BManager = new BuffManager(UI);
@@ -191,10 +193,24 @@ namespace JobBars {
                 return;
             }
 
-            // ======== SWITCH JOB ============
+            CheckForJobChange();
+            Tick();
+            CheckForPartyChange();
+            CheckForHUDChange(addon);
+        }
+
+        private void CheckForPartyChange() {
+            if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
+                BManager.SetJob(CurrentJob);
+            }
+            LastPartyCount = Party.Count;
+        }
+
+        private void CheckForJobChange() {
             var level = PluginInterface.ClientState.LocalPlayer.Level;
             var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
             JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
+
             if (job != CurrentJob) {
                 CurrentJob = job;
                 LastLevel = level; // switching to a different job, might have a different level
@@ -205,21 +221,18 @@ namespace JobBars {
                 LastLevel = level;
                 // TODO
             }
+        }
 
-            // ========= TICK =============
+        private void Tick() {
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.ConditionFlag.InCombat];
             GManager.Tick(Party, inCombat);
             BManager.Tick(inCombat);
+        }
 
-            // ========= PARTY CHANGE ===========
-            if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
-                BManager.SetJob(CurrentJob);
-            }
-            LastPartyCount = Party.Count;
-
-            // ========= HUD LAYOUT CHANGE ==========
+        private void CheckForHUDChange(AtkUnitBase* addon) {
             var currentPosition = UiHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
             var currentScale = UiHelper.GetNodeScale(addon->RootNode);
+
             if (currentPosition != LastPosition || currentScale != LastScale) {
                 GManager.SetPositionScale();
                 BManager.SetPositionScale();
@@ -234,7 +247,8 @@ namespace JobBars {
         }
 
         // ======= COMMANDS ============
-        public void SetupCommands() {
+
+        private void SetupCommands() {
             PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnCommand) {
                 HelpMessage = $"Open config window for {Name}",
                 ShowInHelp = true
@@ -251,52 +265,6 @@ namespace JobBars {
 
         public void RemoveCommands() {
             PluginInterface.CommandManager.RemoveHandler("/jobbars");
-        }
-    }
-
-    // ===== BUFF OR ACTION ======
-    public enum ItemType {
-        Buff,
-        Action, // either GCD or OGCD
-        GCD,
-        OGCD
-    }
-
-    public struct Item {
-        public uint Id;
-        public ItemType Type;
-
-        public Item(ActionIds action) {
-            Id = (uint)action;
-            Type = ItemType.Action;
-        }
-
-        public Item(BuffIds buff) {
-            Id = (uint)buff;
-            Type = ItemType.Buff;
-        }
-
-        public override bool Equals(object obj) {
-            return obj is Item overrides && Equals(overrides);
-        }
-
-        public bool Equals(Item other) {
-            return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
-        }
-
-        public static bool operator ==(Item left, Item right) {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Item left, Item right) {
-            return !(left == right);
-        }
-
-        public override int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();
-            return hash;
         }
     }
 }

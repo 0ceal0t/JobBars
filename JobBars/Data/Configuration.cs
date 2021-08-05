@@ -49,7 +49,7 @@ namespace JobBars.Data {
 
 
         [NonSerialized]
-        private DalamudPluginInterface _pluginInterface;
+        private DalamudPluginInterface PluginInterface;
 
         public static Configuration Config { get; private set; }
 
@@ -70,12 +70,12 @@ namespace JobBars.Data {
         }
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
-            _pluginInterface = pluginInterface;
+            PluginInterface = pluginInterface;
             Config = this;
         }
 
         public void Save() {
-            _pluginInterface.SavePluginConfig(this);
+            PluginInterface.SavePluginConfig(this);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace JobBars.Gauges {
                     SetValue(proc.Idx, buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
-                    SetValue(proc.Idx, JobBars.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
+                    SetValue(proc.Idx, UIIconManager.Manager.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
                 }
             }
         }
