@@ -21,14 +21,12 @@ namespace JobBars {
         public DalamudPluginInterface PluginInterface { get; private set; }
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
 
-        private UIBuilder UI;
         private GaugeManager GManager;
         private BuffManager BManager;
         private Configuration Config;
         private readonly HashSet<uint> GCDs = new();
 
         private JobIds CurrentJob = JobIds.OTHER;
-        private byte LastLevel = 0;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
@@ -39,8 +37,8 @@ namespace JobBars {
         private PList Party; // TEMP
         private int LastPartyCount = 0;
 
-        private bool Ready => PluginInterface.ClientState?.LocalPlayer != null;
-        private bool Init = false;
+        private bool PlayerExists => PluginInterface.ClientState?.LocalPlayer != null;
+        private bool Initialized = false;
 
         private Vector2 LastPosition;
         private Vector2 LastScale;
@@ -94,7 +92,7 @@ namespace JobBars {
             if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
 
             UIIconManager.Initialize(pluginInterface);
-            UiHelper.Setup(pluginInterface.TargetModuleScanner);
+            UIHelper.Setup(pluginInterface);
             UIColor.SetupColors();
 
             Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
@@ -139,7 +137,8 @@ namespace JobBars {
 
             Animation.Cleanup();
             UIIconManager.Dispose();
-            UI.Dispose();
+            UIBuilder.Dispose();
+            UIHelper.Dispose();
 
             RemoveCommands();
         }
@@ -163,33 +162,17 @@ namespace JobBars {
         }
 
         private void FrameworkOnUpdate(Framework framework) {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+            var addon = UIHelper.Addon;
 
-            if (!Ready) {
-                if (Init && addon == null) { // a logout, need to recreate everything once we're done
-                    PluginLog.Log("==== LOGOUT ===");
-                    Animation.Cleanup();
-
-                    Init = false;
-                    CurrentJob = JobIds.OTHER;
-                }
+            if (!PlayerExists) {
+                if (Initialized && addon == null) Logout();
                 return;
             }
 
             if (addon == null || addon->RootNode == null) return;
-            if (!Init) {
-                PluginLog.Log("==== INIT ====");
-                UI?.Dispose(); // free any existing resources
-                UIIconManager.Manager.Reset();
 
-                UI = new UIBuilder(PluginInterface);
-                if (UI.Setup()) {
-                    GManager = new GaugeManager(PluginInterface, UI);
-                    BManager = new BuffManager(UI);
-                    UI.HideAllBuffs();
-                    UI.HideAllGauges();
-                    Init = true;
-                }
+            if (!Initialized) {
+                InitializeUI();
                 return;
             }
 
@@ -197,6 +180,24 @@ namespace JobBars {
             Tick();
             CheckForPartyChange();
             CheckForHUDChange(addon);
+        }
+
+        private void Logout() {
+            PluginLog.Log("==== LOGOUT ===");
+            Animation.Cleanup();
+            Initialized = false;
+            CurrentJob = JobIds.OTHER;
+        }
+
+        private void InitializeUI() {
+            PluginLog.Log("==== INIT ====");
+            UIIconManager.Manager.Reset();
+            UIBuilder.Initialize(PluginInterface);
+            GManager = new GaugeManager(PluginInterface);
+            BManager = new BuffManager();
+            UIBuilder.Builder.HideAllBuffs();
+            UIBuilder.Builder.HideAllGauges();
+            Initialized = true;
         }
 
         private void CheckForPartyChange() {
@@ -207,19 +208,13 @@ namespace JobBars {
         }
 
         private void CheckForJobChange() {
-            var level = PluginInterface.ClientState.LocalPlayer.Level;
             var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
             JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
 
             if (job != CurrentJob) {
                 CurrentJob = job;
-                LastLevel = level; // switching to a different job, might have a different level
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
                 Reset();
-            }
-            else if (level != LastLevel) {
-                LastLevel = level;
-                // TODO
             }
         }
 
@@ -230,12 +225,12 @@ namespace JobBars {
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {
-            var currentPosition = UiHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
-            var currentScale = UiHelper.GetNodeScale(addon->RootNode);
+            var currentPosition = UIHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
+            var currentScale = UIHelper.GetNodeScale(addon->RootNode);
 
             if (currentPosition != LastPosition || currentScale != LastScale) {
                 GManager.SetPositionScale();
-                BManager.SetPositionScale();
+                BuffManager.SetPositionScale();
             }
             LastPosition = currentPosition;
             LastScale = currentScale;

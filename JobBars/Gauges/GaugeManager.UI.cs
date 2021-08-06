@@ -20,8 +20,8 @@ namespace JobBars.Gauges {
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref Configuration.Config.GaugesEnabled)) {
-                if (Configuration.Config.GaugesEnabled) UI.ShowGauges();
-                else UI.HideGauges();
+                if (Configuration.Config.GaugesEnabled) UIBuilder.Builder.ShowGauges();
+                else UIBuilder.Builder.HideGauges();
                 Configuration.Config.Save();
             }
 
@@ -51,7 +51,7 @@ namespace JobBars.Gauges {
             ImGui.SameLine();
             if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref Configuration.Config.GaugesHideOutOfCombat)) {
                 if (!Configuration.Config.GaugesHideOutOfCombat && Configuration.Config.GaugesEnabled) { // since they might be hidden
-                    UI.ShowGauges();
+                    UIBuilder.Builder.ShowGauges();
                 }
                 Configuration.Config.Save();
             }
@@ -135,7 +135,7 @@ namespace JobBars.Gauges {
         private void SetGaugePosition(Vector2 pos) {
             Configuration.Config.GaugePosition = pos;
             Configuration.Config.Save();
-            UI?.SetGaugePosition(pos);
+            UIBuilder.Builder.SetGaugePosition(pos);
         }
     }
 }

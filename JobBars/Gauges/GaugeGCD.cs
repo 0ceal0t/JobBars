@@ -67,7 +67,7 @@ namespace JobBars.Gauges {
                 sg.DrawSubGauge(_ID, job);
             }
             // ======== TYPE =============
-            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Type, out var newType)) {
+            if (DrawTypeOptions(_ID, Name, ValidGaugeVisualType, Type, out var newType)) {
                 Type = newType;
                 GaugeManager.Manager.ResetJob(job);
             }

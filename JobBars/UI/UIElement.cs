@@ -11,12 +11,7 @@ using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public abstract unsafe class UIElement {
-        protected UIBuilder UI;
         public AtkResNode* RootRes;
-
-        public UIElement(UIBuilder ui) {
-            UI = ui;
-        }
 
         public abstract void Dispose();
 
@@ -26,25 +21,25 @@ namespace JobBars.UI {
         }
 
         public virtual void Hide() {
-            UiHelper.Hide(RootRes);
+            UIHelper.Hide(RootRes);
         }
 
         public virtual void Show() {
-            UiHelper.Show(RootRes);
+            UIHelper.Show(RootRes);
         }
 
         public virtual void SetSplitPosition(Vector2 pos) {
-            var p = UiHelper.GetNodePosition(UI.G_RootRes);
-            var pScale = UiHelper.GetNodeScale(UI.G_RootRes);
-            UiHelper.SetPosition(RootRes, (pos.X - p.X) / pScale.X, (pos.Y - p.Y) / pScale.Y);
+            var p = UIHelper.GetNodePosition(UIBuilder.Builder.GaugeRoot);
+            var pScale = UIHelper.GetNodeScale(UIBuilder.Builder.GaugeRoot);
+            UIHelper.SetPosition(RootRes, (pos.X - p.X) / pScale.X, (pos.Y - p.Y) / pScale.Y);
         }
 
         public virtual void SetPosition(Vector2 pos) {
-            UiHelper.SetPosition(RootRes, pos.X, pos.Y);
+            UIHelper.SetPosition(RootRes, pos.X, pos.Y);
         }
 
         public virtual void SetScale(float scale) {
-            UiHelper.SetScale(RootRes, scale, scale);
+            UIHelper.SetScale(RootRes, scale, scale);
         }
 
         public virtual void Cleanup() { }

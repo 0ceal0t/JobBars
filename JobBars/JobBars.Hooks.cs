@@ -4,11 +4,12 @@ using JobBars.GameStructs;
 using JobBars.Data;
 using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.ClientState.Actors.Types.NonPlayer;
+using Dalamud.Plugin;
 
 namespace JobBars {
     public unsafe partial class JobBars {
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
-            if (!Ready || !Init) {
+            if (!PlayerExists || !Initialized) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -102,11 +103,13 @@ namespace JobBars {
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
             if (arg1 == 0x40000010) { // WIPE
+                PluginLog.Log("=== WIPE  ===");
                 Reset();
             }
         }
 
         private void ZoneChanged(object sender, ushort e) {
+            PluginLog.Log("==== ZONE CHANGED ====");
             Reset();
         }
 

@@ -1,12 +1,6 @@
 ﻿using Dalamud.Interface;
 using Dalamud.Plugin;
 using ImGuiNET;
-using JobBars.Data;
-using JobBars.Gauges;
-using JobBars.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace JobBars {
@@ -14,8 +8,7 @@ namespace JobBars {
         public bool Visible = false;
 
         private void BuildSettingsUI() {
-            if (!Ready || !Init) return;
-
+            if (!PlayerExists || !Initialized) return;
             if (!Visible) return;
 
             string _ID = "##JobBars_Settings";
@@ -56,7 +49,9 @@ namespace JobBars {
         }
 
         public static void Separator() {
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2); ImGui.Separator(); ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+            ImGui.Separator();
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
         }
     }
 }

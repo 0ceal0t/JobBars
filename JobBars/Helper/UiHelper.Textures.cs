@@ -2,14 +2,10 @@
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Helper {
-    public unsafe partial class UiHelper {
+    public unsafe partial class UIHelper {
         public static void LoadIcon(AtkImageNode* node, int icon) {
             var partsList = CreatePartsList(1);
             node->PartsList = partsList;

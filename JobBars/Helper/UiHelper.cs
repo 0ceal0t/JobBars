@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Plugin;
-using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using FFXIVClientStructs.FFXIV.Component.GUI.ULD;
 
 namespace JobBars.Helper {
-    public static unsafe partial class UiHelper {
+    public static unsafe partial class UIHelper {
         public static unsafe Vector2 GetNodePosition(AtkResNode* node) {
             var pos = new Vector2(node->X, node->Y);
             var par = node->ParentNode;

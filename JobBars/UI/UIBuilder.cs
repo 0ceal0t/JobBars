@@ -10,32 +10,32 @@ using System.Text;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
+        public static UIBuilder Builder { get; private set; } = null;
+        public static void Initialize(DalamudPluginInterface pluginInterface) {
+            Builder?.DisposeInstance();
+            Builder = new UIBuilder(pluginInterface);
+            Builder.InitializeInstance();
+        }
+
+        public static void Dispose() {
+            Builder?.DisposeInstance();
+            Builder = null;
+        }
+
+        // ===== INSTANCE =======
+
         public DalamudPluginInterface PluginInterface;
 
-        public AtkResNode* G_RootRes = null;
+        public AtkResNode* GaugeRoot = null;
         private static readonly int MAX_GAUGES = 4;
-        public List<UIGauge> Gauges;
-        public List<UIArrow> Arrows;
-        public List<UIDiamond> Diamonds;
+        public List<UIGauge> Gauges = new();
+        public List<UIArrow> Arrows = new();
+        public List<UIDiamond> Diamonds = new();
 
-        private AtkResNode* B_RootRes = null;
-        public List<UIBuff> Buffs;
+        private AtkResNode* BuffRoot = null;
+        public List<UIBuff> Buffs = new();
         private static IconIds[] Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
         public Dictionary<IconIds, UIBuff> IconToBuff = new();
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTexDelegate(IntPtr uldManager, IntPtr allocator, IntPtr texPaths, IntPtr assetMapping, uint assetNumber, byte a6);
-        public LoadTexDelegate LoadTex;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTexAllocDelegate(IntPtr allocator, Int64 size, UInt64 a3);
-        public LoadTexAllocDelegate LoadTexAlloc;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr TexUnallocDelegate(IntPtr tex);
-        public TexUnallocDelegate TexUnalloc;
-
-        public AtkUnitBase* ADDON => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
 
         private static readonly uint NODE_IDX_START = 89990001;
         private uint NodeIdx = NODE_IDX_START;
@@ -60,26 +60,25 @@ namespace JobBars.UI {
         public static readonly ushort BUFF_BORDER = (ushort)(PART_START + 8);
         public static readonly ushort BUFF_OVERLAY = (ushort)(PART_START + 9);
 
-        public UIBuilder(DalamudPluginInterface pi) {
+        private UIBuilder(DalamudPluginInterface pi) {
             PluginInterface = pi;
-
-            var loadAssetsPtr = PluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??");
-            LoadTex = Marshal.GetDelegateForFunctionPointer<LoadTexDelegate>(loadAssetsPtr);
-
-            var loadTexAllocPtr = PluginInterface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48");
-            LoadTexAlloc = Marshal.GetDelegateForFunctionPointer<LoadTexAllocDelegate>(loadTexAllocPtr);
-
-            var texUnallocPtr = PluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? C6 43 10 02");
-            TexUnalloc = Marshal.GetDelegateForFunctionPointer<TexUnallocDelegate>(texUnallocPtr);
-
-            Gauges = new();
-            Arrows = new();
-            Diamonds = new();
-            Buffs = new();
         }
 
-        public void Dispose() {
-            G_RootRes->NextSiblingNode->PrevSiblingNode = null; // unlink
+        private void InitializeInstance() {
+            var addon = UIHelper.Addon;
+            if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) {
+                PluginLog.Debug("Error setting up UI builder");
+                return;
+            }
+            if (addon->UldManager.AssetCount == 1) {
+                SetupTex();
+                SetupPart(addon);
+            }
+            Init(addon);
+        }
+
+        private void DisposeInstance() {
+            GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
 
             Gauges.ForEach(x => x.Dispose());
             Gauges = null;
@@ -93,50 +92,39 @@ namespace JobBars.UI {
             Buffs.ForEach(x => x.Dispose());
             Buffs = null;
 
-            G_RootRes->Destroy(true);
-            G_RootRes = null;
+            GaugeRoot->Destroy(true);
+            GaugeRoot = null;
 
-            B_RootRes->Destroy(true);
-            B_RootRes = null;
+            BuffRoot->Destroy(true);
+            BuffRoot = null;
 
-            var addon = ADDON;
+            var addon = UIHelper.Addon;
             if (addon == null) return;
             addon->UldManager.UpdateDrawNodeList();
 
             if (PluginInterface.ClientState?.LocalPlayer == null) { // game closing, remove the orphaned assets
+                PluginLog.Log("==== UNLOADING TEXTURES =======");
                 for (int i = 0; i < addon->UldManager.AssetCount; i++) {
-                    TexUnalloc(new IntPtr(addon->UldManager.Assets) + 0x8 + 0x20 * i);
+                    UIHelper.TexUnalloc(new IntPtr(addon->UldManager.Assets) + 0x8 + 0x20 * i);
                 }
             }
         }
 
-        public bool Setup() {
-            var addon = ADDON;
-            if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) return false;
-            if(addon->UldManager.AssetCount == 1) {
-                SetupTex();
-                SetupPart();
-            }
-            Init();
-
-            return true;
-        }
-
         private void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
             var numPaths = paths.Length;
-            var addon = ADDON;
+            var addon = UIHelper.Addon;
             AtkUldAsset* oldAssets = addon->UldManager.Assets;
 
-            var allocator = UiHelper.GetGameAllocator();
+            var allocator = UIHelper.GetGameAllocator();
 
-            var assetMapping = LoadTexAlloc(allocator, 4 * numPaths, 16);
+            var assetMapping = UIHelper.LoadTexAlloc(allocator, 4 * numPaths, 16);
             for (int i = 0; i < numPaths; i++) {
                 Marshal.WriteInt32(assetMapping + 4 * i, i + 1); // 0->1, 1->2, etc.
             }
 
             IntPtr manager = (IntPtr)addon + 0x28;
             var size = 16 + 56 * numPaths + 16; // a bit of extra padding on the end
-            IntPtr texPaths = UiHelper.Alloc(size);
+            IntPtr texPaths = UIHelper.Alloc(size);
             var data = new byte[size];
 
             var start = Encoding.ASCII.GetBytes("ashd0101");
@@ -156,14 +144,14 @@ namespace JobBars.UI {
             Buffer.BlockCopy(end, 0, data, 16 + 56 * numPaths, end.Length);
 
             Marshal.Copy(data, 0, texPaths, size);
-            LoadTex(manager, allocator, texPaths, assetMapping, (uint)numPaths, 1);
+            UIHelper.LoadTex(manager, allocator, texPaths, assetMapping, (uint)numPaths, 1);
 
             for (int i = 0; i < 7; i++) { // _ParameterGauges is nice because it only has 1 PartList and 1 Asset
                 addon->UldManager.PartsList[0].Parts[i].UldAsset = addon->UldManager.Assets; // reset all the assets
             }
 
             addon->UldManager.LoadedState = 3; // maybe reset this after the parts are set up? idk
-            TexUnalloc(new IntPtr(oldAssets) + 0x8); // unallocate the old AtkTexture
+            UIHelper.TexUnalloc(new IntPtr(oldAssets) + 0x8); // unallocate the old AtkTexture
         }
 
         private void SetupTex() {
@@ -178,84 +166,82 @@ namespace JobBars.UI {
             LoadAssets(assets.ToArray());
         }
 
-        private void SetupPart() {
+        private void SetupPart(AtkUnitBase* addon) {
             PluginLog.Log("LOADING PARTS");
-            var addon = ADDON;
             var manager = addon->UldManager;
-            addon->UldManager.PartsList->Parts = UiHelper.ExpandPartList(addon->UldManager, 99);
-            UiHelper.AddPart(manager, GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
-            UiHelper.AddPart(manager, GAUGE_ASSET, GAUGE_FRAME_PART, 0, 0, 160, 20);
-            UiHelper.AddPart(manager, GAUGE_ASSET, GAUGE_BAR_MAIN, 0, 40, 160, 20);
-            UiHelper.AddPart(manager, BLUR_ASSET, GAUGE_TEXT_BLUR_PART, 0, 0, 60, 40);
-            UiHelper.AddPart(manager, ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
-            UiHelper.AddPart(manager, ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
-            UiHelper.AddPart(manager, DIAMOND_ASSET, DIAMOND_BG, 0, 0, 32, 32);
-            UiHelper.AddPart(manager, DIAMOND_ASSET, DIAMOND_FG, 32, 0, 32, 32);
-            UiHelper.AddPart(manager, BUFF_OVERLAY_ASSET, BUFF_BORDER, 252, 12, 47, 47);
-            UiHelper.AddPart(manager, BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
+            addon->UldManager.PartsList->Parts = UIHelper.ExpandPartList(addon->UldManager, 99);
+            UIHelper.AddPart(manager, GAUGE_ASSET, GAUGE_BG_PART, 0, 100, 160, 20);
+            UIHelper.AddPart(manager, GAUGE_ASSET, GAUGE_FRAME_PART, 0, 0, 160, 20);
+            UIHelper.AddPart(manager, GAUGE_ASSET, GAUGE_BAR_MAIN, 0, 40, 160, 20);
+            UIHelper.AddPart(manager, BLUR_ASSET, GAUGE_TEXT_BLUR_PART, 0, 0, 60, 40);
+            UIHelper.AddPart(manager, ARROW_ASSET, ARROW_BG, 0, 0, 32, 32);
+            UIHelper.AddPart(manager, ARROW_ASSET, ARROW_FG, 32, 0, 32, 32);
+            UIHelper.AddPart(manager, DIAMOND_ASSET, DIAMOND_BG, 0, 0, 32, 32);
+            UIHelper.AddPart(manager, DIAMOND_ASSET, DIAMOND_FG, 32, 0, 32, 32);
+            UIHelper.AddPart(manager, BUFF_OVERLAY_ASSET, BUFF_BORDER, 252, 12, 47, 47);
+            UIHelper.AddPart(manager, BUFF_OVERLAY_ASSET, BUFF_OVERLAY, 365, 4, 37, 37);
         }
 
-        private void Init() {
-            var addon = ADDON;
+        private void Init(AtkUnitBase* addon) {
             NodeIdx = NODE_IDX_START;
 
             // ======== CREATE GAUGES =======
-            G_RootRes = CreateResNode();
-            G_RootRes->Width = 256;
-            G_RootRes->Height = 100;
-            G_RootRes->Flags = 9395;
-            G_RootRes->Flags_2 = 4;
+            GaugeRoot = CreateResNode();
+            GaugeRoot->Width = 256;
+            GaugeRoot->Height = 100;
+            GaugeRoot->Flags = 9395;
+            GaugeRoot->Flags_2 = 4;
 
             UIDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
-                var newGauge = new UIGauge(this);
-                var newArrow = new UIArrow(this);
-                var newDiamond = new UIDiamond(this);
+                var newGauge = new UIGauge(addon);
+                var newArrow = new UIArrow(addon);
+                var newDiamond = new UIDiamond(addon);
 
                 Gauges.Add(newGauge);
                 Arrows.Add(newArrow);
                 Diamonds.Add(newDiamond);
 
-                newGauge.RootRes->ParentNode = G_RootRes;
-                newArrow.RootRes->ParentNode = G_RootRes;
-                newDiamond.RootRes->ParentNode = G_RootRes;
+                newGauge.RootRes->ParentNode = GaugeRoot;
+                newArrow.RootRes->ParentNode = GaugeRoot;
+                newDiamond.RootRes->ParentNode = GaugeRoot;
 
-                UiHelper.Link(newGauge.RootRes, newArrow.RootRes);
-                UiHelper.Link(newArrow.RootRes, newDiamond.RootRes);
+                UIHelper.Link(newGauge.RootRes, newArrow.RootRes);
+                UIHelper.Link(newArrow.RootRes, newDiamond.RootRes);
 
-                if(lastDiamond != null) UiHelper.Link(lastDiamond.RootRes, newGauge.RootRes);
+                if (lastDiamond != null) UIHelper.Link(lastDiamond.RootRes, newGauge.RootRes);
                 lastDiamond = newDiamond;
             }
 
-            G_RootRes->ParentNode = addon->RootNode;
-            G_RootRes->ChildCount = (ushort)(MAX_GAUGES * (
+            GaugeRoot->ParentNode = addon->RootNode;
+            GaugeRoot->ChildCount = (ushort)(MAX_GAUGES * (
                 Arrows[0].RootRes->ChildCount + 1 +
                 Gauges[0].RootRes->ChildCount + 1 +
                 Diamonds[0].RootRes->ChildCount + 1
             ));
-            G_RootRes->ChildNode = Gauges[0].RootRes;
+            GaugeRoot->ChildNode = Gauges[0].RootRes;
 
             // ======= CREATE BUFFS =========
-            B_RootRes = CreateResNode();
-            B_RootRes->Width = 256;
-            B_RootRes->Height = 100;
-            B_RootRes->Flags = 9395;
-            B_RootRes->Flags_2 = 4;
-            B_RootRes->ParentNode = addon->RootNode;
+            BuffRoot = CreateResNode();
+            BuffRoot->Width = 256;
+            BuffRoot->Height = 100;
+            BuffRoot->Flags = 9395;
+            BuffRoot->Flags_2 = 4;
+            BuffRoot->ParentNode = addon->RootNode;
 
             UIBuff lastBuff = null;
-            foreach(var icon in Icons) {
-                var newBuff = new UIBuff(this, (int)icon);
+            foreach (var icon in Icons) {
+                var newBuff = new UIBuff(addon, (int)icon);
 
                 Buffs.Add(newBuff);
                 IconToBuff[icon] = newBuff;
 
-                if (lastBuff != null) UiHelper.Link(lastBuff.RootRes, newBuff.RootRes);
+                if (lastBuff != null) UIHelper.Link(lastBuff.RootRes, newBuff.RootRes);
                 lastBuff = newBuff;
             }
 
-            B_RootRes->ChildCount = (ushort)(5 * Buffs.Count);
-            B_RootRes->ChildNode = Buffs[0].RootRes;
+            BuffRoot->ChildCount = (ushort)(5 * Buffs.Count);
+            BuffRoot->ChildNode = Buffs[0].RootRes;
 
             // ==== INSERT AT THE END ====
             var lastNode = addon->RootNode->ChildNode;
@@ -263,40 +249,40 @@ namespace JobBars.UI {
                 lastNode = lastNode->PrevSiblingNode;
             }
 
-            UiHelper.Link(lastNode, G_RootRes);
-            UiHelper.Link(G_RootRes, B_RootRes);
+            UIHelper.Link(lastNode, GaugeRoot);
+            UIHelper.Link(GaugeRoot, BuffRoot);
 
             addon->UldManager.UpdateDrawNodeList();
         }
 
         // ==== HELPER FUNCTIONS ============
         public void SetGaugePosition(Vector2 pos) {
-            SetPosition(G_RootRes, pos.X, pos.Y);
+            SetPosition(GaugeRoot, pos.X, pos.Y);
         }
 
         public void SetBuffPosition(Vector2 pos) {
-            SetPosition(B_RootRes, pos.X, pos.Y);
+            SetPosition(BuffRoot, pos.X, pos.Y);
         }
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
-            var addon = ADDON;
-            var p = UiHelper.GetNodePosition(ADDON->RootNode);
-            var pScale = UiHelper.GetNodeScale(ADDON->RootNode);
-            UiHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
+            var addon = UIHelper.Addon;
+            var p = UIHelper.GetNodePosition(addon->RootNode);
+            var pScale = UIHelper.GetNodeScale(addon->RootNode);
+            UIHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
         }
 
         public void SetGaugeScale(float scale) {
-            SetScale(G_RootRes, scale, scale);
+            SetScale(GaugeRoot, scale, scale);
         }
 
         public void SetBuffScale(float scale) {
-            SetScale(B_RootRes, scale, scale);
+            SetScale(BuffRoot, scale, scale);
         }
 
         private void SetScale(AtkResNode* node, float X, float Y) {
-            var addon = ADDON;
-            var p = UiHelper.GetNodeScale(ADDON->RootNode);
-            UiHelper.SetScale(node, X / p.X, Y / p.Y);
+            var addon = UIHelper.Addon;
+            var p = UIHelper.GetNodeScale(addon->RootNode);
+            UIHelper.SetScale(node, X / p.X, Y / p.Y);
         }
 
         public void Hide() {
@@ -310,19 +296,19 @@ namespace JobBars.UI {
         }
 
         public void ShowGauges() {
-            UiHelper.Show(G_RootRes);
+            UIHelper.Show(GaugeRoot);
         }
 
         public void ShowBuffs() {
-            UiHelper.Show(B_RootRes);
+            UIHelper.Show(BuffRoot);
         }
 
         public void HideGauges() {
-            UiHelper.Hide(G_RootRes);
+            UIHelper.Hide(GaugeRoot);
         }
 
         public void HideBuffs() {
-            UiHelper.Hide(B_RootRes);
+            UIHelper.Hide(BuffRoot);
         }
 
         public void HideAllGauges() {

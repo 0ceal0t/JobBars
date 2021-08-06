@@ -162,7 +162,7 @@ namespace JobBars.UI {
 
             var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
             var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
-            var node = (AtkNineGridNode*)UiHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[3]);
+            var node = (AtkNineGridNode*)UIHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[3]);
 
             node->PartsTypeRenderType = 128;
 

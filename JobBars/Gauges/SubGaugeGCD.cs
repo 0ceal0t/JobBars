@@ -108,9 +108,7 @@ namespace JobBars.Gauges {
                 ((Props.Increment == null && action.Type == ItemType.GCD) || // just take any gcd
                     (Props.Increment != null && Props.Increment.Contains(action))) // take specific gcds
             ) {
-                if (Counter < Props.MaxCounter) {
-                    Counter++;
-                }
+                if (Counter < Props.MaxCounter) Counter++;
             }
         }
 

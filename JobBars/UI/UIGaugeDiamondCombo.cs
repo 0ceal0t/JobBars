@@ -13,7 +13,7 @@ namespace JobBars.UI {
         private readonly UIGauge Gauge;
         private readonly UIDiamond Diamond;
 
-        public UIGaugeDiamondCombo(UIBuilder _ui, UIGauge gauge, UIDiamond diamond) : base(_ui) {
+        public UIGaugeDiamondCombo(UIGauge gauge, UIDiamond diamond) {
             Gauge = gauge;
             Diamond = diamond;
             RootRes = gauge.RootRes;
@@ -22,13 +22,13 @@ namespace JobBars.UI {
         public override void Dispose() { }
 
         public override void Hide() {
-            UiHelper.Hide(RootRes);
-            UiHelper.Hide(Diamond.RootRes);
+            UIHelper.Hide(RootRes);
+            UIHelper.Hide(Diamond.RootRes);
         }
 
         public override void Show() {
-            UiHelper.Show(RootRes);
-            UiHelper.Show(Diamond.RootRes);
+            UIHelper.Show(RootRes);
+            UIHelper.Show(Diamond.RootRes);
         }
 
         public void SetText(string text) {
@@ -85,23 +85,23 @@ namespace JobBars.UI {
         }
 
         public override void SetSplitPosition(Vector2 pos) {
-            var p = UiHelper.GetNodePosition(UI.G_RootRes);
-            var pScale = UiHelper.GetNodeScale(UI.G_RootRes);
+            var p = UIHelper.GetNodePosition(UIBuilder.Builder.GaugeRoot);
+            var pScale = UIHelper.GetNodeScale(UIBuilder.Builder.GaugeRoot);
             var x = (pos.X - p.X) / pScale.X;
             var y = (pos.Y - p.Y) / pScale.Y;
 
-            UiHelper.SetPosition(Gauge.RootRes, x, y);
-            UiHelper.SetPosition(Diamond.RootRes, x, y + 10);
+            UIHelper.SetPosition(Gauge.RootRes, x, y);
+            UIHelper.SetPosition(Diamond.RootRes, x, y + 10);
         }
 
         public override void SetScale(float scale) {
-            UiHelper.SetScale(Gauge.RootRes, scale, scale);
-            UiHelper.SetScale(Diamond.RootRes, scale, scale);
+            UIHelper.SetScale(Gauge.RootRes, scale, scale);
+            UIHelper.SetScale(Diamond.RootRes, scale, scale);
         }
 
         public override void SetPosition(Vector2 pos) {
-            UiHelper.SetPosition(Gauge.RootRes, pos.X, pos.Y);
-            UiHelper.SetPosition(Diamond.RootRes, pos.X, pos.Y + 10);
+            UIHelper.SetPosition(Gauge.RootRes, pos.X, pos.Y);
+            UIHelper.SetPosition(Diamond.RootRes, pos.X, pos.Y + 10);
         }
     }
 }

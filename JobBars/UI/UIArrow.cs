@@ -38,15 +38,11 @@ namespace JobBars.UI {
         }
 
         private static readonly int MAX = 12;
-        private List<TickStruct> Ticks;
+        private List<TickStruct> Ticks = new();
         private int LastValue = 0;
 
-        public UIArrow(UIBuilder ui) : base(ui) {
-            Ticks = new();
-
-            var addon = UI.ADDON;
-
-            RootRes = UI.CreateResNode();
+        public UIArrow(AtkUnitBase* addon) : base() {
+            RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
@@ -56,13 +52,13 @@ namespace JobBars.UI {
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
-                var tick = UI.CreateResNode();
+                var tick = UIBuilder.Builder.CreateResNode();
                 tick->X = 18 * idx;
                 tick->Y = 0;
                 tick->Width = 32;
                 tick->Height = 32;
 
-                var bg = UI.CreateImageNode();
+                var bg = UIBuilder.Builder.CreateImageNode();
                 bg->AtkResNode.Width = 32;
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
@@ -73,7 +69,7 @@ namespace JobBars.UI {
                 bg->WrapMode = 1;
 
                 // ======== SELECTED ========
-                var selectedContainer = UI.CreateResNode();
+                var selectedContainer = UIBuilder.Builder.CreateResNode();
                 selectedContainer->X = 0;
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
@@ -81,7 +77,7 @@ namespace JobBars.UI {
                 selectedContainer->OriginX = 16;
                 selectedContainer->OriginY = 16;
 
-                var selected = UI.CreateImageNode();
+                var selected = UIBuilder.Builder.CreateImageNode();
                 selected->AtkResNode.Width = 32;
                 selected->AtkResNode.Height = 32;
                 selected->AtkResNode.X = 0;
@@ -103,7 +99,7 @@ namespace JobBars.UI {
                 tick->ChildNode = (AtkResNode*)bg;
                 tick->ParentNode = RootRes;
 
-                UiHelper.Link((AtkResNode*)bg, selectedContainer);
+                UIHelper.Link((AtkResNode*)bg, selectedContainer);
 
                 bg->AtkResNode.ParentNode = tick;
                 selectedContainer->ParentNode = tick;
@@ -116,7 +112,7 @@ namespace JobBars.UI {
                 };
                 Ticks.Add(newTick);
 
-                if (lastTick != null) UiHelper.Link(lastTick.MainTick, newTick.MainTick);
+                if (lastTick != null) UIHelper.Link(lastTick.MainTick, newTick.MainTick);
                 lastTick = newTick;
             }
 
@@ -146,17 +142,17 @@ namespace JobBars.UI {
 
         public void SetMaxValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                UiHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
+                UIHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
             }
         }
 
         public void SetValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
-                UiHelper.SetVisibility(Ticks[idx].Selected, idx < value);
+                UIHelper.SetVisibility(Ticks[idx].Selected, idx < value);
 
                 if (idx < value && idx >= LastValue) { // newly added
                     var item = (AtkResNode*)Ticks[idx].Selected;
-                    Animation.AddAnim((float f) => UiHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
+                    Animation.AddAnim((float f) => UIHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
                 }
             }
             LastValue = value;

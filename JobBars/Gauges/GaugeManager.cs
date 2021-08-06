@@ -13,7 +13,6 @@ namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         public static GaugeManager Manager { get; private set; }
         public DalamudPluginInterface PluginInterface;
-        public UIBuilder UI;
 
         public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
@@ -21,23 +20,23 @@ namespace JobBars.Gauges {
 
         public IntPtr TargetAddress;
 
-        public GaugeManager(DalamudPluginInterface pi, UIBuilder ui) {
+        public GaugeManager(DalamudPluginInterface pi) {
             Manager = this;
-            UI = ui;
             PluginInterface = pi;
             TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
 
-            if (!Configuration.Config.GaugesEnabled) UI.HideGauges();
+            if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
             Init();
         }
 
         public void SetJob(JobIds job) {
+
             //===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) {
                 gauge.UI?.Cleanup();
                 gauge.UI = null;
             }
-            UI.HideAllGauges();
+            UIBuilder.Builder.HideAllGauges();
             UIIconManager.Manager.Reset();
 
             //====== SET UP NEW =======
@@ -52,8 +51,8 @@ namespace JobBars.Gauges {
         }
 
         public void SetPositionScale() {
-            UI.SetGaugePosition(Configuration.Config.GaugePosition);
-            UI.SetGaugeScale(Configuration.Config.GaugeScale);
+            UIBuilder.Builder.SetGaugePosition(Configuration.Config.GaugePosition);
+            UIBuilder.Builder.SetGaugeScale(Configuration.Config.GaugeScale);
 
             int totalPosition = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
@@ -74,24 +73,12 @@ namespace JobBars.Gauges {
             }
         }
 
-        public UIElement GetUI(int idx, GaugeVisualType type) {
-            return type switch {
-                GaugeVisualType.Arrow => UI.Arrows[idx],
-                GaugeVisualType.Bar => UI.Gauges[idx],
-                GaugeVisualType.Diamond => UI.Diamonds[idx],
-                GaugeVisualType.BarDiamondCombo => new UIGaugeDiamondCombo(UI, UI.Gauges[idx], UI.Diamonds[idx]),// kind of scuffed, but oh well
-                _ => null,
-            };
-        }
-
         public void Reset() {
             SetJob(CurrentJob);
         }
 
         public void ResetJob(JobIds job) {
-            if (job == CurrentJob) {
-                SetJob(job);
-            }
+            if (job == CurrentJob) SetJob(job);
         }
 
         public void PerformAction(Item action) {
@@ -105,8 +92,8 @@ namespace JobBars.Gauges {
             if (!Configuration.Config.GaugesEnabled) return;
 
             if (Configuration.Config.GaugesHideOutOfCombat) {
-                if (inCombat) UI.ShowGauges();
-                else UI.HideGauges();
+                if (inCombat) UIBuilder.Builder.ShowGauges();
+                else UIBuilder.Builder.HideGauges();
             }
 
             Dictionary<Item, BuffElem> BuffDict = new();
@@ -141,6 +128,19 @@ namespace JobBars.Gauges {
             UIIconManager.Manager.Tick();
         }
 
+        private static UIElement GetUI(int idx, GaugeVisualType type) {
+            return type switch {
+                GaugeVisualType.Arrow => UIBuilder.Builder.Arrows[idx],
+                GaugeVisualType.Bar => UIBuilder.Builder.Gauges[idx],
+                GaugeVisualType.Diamond => UIBuilder.Builder.Diamonds[idx],
+                GaugeVisualType.BarDiamondCombo => new UIGaugeDiamondCombo(
+                    UIBuilder.Builder.Gauges[idx],
+                    UIBuilder.Builder.Diamonds[idx]
+                ), // kind of scuffed, but oh well
+                _ => null,
+            };
+        }
+
         private static void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
             if (actor is Chara charaActor) {
@@ -160,8 +160,7 @@ namespace JobBars.Gauges {
 
         private Actor GetPreviousEnemyTarget() {
             var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
-            if (actorAddress == IntPtr.Zero)
-                return null;
+            if (actorAddress == IntPtr.Zero) return null;
 
             return PluginInterface.ClientState.Actors.CreateActorReference(actorAddress);
         }

@@ -2,12 +2,7 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
-using Lumina.Excel.GeneratedSheets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
@@ -25,23 +20,22 @@ namespace JobBars.UI {
         private float LastPercent = 1;
         private Animation Anim = null;
 
-        public UIGauge(UIBuilder ui) : base(ui) {
-            var addon = UI.ADDON;
+        public UIGauge(AtkUnitBase* addon) {
 
             // ======= CONTAINERS =========
-            RootRes = UI.CreateResNode();
+            RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
 
-            GaugeContainer = UI.CreateResNode();
+            GaugeContainer = UIBuilder.Builder.CreateResNode();
             GaugeContainer->X = 0;
             GaugeContainer->Y = 0;
             GaugeContainer->Width = 160;
             GaugeContainer->Height = 32;
 
-            Background = UI.CreateImageNode();
+            Background = UIBuilder.Builder.CreateImageNode();
             Background->AtkResNode.Width = 160;
             Background->AtkResNode.Height = 20;
             Background->AtkResNode.X = 0;
@@ -52,13 +46,13 @@ namespace JobBars.UI {
             Background->WrapMode = 1;
 
             // ========= BAR ============
-            BarContainer = UI.CreateResNode();
+            BarContainer = UIBuilder.Builder.CreateResNode();
             BarContainer->X = 0;
             BarContainer->Y = 0;
             BarContainer->Width = 160;
             BarContainer->Height = 20;
 
-            BarMainNode = UI.CreateNineNode();
+            BarMainNode = UIBuilder.Builder.CreateNineNode();
             BarMainNode->AtkResNode.Width = 160;
             BarMainNode->AtkResNode.Height = 20;
             BarMainNode->AtkResNode.X = 0;
@@ -75,7 +69,7 @@ namespace JobBars.UI {
             BarContainer->ChildNode = (AtkResNode*)BarMainNode;
             BarMainNode->AtkResNode.ParentNode = BarContainer;
 
-            Frame = UI.CreateImageNode();
+            Frame = UIBuilder.Builder.CreateImageNode();
             Frame->AtkResNode.Width = 160;
             Frame->AtkResNode.Height = 20;
             Frame->AtkResNode.X = 0;
@@ -93,23 +87,23 @@ namespace JobBars.UI {
             GaugeContainer->ChildCount = (ushort)(3 + BarContainer->ChildCount);
             GaugeContainer->ChildNode = (AtkResNode*)Background;
 
-            UiHelper.Link((AtkResNode*)Background, BarContainer);
-            UiHelper.Link(BarContainer, (AtkResNode*)Frame);
+            UIHelper.Link((AtkResNode*)Background, BarContainer);
+            UIHelper.Link(BarContainer, (AtkResNode*)Frame);
 
             // ======== TEXT ==========
-            TextContainer = UI.CreateResNode();
+            TextContainer = UIBuilder.Builder.CreateResNode();
             TextContainer->X = 112;
             TextContainer->Y = 6;
             TextContainer->Width = 47;
             TextContainer->Height = 40;
 
-            TextNode = UI.CreateTextNode();
+            TextNode = UIBuilder.Builder.CreateTextNode();
             TextNode->AtkResNode.X = 14;
             TextNode->AtkResNode.Y = 5;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
 
-            TextBlurNode = UI.CreateNineNode();
+            TextBlurNode = UIBuilder.Builder.CreateNineNode();
             TextBlurNode->AtkResNode.Flags = 8371;
             TextBlurNode->AtkResNode.Width = 47;
             TextBlurNode->AtkResNode.Height = 40;
@@ -130,10 +124,10 @@ namespace JobBars.UI {
             TextNode->AtkResNode.ParentNode = TextContainer;
             TextBlurNode->AtkResNode.ParentNode = TextContainer;
 
-            UiHelper.Link((AtkResNode*)TextNode, (AtkResNode*)TextBlurNode);
+            UIHelper.Link((AtkResNode*)TextNode, (AtkResNode*)TextBlurNode);
 
             // ====== CONTAINER SETUP ======
-            UiHelper.Link(GaugeContainer, TextContainer);
+            UIHelper.Link(GaugeContainer, TextContainer);
 
             // ====== ROOT SETUP =====
             RootRes->ChildNode = GaugeContainer;
@@ -196,14 +190,14 @@ namespace JobBars.UI {
             }
 
             int size = text.Length * 17;
-            UiHelper.SetPosition(TextContainer, 129 - size, 6);
-            UiHelper.SetSize(TextContainer, 30 + size, 40);
+            UIHelper.SetPosition(TextContainer, 129 - size, 6);
+            UIHelper.SetSize(TextContainer, 30 + size, 40);
 
-            UiHelper.SetPosition(TextBlurNode, 0, 0);
-            UiHelper.SetSize(TextBlurNode, 30 + size, 40);
+            UIHelper.SetPosition(TextBlurNode, 0, 0);
+            UIHelper.SetSize(TextBlurNode, 30 + size, 40);
 
-            UiHelper.SetPosition(TextNode, 14, 5);
-            UiHelper.SetSize(TextNode, size, 30);
+            UIHelper.SetPosition(TextNode, 14, 5);
+            UIHelper.SetSize(TextNode, size, 30);
         }
 
         public void SetTextColor(ElementColor color) {
@@ -211,12 +205,8 @@ namespace JobBars.UI {
         }
 
         public void SetPercent(float value) {
-            if (value > 1) {
-                value = 1;
-            }
-            else if (value < 0) {
-                value = 0;
-            }
+            if (value > 1) value = 1;
+            else if (value < 0) value = 0;
 
             var difference = Math.Abs(value - LastPercent);
             if (difference == 0) return;
@@ -225,10 +215,10 @@ namespace JobBars.UI {
             var item = (AtkResNode*)BarMainNode;
             Anim?.Delete();
             if (difference > 0.1f) {
-                Anim = Animation.AddAnim(f => UiHelper.SetSize(item, (int)(160 * f), 20), 0.2f, LastPercent, value);
+                Anim = Animation.AddAnim(f => UIHelper.SetSize(item, (int)(160 * f), 20), 0.2f, LastPercent, value);
             }
             else {
-                UiHelper.SetSize(item, (int)(160 * value), 20);
+                UIHelper.SetSize(item, (int)(160 * value), 20);
             }
             LastPercent = value;
         }

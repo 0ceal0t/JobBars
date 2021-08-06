@@ -16,17 +16,15 @@ namespace JobBars.UI {
         private string CurrentText = "";
         static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
 
-        public UIBuff(UIBuilder ui, int icon) : base(ui) {
-            var addon = UI.ADDON;
-
-            RootRes = UI.CreateResNode();
+        public UIBuff(AtkUnitBase* addon, int icon) : base() {
+            RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
             RootRes->ChildCount = 4;
 
-            TextNode = UI.CreateTextNode();
+            TextNode = UIBuilder.Builder.CreateTextNode();
             TextNode->FontSize = 15;
             TextNode->LineSpacing = 15;
             TextNode->AlignmentFontType = 20;
@@ -37,7 +35,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
 
-            Icon = UI.CreateImageNode();
+            Icon = UIBuilder.Builder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
@@ -46,10 +44,10 @@ namespace JobBars.UI {
             Icon->Flags = 0;
             Icon->WrapMode = 1;
 
-            UiHelper.LoadIcon(Icon, icon);
-            UiHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
+            UIHelper.LoadIcon(Icon, icon);
+            UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
 
-            Overlay = UI.CreateImageNode();
+            Overlay = UIBuilder.Builder.CreateImageNode();
             Overlay->AtkResNode.Width = WIDTH;
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
@@ -59,7 +57,7 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
 
-            Border = UI.CreateImageNode();
+            Border = UIBuilder.Builder.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -2;
@@ -68,7 +66,7 @@ namespace JobBars.UI {
             Border->PartsList = addon->UldManager.PartsList;
             Border->Flags = 0;
             Border->WrapMode = 1;
-            UiHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
+            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
 
             Icon->AtkResNode.ParentNode = RootRes;
             Overlay->AtkResNode.ParentNode = RootRes;
@@ -77,9 +75,9 @@ namespace JobBars.UI {
 
             RootRes->ChildNode = (AtkResNode*)TextNode;
 
-            UiHelper.Link((AtkResNode*)TextNode, (AtkResNode*)Icon);
-            UiHelper.Link((AtkResNode*)Icon, (AtkResNode*)Overlay);
-            UiHelper.Link((AtkResNode*)Overlay, (AtkResNode*)Border);
+            UIHelper.Link((AtkResNode*)TextNode, (AtkResNode*)Icon);
+            UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)Overlay);
+            UIHelper.Link((AtkResNode*)Overlay, (AtkResNode*)Border);
             TextNode->SetText("");
         }
 
@@ -90,7 +88,7 @@ namespace JobBars.UI {
             }
 
             if(Icon != null) {
-                UiHelper.UnloadIcon(Icon);
+                UIHelper.UnloadIcon(Icon);
                 Icon->AtkResNode.Destroy(true);
                 Icon = null;
             }
@@ -118,7 +116,7 @@ namespace JobBars.UI {
             int xMod = Configuration.Config.BuffRightToLeft ? -1 : 1;
             int yMod = Configuration.Config.BuffBottomToTop ? -1 : 1;
 
-            UiHelper.SetPosition(RootRes, xMod * (WIDTH + 9) * position_x, yMod * (HEIGHT + 7) * position_y);
+            UIHelper.SetPosition(RootRes, xMod * (WIDTH + 9) * position_x, yMod * (HEIGHT + 7) * position_y);
         }
 
         public void SetOnCD() {
@@ -143,8 +141,8 @@ namespace JobBars.UI {
         public void SetPercent(float percent) {
             int h = (int)(HEIGHT * percent);
             int yOffset = HEIGHT - h;
-            UiHelper.SetSize(Overlay, null, h);
-            UiHelper.SetPosition(Overlay, 0, yOffset);
+            UIHelper.SetSize(Overlay, null, h);
+            UIHelper.SetPosition(Overlay, 0, yOffset);
         }
 
         public override void SetColor(ElementColor color) {

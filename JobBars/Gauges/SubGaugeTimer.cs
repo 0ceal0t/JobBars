@@ -1,8 +1,8 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
+﻿using ImGuiNET;
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
+using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,28 +67,21 @@ namespace JobBars.Gauges {
         private void StartIcon() {
             if (NoIcon()) return;
             foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.ActionIdToState[(uint)icon] = IconState.StartRunning;
+                UIIconManager.Manager.SetIconState((uint)icon, IconState.StartRunning);
             }
         }
 
-        private void SetIcon(double current, float max) {
+        private void SetIcon(float current, float max) {
             if (NoIcon()) return;
             foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress {
-                    Current = current,
-                    Max = max
-                };
+                UIIconManager.Manager.SetIconProgress((uint)icon, current, max);
             }
         }
 
         private void ResetIcon() {
             if (NoIcon()) return;
             foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.ActionIdToStatus[(uint)icon] = new IconProgress {
-                    Current = 0,
-                    Max = 1
-                };
-                UIIconManager.Manager.ActionIdToState[(uint)icon] = IconState.DoneRunning;
+                UIIconManager.Manager.SetIconStateProgress((uint)icon, IconState.DoneRunning, 0, 1);
             }
         }
 
@@ -114,7 +107,7 @@ namespace JobBars.Gauges {
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
                 if (inDanger && beforeOk) {
                     if (Configuration.Config.SeNumber > 0) {
-                        UiHelper.PlaySe(Configuration.Config.SeNumber + 36, 0, 0);
+                        UIHelper.PlaySe(Configuration.Config.SeNumber + 36, 0, 0);
                     }
                 }
                 if (UI is UIGauge gauge) {
@@ -152,6 +145,7 @@ namespace JobBars.Gauges {
         }
 
         public void DrawSubGauge(string _ID, JobIds job) {
+
             //============ COLOR ===============
             var colorTitle = "Color" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
             if (Gauges.Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: colorTitle)) {

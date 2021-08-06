@@ -11,20 +11,18 @@ namespace JobBars.Buffs {
         public Dictionary<JobIds, Buff[]> JobToBuffs;
         public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
 
-        private readonly UIBuilder UI;
         private readonly List<Buff> AllBuffs;
         public JobIds CurrentJob = JobIds.OTHER;
 
-        public BuffManager(UIBuilder ui) {
+        public BuffManager() {
             Manager = this;
-            UI = ui;
-            if (!Configuration.Config.BuffBarEnabled) UI.HideBuffs();
+            if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();
 
             Init();
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
                 foreach (var buff in jobEntry.Value) {
-                    buff.UI = UI.IconToBuff[buff.Icon];
+                    buff.UI = UIBuilder.Builder.IconToBuff[buff.Icon];
                     buff.Setup();
                     AllBuffs.Add(buff);
                 }
@@ -34,13 +32,8 @@ namespace JobBars.Buffs {
         public void SetJob(JobIds job) {
             CurrentJob = job;
             AllBuffs.ForEach(buff => buff.Reset());
-            UI.HideAllBuffs();
+            UIBuilder.Builder.HideAllBuffs();
             SetPositionScale();
-        }
-
-        public void SetPositionScale() {
-            UI.SetBuffPosition(Configuration.Config.BuffPosition);
-            UI.SetBuffScale(Configuration.Config.BuffScale);
         }
 
         public void Reset() {
@@ -59,8 +52,8 @@ namespace JobBars.Buffs {
         public void Tick(bool inCombat) {
             if (!Configuration.Config.BuffBarEnabled) return;
             if (Configuration.Config.BuffHideOutOfCombat) {
-                if (inCombat) UI.ShowBuffs();
-                else UI.HideBuffs();
+                if (inCombat) UIBuilder.Builder.ShowBuffs();
+                else UIBuilder.Builder.HideBuffs();
             }
 
             var idx = 0;
@@ -73,6 +66,11 @@ namespace JobBars.Buffs {
                     idx++;
                 }
             }
+        }
+
+        public static void SetPositionScale() {
+            UIBuilder.Builder.SetBuffPosition(Configuration.Config.BuffPosition);
+            UIBuilder.Builder.SetBuffScale(Configuration.Config.BuffScale);
         }
     }
 }

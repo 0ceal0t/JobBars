@@ -172,7 +172,7 @@ namespace JobBars.Gauges {
                 }
             }
             // ======== TYPE =============
-            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {
+            if (DrawTypeOptions(_ID, Name, ValidGaugeVisualType, Props.Type, out var newType)) {
                 Props.Type = newType;
                 GaugeManager.Manager.ResetJob(job);
             }

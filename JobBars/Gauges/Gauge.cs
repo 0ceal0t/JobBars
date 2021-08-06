@@ -1,14 +1,10 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
+﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
@@ -153,12 +149,12 @@ namespace JobBars.Gauges {
             UI?.SetSplitPosition(pos);
         }
 
-        public bool DrawTypeOptions(string _ID, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {
+        public static bool DrawTypeOptions(string _ID, string lookupId, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {
             newType = GaugeVisualType.Bar;
             if (ImGui.BeginCombo("Type" + _ID, $"{currentType}")) {
                 foreach (GaugeVisualType gType in typeOptions) {
                     if (ImGui.Selectable($"{gType}{_ID}", gType == currentType)) {
-                        Configuration.Config.GaugeTypeOverride[Name] = gType;
+                        Configuration.Config.GaugeTypeOverride[lookupId] = gType;
                         Configuration.Config.Save();
                         newType = gType;
                         return true;

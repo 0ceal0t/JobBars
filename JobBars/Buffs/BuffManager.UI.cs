@@ -1,11 +1,10 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Buffs {
     public partial class BuffManager {
@@ -20,8 +19,8 @@ namespace JobBars.Buffs {
             ImGui.SameLine();
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
                 Configuration.Config.Save();
-                if (Configuration.Config.BuffBarEnabled) UI.ShowBuffs();
-                else UI.HideBuffs();
+                if (Configuration.Config.BuffBarEnabled) UIBuilder.Builder.ShowBuffs();
+                else UIBuilder.Builder.HideBuffs();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
@@ -33,7 +32,7 @@ namespace JobBars.Buffs {
 
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref Configuration.Config.BuffHideOutOfCombat)) {
                 if (!Configuration.Config.BuffHideOutOfCombat && Configuration.Config.BuffBarEnabled) { // since they might be hidden
-                    UI.ShowBuffs();
+                    UIBuilder.Builder.ShowBuffs();
                 }
                 Configuration.Config.Save();
             }
@@ -99,7 +98,7 @@ namespace JobBars.Buffs {
         private void SetBuffPosition(Vector2 pos) {
             Configuration.Config.BuffPosition = pos;
             Configuration.Config.Save();
-            UI?.SetBuffPosition(pos);
+            UIBuilder.Builder.SetBuffPosition(pos);
         }
     }
 }
