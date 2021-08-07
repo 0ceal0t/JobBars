@@ -3,7 +3,6 @@ using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using static JobBars.UI.UIColor;
 
@@ -25,49 +24,33 @@ namespace JobBars.Gauges {
         public string Name;
         public UIElement UI;
 
-        public bool Enabled;
-        public int Order;
-        public float Scale;
+        protected GaugeConfig Config;
+        public bool Enabled => Config.Enabled;
+        public int Order => Config.Order;
+        public Vector2 Position => Config.SplitPosition;
+        public float Scale => Config.Scale;
 
         public Gauge(string name) {
             Name = name;
-            Enabled = !Configuration.Config.GaugeDisabled.Contains(Name);
-            Order = Configuration.Config.GaugeOrderOverride.TryGetValue(Name, out var newOrder) ? newOrder : -1;
-            Scale = Configuration.Config.GaugeIndividualScale.TryGetValue(name, out var newScale) ? newScale : 1;
+            Config = Configuration.Config.GetGaugeConfig(name);
         }
 
-        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
-            if (lastActiveTrigger.Type == ItemType.Buff) {
-                if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
-                    return elem.Duration;
-                }
-                else { // time isn't there, are we just waiting on it?
-                    var timeSinceActive = (time - lastActiveTime).TotalSeconds;
-                    if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
-                        return defaultDuration;
-                    }
-                    return -1; // yeah lmao it's gone
-                }
-            }
-            else {
-                return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
-            }
+#nullable enable
+        public static T GetConfigValue<T>(T? configValue, T defaultValue) {
+            return configValue == null ? defaultValue : configValue;
         }
+#nullable disable
 
         public void SetupUI() {
-            UI.SetVisible(Enabled);
-            UI.SetScale(Scale);
+            UI.SetVisible(Config.Enabled);
+            UI.SetScale(Config.Scale);
             Setup();
         }
+
         protected abstract void Setup();
-
-        public virtual bool DoProcessInput() {
-            return Enabled;
-        }
+        public virtual bool DoProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
-
         public abstract GaugeVisualType GetVisualType();
-
         public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
 
         public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
@@ -87,56 +70,31 @@ namespace JobBars.Gauges {
                 _ => ""
             };
 
-            // ======== ENABLED/DISABLED =========
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
-            if (ImGui.Checkbox("Enabled" + _ID, ref Enabled)) {
-                if (Enabled) {
-                    Configuration.Config.GaugeDisabled.Remove(Name);
-                    if (job == GaugeManager.Manager.CurrentJob) {
-                        UI?.Show();
-                    }
-                }
-                else {
-                    Configuration.Config.GaugeDisabled.Add(Name);
-                    if (job == GaugeManager.Manager.CurrentJob) {
-                        UI?.Hide();
-                    }
-                }
+            if (ImGui.Checkbox("Enabled" + _ID, ref Config.Enabled)) {
                 Configuration.Config.Save();
+
                 if (job == GaugeManager.Manager.CurrentJob) {
-                    GaugeManager.Manager.SetPositionScale();
+                    if (Enabled) UI?.Show();
+                    else UI?.Hide();
                 }
+
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
             }
 
-            // ===== ORDER =======
-            if (ImGui.InputInt("Order" + _ID, ref Order)) {
-                if (Order <= -1) {
-                    Order = -1;
-                    Configuration.Config.GaugeOrderOverride.Remove(Name);
-                }
-                else {
-                    Configuration.Config.GaugeOrderOverride[Name] = Order;
-                }
+            if (ImGui.InputInt("Order" + _ID, ref Config.Order)) {
+                Config.Order = Math.Max(Config.Order, -1);
                 Configuration.Config.Save();
-                if (job == GaugeManager.Manager.CurrentJob) {
-                    GaugeManager.Manager.SetPositionScale();
-                }
+
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
             }
 
-            // ====== SCALE ========
-            if (ImGui.InputFloat("Scale" + _ID, ref Scale)) {
-                if (Scale <= 0.1f) { Scale = 0.1f; }
-                if (Scale == 1) {
-                    Configuration.Config.GaugeIndividualScale.Remove(Name);
-                }
-                else {
-                    Configuration.Config.GaugeIndividualScale[Name] = Scale;
-                }
+            if (ImGui.InputFloat("Scale" + _ID, ref Config.Scale)) {
+                Config.Scale = Math.Max(Config.Scale, 0.1f);
+                UI?.SetScale(Config.Scale);
                 Configuration.Config.Save();
-                UI?.SetScale(Scale);
-                if (job == GaugeManager.Manager.CurrentJob) {
-                    GaugeManager.Manager.SetPositionScale();
-                }
+
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
             }
 
             DrawGauge(_ID, job);
@@ -144,18 +102,16 @@ namespace JobBars.Gauges {
         }
 
         public void SetSplitPosition(Vector2 pos) {
-            Configuration.Config.GaugeSplitPosition[Name] = pos;
+            Config.SplitPosition = pos;
             Configuration.Config.Save();
             UI?.SetSplitPosition(pos);
         }
 
-        public static bool DrawTypeOptions(string _ID, string lookupId, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {
+        public static bool DrawTypeOptions(string _ID, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {
             newType = GaugeVisualType.Bar;
             if (ImGui.BeginCombo("Type" + _ID, $"{currentType}")) {
                 foreach (GaugeVisualType gType in typeOptions) {
                     if (ImGui.Selectable($"{gType}{_ID}", gType == currentType)) {
-                        Configuration.Config.GaugeTypeOverride[lookupId] = gType;
-                        Configuration.Config.Save();
                         newType = gType;
                         return true;
                     }
@@ -165,13 +121,13 @@ namespace JobBars.Gauges {
             return false;
         }
 
-        public static bool DrawColorOptions(string _ID, string lookupId, ElementColor currentColor, out ElementColor newColor, string title = "Color") {
+        public static bool DrawColorOptions(string _ID, ElementColor currentColor, out string newColorString, out ElementColor newColor, string title = "Color") {
             newColor = NoColor;
+            newColorString = string.Empty;
             if (ImGui.BeginCombo(title + _ID, currentColor.Name)) {
                 foreach (var entry in AllColors) {
                     if (ImGui.Selectable($"{entry.Key}{_ID}", currentColor.Name == entry.Key)) {
-                        Configuration.Config.GaugeColorOverride[lookupId] = entry.Key;
-                        Configuration.Config.Save();
+                        newColorString = entry.Key;
                         newColor = entry.Value;
                         return true;
                     }
@@ -179,6 +135,24 @@ namespace JobBars.Gauges {
                 ImGui.EndCombo();
             }
             return false;
+        }
+
+        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+            if (lastActiveTrigger.Type == ItemType.Buff) {
+                if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
+                    return elem.Duration;
+                }
+                else { // time isn't there, are we just waiting on it?
+                    var timeSinceActive = (time - lastActiveTime).TotalSeconds;
+                    if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
+                        return defaultDuration;
+                    }
+                    return -1; // yeah lmao it's gone
+                }
+            }
+            else {
+                return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
+            }
         }
     }
 }

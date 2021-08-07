@@ -1,12 +1,11 @@
 ﻿using Dalamud.Plugin;
 using ImGuiNET;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
@@ -15,16 +14,18 @@ namespace JobBars.Gauges {
         public float MaxDuration;
         public Item[] Triggers;
         public ElementColor Color;
+        public bool Invert;
+        public bool NoSoundOnFull;
 #nullable enable
         public string? SubName;
         public Item[]? Increment;
 #nullable disable
     }
 
-    public class SubGaugeGCD {
+    public class SubGaugeGCD : SubGauge {
         private SubGaugeGCDProps Props;
-        private readonly GaugeGCD Gauge;
-        private readonly string Id;
+        private readonly GaugeGCD ParentGauge;
+        private UIElement UI => ParentGauge.UI;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
@@ -32,18 +33,15 @@ namespace JobBars.Gauges {
         private static readonly int RESET_DELAY = 3;
         private DateTime StopTime;
 
-        private bool Invert;
-
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
-        private UIElement UI => Gauge.UI;
 
-        public SubGaugeGCD(string id, GaugeGCD gauge, SubGaugeGCDProps props) {
-            Id = id;
-            Gauge = gauge;
+        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name) {
+            ParentGauge = gauge;
             Props = props;
-            Props.Color = Configuration.Config.GetColorOverride(Id, out var newColor) ? newColor : Props.Color;
-            Invert = Configuration.Config.GaugeInvert.Contains(id);
+            Props.Invert = Gauge.GetConfigValue(Config.Invert, Props.Invert).Value;
+            Props.NoSoundOnFull = Gauge.GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
+            Props.Color = Config.GetColor(Props.Color);
         }
 
         public void Reset() {
@@ -67,12 +65,12 @@ namespace JobBars.Gauges {
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
             if (State == GaugeState.Active) {
-                float timeLeft = Gauges.Gauge.TimeLeft(Props.MaxDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
+                float timeLeft = Gauge.TimeLeft(Props.MaxDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
                     State = GaugeState.Finished;
                     StopTime = time;
                 }
-                SetValue(Invert ? Props.MaxCounter - Counter : Counter);
+                SetValue(Props.Invert ? Props.MaxCounter - Counter : Counter);
             }
             else if (State == GaugeState.Finished) {
                 if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
@@ -97,8 +95,8 @@ namespace JobBars.Gauges {
                 State = GaugeState.Active;
                 Counter = 0;
                 CheckInactive();
-                if (Gauge.ActiveSubGauge != this) {
-                    Gauge.ActiveSubGauge = this;
+                if (ParentGauge.ActiveSubGauge != this) {
+                    ParentGauge.ActiveSubGauge = this;
                     UseSubGauge();
                 }
             }
@@ -109,11 +107,12 @@ namespace JobBars.Gauges {
                     (Props.Increment != null && Props.Increment.Contains(action))) // take specific gcds
             ) {
                 if (Counter < Props.MaxCounter) Counter++;
+                if (Counter == Props.MaxCounter && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when reached max counter
             }
         }
 
         private void SetValue(int value) {
-            if (Gauge.ActiveSubGauge != this) return;
+            if (ParentGauge.ActiveSubGauge != this) return;
             if (UI is UIArrow arrows) {
                 arrows.SetValue(value);
             }
@@ -127,18 +126,24 @@ namespace JobBars.Gauges {
         }
 
         public void DrawSubGauge(string _ID, JobIds job) {
-            //============ COLOR ===================
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
-            if (Gauges.Gauge.DrawColorOptions(_ID + Props.SubName, Id, Props.Color, out var newColor, title: "Color" + suffix)) {
+
+            if (Gauge.DrawColorOptions(_ID, Props.Color, out var newColorString, out var newColor, title: "Color" + suffix)) {
                 Props.Color = newColor;
-                if (Gauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
+                Config.Color = newColorString;
+                Configuration.Config.Save();
+                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
                     UI?.SetColor(Props.Color);
                 }
             }
-            //========== INVERT ====================
-            if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Invert)) {
-                if (Invert) Configuration.Config.GaugeInvert.Add(Id);
-                else Configuration.Config.GaugeInvert.Remove(Id);
+
+            if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Props.Invert)) {
+                Config.Invert = Props.Invert;
+                Configuration.Config.Save();
+            }
+
+            if (ImGui.Checkbox($"Don't Play Sound When Full{suffix}{_ID}{Props.SubName}", ref Props.NoSoundOnFull)) {
+                Config.Invert = Props.NoSoundOnFull;
                 Configuration.Config.Save();
             }
         }

@@ -1,14 +1,21 @@
 ﻿using Dalamud.Plugin;
+using ImGuiNET;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
+    public struct GaugeChargesProps {
+        public GaugesChargesPartProps[] Parts;
+        public GaugeVisualType Type;
+        public ElementColor BarColor;
+        public bool SameColor;
+        public bool NoSoundOnFull;
+    }
+
     public struct GaugesChargesPartProps {
         public Item[] Triggers;
         public float Duration;
@@ -19,26 +26,20 @@ namespace JobBars.Gauges {
         public ElementColor Color;
     }
 
-    public struct GaugeChargesProps {
-        public GaugesChargesPartProps[] Parts;
-        public GaugeVisualType Type;
-        public ElementColor BarColor;
-        public bool SameColor;
-    }
-
     public class GaugeCharges : Gauge {
-        private GaugeChargesProps Props;
-        private readonly int TotalDiamonds;
+        private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        public static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+        private GaugeChargesProps Props;
+        private readonly int TotalDiamonds = 0;
+        private bool GaugeFull = true;
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
-            Props.Type = Configuration.Config.GaugeTypeOverride.TryGetValue(Name, out var newType) ? newType : Props.Type;
-            Props.BarColor = Configuration.Config.GetColorOverride(name, out var newColor) ? newColor : Props.BarColor;
-            RefreshSameColor();
+            Props.Type = GetConfigValue(Config.Type, Props.Type).Value;
+            Props.NoSoundOnFull = GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
+            Props.BarColor = Config.GetColor(Props.BarColor);
 
-            TotalDiamonds = 0;
+            RefreshSameColor();
             foreach (var part in Props.Parts) {
                 if (part.Diamond) {
                     TotalDiamonds += part.MaxCharges;
@@ -61,6 +62,8 @@ namespace JobBars.Gauges {
                 gauge.SetColor(Props.BarColor);
                 gauge.SetTextColor(NoColor);
             }
+
+            GaugeFull = true;
             SetGaugeValue(0, 0);
             SetDiamondValue(0, 0, TotalDiamonds);
         }
@@ -81,10 +84,9 @@ namespace JobBars.Gauges {
         }
 
         private void RefreshSameColor() {
-            if (Props.SameColor) {
-                for (int i = 0; i < Props.Parts.Length; i++) {
-                    Props.Parts[i].Color = Props.BarColor;
-                }
+            if (!Props.SameColor) return;
+            for (int i = 0; i < Props.Parts.Length; i++) {
+                Props.Parts[i].Color = Props.BarColor;
             }
         }
 
@@ -124,7 +126,9 @@ namespace JobBars.Gauges {
             }
             if (!barAssigned) {
                 SetGaugeValue(0, 0);
+                if (!GaugeFull && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play the sound effect when full charges
             }
+            GaugeFull = !barAssigned;
         }
 
         public override void ProcessAction(Item action) { }
@@ -149,32 +153,34 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override int GetHeight() {
-            return UI == null ? 0 : UI.GetHeight(0);
-        }
+        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
 
-        protected override int GetWidth() {
-            return UI == null ? 0 : UI.GetWidth(0);
-        }
+        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(0);
 
-        public override GaugeVisualType GetVisualType() {
-            return Props.Type;
-        }
+        public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            // ======== COLOR =============
-            if (DrawColorOptions(_ID, Name, Props.BarColor, out var newColor)) {
+            if (DrawColorOptions(_ID, Props.BarColor, out string newColorString, out var newColor)) {
                 Props.BarColor = newColor;
                 if (job == GaugeManager.Manager.CurrentJob) {
+                    Props.BarColor = newColor;
+                    Config.Color = newColorString;
+                    Configuration.Config.Save();
                     UI?.SetColor(Props.BarColor);
                     RefreshSameColor();
                     SetupDiamondColors();
                 }
             }
-            // ======== TYPE =============
-            if (DrawTypeOptions(_ID, Name, ValidGaugeVisualType, Props.Type, out var newType)) {
-                Props.Type = newType;
+
+            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {
+                Config.Type = Props.Type = newType;
+                Configuration.Config.Save();
                 GaugeManager.Manager.ResetJob(job);
+            }
+
+            if (ImGui.Checkbox($"Don't Play Sound When Full {_ID}", ref Props.NoSoundOnFull)) {
+                Config.Invert = Props.NoSoundOnFull;
+                Configuration.Config.Save();
             }
         }
     }

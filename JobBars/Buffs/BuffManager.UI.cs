@@ -95,7 +95,7 @@ namespace JobBars.Buffs {
             }
         }
 
-        private void SetBuffPosition(Vector2 pos) {
+        private static void SetBuffPosition(Vector2 pos) {
             Configuration.Config.BuffPosition = pos;
             Configuration.Config.Save();
             UIBuilder.Builder.SetBuffPosition(pos);

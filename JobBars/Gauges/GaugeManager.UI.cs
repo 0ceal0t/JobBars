@@ -118,7 +118,7 @@ namespace JobBars.Gauges {
             if (!LOCKED) {
                 if (Configuration.Config.GaugeSplit) {
                     foreach (var gauge in CurrentGauges) {
-                        if (JobBars.DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, Configuration.Config.GetGaugeSplitPosition(gauge.Name), out var pos)) {
+                        if (JobBars.DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, gauge.Position, out var pos)) {
                             gauge.SetSplitPosition(pos);
                         }
                     }
@@ -132,7 +132,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        private void SetGaugePosition(Vector2 pos) {
+        private static void SetGaugePosition(Vector2 pos) {
             Configuration.Config.GaugePosition = pos;
             Configuration.Config.Save();
             UIBuilder.Builder.SetGaugePosition(pos);

@@ -1,14 +1,7 @@
 ﻿using Dalamud.Plugin;
 using JobBars.Data;
-using JobBars.Helper;
-using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static JobBars.UI.UIColor;
-
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
         private readonly SubGaugeTimer[] SubGauges;
@@ -56,21 +49,13 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override bool DoProcessInput() {
-            return Enabled || IconEnabled;
-        }
+        public override bool DoProcessInput() => Enabled || IconEnabled;
 
-        protected override int GetHeight() {
-            return UI == null ? 0 : UI.GetHeight(0);
-        }
+        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
 
-        protected override int GetWidth() {
-            return UI == null ? 0 : UI.GetWidth(0);
-        }
+        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(0);
 
-        public override GaugeVisualType GetVisualType() {
-            return GaugeVisualType.Bar;
-        }
+        public override GaugeVisualType GetVisualType() => GaugeVisualType.Bar;
 
         protected override void DrawGauge(string _ID, JobIds job) {
             foreach (var sg in SubGauges) {

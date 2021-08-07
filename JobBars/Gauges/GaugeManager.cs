@@ -57,7 +57,7 @@ namespace JobBars.Gauges {
             int totalPosition = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
                 if (Configuration.Config.GaugeSplit) { // SPLIT
-                    gauge.UI.SetSplitPosition(Configuration.Config.GetGaugeSplitPosition(gauge.Name));
+                    gauge.UI.SetSplitPosition(gauge.Position);
                 }
                 else {
                     if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
@@ -73,12 +73,10 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void Reset() {
-            SetJob(CurrentJob);
-        }
+        public void Reset() => SetJob(CurrentJob);
 
         public void ResetJob(JobIds job) {
-            if (job == CurrentJob) SetJob(job);
+            if (job == CurrentJob) Reset();
         }
 
         public void PerformAction(Item action) {

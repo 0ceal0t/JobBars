@@ -1,17 +1,17 @@
 ﻿using Dalamud.Plugin;
+using ImGuiNET;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public struct GaugeProcProps {
         public bool ShowText;
         public Proc[] Procs;
+        public bool NoSoundOnFull;
     }
 
     public struct Proc {
@@ -35,12 +35,16 @@ namespace JobBars.Gauges {
         private GaugeProcProps Props;
         private readonly int Size;
 
+        private List<bool> ProcsActive = new();
+
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
-            for (int idx = 0; idx < Props.Procs.Length; idx++) {
-                Props.Procs[idx].Idx = idx;
-            }
+            Props.NoSoundOnFull = GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
+
+            for (int idx = 0; idx < Props.Procs.Length; idx++) Props.Procs[idx].Idx = idx;
             Size = Props.Procs.Length;
+
+            ResetProcActive();
         }
 
         protected override void Setup() {
@@ -53,16 +57,29 @@ namespace JobBars.Gauges {
             foreach (var proc in Props.Procs) {
                 SetValue(proc.Idx, false);
             }
+
+            ResetProcActive();
+        }
+
+        private void ResetProcActive() {
+            ProcsActive.Clear();
+            for (var i = 0; i < Size; i++) ProcsActive.Add(true);
         }
 
         public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach (var proc in Props.Procs) {
+            for(int idx = 0; idx < Size; idx++) {
+                var proc = Props.Procs[idx];
+                bool procActive;
+
                 if (proc.Trigger.Type == ItemType.Buff) {
-                    SetValue(proc.Idx, buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
+                    SetValue(proc.Idx, procActive = buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
-                    SetValue(proc.Idx, UIIconManager.Manager.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
+                    SetValue(proc.Idx, procActive = UIIconManager.Manager.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
                 }
+
+                if (procActive && !ProcsActive[idx] && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when any proc becomes active
+                ProcsActive[idx] = procActive;
             }
         }
 
@@ -82,19 +99,17 @@ namespace JobBars.Gauges {
 
         public override void ProcessAction(Item action) { }
 
-        protected override int GetHeight() {
-            return UI == null ? 0 : UI.GetHeight(0);
-        }
+        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
 
-        protected override int GetWidth() {
-            return UI == null ? 0 : UI.GetWidth(Size);
-        }
+        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(Size);
 
-        public override GaugeVisualType GetVisualType() {
-            return GaugeVisualType.Diamond;
-        }
+        public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {
+            if (ImGui.Checkbox($"Don't Play Sound On Proc {_ID}", ref Props.NoSoundOnFull)) {
+                Config.Invert = Props.NoSoundOnFull;
+                Configuration.Config.Save();
+            }
         }
     }
 }

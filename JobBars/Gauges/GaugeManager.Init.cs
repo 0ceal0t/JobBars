@@ -41,6 +41,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,
+                    NoSoundOnFull = true,
                     Increment = new []{
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
@@ -159,6 +160,7 @@ namespace JobBars.Gauges {
             // ============ SCH ==================
             JobToGauges.Add(JobIds.SCH, new Gauge[] {
                 new GaugeProc("Excog", new GaugeProcProps{
+                    NoSoundOnFull = true,
                     Procs = new []{
                         new Proc(BuffIds.Excog, UIColor.BrightGreen)
                     }
@@ -282,6 +284,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -393,6 +396,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -470,6 +474,7 @@ namespace JobBars.Gauges {
                 }),
                 new GaugeStacks("Acceleration", new GaugeStacksProps {
                     MaxStacks = 3,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Acceleration)
                     },
@@ -546,6 +551,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 15,
                     Color = UIColor.Red,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Bunshin)
                     }
@@ -554,6 +560,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -579,6 +586,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 6,
                     MaxDuration = 15,
                     Color = UIColor.Orange,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.PerfectBalance)
                     }
@@ -602,6 +610,7 @@ namespace JobBars.Gauges {
                 new GaugeCharges("True North / Riddle of Earth", new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,

@@ -71,10 +71,12 @@ namespace JobBars {
             for (int i = 0; i < effectsEntries; i++) {
                 entries.Add(*(EffectEntry*)(effectArray + i * 8));
             }
+
             ulong[] targets = new ulong[targetEntries];
             for (int i = 0; i < targetCount; i++) {
                 targets[i] = *(ulong*)(effectTrail + i * 8);
             }
+
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
 
@@ -97,19 +99,18 @@ namespace JobBars {
                     }
                 }
             }
+
             receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
             if (arg1 == 0x40000010) { // WIPE
-                PluginLog.Log("=== WIPE  ===");
                 Reset();
             }
         }
 
         private void ZoneChanged(object sender, ushort e) {
-            PluginLog.Log("==== ZONE CHANGED ====");
             Reset();
         }
 

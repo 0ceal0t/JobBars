@@ -63,6 +63,10 @@ namespace JobBars.Helper {
             return Alloc((ulong)size);
         }
 
+        public static void PlaySeComplete() {
+            PlaySe(78, 0, 0);
+        }
+
         public static AtkUnitBase* Addon => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
     }
 }
