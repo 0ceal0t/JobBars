@@ -37,7 +37,7 @@ namespace JobBars.Data {
 
     [Serializable]
     public class Configuration : IPluginConfiguration {
-        public int Version { get; set; } = 0;
+        public int Version { get; set; } = 1;
 
         public float GaugeScale = 1.0f;
         public bool GaugeHorizontal = false;
@@ -68,10 +68,8 @@ namespace JobBars.Data {
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
 
-
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;
-
         public static Configuration Config { get; private set; }
 
         public GaugeConfig GetGaugeConfig(string name) {

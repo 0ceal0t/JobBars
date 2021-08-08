@@ -16,13 +16,14 @@ namespace JobBars {
 
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
+            byte type = *((byte*)effectHeader.ToPointer() + 0x1F); // 1 = action
 
             var selfId = (int)PluginInterface.ClientState.LocalPlayer.ActorId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId));
             var isParty = !isSelf && !isPet && IsInParty(sourceId);
 
-            if (!(isSelf || isPet || isParty)) {
+            if (type != 1 || !(isSelf || isPet || isParty)) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -40,6 +41,7 @@ namespace JobBars {
             }
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
+
             int effectsEntries = 0;
             int targetEntries = 1;
             if (targetCount == 0) {
