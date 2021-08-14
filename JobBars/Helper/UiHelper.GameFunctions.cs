@@ -59,6 +59,18 @@ namespace JobBars.Helper {
             return GameAlloc(size, IntPtr.Zero, GetGameAllocator(), IntPtr.Zero);
         }
 
+        public static T* CleanAlloc<T>() where T : unmanaged {
+            var alloc = Alloc(sizeof(T));
+            Marshal.Copy(new byte[sizeof(T)], 0, alloc, sizeof(T));
+            return (T*)alloc;
+        }
+
+        public static T* CleanAlloc<T>(int size) where T : unmanaged {
+            var alloc = Alloc(size);
+            Marshal.Copy(new byte[size], 0, alloc, size);
+            return (T*)alloc;
+        }
+
         public static IntPtr Alloc(int size) {
             return Alloc((ulong)size);
         }

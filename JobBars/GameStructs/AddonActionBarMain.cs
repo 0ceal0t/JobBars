@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Dalamud.Game.Internal.Gui.Structs;
 
 namespace JobBars.GameStructs {
 

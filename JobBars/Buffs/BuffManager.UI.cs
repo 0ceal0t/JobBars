@@ -24,8 +24,13 @@ namespace JobBars.Buffs {
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
-                SetPositionScale();
+                UpdatePositionScale();
                 Configuration.Config.Save();
+            }
+
+            var pos = Configuration.Config.BuffPosition;
+            if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+                SetBuffPosition(pos);
             }
 
             JobBars.Separator(); // =====================================
@@ -89,13 +94,14 @@ namespace JobBars.Buffs {
 
         public void DrawPositionBox() {
             if (!LOCKED) {
-                if (JobBars.DrawPositionView("##BuffPosition", "Buff Bar", Configuration.Config.BuffPosition, out var pos)) {
+                if (JobBars.DrawPositionView("Buff Bar##BuffPosition", Configuration.Config.BuffPosition, out var pos)) {
                     SetBuffPosition(pos);
                 }
             }
         }
 
         private static void SetBuffPosition(Vector2 pos) {
+            JobBars.SetWindowPosition("Buff Bar##BuffPosition", pos);
             Configuration.Config.BuffPosition = pos;
             Configuration.Config.Save();
             UIBuilder.Builder.SetBuffPosition(pos);

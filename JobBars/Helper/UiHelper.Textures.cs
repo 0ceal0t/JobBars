@@ -1,4 +1,5 @@
-﻿using Dalamud.Plugin;
+﻿using Dalamud.Logging;
+using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
@@ -42,7 +43,7 @@ namespace JobBars.Helper {
 
                 var asset = (AtkUldAsset*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldAsset), 8);
                 if (asset == null) {
-                    PluginLog.Log("Failed to allocate memory for asset");
+                    PluginLog.Debug("Failed to allocate memory for asset");
                     IMemorySpace.Free(part, (ulong)sizeof(AtkUldPart) * partCount);
                     IMemorySpace.Free(partsList, (ulong)sizeof(AtkUldPartsList));
                     return null;

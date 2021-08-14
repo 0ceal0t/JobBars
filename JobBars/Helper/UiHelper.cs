@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
@@ -64,6 +66,16 @@ namespace JobBars.Helper {
             atkUnitBase->ScaleY = scaleY.Value;
             atkUnitBase->Flags_2 |= 0x1;
             atkUnitBase->Flags_2 |= 0x4;
+        }
+
+        public static T* AllocNode<T>() where T : unmanaged {
+            var node = (T*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(T), 8);
+            if (node == null) {
+                PluginLog.Debug("Failed to allocate memory for node");
+                return null;
+            }
+            IMemorySpace.Memset(node, 0, (ulong)sizeof(T));
+            return node;
         }
 
         public static AtkResNode* CloneNode(AtkResNode* original) {

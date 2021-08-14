@@ -33,7 +33,7 @@ namespace JobBars.Buffs {
             CurrentJob = job;
             AllBuffs.ForEach(buff => buff.Reset());
             UIBuilder.Builder.HideAllBuffs();
-            SetPositionScale();
+            UpdatePositionScale();
         }
 
         public void Reset() {
@@ -68,7 +68,7 @@ namespace JobBars.Buffs {
             }
         }
 
-        public static void SetPositionScale() {
+        public void UpdatePositionScale() {
             UIBuilder.Builder.SetBuffPosition(Configuration.Config.BuffPosition);
             UIBuilder.Builder.SetBuffScale(Configuration.Config.BuffScale);
         }

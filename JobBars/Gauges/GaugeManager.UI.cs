@@ -27,13 +27,18 @@ namespace JobBars.Gauges {
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Split Gauges" + _ID, ref Configuration.Config.GaugeSplit)) {
-                SetPositionScale();
+                UpdatePositionScale();
                 Configuration.Config.Save();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.GaugeScale)) {
-                SetPositionScale();
+                UpdatePositionScale();
                 Configuration.Config.Save();
+            }
+
+            var pos = Configuration.Config.GaugePosition;
+            if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+                SetGaugePosition(pos);
             }
 
             JobBars.Separator(); // =====================================
@@ -75,13 +80,13 @@ namespace JobBars.Gauges {
                 JobBars.Separator(); // =====================================
 
                 if (ImGui.Checkbox("Horizontal Gauges", ref Configuration.Config.GaugeHorizontal)) {
-                    SetPositionScale();
+                    UpdatePositionScale();
                     Configuration.Config.Save();
                 }
 
                 ImGui.SameLine();
                 if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
-                    SetPositionScale();
+                    UpdatePositionScale();
                     Configuration.Config.Save();
                 }
             }
@@ -117,15 +122,11 @@ namespace JobBars.Gauges {
         public void DrawPositionBox() {
             if (!LOCKED) {
                 if (Configuration.Config.GaugeSplit) {
-                    foreach (var gauge in CurrentGauges) {
-                        if (JobBars.DrawPositionView("##GaugePosition" + gauge.Name, gauge.Name, gauge.Position, out var pos)) {
-                            gauge.SetSplitPosition(pos);
-                        }
-                    }
+                    foreach (var gauge in CurrentGauges) gauge.DrawPositionBox();
                 }
                 else {
                     var currentPos = Configuration.Config.GaugePosition;
-                    if (JobBars.DrawPositionView("##GaugePosition", "Gauge Bar", currentPos, out var pos)) {
+                    if (JobBars.DrawPositionView("Gauge Bar##GaugePosition", currentPos, out var pos)) {
                         SetGaugePosition(pos);
                     }
                 }
@@ -133,6 +134,7 @@ namespace JobBars.Gauges {
         }
 
         private static void SetGaugePosition(Vector2 pos) {
+            JobBars.SetWindowPosition("Gauge Bar##GaugePosition", pos);
             Configuration.Config.GaugePosition = pos;
             Configuration.Config.Save();
             UIBuilder.Builder.SetGaugePosition(pos);

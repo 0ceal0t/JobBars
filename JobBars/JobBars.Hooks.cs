@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using JobBars.GameStructs;
 using JobBars.Data;
-using Dalamud.Game.ClientState.Actors.Types;
-using Dalamud.Game.ClientState.Actors.Types.NonPlayer;
 using Dalamud.Plugin;
+using Dalamud.Game.ClientState.Objects.Types;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -18,9 +17,9 @@ namespace JobBars {
             ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
             byte type = *((byte*)effectHeader.ToPointer() + 0x1F); // 1 = action
 
-            var selfId = (int)PluginInterface.ClientState.LocalPlayer.ActorId;
+            var selfId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
             var isSelf = sourceId == selfId;
-            var isPet = !isSelf && ((GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId));
+            var isPet = !isSelf && (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
             var isParty = !isSelf && !isPet && IsInParty(sourceId);
 
             if (type != 1 || !(isSelf || isPet || isParty)) {
@@ -116,11 +115,11 @@ namespace JobBars {
             Reset();
         }
 
-        private bool IsPet(int actorId, int ownerId) {
-            if (actorId == 0) return false;
-            foreach (Actor actor in PluginInterface.ClientState.Actors) {
+        private bool IsPet(int objectId, int ownerId) {
+            if (objectId == 0) return false;
+            foreach (var actor in PluginInterface.ClientState.Objects) {
                 if (actor == null) continue;
-                if (actor.ActorId == actorId) {
+                if (actor.ObjectId == objectId) {
                     if (actor is BattleNpc npc) {
                         if (npc.Address == IntPtr.Zero) return false;
                         return npc.OwnerId == ownerId;
@@ -131,12 +130,12 @@ namespace JobBars {
             return false;
         }
 
-        private bool IsInParty(int actorId) {
-            if (actorId == 0) return false;
+        private bool IsInParty(int objectId) {
+            if (objectId == 0) return false;
             foreach (var pMember in Party) {
                 if (pMember == null) continue;
-                if (pMember.ActorId == 0) continue;
-                if (pMember.ActorId == actorId) {
+                if (pMember.ObjectId == 0) continue;
+                if (pMember.ObjectId == objectId) {
                     return true;
                 }
             }

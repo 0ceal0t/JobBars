@@ -1,19 +1,20 @@
-﻿using Dalamud.Plugin;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using JobBars.Helper;
-using Dalamud.Game.Internal;
-using JobBars.UI;
+using Dalamud.Plugin;
 using Dalamud.Hooking;
+using Dalamud.Logging;
+using Dalamud.Game;
+using JobBars.Helper;
+using JobBars.UI;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
 using JobBars.PartyList;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using System.Threading;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -64,11 +65,6 @@ namespace JobBars {
          *  JobBars.cs
          *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
          *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
-         *  UIIconManager.cs
-         *      setIconRecastPtr (40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23)
-         *      setIconRecastPtr2 (40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??)
-         *      setIconTextPtr (55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9)
-         *      setIconTextPtr2 (4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA)
          *  UIBuilder.cs
          *      loadAssetsPtr (E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??)
          *      loadTexAllocPtr (48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48)
@@ -109,9 +105,9 @@ namespace JobBars {
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             actorControlSelfHook.Enable();
 
-            PluginInterface.UiBuilder.OnBuildUi += BuildSettingsUI;
-            PluginInterface.UiBuilder.OnBuildUi += Animate;
-            PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
+            PluginInterface.UiBuilder.Draw += BuildSettingsUI;
+            PluginInterface.UiBuilder.Draw += Animate;
+            PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
@@ -119,16 +115,18 @@ namespace JobBars {
 
         public void Dispose() {
             receiveActionEffectHook?.Disable();
-            receiveActionEffectHook?.Dispose();
-            receiveActionEffectHook = null;
-
             actorControlSelfHook?.Disable();
+
+            Thread.Sleep(500);
+
+            receiveActionEffectHook?.Dispose();
             actorControlSelfHook?.Dispose();
+            receiveActionEffectHook = null;
             actorControlSelfHook = null;
 
-            PluginInterface.UiBuilder.OnBuildUi -= BuildSettingsUI;
-            PluginInterface.UiBuilder.OnBuildUi -= Animate;
-            PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
+            PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
+            PluginInterface.UiBuilder.Draw -= Animate;
+            PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfig;
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
@@ -184,7 +182,9 @@ namespace JobBars {
 
         private void Logout() {
             PluginLog.Log("==== LOGOUT ===");
+            UIIconManager.Manager.Reset();
             Animation.Cleanup();
+
             Initialized = false;
             CurrentJob = JobIds.OTHER;
         }
@@ -192,11 +192,13 @@ namespace JobBars {
         private void InitializeUI() {
             PluginLog.Log("==== INIT ====");
             UIIconManager.Manager.Reset();
+
             UIBuilder.Initialize(PluginInterface);
             GManager = new GaugeManager(PluginInterface);
             BManager = new BuffManager();
             UIBuilder.Builder.HideAllBuffs();
             UIBuilder.Builder.HideAllGauges();
+
             Initialized = true;
         }
 
@@ -219,7 +221,7 @@ namespace JobBars {
         }
 
         private void Tick() {
-            var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.ConditionFlag.InCombat];
+            var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
             GManager.Tick(Party, inCombat);
             BManager.Tick(inCombat);
         }
@@ -229,8 +231,8 @@ namespace JobBars {
             var currentScale = UIHelper.GetNodeScale(addon->RootNode);
 
             if (currentPosition != LastPosition || currentScale != LastScale) {
-                GManager.SetPositionScale();
-                BuffManager.SetPositionScale();
+                GManager.UpdatePositionScale();
+                BManager.UpdatePositionScale();
             }
             LastPosition = currentPosition;
             LastScale = currentScale;

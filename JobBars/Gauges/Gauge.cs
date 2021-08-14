@@ -59,6 +59,7 @@ namespace JobBars.Gauges {
         protected abstract int GetWidth();
 
         protected abstract void DrawGauge(string _ID, JobIds job);
+
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
             string type = this switch {
@@ -79,14 +80,14 @@ namespace JobBars.Gauges {
                     else UI?.Hide();
                 }
 
-                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
             }
 
             if (ImGui.InputInt("Order" + _ID, ref Config.Order)) {
                 Config.Order = Math.Max(Config.Order, -1);
                 Configuration.Config.Save();
 
-                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Config.Scale)) {
@@ -94,14 +95,26 @@ namespace JobBars.Gauges {
                 UI?.SetScale(Config.Scale);
                 Configuration.Config.Save();
 
-                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.SetPositionScale();
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
+            }
+
+            var pos = Config.SplitPosition;
+            if (ImGui.InputFloat2("Split Position" + _ID, ref pos)) {
+                SetSplitPosition(pos);
             }
 
             DrawGauge(_ID, job);
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
         }
 
+        public void DrawPositionBox() {
+            if (JobBars.DrawPositionView(Name + "##GaugePosition", Position, out var pos)) {
+                SetSplitPosition(pos);
+            }
+        }
+
         public void SetSplitPosition(Vector2 pos) {
+            JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
             Config.SplitPosition = pos;
             Configuration.Config.Save();
             UI?.SetSplitPosition(pos);

@@ -1,34 +1,184 @@
-﻿using Dalamud.Hooking;
+﻿using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientInterface;
 using FFXIVClientInterface.Client.Game;
 using FFXIVClientInterface.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JobBars.UI {
-    public enum IconState {
-        StartRunning, // turn on the recast, turn on the test, turn off the dash
-        Running, // good to go
-        DoneRunning, // turn off the recast, turn off the text
-        Waiting
-    }
-
-    public struct IconProgress {
-        public IconState State;
-        public float Max;
-        public float Current;
-    }
-
     public unsafe class UIIconManager {
-        public static UIIconManager Manager { get; private set;  }
+        private class Icon {
+            private enum IconState {
+                None,
+                Running,
+                Done
+            }
 
-        public DalamudPluginInterface PluginInterface;
-        public ClientInterface Client;
+            public readonly uint Id;
+            public AtkComponentNode* Component;
+
+            private AtkResNode* OriginalOverlay;
+            private AtkImageNode* Border;
+            private AtkImageNode* CD;
+            private AtkTextNode* Text;
+            private IconState State = IconState.None;
+
+            public Icon(uint id, AtkComponentNode* component) {
+                Id = id;
+                Component = component;
+                var nodeList = Component->Component->UldManager.NodeList;
+                OriginalOverlay = nodeList[1];
+
+                var originalBorder = (AtkImageNode*)nodeList[4];
+                var originalCD = (AtkImageNode*)nodeList[5];
+
+                Border = UIHelper.AllocNode<AtkImageNode>();
+                Border->Ctor();
+                Border->AtkResNode.NodeID = 200;
+                Border->AtkResNode.ChildCount = 0;
+                Border->AtkResNode.ChildNode = null;
+                Border->AtkResNode.PrevSiblingNode = null;
+                Border->AtkResNode.NextSiblingNode = null;
+                Border->AtkResNode.Type = NodeType.Image;
+                Border->AtkResNode.X = -2;
+                Border->AtkResNode.Width = 48;
+                Border->AtkResNode.Height = 48;
+                Border->AtkResNode.Flags = 8243;
+                Border->AtkResNode.Flags_2 = 1;
+                Border->AtkResNode.Flags_2 |= 4;
+                Border->WrapMode = 1;
+                Border->PartId = 0;
+                Border->PartsList = originalBorder->PartsList;
+
+                CD = UIHelper.AllocNode<AtkImageNode>();
+                CD->Ctor();
+                CD->AtkResNode.NodeID = 201;
+                CD->AtkResNode.Type = NodeType.Image;
+                Border->AtkResNode.ChildCount = 0;
+                Border->AtkResNode.ChildNode = null;
+                Border->AtkResNode.PrevSiblingNode = null;
+                Border->AtkResNode.NextSiblingNode = null;
+                CD->AtkResNode.X = 0;
+                CD->AtkResNode.Y = 2;
+                CD->AtkResNode.Width = 44;
+                CD->AtkResNode.Height = 46;
+                CD->AtkResNode.Flags = 8243;
+                CD->AtkResNode.Flags_2 = 1;
+                CD->AtkResNode.Flags_2 |= 4;
+                CD->WrapMode = 1;
+                CD->PartId = 0;
+                CD->PartsList = originalCD->PartsList;
+
+                Text = UIHelper.AllocNode<AtkTextNode>();
+                Text->Ctor();
+                Text->AtkResNode.NodeID = 202;
+                Text->AtkResNode.Type = NodeType.Text;
+                Border->AtkResNode.ChildCount = 0;
+                Border->AtkResNode.ChildNode = null;
+                Border->AtkResNode.PrevSiblingNode = null;
+                Border->AtkResNode.NextSiblingNode = null;
+                Text->AtkResNode.X = 1;
+                Text->AtkResNode.Y = 37;
+                Text->AtkResNode.Width = 48;
+                Text->AtkResNode.Height = 12;
+                Text->AtkResNode.Flags = 8243;
+                Text->AtkResNode.Flags_2 = 1;
+                Text->AtkResNode.Flags_2 |= 4;
+                Text->LineSpacing = 12;
+                Text->AlignmentFontType = 3;
+                Text->FontSize = 12;
+                Text->TextFlags = 16;
+                Text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
+                Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+                Text->SetText("");
+
+                var macroIcon = nodeList[15];
+                var rootNode = (AtkResNode*)Component;
+
+                Border->AtkResNode.ParentNode = rootNode;
+                CD->AtkResNode.ParentNode = rootNode;
+                Text->AtkResNode.ParentNode = rootNode;
+
+                UIHelper.Link(OriginalOverlay, (AtkResNode*)Border);
+                UIHelper.Link((AtkResNode*)Border, (AtkResNode*)CD);
+                UIHelper.Link((AtkResNode*)CD, (AtkResNode*)Text);
+                UIHelper.Link((AtkResNode*)Text, macroIcon);
+
+                Component->Component->UldManager.UpdateDrawNodeList();
+
+                UIHelper.Hide(OriginalOverlay);
+                UIHelper.Hide(CD);
+                UIHelper.Hide(Text);
+            }
+
+            public void SetProgress(float current, float max) {
+                if (State == IconState.Done && current <= 0) return;
+                State = IconState.Running;
+
+                UIHelper.Show(CD);
+                UIHelper.Show(Text);
+                Border->PartId = 0;
+
+                CD->PartId = (ushort)(80 - (float)(current / max) * 80);
+                Text->SetText(((int)Math.Round(current)).ToString());
+            }
+
+            public void SetDone() {
+                State = IconState.Done;
+                UIHelper.Hide(CD);
+                UIHelper.Hide(Text);
+            }
+
+            public void Tick(float percent) {
+                if (State != IconState.Done) return;
+
+                Border->PartId = (ushort)(6 + percent * 7);
+            }
+
+            public void Dispose() {
+                var rootNode = (AtkResNode*)Component;
+
+                UIHelper.Link(OriginalOverlay, Text->AtkResNode.PrevSiblingNode);
+                Component->Component->UldManager.UpdateDrawNodeList();
+
+                UIHelper.Show(OriginalOverlay);
+
+                if (Border != null) {
+                    Border->AtkResNode.Destroy(true);
+                    Border = null;
+                }
+
+                if (CD != null) {
+                    CD->AtkResNode.Destroy(true);
+                    CD = null;
+                }
+
+                if (Text != null) {
+                    Text->AtkResNode.Destroy(true);
+                    Text = null;
+                }
+
+                Component = null;
+                OriginalOverlay = null;
+            }
+        }
+
+        public static UIIconManager Manager { get; private set; }
+        public static void Initialize(DalamudPluginInterface pluginInterface) {
+            Manager = new UIIconManager(pluginInterface);
+        }
+
+        public static void Dispose() {
+            Manager?.DisposeInstance();
+            Manager = null;
+        }
+
+        // ==================
         private readonly string[] AllActionBars = {
             "_ActionBar",
             "_ActionBar01",
@@ -44,267 +194,97 @@ namespace JobBars.UI {
             //"_ActionDoubleCrossL",
             //"_ActionDoubleCrossR",
         };
-        private readonly Dictionary<uint, IconProgress> ActionIdToStatus = new();
-        private readonly HashSet<IntPtr> ToCleanup = new();
-
-        private readonly HashSet<IntPtr> IconRecastOverride;
-        private delegate void SetIconRecastDelegate(IntPtr icon);
-        private readonly Hook<SetIconRecastDelegate> setIconRecastHook;
-
-        private readonly HashSet<IntPtr> IconComponentOverride;
-        private delegate IntPtr SetIconRecastDelegate2(IntPtr icon);
-        private readonly Hook<SetIconRecastDelegate2> setIconRecastHook2;
-
-        private readonly HashSet<IntPtr> IconTextOverride;
-        private delegate void SetIconRecastTextDelegate(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6);
-        private readonly Hook<SetIconRecastTextDelegate> setIconRecastTextHook;
-
-        private delegate void SetIconRecastTextDelegate2(IntPtr text, IntPtr a2);
-        private readonly Hook<SetIconRecastTextDelegate2> setIconRecastTextHook2;
-
         private static readonly int MILLIS_LOOP = 250;
 
-        public static void Initialize(DalamudPluginInterface pluginInterface) {
-            Manager = new UIIconManager(pluginInterface);
-        }
+        private readonly List<Icon> Icons = new();
+        private readonly ClientInterface Client;
+        private readonly DalamudPluginInterface PluginInterface;
 
-        public static void Dispose() {
-            Manager?.DisposeInstance();
-            Manager = null;
-        }
-
-        // ======== INSTANCE ======
-
-        public UIIconManager(DalamudPluginInterface pluginInterface) {
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
+        private UIIconManager(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
-
-            IconRecastOverride = new HashSet<IntPtr>();
-            IconComponentOverride = new HashSet<IntPtr>();
-            IconTextOverride = new HashSet<IntPtr>();
-
-            // changes recast partId for gcds
-            IntPtr setIconRecastPtr = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23");
-            setIconRecastHook = new Hook<SetIconRecastDelegate>(setIconRecastPtr, SetIconRecast);
-            setIconRecastHook.Enable();
-
-            // this is for stuff like thunder during thundercloud procs. god this sig is nasty
-            IntPtr setIconRecastPtr2 = PluginInterface.TargetModuleScanner.ScanText("40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??");
-            setIconRecastHook2 = new Hook<SetIconRecastDelegate2>(setIconRecastPtr2, SetIconRecast2);
-            setIconRecastHook2.Enable();
-
-            // sets icon text for abilities which use mp, like Combust
-            IntPtr setIconTextPtr = PluginInterface.TargetModuleScanner.ScanText("55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9");
-            setIconRecastTextHook = new Hook<SetIconRecastTextDelegate>(setIconTextPtr, SetIconRecastText);
-            setIconRecastTextHook.Enable();
-
-            // sets icon text for other abilities, like Goring blade
-            IntPtr setIconTextPtr2 = PluginInterface.TargetModuleScanner.ScanText("4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA");
-            setIconRecastTextHook2 = new Hook<SetIconRecastTextDelegate2>(setIconTextPtr2, SetIconRecastText2);
-            setIconRecastTextHook2.Enable();
+            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
         }
 
-        public void Reset() {
-            ActionIdToStatus.Clear();
-
-            foreach (var ptr in ToCleanup) Cleanup(ptr);
-            ToCleanup.Clear();
-
-            IconRecastOverride.Clear();
-            IconComponentOverride.Clear();
-            IconTextOverride.Clear();
-        }
-
-        public void DisposeInstance() {
-            setIconRecastTextHook.Disable();
-            setIconRecastTextHook.Dispose();
-
-            setIconRecastTextHook2.Disable();
-            setIconRecastTextHook2.Dispose();
-
-            setIconRecastHook.Disable();
-            setIconRecastHook.Dispose();
-
-            setIconRecastHook2.Disable();
-            setIconRecastHook2.Dispose();
-
-            Reset();
-            Manager = null;
-        }
-
-        private IntPtr SetIconRecast2(IntPtr icon) {
-            if (IconComponentOverride.Contains(icon)) {
-                return (IntPtr)0;
-            }
-            return setIconRecastHook2.Original(icon);
-        }
-
-        private void SetIconRecast(IntPtr icon) {
-            if (!IconRecastOverride.Contains(icon)) {
-                setIconRecastHook.Original(icon);
-            }
-            return;
-        }
-
-        private void SetIconRecastText(IntPtr text, int a2, byte a3, byte a4, byte a5, byte a6) {
-            if (!IconTextOverride.Contains(text)) {
-                setIconRecastTextHook.Original(text, a2, a3, a4, a5, a6);
-            }
-            return;
-        }
-
-        private void SetIconRecastText2(IntPtr text, IntPtr a2) {
-            if (!IconTextOverride.Contains(text) || a2 != IntPtr.Zero) {
-                setIconRecastTextHook2.Original(text, a2);
-            }
-            return;
-        }
-
-        // visuals get messed up when icons are dragged around, but there's not much I can do
-        public void Tick() {
-            if (ActionIdToStatus.Count == 0) return;
+        public void Setup(List<uint> triggers) {
+            if (triggers == null) return;
             var actionManager = Client.ActionManager;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
 
-            HashSet<uint> TO_BUMP = new();
-
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
-
                 if (actionManager == null || hotbarModule == null) return;
                 var actionBar = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(AllActionBars[abIndex], 1);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
                 HotBar* bar = (abIndex < 10) ? hotbarModule.GetBar(abIndex, HotBarType.Normal) : hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
 
-                for (var i = 0; i < actionBar->HotbarSlotCount; i++) {
-
-                    var slot = actionBar->ActionBarSlotsAction[i];
-                    var slotStruct = hotbarModule.GetBarSlot(bar, i);
+                for (var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++) {
+                    var slot = actionBar->ActionBarSlotsAction[slotIndex];
+                    var slotStruct = hotbarModule.GetBarSlot(bar, slotIndex);
                     if (slotStruct == null) continue;
                     if (slotStruct->CommandType != HotbarSlotType.Action) continue;
 
-                    if (!ActionIdToStatus.TryGetValue(slotStruct->CommandId, out var iconProgress)) continue;
-                    var state = iconProgress.State;
-
                     var icon = slot.Icon;
-                    var cdOverlay = (AtkImageNode*)icon->Component->UldManager.NodeList[5];
-                    var dashOverlay = (AtkImageNode*)icon->Component->UldManager.NodeList[9];
-                    var iconImage = (AtkImageNode*)icon->Component->UldManager.NodeList[0];
-                    var bottomLeftText = (AtkTextNode*)icon->Component->UldManager.NodeList[13];
-
-                    if (state == IconState.StartRunning) {
-                        ToCleanup.Add((IntPtr)icon);
-                        TO_BUMP.Add(slotStruct->CommandId);
-
-                        UIHelper.Show(cdOverlay);
-                        UIHelper.Hide(dashOverlay);
-                        UIHelper.Show(bottomLeftText);
-
-                        iconImage->AtkResNode.MultiplyBlue = 50;
-                        iconImage->AtkResNode.MultiplyBlue_2 = 50;
-                        iconImage->AtkResNode.MultiplyRed = 50;
-                        iconImage->AtkResNode.MultiplyRed_2 = 50;
-                        iconImage->AtkResNode.MultiplyGreen = 50;
-                        iconImage->AtkResNode.MultiplyGreen_2 = 50;
-
-                        IconTextOverride.Add((IntPtr)bottomLeftText);
-                        IconRecastOverride.Add((IntPtr)cdOverlay);
-                        IconComponentOverride.Add((IntPtr)icon->Component);
-
-                        UIHelper.Hide(icon->Component->UldManager.NodeList[2]);
-                        UIHelper.Hide(icon->Component->UldManager.NodeList[10]);
-                        UIHelper.Hide(icon->Component->UldManager.NodeList[14]); // another image overlay :shrug:
-                    }
-                    else if (state == IconState.Running) {
-                        UIHelper.Show(cdOverlay);
-                        cdOverlay->PartId = (ushort)(80 - (float)(iconProgress.Current / iconProgress.Max) * 80);
-                        bottomLeftText->SetText(((int)iconProgress.Current).ToString());
-                        UIHelper.Show(bottomLeftText);
-                    }
-                    else if (state == IconState.DoneRunning) {
-                        TO_BUMP.Add(slotStruct->CommandId);
-
-                        IconTextOverride.Remove((IntPtr)bottomLeftText);
-                        IconRecastOverride.Remove((IntPtr)cdOverlay);
-                        IconComponentOverride.Remove((IntPtr)icon->Component);
-                        ResetColor(iconImage);
-
-                        UIHelper.Hide(cdOverlay);
-                        UIHelper.Show(dashOverlay);
-                        UIHelper.Hide(bottomLeftText);
-                    }
-                    else if (state == IconState.Waiting) {
-                        UIHelper.Show(dashOverlay);
-
-                        var time = DateTime.Now;
-                        int millis = time.Second * 1000 + time.Millisecond;
-                        float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
-                        dashOverlay->PartId = (ushort)(6 + percent * 7);
+                    var action = slotStruct->CommandId;
+                    if (triggers.Contains(action) && !AlreadySetup(icon)) {
+                        Icons.Add(new Icon(action, icon));
                     }
                 }
             }
+        }
 
-            foreach (var bump in TO_BUMP) { // necessary because there could be multiple of the same icon :/
-                var current = ActionIdToStatus[bump];
-
-                IconState newState = current.State switch {
-                    IconState.StartRunning => IconState.Running,
-                    IconState.DoneRunning => IconState.Waiting,
-                    _ => current.State
-                };
-
-                ActionIdToStatus[bump] = new IconProgress {
-                    State = newState,
-                    Current = current.Current,
-                    Max = current.Max
-                };
+        public void Remove(List<uint> triggers) {
+            if (triggers == null) return;
+            List<Icon> toRemove = new();
+            foreach(var icon in Icons) {
+                if(triggers.Contains(icon.Id)) {
+                    icon.Dispose();
+                    toRemove.Add(icon);
+                }
             }
+            Icons.RemoveAll(x => toRemove.Contains(x));
         }
 
-        public void SetIconState(uint actionId, IconState state) {
-            ActionIdToStatus[actionId] = ActionIdToStatus.TryGetValue(actionId, out var oldState) ?
-                new IconProgress {
-                    State = state,
-                    Current = oldState.Current,
-                    Max = oldState.Max
-                } : new IconProgress {
-                    State = state,
-                    Current = 0,
-                    Max = 1
-                };
+        public void SetIconProgress(List<uint> triggers, float current, float max, bool check = true) {
+            var found = false;
+            foreach(var icon in Icons) {
+                if (!triggers.Contains(icon.Id)) continue;
+                icon.SetProgress(current, max);
+                found = true;
+            }
+
+            if (found || !check) return;
+            Setup(triggers);
+            SetIconProgress(triggers, current, max, false);
         }
 
-        public void SetIconProgress(uint actionId, float current, float max) {
-            ActionIdToStatus[actionId] = ActionIdToStatus.TryGetValue(actionId, out var oldState) ?
-                new IconProgress {
-                    State = oldState.State,
-                    Current = current,
-                    Max = max
-                } : new IconProgress {
-                    State = IconState.StartRunning,
-                    Current = current,
-                    Max = max
-                };
+        public void SetIconDone(List<uint> triggers, bool check = true) {
+            var found = false;
+            foreach (var icon in Icons) {
+                if (!triggers.Contains(icon.Id)) continue;
+                icon.SetDone();
+                found = true;
+            }
+
+            if (found || !check) return;
+            Setup(triggers);
+            SetIconDone(triggers, false);
         }
 
-        public void SetIconStateProgress(uint actionId, IconState state, float current, float max) {
-            ActionIdToStatus[actionId] = new IconProgress {
-                State = state,
-                Current = current,
-                Max = max
-            };
+        public void Tick() {
+            var time = DateTime.Now;
+            int millis = time.Second * 1000 + time.Millisecond;
+            float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
+
+            Icons.ForEach(x => x.Tick(percent));
         }
 
-        public void Cleanup(IntPtr node) {
-            Cleanup((AtkComponentNode*)node);
+        public void Reset() {
+            Icons.ForEach(x => x.Dispose());
+            Icons.Clear();
         }
 
-        public void Cleanup(AtkComponentNode* node) {
-            var cdOverlay = (AtkImageNode*)node->Component->UldManager.NodeList[5];
-            var dashOverlay = (AtkImageNode*)node->Component->UldManager.NodeList[9];
-            var iconImage = (AtkImageNode*)node->Component->UldManager.NodeList[0];
-            ResetColor(iconImage);
-            UIHelper.Hide(cdOverlay);
-            UIHelper.Hide(dashOverlay);
+        private void DisposeInstance() {
+            Reset();
+            Client.Dispose();
         }
 
         public bool GetRecast(uint action, out RecastTimer* timer) {
@@ -316,14 +296,11 @@ namespace JobBars.UI {
             return true;
         }
 
-        private void ResetColor(AtkImageNode* iconImage) {
-            iconImage->AtkResNode.MultiplyBlue = 100;
-            iconImage->AtkResNode.MultiplyBlue = 100;
-            iconImage->AtkResNode.MultiplyBlue_2 = 100;
-            iconImage->AtkResNode.MultiplyRed = 100;
-            iconImage->AtkResNode.MultiplyRed_2 = 100;
-            iconImage->AtkResNode.MultiplyGreen = 100;
-            iconImage->AtkResNode.MultiplyGreen_2 = 100;
+        private bool AlreadySetup(AtkComponentNode* node) {
+            foreach(var icon in Icons) {
+                if (icon.Component == node) return true;
+            }
+            return false;
         }
     }
 }

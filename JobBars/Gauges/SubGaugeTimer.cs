@@ -33,18 +33,21 @@ namespace JobBars.Gauges {
 
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
+        private readonly List<uint> Icons;
 
         public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name) {
             ParentGauge = gauge;
             Props = props;
             Props.Color = Config.GetColor(Props.Color);
             Props.DefaultDuration = Props.DefaultDuration == null ? Props.MaxDuration : Props.DefaultDuration.Value;
+            Icons = Props.Icons == null ? null : new List<ActionIds>(Props.Icons).Select(x => (uint)x).ToList();
         }
 
         public void Reset() {
             TimeLeft = 0;
             InDanger = false;
             State = GaugeState.Inactive;
+            if(!NoIcon()) UIIconManager.Manager.Setup(Icons);
         }
 
         public void UseSubGauge() {
@@ -55,36 +58,24 @@ namespace JobBars.Gauges {
             SetValue(TimeLeft);
         }
 
-        private void StartIcon() {
-            if (NoIcon()) return;
-            foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.SetIconState((uint)icon, IconState.StartRunning);
-            }
-        }
-
         private void SetIcon(float current, float max) {
             if (NoIcon()) return;
-            foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.SetIconProgress((uint)icon, current, max);
-            }
+            UIIconManager.Manager.SetIconProgress(Icons, current, max);
         }
 
         private void ResetIcon() {
             if (NoIcon()) return;
-            foreach (var icon in Props.Icons) {
-                UIIconManager.Manager.SetIconStateProgress((uint)icon, IconState.DoneRunning, 0, 1);
-            }
+            UIIconManager.Manager.SetIconDone(Icons);
         }
 
         public bool NoIcon() {
-            return !Config.IconEnabled || (Props.Icons == null) || !Configuration.Config.GaugeIconReplacement;
+            return !Config.IconEnabled || (Icons == null) || !Configuration.Config.GaugeIconReplacement;
         }
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            var timeLeft = Gauges.Gauge.TimeLeft(Props.DefaultDuration.Value, time, buffDict, LastActiveTrigger, LastActiveTime);
+            var timeLeft = Gauge.TimeLeft(Props.DefaultDuration.Value, time, buffDict, LastActiveTrigger, LastActiveTime);
             if (timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
-                StartIcon();
             }
 
             if (State == GaugeState.Active) {
@@ -120,7 +111,6 @@ namespace JobBars.Gauges {
                 TimeLeft = Props.DefaultDuration.Value;
                 InDanger = false;
 
-                StartIcon();
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
                     UseSubGauge();
@@ -151,9 +141,11 @@ namespace JobBars.Gauges {
                 var iconTitle = "Icon Replacement" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
                 if (ImGui.Checkbox(iconTitle + _ID + Props.SubName, ref Config.IconEnabled)) {
                     Configuration.Config.Save();
-                    if(!Config.IconEnabled && GaugeManager.Manager.CurrentJob == job) UIIconManager.Manager.Reset();
+                    if(GaugeManager.Manager.CurrentJob == job && Configuration.Config.GaugeIconReplacement) {
+                        if (Config.IconEnabled) UIIconManager.Manager.Setup(Icons);
+                        else UIIconManager.Manager.Remove(Icons);
+                    }
                     ParentGauge.RefreshIconEnabled();
-                    UIIconManager.Manager.Reset();
                 }
             }
         }

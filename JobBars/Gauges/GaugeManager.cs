@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Actors.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.PartyList;
@@ -47,10 +47,10 @@ namespace JobBars.Gauges {
                 gauge.SetupUI();
                 idx++;
             }
-            SetPositionScale();
+            UpdatePositionScale();
         }
 
-        public void SetPositionScale() {
+        public void UpdatePositionScale() {
             UIBuilder.Builder.SetGaugePosition(Configuration.Config.GaugePosition);
             UIBuilder.Builder.SetGaugeScale(Configuration.Config.GaugeScale);
 
@@ -97,7 +97,7 @@ namespace JobBars.Gauges {
             Dictionary<Item, BuffElem> BuffDict = new();
             var currentTime = DateTime.Now;
 
-            int ownerId = (int)PluginInterface.ClientState.LocalPlayer.ActorId;
+            int ownerId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
@@ -110,9 +110,9 @@ namespace JobBars.Gauges {
                 foreach (var pMember in party) {
                     if (pMember == null) continue;
 
-                    foreach (var actor in PluginInterface.ClientState.Actors) {
+                    foreach (var actor in PluginInterface.ClientState.Objects) {
                         if (actor == null) continue;
-                        if (actor.ActorId == pMember.ActorId) {
+                        if (actor.ObjectId == pMember.ObjectId) {
                             AddBuffs(actor, ownerId, BuffDict);
                         }
                     }
@@ -123,6 +123,7 @@ namespace JobBars.Gauges {
                 if (!gauge.DoProcessInput()) { continue; }
                 gauge.Tick(currentTime, BuffDict);
             }
+
             UIIconManager.Manager.Tick();
         }
 
@@ -139,16 +140,16 @@ namespace JobBars.Gauges {
             };
         }
 
-        private static void AddBuffs(Actor actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
+        private static void AddBuffs(GameObject actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
             if (actor == null) return;
-            if (actor is Chara charaActor) {
-                foreach (var status in charaActor.StatusEffects) {
-                    if (status.OwnerId == ownerId) {
+            if (actor is BattleChara charaActor) {
+                foreach (var status in charaActor.StatusList) {
+                    if (status.SourceID == ownerId) {
                         buffDict[new Item {
-                            Id = (uint)status.EffectId,
+                            Id = status.StatusID,
                             Type = ItemType.Buff
                         }] = new BuffElem {
-                            Duration = status.Duration > 0 ? status.Duration : status.Duration * -1,
+                            Duration = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
                             StackCount = status.StackCount
                         };
                     }
@@ -156,11 +157,11 @@ namespace JobBars.Gauges {
             }
         }
 
-        private Actor GetPreviousEnemyTarget() {
+        private GameObject GetPreviousEnemyTarget() {
             var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
             if (actorAddress == IntPtr.Zero) return null;
 
-            return PluginInterface.ClientState.Actors.CreateActorReference(actorAddress);
+            return PluginInterface.ClientState.Objects.CreateObjectReference(actorAddress);
         }
     }
 
