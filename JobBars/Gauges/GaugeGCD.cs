@@ -26,10 +26,8 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void Setup() {
-            foreach (var sg in SubGauges) {
-                sg.Reset();
-            }
+        protected override void SetupUI() {
+            foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
             ActiveSubGauge.UseSubGauge();
             ActiveSubGauge.CheckInactive();

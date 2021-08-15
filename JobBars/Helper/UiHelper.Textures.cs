@@ -20,7 +20,7 @@ namespace JobBars.Helper {
         }
 
         public static AtkUldPartsList* CreatePartsList(uint partCount) {
-            var partsList = (AtkUldPartsList*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldPartsList), 8);
+            var partsList = Alloc<AtkUldPartsList>();
             if (partsList == null) {
                 PluginLog.Debug("Failed to allocate memory for parts list");
             }
@@ -28,7 +28,7 @@ namespace JobBars.Helper {
             partsList->Id = 0;
             partsList->PartCount = partCount;
 
-            var part = (AtkUldPart*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldPart) * partCount, 8);
+            var part = (AtkUldPart*)Alloc((ulong)sizeof(AtkUldPart) * partCount);
             if (part == null) {
                 PluginLog.Debug("Failed to allocate memory for part");
                 IMemorySpace.Free(partsList, (ulong)sizeof(AtkUldPartsList));
@@ -41,7 +41,7 @@ namespace JobBars.Helper {
                 part[i].Width = 24;
                 part[i].Height = 32;
 
-                var asset = (AtkUldAsset*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldAsset), 8);
+                var asset = Alloc<AtkUldAsset>();
                 if (asset == null) {
                     PluginLog.Debug("Failed to allocate memory for asset");
                     IMemorySpace.Free(part, (ulong)sizeof(AtkUldPart) * partCount);
@@ -77,6 +77,8 @@ namespace JobBars.Helper {
             partsList->Parts[idx].Height = height;
         }
 
+        // ======= USED FOR LOADING TEXTURES INTO ADDON ==============
+
         public static AtkUldPart* ExpandPartList(AtkUldManager manager, ushort addSize) {
             var oldLength = manager.PartsList->PartCount;
             var newLength = oldLength + addSize + 1;
@@ -84,7 +86,7 @@ namespace JobBars.Helper {
             var oldSize = oldLength * 0x10;
             var newSize = newLength * 0x10;
 
-            var part = (AtkUldPart*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldPart) * newLength, 8);
+            var part = (AtkUldPart*)Alloc((ulong)sizeof(AtkUldPart) * newLength);
             var newListPtr = new IntPtr(part);
             var oldListPtr = new IntPtr(manager.PartsList->Parts);
 
@@ -95,7 +97,7 @@ namespace JobBars.Helper {
         }
 
         public static void AddPart(AtkUldManager manager, ushort assetIdx, ushort partIdx, ushort U, ushort V, ushort Width, ushort Height) {
-            var asset = (AtkUldAsset*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldAsset), 8);
+            var asset = Alloc<AtkUldAsset>();
             asset->Id = manager.Assets[assetIdx].Id;
             asset->AtkTexture = manager.Assets[assetIdx].AtkTexture;
 

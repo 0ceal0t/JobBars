@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using Dalamud.Logging;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
         private static DalamudPluginInterface PluginInterface;
-
-        public delegate IntPtr GameAllocDelegate(ulong size, IntPtr unk, IntPtr allocator, IntPtr alignment);
-        public static GameAllocDelegate GameAlloc { get; private set; }
-
-        public delegate IntPtr GetGameAllocatorDelegate();
-        public static GetGameAllocatorDelegate GetGameAllocator { get; private set; }
 
         public delegate long PlaySeDelegate(int a1, long a2, long a3);
         public static PlaySeDelegate PlaySe { get; private set; }
@@ -34,8 +32,6 @@ namespace JobBars.Helper {
             PluginInterface = pluginInterface;
             var scanner = pluginInterface.TargetModuleScanner;
 
-            GameAlloc = Marshal.GetDelegateForFunctionPointer<GameAllocDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 45 8D 67 23"));
-            GetGameAllocator = Marshal.GetDelegateForFunctionPointer<GetGameAllocatorDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 8B 75 08"));
             PlaySe = Marshal.GetDelegateForFunctionPointer<PlaySeDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
 
             var loadAssetsPtr = scanner.ScanText("E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??");
@@ -50,35 +46,55 @@ namespace JobBars.Helper {
             Ready = true;
         }
 
-        public static void Dispose() {
-            PluginInterface = null;
+        public static T* Alloc<T>() where T : unmanaged {
+            return (T*)Alloc((ulong)sizeof(T));
         }
 
-        public static IntPtr Alloc(ulong size) {
-            if (GameAlloc == null || GetGameAllocator == null) return IntPtr.Zero;
-            return GameAlloc(size, IntPtr.Zero, GetGameAllocator(), IntPtr.Zero);
+        public static void* Alloc(ulong size) {
+            return IMemorySpace.GetUISpace()->Malloc(size, 8);
         }
 
         public static T* CleanAlloc<T>() where T : unmanaged {
-            var alloc = Alloc(sizeof(T));
-            Marshal.Copy(new byte[sizeof(T)], 0, alloc, sizeof(T));
-            return (T*)alloc;
+            return (T*)CleanAlloc((ulong)sizeof(T));
         }
 
-        public static T* CleanAlloc<T>(int size) where T : unmanaged {
+        public static void* CleanAlloc(ulong size) {
             var alloc = Alloc(size);
-            Marshal.Copy(new byte[size], 0, alloc, size);
-            return (T*)alloc;
+            IMemorySpace.Memset(alloc, 0, size);
+            return alloc;
         }
 
-        public static IntPtr Alloc(int size) {
-            return Alloc((ulong)size);
+        public static T* CloneNode<T>(T* original) where T : unmanaged {
+            var allocation = CleanAlloc<T>();
+
+            var bytes = new byte[sizeof(T)];
+            Marshal.Copy(new IntPtr(original), bytes, 0, bytes.Length);
+            Marshal.Copy(bytes, 0, new IntPtr(allocation), bytes.Length);
+
+            var newNode = (AtkResNode*)allocation;
+            newNode->ParentNode = null;
+            newNode->ChildNode = null;
+            newNode->ChildCount = 0;
+            newNode->PrevSiblingNode = null;
+            newNode->NextSiblingNode = null;
+            return allocation;
         }
 
         public static void PlaySeComplete() {
             PlaySe(78, 0, 0);
         }
 
-        public static AtkUnitBase* Addon => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+        public static bool GetRecastActive(uint actionId, out float timeElapsed, ActionType actionType = ActionType.Spell) {
+            var actionManager = ActionManager.Instance();
+            var adjustedId = actionManager->GetAdjustedActionId(actionId);
+            timeElapsed = actionManager->GetRecastTimeElapsed(actionType, adjustedId);
+            return timeElapsed > 0;
+        }
+
+        public static AtkUnitBase* ParameterAddon => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+
+        public static void Dispose() {
+            PluginInterface = null;
+        }
     }
 }

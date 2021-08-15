@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Dalamud.Data;
 using Dalamud.Game;
-using FFXIVClientInterface.Client.Game;
 using FFXIVClientInterface.Client.UI;
 
 namespace FFXIVClientInterface {
@@ -25,17 +24,6 @@ namespace FFXIVClientInterface {
                     uiModule = new UiModule() { Data = fetchedUiModule };
                 }
                 return uiModule;
-            }
-        }
-        
-        private ActionManager actionManager;
-        public ActionManager ActionManager {
-            get {
-                if (actionManager != null && actionManager.IsValid) return actionManager;
-                var address = new ActionManager.ActionManagerAddressResolver();
-                address.Setup(SigScanner);
-                actionManager = new ActionManager(address);
-                return actionManager;
             }
         }
 

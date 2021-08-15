@@ -47,7 +47,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void Setup() {
+        protected override void SetupUI() {
             if (UI is UIGaugeDiamondCombo combo) {
                 combo.SetGaugeColor(Props.BarColor);
                 SetupDiamondColors();
@@ -97,6 +97,7 @@ namespace JobBars.Gauges {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = buffDict.TryGetValue(trigger, out var buff);
+
                         if (part.Bar && !barAssigned && buffExists) {
                             barAssigned = true;
                             SetGaugeValue(buff.Duration / part.Duration, (int)Math.Round(buff.Duration));
@@ -108,16 +109,16 @@ namespace JobBars.Gauges {
                         if (buffExists) break;
                     }
                     else {
-                        var foundRecast = UIIconManager.Manager.GetRecast(trigger.Id, out var recastTimer);
-                        var recastActive = foundRecast && recastTimer->IsActive == 1;
+                        var recastActive = UIHelper.GetRecastActive(trigger.Id, out var timeElapsed);
+
                         if (part.Bar && !barAssigned && recastActive) {
                             barAssigned = true;
-                            var currentTime = recastTimer->Elapsed % part.CD;
+                            var currentTime = timeElapsed % part.CD;
                             var timeLeft = part.CD - currentTime;
                             SetGaugeValue(currentTime / part.CD, (int)Math.Round(timeLeft));
                         }
                         if (part.Diamond) {
-                            SetDiamondValue(recastActive ? (int)Math.Floor(recastTimer->Elapsed / part.CD) : part.MaxCharges, diamondIdx, part.MaxCharges);
+                            SetDiamondValue(recastActive ? (int)Math.Floor(timeElapsed / part.CD) : part.MaxCharges, diamondIdx, part.MaxCharges);
                             diamondIdx += part.MaxCharges;
                         }
                         if (recastActive) break;

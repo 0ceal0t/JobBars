@@ -1,12 +1,7 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
 using JobBars.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public partial class GaugeManager {
@@ -20,8 +15,7 @@ namespace JobBars.Gauges {
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref Configuration.Config.GaugesEnabled)) {
-                if (Configuration.Config.GaugesEnabled) UIBuilder.Builder.ShowGauges();
-                else UIBuilder.Builder.HideGauges();
+                Reset();
                 Configuration.Config.Save();
             }
 
@@ -56,7 +50,7 @@ namespace JobBars.Gauges {
             ImGui.SameLine();
             if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref Configuration.Config.GaugesHideOutOfCombat)) {
                 if (!Configuration.Config.GaugesHideOutOfCombat && Configuration.Config.GaugesEnabled) { // since they might be hidden
-                    UIBuilder.Builder.ShowGauges();
+                    UIBuilder.Builder.SetGaugeVisible(true);
                 }
                 Configuration.Config.Save();
             }
