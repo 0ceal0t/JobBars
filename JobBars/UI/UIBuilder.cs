@@ -1,5 +1,6 @@
 ﻿using Dalamud.Logging;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
@@ -66,7 +67,7 @@ namespace JobBars.UI {
         }
 
         private void InitializeInstance() {
-            var addon = UIHelper.Addon;
+            var addon = UIHelper.ParameterAddon;
             if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) {
                 PluginLog.Debug("Error setting up UI builder");
                 return;
@@ -99,7 +100,7 @@ namespace JobBars.UI {
             BuffRoot->Destroy(true);
             BuffRoot = null;
 
-            var addon = UIHelper.Addon;
+            var addon = UIHelper.ParameterAddon;
             if (addon == null) return;
             addon->UldManager.UpdateDrawNodeList();
 
@@ -113,19 +114,19 @@ namespace JobBars.UI {
 
         private void LoadAssets(string[] paths) { // is this kind of gross? yes. does it work? probably
             var numPaths = paths.Length;
-            var addon = UIHelper.Addon;
-            AtkUldAsset* oldAssets = addon->UldManager.Assets;
+            var addon = UIHelper.ParameterAddon;
+            var oldAssets = addon->UldManager.Assets;
 
-            var allocator = UIHelper.GetGameAllocator();
+            var allocator = new IntPtr(IMemorySpace.GetUISpace());
 
             var assetMapping = UIHelper.LoadTexAlloc(allocator, 4 * numPaths, 16);
             for (int i = 0; i < numPaths; i++) {
                 Marshal.WriteInt32(assetMapping + 4 * i, i + 1); // 0->1, 1->2, etc.
             }
 
-            IntPtr manager = (IntPtr)addon + 0x28;
+            var manager = (IntPtr)addon + 0x28;
             var size = 16 + 56 * numPaths + 16; // a bit of extra padding on the end
-            IntPtr texPaths = UIHelper.Alloc(size);
+            var texPaths = new IntPtr(UIHelper.Alloc((ulong)size));
             var data = new byte[size];
 
             var start = Encoding.ASCII.GetBytes("ashd0101");
@@ -266,7 +267,7 @@ namespace JobBars.UI {
         }
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.Addon;
+            var addon = UIHelper.ParameterAddon;
             var p = UIHelper.GetNodePosition(addon->RootNode);
             var pScale = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
@@ -281,7 +282,7 @@ namespace JobBars.UI {
         }
 
         private void SetScale(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.Addon;
+            var addon = UIHelper.ParameterAddon;
             var p = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetScale(node, X / p.X, Y / p.Y);
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JobBars.GameStructs;
 using JobBars.Data;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using Dalamud.Game.ClientState.Objects.Types;
 
 namespace JobBars {
@@ -14,7 +14,6 @@ namespace JobBars {
             }
 
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
-            ushort op = *((ushort*)effectHeader.ToPointer() - 0x7);
             byte type = *((byte*)effectHeader.ToPointer() + 0x1F); // 1 = action
 
             var selfId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;

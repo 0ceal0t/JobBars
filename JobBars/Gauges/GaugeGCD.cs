@@ -26,25 +26,19 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void Setup() {
-            foreach (var sg in SubGauges) {
-                sg.Reset();
-            }
+        protected override void SetupUI() {
+            foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
             ActiveSubGauge.UseSubGauge();
             ActiveSubGauge.CheckInactive();
         }
 
         public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            foreach (var sg in SubGauges) {
-                sg.Tick(time, buffDict);
-            }
+            foreach (var sg in SubGauges) sg.Tick(time, buffDict);
         }
 
         public override void ProcessAction(Item action) {
-            foreach (var sg in SubGauges) {
-                sg.ProcessAction(action);
-            }
+            foreach (var sg in SubGauges) sg.ProcessAction(action);
         }
 
         protected override int GetHeight() {
@@ -60,9 +54,7 @@ namespace JobBars.Gauges {
         }
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            foreach (var sg in SubGauges) {
-                sg.DrawSubGauge(_ID, job);
-            }
+            foreach (var sg in SubGauges) sg.DrawSubGauge(_ID, job);
 
             if (DrawTypeOptions(_ID, ValidGaugeVisualType, Type, out var newType)) {
                 Config.Type = Type = newType;

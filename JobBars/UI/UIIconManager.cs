@@ -1,7 +1,6 @@
 ﻿using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientInterface;
-using FFXIVClientInterface.Client.Game;
 using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -37,7 +36,7 @@ namespace JobBars.UI {
                 var originalBorder = (AtkImageNode*)nodeList[4];
                 var originalCD = (AtkImageNode*)nodeList[5];
 
-                Border = UIHelper.AllocNode<AtkImageNode>();
+                Border = UIHelper.CleanAlloc<AtkImageNode>();
                 Border->Ctor();
                 Border->AtkResNode.NodeID = 200;
                 Border->AtkResNode.ChildCount = 0;
@@ -55,7 +54,7 @@ namespace JobBars.UI {
                 Border->PartId = 0;
                 Border->PartsList = originalBorder->PartsList;
 
-                CD = UIHelper.AllocNode<AtkImageNode>();
+                CD = UIHelper.CleanAlloc<AtkImageNode>();
                 CD->Ctor();
                 CD->AtkResNode.NodeID = 201;
                 CD->AtkResNode.Type = NodeType.Image;
@@ -74,7 +73,7 @@ namespace JobBars.UI {
                 CD->PartId = 0;
                 CD->PartsList = originalCD->PartsList;
 
-                Text = UIHelper.AllocNode<AtkTextNode>();
+                Text = UIHelper.CleanAlloc<AtkTextNode>();
                 Text->Ctor();
                 Text->AtkResNode.NodeID = 202;
                 Text->AtkResNode.Type = NodeType.Text;
@@ -207,11 +206,10 @@ namespace JobBars.UI {
 
         public void Setup(List<uint> triggers) {
             if (triggers == null) return;
-            var actionManager = Client.ActionManager;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
 
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
-                if (actionManager == null || hotbarModule == null) return;
+                if (hotbarModule == null) return;
                 var actionBar = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(AllActionBars[abIndex], 1);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
                 HotBar* bar = (abIndex < 10) ? hotbarModule.GetBar(abIndex, HotBarType.Normal) : hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
@@ -229,6 +227,13 @@ namespace JobBars.UI {
                     }
                 }
             }
+        }
+
+        private bool AlreadySetup(AtkComponentNode* node) {
+            foreach (var icon in Icons) {
+                if (icon.Component == node) return true;
+            }
+            return false;
         }
 
         public void Remove(List<uint> triggers) {
@@ -285,22 +290,6 @@ namespace JobBars.UI {
         private void DisposeInstance() {
             Reset();
             Client.Dispose();
-        }
-
-        public bool GetRecast(uint action, out RecastTimer* timer) {
-            timer = (RecastTimer*)IntPtr.Zero;
-            var adjustedActionId = Client.ActionManager.GetAdjustedActionId(action);
-            var recastGroup = (int)Client.ActionManager.GetRecastGroup(0x01, adjustedActionId) + 1;
-            if (recastGroup == 0 || recastGroup == 58) return false;
-            timer = Client.ActionManager.GetGroupRecastTime(recastGroup);
-            return true;
-        }
-
-        private bool AlreadySetup(AtkComponentNode* node) {
-            foreach(var icon in Icons) {
-                if (icon.Component == node) return true;
-            }
-            return false;
         }
     }
 }

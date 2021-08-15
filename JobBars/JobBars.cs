@@ -12,6 +12,7 @@ using JobBars.UI;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
+using JobBars.Cooldown;
 using JobBars.PartyList;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
@@ -24,6 +25,7 @@ namespace JobBars {
 
         private GaugeManager GManager;
         private BuffManager BManager;
+        private CooldownManager CDManager;
         private Configuration Config;
         private readonly HashSet<uint> GCDs = new();
 
@@ -132,6 +134,7 @@ namespace JobBars {
 
             GManager = null;
             BManager = null;
+            CDManager = null; // TODO: dispose
 
             Animation.Cleanup();
             UIIconManager.Dispose();
@@ -160,7 +163,7 @@ namespace JobBars {
         }
 
         private void FrameworkOnUpdate(Framework framework) {
-            var addon = UIHelper.Addon;
+            var addon = UIHelper.ParameterAddon;
 
             if (!PlayerExists) {
                 if (Initialized && addon == null) Logout();
@@ -194,8 +197,9 @@ namespace JobBars {
             UIIconManager.Manager.Reset();
 
             UIBuilder.Initialize(PluginInterface);
-            GManager = new GaugeManager(PluginInterface);
+            GManager = new GaugeManager(PluginInterface, Party);
             BManager = new BuffManager();
+            CDManager = new CooldownManager(PluginInterface, Party);
             UIBuilder.Builder.HideAllBuffs();
             UIBuilder.Builder.HideAllGauges();
 
@@ -222,8 +226,9 @@ namespace JobBars {
 
         private void Tick() {
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
-            GManager.Tick(Party, inCombat);
+            GManager.Tick(inCombat);
             BManager.Tick(inCombat);
+            CDManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

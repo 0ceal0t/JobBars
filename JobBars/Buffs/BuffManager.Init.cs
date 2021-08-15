@@ -1,12 +1,11 @@
 ﻿using System;
 using JobBars.Data;
 using JobBars.UI;
-using System.Collections.Generic;
 
 namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
         private void Init() {
-            JobToBuffs = new Dictionary<JobIds, Buff[]>();
+            JobToBuffs = new();
             JobToBuffs.Add(JobIds.OTHER, Array.Empty<Buff>());
             // ======= GNB ==========
             JobToBuffs.Add(JobIds.GNB, Array.Empty<Buff>());

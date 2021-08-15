@@ -24,7 +24,7 @@ namespace JobBars.Gauges {
     public class SubGaugeTimer : SubGauge {
         private SubGaugeTimerProps Props;
         private readonly GaugeTimer ParentGauge;
-        private UIElement UI => ParentGauge.UI;
+        private UIGaugeElement UI => ParentGauge.UI;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
-    public unsafe class UIDiamond : UIElement {
+    public unsafe class UIDiamond : UIGaugeElement {
 
         private class TickStruct {
             public AtkResNode* MainTick;

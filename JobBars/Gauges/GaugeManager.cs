@@ -12,7 +12,8 @@ using System.Runtime.InteropServices;
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         public static GaugeManager Manager { get; private set; }
-        public DalamudPluginInterface PluginInterface;
+        private readonly DalamudPluginInterface PluginInterface;
+        private readonly PList Party;
 
         public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
@@ -20,9 +21,10 @@ namespace JobBars.Gauges {
 
         public IntPtr TargetAddress;
 
-        public GaugeManager(DalamudPluginInterface pi) {
+        public GaugeManager(DalamudPluginInterface pluginInterface, PList party) {
             Manager = this;
-            PluginInterface = pi;
+            PluginInterface = pluginInterface;
+            Party = party;
             TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
 
             if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
@@ -44,10 +46,14 @@ namespace JobBars.Gauges {
             int idx = 0;
             foreach (var gauge in CurrentGauges) {
                 gauge.UI = GetUI(idx, gauge.GetVisualType());
-                gauge.SetupUI();
+                gauge.Setup();
                 idx++;
             }
             UpdatePositionScale();
+        }
+
+        public void UpdatePositionScale(JobIds job) {
+            if (job == CurrentJob) UpdatePositionScale();
         }
 
         public void UpdatePositionScale() {
@@ -86,7 +92,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void Tick(PList party, bool inCombat) {
+        public void Tick(bool inCombat) {
             if (!Configuration.Config.GaugesEnabled) return;
 
             if (Configuration.Config.GaugesHideOutOfCombat) {
@@ -107,7 +113,7 @@ namespace JobBars.Gauges {
             }
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                foreach (var pMember in party) {
+                foreach (var pMember in Party) {
                     if (pMember == null) continue;
 
                     foreach (var actor in PluginInterface.ClientState.Objects) {
@@ -120,14 +126,14 @@ namespace JobBars.Gauges {
             }
 
             foreach (var gauge in CurrentGauges) {
-                if (!gauge.DoProcessInput()) { continue; }
+                if (!gauge.DoProcessInput()) continue;
                 gauge.Tick(currentTime, BuffDict);
             }
 
             UIIconManager.Manager.Tick();
         }
 
-        private static UIElement GetUI(int idx, GaugeVisualType type) {
+        private static UIGaugeElement GetUI(int idx, GaugeVisualType type) {
             return type switch {
                 GaugeVisualType.Arrow => UIBuilder.Builder.Arrows[idx],
                 GaugeVisualType.Bar => UIBuilder.Builder.Gauges[idx],

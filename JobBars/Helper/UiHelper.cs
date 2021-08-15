@@ -67,40 +67,5 @@ namespace JobBars.Helper {
             atkUnitBase->Flags_2 |= 0x1;
             atkUnitBase->Flags_2 |= 0x4;
         }
-
-        public static T* AllocNode<T>() where T : unmanaged {
-            var node = (T*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(T), 8);
-            if (node == null) {
-                PluginLog.Debug("Failed to allocate memory for node");
-                return null;
-            }
-            IMemorySpace.Memset(node, 0, (ulong)sizeof(T));
-            return node;
-        }
-
-        public static AtkResNode* CloneNode(AtkResNode* original) {
-            var size = original->Type switch {
-                NodeType.Res => sizeof(AtkResNode),
-                NodeType.Image => sizeof(AtkImageNode),
-                NodeType.Text => sizeof(AtkTextNode),
-                NodeType.NineGrid => sizeof(AtkNineGridNode),
-                NodeType.Counter => sizeof(AtkCounterNode),
-                NodeType.Collision => sizeof(AtkCollisionNode),
-                _ => throw new Exception($"Unsupported Type: {original->Type}")
-            };
-
-            var allocation = Alloc((ulong)size);
-            var bytes = new byte[size];
-            Marshal.Copy(new IntPtr(original), bytes, 0, bytes.Length);
-            Marshal.Copy(bytes, 0, allocation, bytes.Length);
-
-            var newNode = (AtkResNode*)allocation;
-            newNode->ParentNode = null;
-            newNode->ChildNode = null;
-            newNode->ChildCount = 0;
-            newNode->PrevSiblingNode = null;
-            newNode->NextSiblingNode = null;
-            return newNode;
-        }
     }
 }

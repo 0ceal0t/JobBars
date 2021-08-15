@@ -150,17 +150,5 @@ namespace JobBars.UI {
             newColor.AddBlue -= 50;
             UIColor.SetColor(Border, newColor);
         }
-
-        public override int GetHeight(int param) {
-            return HEIGHT;
-        }
-
-        public override int GetWidth(int param) {
-            return WIDTH;
-        }
-
-        public override int GetHorizontalYOffset() {
-            return 0;
-        }
     }
 }

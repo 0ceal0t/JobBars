@@ -7,7 +7,7 @@ using JobBars.Helper;
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public AtkResNode* CreateResNode() {
-            var node = UIHelper.AllocNode<AtkResNode>();
+            var node = UIHelper.CleanAlloc<AtkResNode>();
             node->Ctor();
 
             node->NodeID = (NodeIdx++);
@@ -31,7 +31,7 @@ namespace JobBars.UI {
         }
 
         public AtkTextNode* CreateTextNode() {
-            var node = UIHelper.AllocNode<AtkTextNode>();
+            var node = UIHelper.CleanAlloc<AtkTextNode>();
             node->Ctor();
 
             node->AtkResNode.NodeID = (NodeIdx++);
@@ -75,7 +75,7 @@ namespace JobBars.UI {
         }
 
         public AtkImageNode* CreateImageNode() {
-            var node = UIHelper.AllocNode<AtkImageNode>();
+            var node = UIHelper.CleanAlloc<AtkImageNode>();
             node->Ctor();
 
             node->WrapMode = 1;
@@ -105,7 +105,7 @@ namespace JobBars.UI {
         public AtkNineGridNode* CreateNineNode() {
             var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
             var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
-            var node = (AtkNineGridNode*)UIHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[3]);
+            var node = UIHelper.CloneNode((AtkNineGridNode*)gaugeComp->Component->UldManager.NodeList[3]);
 
             node->PartsTypeRenderType = 128;
 

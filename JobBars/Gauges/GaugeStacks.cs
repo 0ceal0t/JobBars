@@ -30,7 +30,7 @@ namespace JobBars.Gauges {
             Props.Color = Config.GetColor(Props.Color);
         }
 
-        protected override void Setup() {
+        protected override void SetupUI() {
             UI.SetColor(Props.Color);
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Props.MaxStacks);
