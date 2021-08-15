@@ -6,7 +6,7 @@ using System;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
-    public unsafe class UIGauge : UIGaugeElement {
+    public unsafe class UIGauge : UIElement {
         private AtkResNode* GaugeContainer;
         private AtkImageNode* Background;
         private AtkResNode* BarContainer;

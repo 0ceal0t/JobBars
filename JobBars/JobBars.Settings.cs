@@ -46,6 +46,10 @@ namespace JobBars {
             ImGui.Begin(Id, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
             newPosition = ImGui.GetWindowPos() - minPosition;
 
+            /*if (ImGui.InputFloat2("Position" + _ID, ref newPosition)) {
+                ImGui.SetWindowPos(text + _ID, newPosition);
+            }*/
+
             ImGui.PopStyleVar(1);
             ImGui.End();
             return newPosition != position;

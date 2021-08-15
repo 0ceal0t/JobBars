@@ -35,7 +35,7 @@ namespace JobBars.Gauges {
         private GaugeProcProps Props;
         private readonly int Size;
 
-        private readonly List<bool> ProcsActive = new();
+        private List<bool> ProcsActive = new();
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
@@ -47,7 +47,7 @@ namespace JobBars.Gauges {
             ResetProcActive();
         }
 
-        protected override void SetupUI() {
+        protected override void Setup() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size, showText: Props.ShowText);
                 foreach (var proc in Props.Procs) {
@@ -75,8 +75,7 @@ namespace JobBars.Gauges {
                     SetValue(proc.Idx, procActive = buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
-                    var recastActive = UIHelper.GetRecastActive(proc.Trigger.Id, out _);
-                    SetValue(proc.Idx, procActive = !recastActive);
+                    SetValue(proc.Idx, procActive = UIIconManager.Manager.GetRecast(proc.Trigger.Id, out var timer) && timer->IsActive != 1);
                 }
 
                 if (procActive && !ProcsActive[idx] && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when any proc becomes active

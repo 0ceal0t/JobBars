@@ -145,10 +145,22 @@ namespace JobBars.UI {
             UIHelper.SetPosition(Overlay, 0, yOffset);
         }
 
-        public void SetColor(ElementColor color) {
+        public override void SetColor(ElementColor color) {
             var newColor = color;
             newColor.AddBlue -= 50;
             UIColor.SetColor(Border, newColor);
+        }
+
+        public override int GetHeight(int param) {
+            return HEIGHT;
+        }
+
+        public override int GetWidth(int param) {
+            return WIDTH;
+        }
+
+        public override int GetHorizontalYOffset() {
+            return 0;
         }
     }
 }

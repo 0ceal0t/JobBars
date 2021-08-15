@@ -9,41 +9,26 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
-    public unsafe class UIGaugeDiamondCombo : UIGaugeElement {
-        private UIGauge Gauge;
-        private UIDiamond Diamond;
+    public unsafe class UIGaugeDiamondCombo : UIElement {
+        private readonly UIGauge Gauge;
+        private readonly UIDiamond Diamond;
 
-        public UIGaugeDiamondCombo(AtkUnitBase* addon) {
-            Gauge = new UIGauge(addon);
-            Diamond = new UIDiamond(addon);
-
-            RootRes = UIBuilder.Builder.CreateResNode();
-            RootRes->X = 0;
-            RootRes->Y = 0;
-            RootRes->Width = 0;
-            RootRes->Height = 0;
-            RootRes->ChildCount = (ushort)(Gauge.RootRes->ChildCount + Gauge.RootRes->ChildCount + 2);
-            RootRes->ChildNode = Gauge.RootRes;
-
-            Gauge.RootRes->ParentNode = RootRes;
-            Diamond.RootRes->ParentNode = RootRes;
-            UIHelper.Link(Gauge.RootRes, Diamond.RootRes);
-
-            UIHelper.SetPosition(Gauge.RootRes, 0, 0);
-            UIHelper.SetPosition(Diamond.RootRes, 0, 10);
+        public UIGaugeDiamondCombo(UIGauge gauge, UIDiamond diamond) {
+            Gauge = gauge;
+            Diamond = diamond;
+            RootRes = gauge.RootRes;
         }
 
-        public override void Dispose() {
-            Gauge.Dispose();
-            Diamond.Dispose();
+        public override void Dispose() { }
 
-            Gauge = null;
-            Diamond = null;
+        public override void Hide() {
+            UIHelper.Hide(RootRes);
+            UIHelper.Hide(Diamond.RootRes);
+        }
 
-            if (RootRes != null) {
-                RootRes->Destroy(true);
-                RootRes = null;
-            }
+        public override void Show() {
+            UIHelper.Show(RootRes);
+            UIHelper.Show(Diamond.RootRes);
         }
 
         public void SetText(string text) {
@@ -97,6 +82,26 @@ namespace JobBars.UI {
 
         public override int GetHorizontalYOffset() {
             return Gauge.GetHorizontalYOffset();
+        }
+
+        public override void SetSplitPosition(Vector2 pos) {
+            var p = UIHelper.GetNodePosition(UIBuilder.Builder.GaugeRoot);
+            var pScale = UIHelper.GetNodeScale(UIBuilder.Builder.GaugeRoot);
+            var x = (pos.X - p.X) / pScale.X;
+            var y = (pos.Y - p.Y) / pScale.Y;
+
+            UIHelper.SetPosition(Gauge.RootRes, x, y);
+            UIHelper.SetPosition(Diamond.RootRes, x, y + 10);
+        }
+
+        public override void SetScale(float scale) {
+            UIHelper.SetScale(Gauge.RootRes, scale, scale);
+            UIHelper.SetScale(Diamond.RootRes, scale, scale);
+        }
+
+        public override void SetPosition(Vector2 pos) {
+            UIHelper.SetPosition(Gauge.RootRes, pos.X, pos.Y);
+            UIHelper.SetPosition(Diamond.RootRes, pos.X, pos.Y + 10);
         }
     }
 }

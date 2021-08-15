@@ -24,7 +24,7 @@ namespace JobBars.Gauges {
     public class SubGaugeTimer : SubGauge {
         private SubGaugeTimerProps Props;
         private readonly GaugeTimer ParentGauge;
-        private UIGaugeElement UI => ParentGauge.UI;
+        private UIElement UI => ParentGauge.UI;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
@@ -51,7 +51,7 @@ namespace JobBars.Gauges {
         }
 
         public void UseSubGauge() {
-            UI?.SetColor(Props.Color);
+            UI.SetColor(Props.Color);
             if (UI is UIGauge gauge) {
                 gauge.SetTextColor(InDanger ? Red : NoColor);
             }
@@ -132,6 +132,9 @@ namespace JobBars.Gauges {
                 Props.Color = newColor;
                 Config.Color = newColorString;
                 Configuration.Config.Save();
+                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
+                    UI?.SetColor(Props.Color);
+                }
             }
 
             if (Props.Icons != null) {

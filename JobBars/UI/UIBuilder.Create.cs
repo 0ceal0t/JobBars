@@ -1,57 +1,13 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
-        private void Init(AtkUnitBase* addon) {
-            NodeIdx = NODE_IDX_START;
-
-            // ======== CREATE GAUGES =======
-            GaugeRoot = CreateResNode();
-            GaugeRoot->Width = 256;
-            GaugeRoot->Height = 100;
-            GaugeRoot->Flags = 9395;
-            GaugeRoot->Flags_2 = 4;
-            GaugeRoot->ParentNode = addon->RootNode;
-
-            // ======= CREATE BUFFS =========
-            BuffRoot = CreateResNode();
-            BuffRoot->Width = 256;
-            BuffRoot->Height = 100;
-            BuffRoot->Flags = 9395;
-            BuffRoot->Flags_2 = 4;
-            BuffRoot->ParentNode = addon->RootNode;
-
-            UIBuff lastBuff = null;
-            foreach (var icon in Icons) {
-                var newBuff = new UIBuff(addon, (int)icon);
-
-                Buffs.Add(newBuff);
-                IconToBuff[icon] = newBuff;
-
-                if (lastBuff != null) UIHelper.Link(lastBuff.RootRes, newBuff.RootRes);
-                lastBuff = newBuff;
-            }
-
-            BuffRoot->ChildCount = (ushort)(5 * Buffs.Count);
-            BuffRoot->ChildNode = Buffs[0].RootRes;
-
-            // ==== INSERT AT THE END ====
-            var lastNode = addon->RootNode->ChildNode;
-            while (lastNode->PrevSiblingNode != null) {
-                lastNode = lastNode->PrevSiblingNode;
-            }
-
-            UIHelper.Link(lastNode, GaugeRoot);
-            UIHelper.Link(GaugeRoot, BuffRoot);
-
-            addon->UldManager.UpdateDrawNodeList();
-        }
-
         public AtkResNode* CreateResNode() {
-            var node = UIHelper.CleanAlloc<AtkResNode>();
+            var node = UIHelper.AllocNode<AtkResNode>();
             node->Ctor();
 
             node->NodeID = (NodeIdx++);
@@ -75,7 +31,7 @@ namespace JobBars.UI {
         }
 
         public AtkTextNode* CreateTextNode() {
-            var node = UIHelper.CleanAlloc<AtkTextNode>();
+            var node = UIHelper.AllocNode<AtkTextNode>();
             node->Ctor();
 
             node->AtkResNode.NodeID = (NodeIdx++);
@@ -119,7 +75,7 @@ namespace JobBars.UI {
         }
 
         public AtkImageNode* CreateImageNode() {
-            var node = UIHelper.CleanAlloc<AtkImageNode>();
+            var node = UIHelper.AllocNode<AtkImageNode>();
             node->Ctor();
 
             node->WrapMode = 1;
@@ -149,7 +105,7 @@ namespace JobBars.UI {
         public AtkNineGridNode* CreateNineNode() {
             var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
             var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
-            var node = UIHelper.CloneNode((AtkNineGridNode*)gaugeComp->Component->UldManager.NodeList[3]);
+            var node = (AtkNineGridNode*)UIHelper.CloneNode(gaugeComp->Component->UldManager.NodeList[3]);
 
             node->PartsTypeRenderType = 128;
 

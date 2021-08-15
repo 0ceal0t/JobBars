@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         private void Init() {
-            JobToGauges = new();
+            JobToGauges = new Dictionary<JobIds, Gauge[]>();
             JobToGauges.Add(JobIds.OTHER, Array.Empty<Gauge>());
             // ============ GNB ==================
             JobToGauges.Add(JobIds.GNB, new Gauge[] {

@@ -1,6 +1,5 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -22,8 +21,8 @@ namespace JobBars.Gauges {
     }
 
     public abstract class Gauge {
-        public readonly string Name;
-        public UIGaugeElement UI;
+        public string Name;
+        public UIElement UI;
 
         protected GaugeConfig Config;
         public bool Enabled => Config.Enabled;
@@ -36,22 +35,19 @@ namespace JobBars.Gauges {
             Config = Configuration.Config.GetGaugeConfig(name);
         }
 
-        public void Setup() {
-            if (Enabled) {
-                UI = CreateUI(GetVisualType());
-                UI.SetScale(Scale);
-                UIBuilder.Builder.AppendGauge(UI);
-            }
-            else UI = null;
-
-            SetupUI();
+#nullable enable
+        public static T GetConfigValue<T>(T? configValue, T defaultValue) {
+            return configValue == null ? defaultValue : configValue;
         }
-        protected abstract void SetupUI();
+#nullable disable
 
-        public void Dispose() {
-            UI = null;
+        public void SetupUI() {
+            UI.SetVisible(Config.Enabled);
+            UI.SetScale(Config.Scale);
+            Setup();
         }
 
+        protected abstract void Setup();
         public virtual bool DoProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
         public abstract GaugeVisualType GetVisualType();
@@ -61,8 +57,6 @@ namespace JobBars.Gauges {
         public int Width => UI == null ? 0 : (int)(Scale * GetWidth());
         protected abstract int GetHeight();
         protected abstract int GetWidth();
-
-        // ======= UI ==========
 
         protected abstract void DrawGauge(string _ID, JobIds job);
 
@@ -81,23 +75,27 @@ namespace JobBars.Gauges {
             if (ImGui.Checkbox("Enabled" + _ID, ref Config.Enabled)) {
                 Configuration.Config.Save();
 
-                GaugeManager.Manager.ResetJob(job);
-                GaugeManager.Manager.UpdatePositionScale(job);
+                if (job == GaugeManager.Manager.CurrentJob) {
+                    if (Enabled) UI?.Show();
+                    else UI?.Hide();
+                }
+
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
             }
 
             if (ImGui.InputInt("Order" + _ID, ref Config.Order)) {
                 Config.Order = Math.Max(Config.Order, -1);
                 Configuration.Config.Save();
 
-                GaugeManager.Manager.UpdatePositionScale(job);
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Config.Scale)) {
                 Config.Scale = Math.Max(Config.Scale, 0.1f);
+                UI?.SetScale(Config.Scale);
                 Configuration.Config.Save();
 
-                UI?.SetScale(Config.Scale);
-                GaugeManager.Manager.UpdatePositionScale(job);
+                if (job == GaugeManager.Manager.CurrentJob) GaugeManager.Manager.UpdatePositionScale();
             }
 
             var pos = Config.SplitPosition;
@@ -116,10 +114,9 @@ namespace JobBars.Gauges {
         }
 
         public void SetSplitPosition(Vector2 pos) {
+            JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
             Config.SplitPosition = pos;
             Configuration.Config.Save();
-
-            JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
             UI?.SetSplitPosition(pos);
         }
 
@@ -129,7 +126,6 @@ namespace JobBars.Gauges {
                 foreach (GaugeVisualType gType in typeOptions) {
                     if (ImGui.Selectable($"{gType}{_ID}", gType == currentType)) {
                         newType = gType;
-                        ImGui.EndCombo();
                         return true;
                     }
                 }
@@ -146,30 +142,12 @@ namespace JobBars.Gauges {
                     if (ImGui.Selectable($"{entry.Key}{_ID}", currentColor.Name == entry.Key)) {
                         newColorString = entry.Key;
                         newColor = entry.Value;
-                        ImGui.EndCombo();
                         return true;
                     }
                 }
                 ImGui.EndCombo();
             }
             return false;
-        }
-
-#nullable enable
-        public static T GetConfigValue<T>(T? configValue, T defaultValue) {
-            return configValue == null ? defaultValue : configValue;
-        }
-#nullable disable
-
-        private static unsafe UIGaugeElement CreateUI(GaugeVisualType type) {
-            var addon = UIHelper.ParameterAddon;
-            return type switch {
-                GaugeVisualType.Arrow => new UIArrow(addon),
-                GaugeVisualType.Bar => new UIGauge(addon),
-                GaugeVisualType.Diamond => new UIDiamond(addon),
-                GaugeVisualType.BarDiamondCombo => new UIGaugeDiamondCombo(addon), // kind of scuffed, but oh well
-                _ => null
-            };
         }
 
         public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {

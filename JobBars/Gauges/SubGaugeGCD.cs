@@ -25,7 +25,7 @@ namespace JobBars.Gauges {
     public class SubGaugeGCD : SubGauge {
         private SubGaugeGCDProps Props;
         private readonly GaugeGCD ParentGauge;
-        private UIGaugeElement UI => ParentGauge.UI;
+        private UIElement UI => ParentGauge.UI;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
@@ -50,7 +50,7 @@ namespace JobBars.Gauges {
         }
 
         public void UseSubGauge() {
-            UI?.SetColor(Props.Color);
+            UI.SetColor(Props.Color);
             if (UI is UIArrow arrows) {
                 arrows.SetMaxValue(Props.MaxCounter);
             }
@@ -84,7 +84,7 @@ namespace JobBars.Gauges {
 
         public void CheckInactive() {
             if (Configuration.Config.GaugeHideGCDInactive) {
-                UI?.SetVisible(State != GaugeState.Inactive);
+                UI.SetVisible(State != GaugeState.Inactive);
             }
         }
 
@@ -132,8 +132,9 @@ namespace JobBars.Gauges {
                 Props.Color = newColor;
                 Config.Color = newColorString;
                 Configuration.Config.Save();
-
-                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) UI?.SetColor(Props.Color);
+                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
+                    UI?.SetColor(Props.Color);
+                }
             }
 
             if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Props.Invert)) {
