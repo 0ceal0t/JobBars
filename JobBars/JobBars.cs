@@ -201,6 +201,7 @@ namespace JobBars {
             GManager = new GaugeManager(PluginInterface, Party);
             BManager = new BuffManager();
             CDManager = new CooldownManager(PluginInterface, Party);
+            UIBuilder.Builder.HideAllBuffs();
 
             Initialized = true;
         }

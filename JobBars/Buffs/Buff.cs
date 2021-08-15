@@ -1,6 +1,5 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -44,30 +43,20 @@ namespace JobBars.Buffs {
             if (Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
         }
 
-        private unsafe void SetupUI() {
-            if (UI != null) return;
-            UI = new UIBuff(UIHelper.ParameterAddon, (int)Props.Icon);
+        public void Setup() {
             UI.SetColor(Props.Color);
-            UIBuilder.Builder.AppendBuff(UI);
         }
 
-        private void TeardownUI() {
-            if (UI == null) return;
-            UIBuilder.Builder.RemoveBuff(UI);
-            UI = null;
-        }
-
-        public void Dispose() {
+        public void Reset() {
             State = BuffState.Inactive;
-            UI = null;
         }
 
         public void ProcessAction(Item action) {
             if ((State == BuffState.Inactive || State == BuffState.OffCD) && Props.Triggers.Contains(action)) {
                 State = BuffState.Active;
                 StateTime = DateTime.Now;
-                SetupUI();
-                UI?.SetOffCD();
+                UI.Show();
+                UI.SetOffCD();
             }
         }
 
@@ -78,22 +67,22 @@ namespace JobBars.Buffs {
                 if (timeleft <= 0) { // buff over, either hide or go on cd
                     if (Props.CD == null) {
                         State = BuffState.Inactive;
-                        TeardownUI();
+                        UI.Hide();
                     }
                     else {
                         State = Props.CD.Value > 30 ? BuffState.OnCD_Hidden : BuffState.OnCD_Visible;
                         StateTime = DateTime.Now;
-                        UI?.SetOnCD();
-                        UI?.SetText(((int)Props.CD.Value).ToString());
-                        UI?.SetPercent(1.0f);
+                        UI.SetOnCD();
+                        UI.SetText(((int)Props.CD.Value).ToString());
+                        UI.SetPercent(1.0f);
                         if (State == BuffState.OnCD_Hidden) {
-                            UI?.Hide();
+                            UI.Hide();
                         }
                     }
                 }
                 else { // buff still active
-                    UI?.SetPercent(1.0f - (float)(timeleft / Props.Duration));
-                    UI?.SetText(((int)timeleft).ToString());
+                    UI.SetPercent(1.0f - (float)(timeleft / Props.Duration));
+                    UI.SetText(((int)timeleft).ToString());
                 }
             }
             else if (State == BuffState.OnCD_Hidden) { // on CD, but don't show it yet since it's more than 30 seconds away
@@ -101,9 +90,9 @@ namespace JobBars.Buffs {
 
                 if (timeleft < 30) {
                     State = BuffState.OnCD_Visible;
-                    UI?.Show();
-                    UI?.SetPercent((float)(timeleft / Props.CD.Value));
-                    UI?.SetText(((int)timeleft).ToString());
+                    UI.Show();
+                    UI.SetPercent((float)(timeleft / Props.CD.Value));
+                    UI.SetText(((int)timeleft).ToString());
                 }
             }
             else if (State == BuffState.OnCD_Visible) { // on CD, now close to being off CD
@@ -111,13 +100,13 @@ namespace JobBars.Buffs {
 
                 if (timeleft <= 0) { // back off CD
                     State = BuffState.OffCD;
-                    UI?.SetOffCD();
-                    UI?.SetText("");
-                    UI?.SetPercent(0);
+                    UI.SetOffCD();
+                    UI.SetText("");
+                    UI.SetPercent(0);
                 }
                 else {
-                    UI?.SetPercent((float)(timeleft / Props.CD.Value));
-                    UI?.SetText(((int)timeleft).ToString());
+                    UI.SetPercent((float)(timeleft / Props.CD.Value));
+                    UI.SetText(((int)timeleft).ToString());
                 }
             }
         }
@@ -127,11 +116,15 @@ namespace JobBars.Buffs {
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name}");
             if (ImGui.Checkbox("Enabled" + _ID, ref Enabled)) {
-                if (Enabled) Configuration.Config.BuffDisabled.Remove(Name);
-                else Configuration.Config.BuffDisabled.Add(Name);
+                if (Enabled) {
+                    Configuration.Config.BuffDisabled.Remove(Name);
+                }
+                else {
+                    UI.Hide();
+                    Reset();
+                    Configuration.Config.BuffDisabled.Add(Name);
+                }
                 Configuration.Config.Save();
-
-                BuffManager.Manager.Reset();
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

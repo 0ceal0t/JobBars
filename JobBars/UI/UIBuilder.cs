@@ -29,7 +29,9 @@ namespace JobBars.UI {
         public List<UIElement> Gauges = new();
 
         private AtkResNode* BuffRoot = null;
-        public List<UIElement> Buffs = new();
+        public List<UIBuff> Buffs = new();
+        private static IconIds[] Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
+        public Dictionary<IconIds, UIBuff> IconToBuff = new();
 
         private static readonly uint NODE_IDX_START = 90000;
         private uint NodeIdx = NODE_IDX_START;
@@ -71,7 +73,6 @@ namespace JobBars.UI {
             Init(addon);
         }
 
-        public void AppendBuff(UIBuff buff) => Append(Buffs, buff, BuffRoot);
         public void AppendGauge(UIGaugeElement element) => Append(Gauges, element, GaugeRoot);
         private void Append(List<UIElement> list, UIElement element, AtkResNode* root) {
             if (element == null) return;
@@ -84,7 +85,6 @@ namespace JobBars.UI {
             UIHelper.ParameterAddon->UldManager.UpdateDrawNodeList();
         }
 
-        public void RemoveBuff(UIBuff buff) => Remove(Buffs, buff, BuffRoot);
         private void Remove(List<UIElement> list, UIElement element, AtkResNode* root) {
             if (element == null) return;
             if (!list.Contains(element)) return;
@@ -105,13 +105,11 @@ namespace JobBars.UI {
             UIHelper.ParameterAddon->UldManager.UpdateDrawNodeList();
         }
 
-        public void ResetBuffs() => Reset(Buffs, BuffRoot);
-        public void ResetGauges() => Reset(Gauges, GaugeRoot);
-        public void Reset(List<UIElement> list, AtkResNode* root) {
-            list.ForEach(x => x.Dispose());
-            list.Clear();
-            root->ChildCount = 0;
-            root->ChildNode = null;
+        public void ResetGauges() {
+            Gauges.ForEach(x => x.Dispose());
+            Gauges.Clear();
+            GaugeRoot->ChildCount = 0;
+            GaugeRoot->ChildNode = null;
             UIHelper.ParameterAddon->UldManager.UpdateDrawNodeList();
         }
 
@@ -155,10 +153,6 @@ namespace JobBars.UI {
             SetPosition(BuffRoot, pos.X, pos.Y);
         }
 
-        public void SetBuffVisible(bool visible) {
-            UIHelper.SetVisibility(BuffRoot, visible);
-        }
-
         private void SetPosition(AtkResNode* node, float X, float Y) {
             var addon = UIHelper.ParameterAddon;
             var p = UIHelper.GetNodePosition(addon->RootNode);
@@ -178,6 +172,18 @@ namespace JobBars.UI {
             var addon = UIHelper.ParameterAddon;
             var p = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetScale(node, X / p.X, Y / p.Y);
+        }
+
+        public void ShowBuffs() {
+            UIHelper.Show(BuffRoot);
+        }
+
+        public void HideBuffs() {
+            UIHelper.Hide(BuffRoot);
+        }
+
+        public void HideAllBuffs() {
+            Buffs.ForEach(x => x.Hide());
         }
     }
 }
