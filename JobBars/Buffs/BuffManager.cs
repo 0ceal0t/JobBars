@@ -16,14 +16,11 @@ namespace JobBars.Buffs {
 
         public BuffManager() {
             Manager = this;
-            if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();
 
             Init();
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
                 foreach (var buff in jobEntry.Value) {
-                    buff.UI = UIBuilder.Builder.IconToBuff[buff.Icon];
-                    buff.Setup();
                     AllBuffs.Add(buff);
                 }
             }
@@ -31,8 +28,9 @@ namespace JobBars.Buffs {
 
         public void SetJob(JobIds job) {
             CurrentJob = job;
-            AllBuffs.ForEach(buff => buff.Reset());
-            UIBuilder.Builder.HideAllBuffs();
+            AllBuffs.ForEach(buff => buff.Dispose());
+            UIBuilder.Builder.ResetBuffs();
+
             UpdatePositionScale();
         }
 
@@ -51,15 +49,16 @@ namespace JobBars.Buffs {
 
         public void Tick(bool inCombat) {
             if (!Configuration.Config.BuffBarEnabled) return;
+
             if (Configuration.Config.BuffHideOutOfCombat) {
-                if (inCombat) UIBuilder.Builder.ShowBuffs();
-                else UIBuilder.Builder.HideBuffs();
+                UIBuilder.Builder.SetBuffVisible(inCombat);
             }
 
             var idx = 0;
             var currentTime = DateTime.Now;
             foreach (var buff in AllBuffs.OrderBy(b => b.State)) {
-                if (!buff.Enabled) { continue; }
+                if (!buff.Enabled) continue;
+
                 buff.Tick(currentTime);
                 if (buff.Visible) {
                     buff.UI.SetPosition(idx);

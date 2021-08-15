@@ -8,7 +8,6 @@ namespace JobBars.UI {
         private void Init(AtkUnitBase* addon) {
             NodeIdx = NODE_IDX_START;
 
-            // ======== CREATE GAUGES =======
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
@@ -16,27 +15,12 @@ namespace JobBars.UI {
             GaugeRoot->Flags_2 = 4;
             GaugeRoot->ParentNode = addon->RootNode;
 
-            // ======= CREATE BUFFS =========
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
             BuffRoot->Flags = 9395;
             BuffRoot->Flags_2 = 4;
             BuffRoot->ParentNode = addon->RootNode;
-
-            UIBuff lastBuff = null;
-            foreach (var icon in Icons) {
-                var newBuff = new UIBuff(addon, (int)icon);
-
-                Buffs.Add(newBuff);
-                IconToBuff[icon] = newBuff;
-
-                if (lastBuff != null) UIHelper.Link(lastBuff.RootRes, newBuff.RootRes);
-                lastBuff = newBuff;
-            }
-
-            BuffRoot->ChildCount = (ushort)(5 * Buffs.Count);
-            BuffRoot->ChildNode = Buffs[0].RootRes;
 
             // ==== INSERT AT THE END ====
             var lastNode = addon->RootNode->ChildNode;

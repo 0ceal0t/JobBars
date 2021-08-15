@@ -18,9 +18,8 @@ namespace JobBars.Buffs {
 
             ImGui.SameLine();
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref Configuration.Config.BuffBarEnabled)) {
+                Reset();
                 Configuration.Config.Save();
-                if (Configuration.Config.BuffBarEnabled) UIBuilder.Builder.ShowBuffs();
-                else UIBuilder.Builder.HideBuffs();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref Configuration.Config.BuffScale)) {
@@ -37,7 +36,7 @@ namespace JobBars.Buffs {
 
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref Configuration.Config.BuffHideOutOfCombat)) {
                 if (!Configuration.Config.BuffHideOutOfCombat && Configuration.Config.BuffBarEnabled) { // since they might be hidden
-                    UIBuilder.Builder.ShowBuffs();
+                    UIBuilder.Builder.SetBuffVisible(true);
                 }
                 Configuration.Config.Save();
             }
