@@ -32,7 +32,6 @@ namespace JobBars.Gauges {
         }
 
         public void SetJob(JobIds job) {
-
             //===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) {
                 gauge.UI?.Cleanup();
@@ -108,9 +107,7 @@ namespace JobBars.Gauges {
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
             var prevEnemy = GetPreviousEnemyTarget();
-            if (prevEnemy != null) {
-                AddBuffs(prevEnemy, ownerId, BuffDict);
-            }
+            if (prevEnemy != null) AddBuffs(prevEnemy, ownerId, BuffDict);
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
                 foreach (var pMember in Party) {

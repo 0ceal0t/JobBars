@@ -50,13 +50,9 @@ namespace JobBars.Gauges {
         protected override void SetupUI() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size, showText: Props.ShowText);
-                foreach (var proc in Props.Procs) {
-                    diamond.SetColor(proc.Color, proc.Idx);
-                }
+                foreach (var proc in Props.Procs) diamond.SetColor(proc.Color, proc.Idx);
             }
-            foreach (var proc in Props.Procs) {
-                SetValue(proc.Idx, false);
-            }
+            foreach (var proc in Props.Procs) SetValue(proc.Idx, false);
 
             ResetProcActive();
         }
@@ -88,13 +84,9 @@ namespace JobBars.Gauges {
             if (UI is UIDiamond diamond) {
                 if (value) {
                     diamond.SelectPart(idx);
-                    if (Props.ShowText) {
-                        diamond.SetText(idx, ((int)Math.Round(duration)).ToString());
-                    }
+                    if (Props.ShowText) diamond.SetText(idx, ((int)Math.Round(duration)).ToString());
                 }
-                else {
-                    diamond.UnselectPart(idx);
-                }
+                else diamond.UnselectPart(idx);
             }
         }
 

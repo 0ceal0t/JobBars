@@ -29,9 +29,6 @@ namespace JobBars.UI {
             UIHelper.SetScale(RootRes, scale, scale);
         }
 
-        public abstract void SetColor(ElementColor color);
-
-        public virtual void Cleanup() { }
         public abstract void Dispose();
     }
 }

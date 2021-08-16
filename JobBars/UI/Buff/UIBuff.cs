@@ -14,7 +14,7 @@ namespace JobBars.UI {
         private AtkImageNode* Border;
 
         private string CurrentText = "";
-        static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
+        private static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
 
         public UIBuff(AtkUnitBase* addon, int icon) : base() {
             RootRes = UIBuilder.Builder.CreateResNode();
@@ -145,7 +145,7 @@ namespace JobBars.UI {
             UIHelper.SetPosition(Overlay, 0, yOffset);
         }
 
-        public override void SetColor(ElementColor color) {
+        public void SetColor(ElementColor color) {
             var newColor = color;
             newColor.AddBlue -= 50;
             UIColor.SetColor(Border, newColor);

@@ -14,5 +14,8 @@ namespace JobBars.UI {
         public abstract int GetHeight(int param);
         public abstract int GetWidth(int param);
         public abstract int GetHorizontalYOffset();
+        public abstract void SetColor(ElementColor color);
+
+        public virtual void Cleanup() { }
     }
 }

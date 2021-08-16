@@ -5,6 +5,7 @@ using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
@@ -96,5 +97,6 @@ namespace JobBars.Helper {
         }
 
         public static AtkUnitBase* ParameterAddon => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+        public static AddonPartyList* PartyListAddon => (AddonPartyList*)PluginInterface?.Framework.Gui.GetUiObjectByName("_PartyList", 1);
     }
 }

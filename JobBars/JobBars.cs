@@ -228,7 +228,7 @@ namespace JobBars {
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
             GManager.Tick(inCombat);
             BManager.Tick(inCombat);
-            CDManager.Tick();
+            //CDManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

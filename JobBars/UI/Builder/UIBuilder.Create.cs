@@ -1,6 +1,5 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
-using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
