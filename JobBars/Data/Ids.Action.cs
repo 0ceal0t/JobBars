@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace JobBars.Data {
     public enum ActionIds : uint {
+        // DRK =========
+        Rampart = 7531, // All tanks
+        Reprisal = 7535, // All tanks
+        ShadowWall = 3636,
+        DarkMissionary = 16471,
+        DarkMind = 3634,
         Delirium = 7390,
         LivingShadow = 0x4058,
         BloodSpiller = 0x1CE0,
         Quietus = 0x1CDF,
-        // WAR
+        // WAR ==========
         InnerRelease = 7389,
         FellCleave = 0xDDD,
         Decimate = 0xDDE,
-        // PLD
+        // PLD ===========
         Requiescat = 7383,
         FastBlade = 0x09,
         RiotBlade = 0x0F,
@@ -26,43 +32,51 @@ namespace JobBars.Data {
         HolySpirit = 0x1CD8,
         HolyCircle = 0x404A,
         Confiteor = 0x404B,
-        // GNB
+        // GNB ===========
         NoMercy = 16138,
-        // SCH
+        // SCH ===========
         Biolysis = 16540,
         SchBio = 17864,
         SchBio2 = 17865,
         ChainStratagem = 7436,
-        // WHM
+        // WHM ===========
         Dia = 16532,
         Aero = 121,
         Aero2 = 132,
-        // AST
+        // AST ===========
         Combust1 = 3599,
         Combust2 = 3608,
         Combust3 = 16554,
         Divination = 16552,
-        // MNK
+        TheBalance = 4401,
+        TheArrow = 4402,
+        TheSpear = 4403,
+        TheBole = 4404,
+        TheEwer = 4405,
+        TheSpire = 4406,
+        LordOfCrowns = 7444,
+        LadyOfCrowns = 7445,
+        // MNK ===========
+        TrueNorth = 7546, // All melee
         Brotherhood = 7396,
         PerfectBalance = 69,
         RiddleOfFire = 7395,
-        TrueNorth = 7546,
         RiddleOfEarth = 7394,
         TwinSnakes = 61,
         Demolish = 66,
-        // DRG
+        // DRG ===========
         DragonSight = 7398,
         BattleLitany = 3557,
         LanceCharge = 85,
-        // NIN
+        // NIN ===========
         TrickAttack = 2258,
         Bunshin = 16493,
-        // SAM
+        // SAM ===========
         DoubleMidare = 0x4066,
         Higanbana = 7489,
         Jinpu = 7478,
         Shifu = 7479,
-        // BRD
+        // BRD ===========
         CausticBite = 0x1CEE,
         Stormbite = 0x1CEF,
         VenomousBite = 0x64,
@@ -72,7 +86,7 @@ namespace JobBars.Data {
         IronJaws = 3560,
         Barrage = 107,
         BloodLetter = 110,
-        // MCH
+        // MCH ===========
         Wildfire = 2878,
         Hypercharge = 0x4339,
         HeatBlast = 0x1CF2,
@@ -80,15 +94,15 @@ namespace JobBars.Data {
         GaussRound = 2874,
         Ricochet = 2890,
         Reassemble = 2876,
-        // DNC
+        // DNC ===========
         QuadTechFinish = 16196,
         Devilment = 16011,
-        // BLM
+        // BLM ===========
         Thunder = 144,
         Thunder2 = 7447,
         Thunder3 = 153,
         Thunder4 = 7420,
-        // SMN
+        // SMN ===========
         ArcBio = 164,
         ArcBio2 = 178,
         Bio3 = 7424,
@@ -100,10 +114,10 @@ namespace JobBars.Data {
         ScarletFlame = 0x4087,
         Devotion = 7423,
         TriDisaster = 3580,
-        // RDM
+        // RDM ===========
         Embolden = 7520,
         Manafication = 7521,
-        // BLU
+        // BLU ===========
         SongOfTorment = 11386,
         PeculiarLight = 11421,
         OffGuard = 11411,

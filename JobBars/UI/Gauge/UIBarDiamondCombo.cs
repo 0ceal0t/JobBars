@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
-    public unsafe class UIGaugeDiamondCombo : UIGaugeElement {
-        private readonly UIGauge Gauge;
+    public unsafe class UIBarDiamondCombo : UIGaugeElement {
+        private readonly UIBar Gauge;
         private readonly UIDiamond Diamond;
 
-        public UIGaugeDiamondCombo(UIGauge gauge, UIDiamond diamond) {
+        public UIBarDiamondCombo(UIBar gauge, UIDiamond diamond) {
             Gauge = gauge;
             Diamond = diamond;
             RootRes = gauge.RootRes;

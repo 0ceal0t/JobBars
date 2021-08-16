@@ -12,8 +12,7 @@ using JobBars.UI;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
-using JobBars.Cooldown;
-using JobBars.PartyList;
+using JobBars.Cooldowns;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
 
@@ -27,7 +26,6 @@ namespace JobBars {
         private BuffManager BManager;
         private CooldownManager CDManager;
         private Configuration Config;
-        private readonly HashSet<uint> GCDs = new();
 
         private JobIds CurrentJob = JobIds.OTHER;
 
@@ -37,7 +35,7 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
-        private PList Party; // TEMP
+        private PartyList.PartyList Party; // TEMP
         private int LastPartyCount = 0;
 
         private bool PlayerExists => PluginInterface.ClientState?.LocalPlayer != null;
@@ -53,15 +51,8 @@ namespace JobBars {
          * 
          *  FFXIVClientInterface/ClientInterface.cs
          *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
-         *  FFXIVClientInterface/Client/Game/ActionManager.cs
-         *      BaseAddress (E8 ?? ?? ?? ?? 33 C0 E9 ?? ?? ?? ?? 8B 7D 0C)
-         *      GetRecastGroup (E8 ?? ?? ?? ?? 8B D0 48 8B CD 8B F0) 
-         *      GetGroupTimer (E8 ?? ?? ?? ?? 0F 57 FF 48 85 C0)
-         *      GetAdjustedActionId (E8 ?? ?? ?? ?? 8B F8 3B DF) 
          *      
          *  Helper/UiHelper.GameFunctions.cs
-         *      _gameAlloc (E8 ?? ?? ?? ?? 45 8D 67 23)
-         *      _getGameAllocator (E8 ?? ?? ?? ?? 8B 75 08)
          *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
          *      
          *  JobBars.cs
@@ -90,14 +81,15 @@ namespace JobBars {
             if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
 
             UIIconManager.Initialize(pluginInterface);
+            DataManager.Initialize(pluginInterface);
+
             UIHelper.Setup(pluginInterface);
             UIColor.SetupColors();
 
-            Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
+            Party = new PartyList.PartyList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
 
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Config.Initialize(PluginInterface);
-            SetupActions();
 
             IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
@@ -132,30 +124,19 @@ namespace JobBars {
             PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
             PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
 
+            GaugeManager.Dispose();
+            BuffManager.Dispose();
             GManager = null;
             BManager = null;
-            CDManager = null; // TODO: dispose
+            CDManager = null;
 
-            Animation.Cleanup();
+            Animation.Dispose();
             UIIconManager.Dispose();
             UIBuilder.Dispose();
             UIHelper.Dispose();
+            DataManager.Dispose();
 
             RemoveCommands();
-        }
-
-        private void SetupActions() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
-                x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
-            );
-            foreach (var item in sheet) {
-                var name = item.Name.ToString();
-                var attackType = item.ActionCategory.Value.Name.ToString();
-                var actionId = item.ActionCategory.Value.RowId;
-                if (actionId == 2 || actionId == 3) { // spell or weaponskill
-                    GCDs.Add(item.RowId);
-                }
-            }
         }
 
         private void Animate() {
@@ -186,7 +167,7 @@ namespace JobBars {
         private void Logout() {
             PluginLog.Log("==== LOGOUT ===");
             UIIconManager.Manager.Reset();
-            Animation.Cleanup();
+            Animation.Dispose();
 
             Initialized = false;
             CurrentJob = JobIds.OTHER;
@@ -196,10 +177,14 @@ namespace JobBars {
             PluginLog.Log("==== INIT ====");
             UIIconManager.Manager.Reset();
 
+            BManager = new BuffManager();
+            CDManager = new CooldownManager(PluginInterface);
             UIBuilder.Initialize(PluginInterface);
             GManager = new GaugeManager(PluginInterface, Party);
-            BManager = new BuffManager();
-            CDManager = new CooldownManager(PluginInterface, Party);
+            BManager.GetIconsUI();
+
+            if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
+            if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();
             UIBuilder.Builder.HideAllBuffs();
             UIBuilder.Builder.HideAllGauges();
 
@@ -207,9 +192,8 @@ namespace JobBars {
         }
 
         private void CheckForPartyChange() {
-            if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
-                BManager.SetJob(CurrentJob);
-            }
+            // someone left the party. this means that some buffs might not make sense anymore, so reset it
+            if (Party.Count < LastPartyCount) BManager.Reset();
             LastPartyCount = Party.Count;
         }
 
@@ -220,7 +204,8 @@ namespace JobBars {
             if (job != CurrentJob) {
                 CurrentJob = job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                Reset();
+                BManager.Reset();
+                GManager.SetJob(CurrentJob);
             }
         }
 
@@ -228,7 +213,7 @@ namespace JobBars {
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
             GManager.Tick(inCombat);
             BManager.Tick(inCombat);
-            //CDManager.Tick();
+            CDManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {
@@ -244,8 +229,8 @@ namespace JobBars {
         }
 
         private void Reset() {
-            GManager?.SetJob(CurrentJob);
-            BManager?.SetJob(CurrentJob);
+            GManager?.Reset();
+            BManager?.Reset();
         }
 
         // ======= COMMANDS ============

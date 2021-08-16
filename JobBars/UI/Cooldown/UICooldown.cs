@@ -1,4 +1,5 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,28 @@ namespace JobBars.UI {
             RootRes->ChildNode = (AtkResNode*)Icon;
 
             UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)TextNode);
-            TextNode->SetText("12");
+            TextNode->SetText("");
+        }
+
+        public void SetText(string text) {
+            TextNode->SetText(text);
+        }
+
+        public void SetOnCD() {
+            RootRes->MultiplyBlue = 75;
+            RootRes->MultiplyRed = 75;
+            RootRes->MultiplyGreen = 75;
+        }
+
+        public void SetOffCD() {
+            RootRes->MultiplyBlue = 100;
+            RootRes->MultiplyRed = 100;
+            RootRes->MultiplyGreen = 100;
+        }
+
+        public void LoadIcon(ActionIds action) {
+            var icon = DataManager.GetIcon(action);
+            Icon->LoadIconTexture(icon, 0);
         }
 
         public override void Dispose() {
@@ -72,9 +94,9 @@ namespace JobBars.UI {
     }
     
     public unsafe class UICooldown : UIElement {
-        public static readonly int MAX_ITEMS = 4;
+        public static readonly int MAX_ITEMS = 5;
 
-        private List<UICooldownItem> Items = new();
+        public List<UICooldownItem> Items = new();
 
         public UICooldown() {
             RootRes = UIBuilder.Builder.CreateResNode();
@@ -97,6 +119,14 @@ namespace JobBars.UI {
             RootRes->ChildCount = (ushort)(MAX_ITEMS * (1 + Items[0].RootRes->ChildCount));
             RootRes->ChildNode = Items[0].RootRes;
         }
+
+        public void HideAllItems() {
+            foreach (var item in Items) item.Hide();
+        }
+
+        public void SetVisibility(int idx, bool visible) => Items[idx].SetVisible(visible);
+
+        public void LoadIcon(int idx, ActionIds action) => Items[idx].LoadIcon(action);
 
         public override void Dispose() {
             for (int idx = 0; idx < MAX_ITEMS; idx++) {

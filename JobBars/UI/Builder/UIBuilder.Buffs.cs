@@ -4,13 +4,13 @@ using JobBars.Helper;
 using System.Collections.Generic;
 using System;
 using System.Numerics;
+using JobBars.Buffs;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         private AtkResNode* BuffRoot = null;
         public List<UIBuff> Buffs = new();
-        private static IconIds[] Icons => (IconIds[])Enum.GetValues(typeof(IconIds));
-        public Dictionary<IconIds, UIBuff> IconToBuff = new();
+        public Dictionary<ActionIds, UIBuff> IconToBuff = new();
 
         private void InitBuffs(AtkUnitBase* addon) {
             BuffRoot = CreateResNode();
@@ -20,8 +20,8 @@ namespace JobBars.UI {
             BuffRoot->ParentNode = addon->RootNode;
 
             UIBuff lastBuff = null;
-            foreach (var icon in Icons) {
-                var newBuff = new UIBuff(addon, (int)icon);
+            foreach (var icon in BuffManager.Manager.Icons) {
+                var newBuff = new UIBuff(addon, DataManager.GetIcon(icon));
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;

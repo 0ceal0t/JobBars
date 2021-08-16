@@ -47,7 +47,7 @@ namespace JobBars.Gauges {
             ResetProcActive();
         }
 
-        protected override void SetupUI() {
+        protected override void LoadUI_Impl() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size, showText: Props.ShowText);
                 foreach (var proc in Props.Procs) diamond.SetColor(proc.Color, proc.Idx);
@@ -55,6 +55,10 @@ namespace JobBars.Gauges {
             foreach (var proc in Props.Procs) SetValue(proc.Idx, false);
 
             ResetProcActive();
+        }
+
+        protected override void RefreshUI_Impl() {
+            
         }
 
         private void ResetProcActive() {
@@ -93,9 +97,7 @@ namespace JobBars.Gauges {
         public override void ProcessAction(Item action) { }
 
         protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-
         protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(Size);
-
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {

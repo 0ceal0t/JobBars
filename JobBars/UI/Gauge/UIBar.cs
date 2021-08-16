@@ -6,7 +6,7 @@ using System;
 using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
-    public unsafe class UIGauge : UIGaugeElement {
+    public unsafe class UIBar : UIGaugeElement {
         private AtkResNode* GaugeContainer;
         private AtkImageNode* Background;
         private AtkResNode* BarContainer;
@@ -20,7 +20,7 @@ namespace JobBars.UI {
         private float LastPercent = 1;
         private Animation Anim = null;
 
-        public UIGauge(AtkUnitBase* addon) {
+        public UIBar(AtkUnitBase* addon) {
 
             // ======= CONTAINERS =========
             RootRes = UIBuilder.Builder.CreateResNode();

@@ -12,31 +12,30 @@ using System.Runtime.InteropServices;
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         public static GaugeManager Manager { get; private set; }
-        private readonly DalamudPluginInterface PluginInterface;
-        private readonly PList Party;
+        public static void Dispose() { Manager = null; }
 
-        public Dictionary<JobIds, Gauge[]> JobToGauges;
         public JobIds CurrentJob = JobIds.OTHER;
-        public Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
-        public IntPtr TargetAddress;
+        private readonly DalamudPluginInterface PluginInterface;
+        private readonly PartyList.PartyList Party;
 
-        public GaugeManager(DalamudPluginInterface pluginInterface, PList party) {
+        private Dictionary<JobIds, Gauge[]> JobToGauges;
+        private Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
+
+        private readonly IntPtr TargetAddress;
+
+        public GaugeManager(DalamudPluginInterface pluginInterface, PartyList.PartyList party) {
             Manager = this;
             PluginInterface = pluginInterface;
             Party = party;
             TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
 
-            if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
             Init();
         }
 
         public void SetJob(JobIds job) {
             //===== CLEANUP OLD =======
-            foreach (var gauge in CurrentGauges) {
-                gauge.UI?.Cleanup();
-                gauge.UI = null;
-            }
+            foreach (var gauge in CurrentGauges) gauge.UnloadUI();
             UIBuilder.Builder.HideAllGauges();
             UIIconManager.Manager.Reset();
 
@@ -44,8 +43,7 @@ namespace JobBars.Gauges {
             CurrentJob = job;
             int idx = 0;
             foreach (var gauge in CurrentGauges) {
-                gauge.UI = GetUI(idx, gauge.GetVisualType());
-                gauge.Setup();
+                gauge.LoadUI(GetUI(idx, gauge.GetVisualType()));
                 idx++;
             }
             UpdatePositionScale();
@@ -86,7 +84,9 @@ namespace JobBars.Gauges {
 
         public void PerformAction(Item action) {
             if (!Configuration.Config.GaugesEnabled) return;
-            foreach (var gauge in CurrentGauges.Where(x => x.DoProcessInput())) {
+
+            foreach (var gauge in CurrentGauges) {
+                if (!gauge.DoProcessInput()) continue;
                 gauge.ProcessAction(action);
             }
         }
@@ -135,7 +135,7 @@ namespace JobBars.Gauges {
                 GaugeVisualType.Arrow => UIBuilder.Builder.Arrows[idx],
                 GaugeVisualType.Bar => UIBuilder.Builder.Gauges[idx],
                 GaugeVisualType.Diamond => UIBuilder.Builder.Diamonds[idx],
-                GaugeVisualType.BarDiamondCombo => new UIGaugeDiamondCombo(
+                GaugeVisualType.BarDiamondCombo => new UIBarDiamondCombo(
                     UIBuilder.Builder.Gauges[idx],
                     UIBuilder.Builder.Diamonds[idx]
                 ), // kind of scuffed, but oh well

@@ -21,7 +21,7 @@ namespace JobBars.Buffs {
         public float? CD;
         public Item[] Triggers;
         public ElementColor Color;
-        public IconIds Icon;
+        public ActionIds Icon;
     }
 
     public class Buff {
@@ -32,7 +32,7 @@ namespace JobBars.Buffs {
         private BuffProps Props;
         private DateTime StateTime;
 
-        public IconIds Icon => Props.Icon;
+        public ActionIds Icon => Props.Icon;
         public BuffState State = BuffState.Inactive;
         public bool Visible => (State == BuffState.Active || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
 
@@ -43,7 +43,8 @@ namespace JobBars.Buffs {
             if (Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
         }
 
-        public void Setup() {
+        public void LoadUI(UIBuff ui) {
+            UI = ui;
             UI.SetColor(Props.Color);
         }
 

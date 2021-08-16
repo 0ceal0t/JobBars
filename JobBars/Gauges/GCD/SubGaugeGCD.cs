@@ -57,10 +57,11 @@ namespace JobBars.Gauges {
             else if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Props.MaxCounter);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetTextColor(NoColor);
             }
             SetValue(Counter);
+            CheckInactive();
         }
 
         public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
@@ -82,10 +83,8 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void CheckInactive() {
-            if (Configuration.Config.GaugeHideGCDInactive) {
-                UI.SetVisible(State != GaugeState.Inactive);
-            }
+        private void CheckInactive() {
+            if (Configuration.Config.GaugeHideGCDInactive) UI.SetVisible(State != GaugeState.Inactive);
         }
 
         public void ProcessAction(Item action) {
@@ -119,7 +118,7 @@ namespace JobBars.Gauges {
             else if (UI is UIDiamond diamond) {
                 diamond.SetValue(value);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetText(value.ToString());
                 gauge.SetPercent(((float)value) / Props.MaxCounter);
             }
@@ -133,7 +132,7 @@ namespace JobBars.Gauges {
                 Config.Color = newColorString;
                 Configuration.Config.Save();
 
-                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) UI?.SetColor(Props.Color);
+                ParentGauge.RefreshUI();
             }
 
             if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Props.Invert)) {

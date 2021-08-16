@@ -30,7 +30,7 @@ namespace JobBars.Gauges {
             Props.Color = Config.GetColor(Props.Color);
         }
 
-        protected override void SetupUI() {
+        protected override void LoadUI_Impl() {
             UI.SetColor(Props.Color);
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Props.MaxStacks);
@@ -38,12 +38,16 @@ namespace JobBars.Gauges {
             else if (UI is UIArrow arrow) {
                 arrow.SetMaxValue(Props.MaxStacks);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetTextColor(NoColor);
             }
 
             GaugeFull = true;
             SetValue(0);
+        }
+
+        protected override void RefreshUI_Impl() {
+            UI.SetColor(Props.Color);
         }
 
         private void SetValue(int value) {
@@ -53,7 +57,7 @@ namespace JobBars.Gauges {
             else if (UI is UIDiamond diamond) {
                 diamond.SetValue(value);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetText(value.ToString());
                 gauge.SetPercent(((float)value) / Props.MaxStacks);
             }
@@ -74,9 +78,7 @@ namespace JobBars.Gauges {
         public override void ProcessAction(Item action) { }
 
         protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-
         protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(Props.MaxStacks);
-
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
@@ -84,9 +86,8 @@ namespace JobBars.Gauges {
                 Props.Color = newColor;
                 Config.Color = newColorString;
                 Configuration.Config.Save();
-                if (job == GaugeManager.Manager.CurrentJob) {
-                    UI?.SetColor(Props.Color);
-                }
+
+                RefreshUI();
             }
 
             if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {

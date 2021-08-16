@@ -29,9 +29,13 @@ namespace JobBars.Gauges {
             IconEnabled = false;
         }
 
-        protected override void SetupUI() {
+        protected override void LoadUI_Impl() {
             foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
+            ActiveSubGauge.UseSubGauge();
+        }
+
+        protected override void RefreshUI_Impl() {
             ActiveSubGauge.UseSubGauge();
         }
 
@@ -50,9 +54,7 @@ namespace JobBars.Gauges {
         public override bool DoProcessInput() => Enabled || IconEnabled;
 
         protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-
         protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(0);
-
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Bar;
 
         protected override void DrawGauge(string _ID, JobIds job) {

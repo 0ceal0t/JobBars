@@ -32,7 +32,7 @@ namespace JobBars.Data {
             Anims.RemoveAll(x => (currentTime - x.Start).TotalSeconds >= x.Duration || x.Remove);
         }
 
-        public static void Cleanup() {
+        public static void Dispose() {
             Anims = new();
         }
 

@@ -52,7 +52,7 @@ namespace JobBars.Gauges {
 
         public void UseSubGauge() {
             UI.SetColor(Props.Color);
-            if (UI is UIGauge gauge) {
+            if (UI is UIBar gauge) {
                 gauge.SetTextColor(InDanger ? Red : NoColor);
             }
             SetValue(TimeLeft);
@@ -92,7 +92,7 @@ namespace JobBars.Gauges {
                         UIHelper.PlaySe(Configuration.Config.SeNumber + 36, 0, 0);
                     }
                 }
-                if (UI is UIGauge gauge) {
+                if (UI is UIBar gauge) {
                     gauge.SetTextColor(inDanger ? Red : NoColor);
                 }
 
@@ -119,7 +119,7 @@ namespace JobBars.Gauges {
         }
 
         private void SetValue(float value) {
-            if (UI is UIGauge gauge) {
+            if (UI is UIBar gauge) {
                 gauge.SetText(((int)Math.Round(value)).ToString());
                 gauge.SetPercent((float)value / Props.MaxDuration);
             }
@@ -132,15 +132,15 @@ namespace JobBars.Gauges {
                 Props.Color = newColor;
                 Config.Color = newColorString;
                 Configuration.Config.Save();
-                if (ParentGauge.ActiveSubGauge == this && GaugeManager.Manager.CurrentJob == job) {
-                    UI?.SetColor(Props.Color);
-                }
+
+                ParentGauge.RefreshUI();
             }
 
             if (Props.Icons != null) {
                 var iconTitle = "Icon Replacement" + (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
                 if (ImGui.Checkbox(iconTitle + _ID + Props.SubName, ref Config.IconEnabled)) {
                     Configuration.Config.Save();
+
                     if(GaugeManager.Manager.CurrentJob == job && Configuration.Config.GaugeIconReplacement) {
                         if (Config.IconEnabled) UIIconManager.Manager.Setup(Icons);
                         else UIIconManager.Manager.Remove(Icons);

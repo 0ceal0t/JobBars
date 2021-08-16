@@ -7,8 +7,8 @@ using Dalamud.Logging;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
+        public List<UICooldown> Cooldowns = new();
         private AtkResNode* CooldownRoot = null;
-        private List<UICooldown> Cooldowns = new();
 
         private void InitCooldowns() {
             var addon = UIHelper.PartyListAddon;
@@ -21,11 +21,12 @@ namespace JobBars.UI {
             UIHelper.SetPosition(CooldownRoot, -40, 40);
 
             UICooldown lastCooldown = null;
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 8; i++) {
                 var newItem = new UICooldown();
 
                 Cooldowns.Add(newItem);
                 newItem.RootRes->ParentNode = CooldownRoot;
+                UIHelper.SetPosition(newItem.RootRes, 0, 40 * i);
 
                 if (lastCooldown != null) UIHelper.Link(lastCooldown.RootRes, newItem.RootRes);
                 lastCooldown = newItem;
@@ -48,6 +49,16 @@ namespace JobBars.UI {
             var addon = UIHelper.PartyListAddon;
             addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = null;
             addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
+        }
+
+        public void SetCooldownRowVisible(int idx, bool Visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, Visible);
+
+        public void ShowCooldowns() {
+            UIHelper.Show(CooldownRoot);
+        }
+
+        public void HideCooldowns() {
+            UIHelper.Hide(CooldownRoot);
         }
     }
 }

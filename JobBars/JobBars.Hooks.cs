@@ -4,6 +4,7 @@ using JobBars.GameStructs;
 using JobBars.Data;
 using Dalamud.Logging;
 using Dalamud.Game.ClientState.Objects.Types;
+using System.Linq;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -28,7 +29,7 @@ namespace JobBars {
 
             var actionItem = new Item {
                 Id = id,
-                Type = (GCDs.Contains(id) ? ItemType.GCD : ItemType.OGCD)
+                Type = (DataManager.IsGCD(id) ? ItemType.GCD : ItemType.OGCD)
             };
 
             if (!isParty) { // don't let party members affect our gauge
@@ -36,6 +37,9 @@ namespace JobBars {
             }
             if (isSelf || Configuration.Config.BuffIncludeParty) {
                 BManager?.PerformAction(actionItem);
+            }
+            if(!isPet) {
+                CDManager?.PerformAction(actionItem, (uint) sourceId);
             }
 
             byte targetCount = *(byte*)(effectHeader + 0x21);

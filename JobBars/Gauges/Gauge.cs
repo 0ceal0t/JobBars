@@ -35,12 +35,30 @@ namespace JobBars.Gauges {
             Config = Configuration.Config.GetGaugeConfig(name);
         }
 
-        public void Setup() {
+        public void LoadUI(UIGaugeElement ui) {
+            UI = ui;
             UI.SetVisible(Config.Enabled);
             UI.SetScale(Config.Scale);
-            SetupUI();
+            LoadUI_Impl();
         }
-        protected abstract void SetupUI();
+        protected abstract void LoadUI_Impl();
+
+        public void RefreshUI() {
+            if (UI == null) return;
+
+            UI.SetVisible(Enabled);
+            UI.SetScale(Config.Scale);
+
+            if(Configuration.Config.GaugeSplit) UI.SetSplitPosition(Config.SplitPosition);
+
+            RefreshUI_Impl();
+        }
+        protected abstract void RefreshUI_Impl();
+
+        public void UnloadUI() {
+            UI.Cleanup();
+            UI = null;
+        }
 
         public virtual bool DoProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
@@ -69,11 +87,7 @@ namespace JobBars.Gauges {
             if (ImGui.Checkbox("Enabled" + _ID, ref Config.Enabled)) {
                 Configuration.Config.Save();
 
-                if (job == GaugeManager.Manager.CurrentJob) {
-                    if (Enabled) UI?.Show();
-                    else UI?.Hide();
-                }
-
+                RefreshUI();
                 GaugeManager.Manager.UpdatePositionScale(job);
             }
 
@@ -88,7 +102,7 @@ namespace JobBars.Gauges {
                 Config.Scale = Math.Max(Config.Scale, 0.1f);
                 Configuration.Config.Save();
 
-                UI?.SetScale(Config.Scale);
+                RefreshUI();
                 GaugeManager.Manager.UpdatePositionScale(job);
             }
 
@@ -112,8 +126,10 @@ namespace JobBars.Gauges {
             Configuration.Config.Save();
 
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
-            UI?.SetSplitPosition(pos);
+            RefreshUI();
         }
+
+        // =============================
 
         public static bool DrawTypeOptions(string _ID, GaugeVisualType[] typeOptions, GaugeVisualType currentType, out GaugeVisualType newType) {
             newType = GaugeVisualType.Bar;

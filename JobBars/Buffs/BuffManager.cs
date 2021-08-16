@@ -7,37 +7,33 @@ using System.Linq;
 namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
         public static BuffManager Manager { get; private set; }
+        public static void Dispose() { Manager = null; }
 
-        public Dictionary<JobIds, Buff[]> JobToBuffs;
-        public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
+        public List<ActionIds> Icons => AllBuffs.Select(x => x.Icon).ToList();
 
+        private Dictionary<JobIds, Buff[]> JobToBuffs;
         private readonly List<Buff> AllBuffs;
-        public JobIds CurrentJob = JobIds.OTHER;
 
         public BuffManager() {
             Manager = this;
-            if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();
 
             Init();
             AllBuffs = new List<Buff>();
             foreach (var jobEntry in JobToBuffs) {
-                foreach (var buff in jobEntry.Value) {
-                    buff.UI = UIBuilder.Builder.IconToBuff[buff.Icon];
-                    buff.Setup();
-                    AllBuffs.Add(buff);
-                }
+                foreach (var buff in jobEntry.Value) AllBuffs.Add(buff);
             }
         }
 
-        public void SetJob(JobIds job) {
-            CurrentJob = job;
-            AllBuffs.ForEach(buff => buff.Reset());
-            UIBuilder.Builder.HideAllBuffs();
-            UpdatePositionScale();
+        public void GetIconsUI() {
+            foreach(var buff in AllBuffs) {
+                buff.LoadUI(UIBuilder.Builder.IconToBuff[buff.Icon]);
+            }
         }
 
         public void Reset() {
-            SetJob(CurrentJob);
+            AllBuffs.ForEach(buff => buff.Reset());
+            UIBuilder.Builder.HideAllBuffs();
+            UpdatePositionScale();
         }
 
         public void PerformAction(Item action) {
@@ -51,6 +47,7 @@ namespace JobBars.Buffs {
 
         public void Tick(bool inCombat) {
             if (!Configuration.Config.BuffBarEnabled) return;
+
             if (Configuration.Config.BuffHideOutOfCombat) {
                 if (inCombat) UIBuilder.Builder.ShowBuffs();
                 else UIBuilder.Builder.HideBuffs();

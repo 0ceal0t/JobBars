@@ -7,7 +7,7 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public AtkResNode* GaugeRoot = null;
         private static readonly int MAX_GAUGES = 4;
-        public List<UIGauge> Gauges = new();
+        public List<UIBar> Gauges = new();
         public List<UIArrow> Arrows = new();
         public List<UIDiamond> Diamonds = new();
 
@@ -19,7 +19,7 @@ namespace JobBars.UI {
 
             UIDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
-                var newGauge = new UIGauge(addon);
+                var newGauge = new UIBar(addon);
                 var newArrow = new UIArrow(addon);
                 var newDiamond = new UIDiamond(addon);
 

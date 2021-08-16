@@ -47,10 +47,10 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void SetupUI() {
-            if (UI is UIGaugeDiamondCombo combo) {
-                combo.SetGaugeColor(Props.BarColor);
+        protected override void LoadUI_Impl() {
+            if (UI is UIBarDiamondCombo combo) {
                 SetupDiamondColors();
+                combo.SetGaugeColor(Props.BarColor);
                 combo.SetTextColor(NoColor);
                 combo.SetMaxValue(TotalDiamonds);
             }
@@ -58,7 +58,7 @@ namespace JobBars.Gauges {
                 SetupDiamondColors();
                 diamond.SetMaxValue(TotalDiamonds);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetColor(Props.BarColor);
                 gauge.SetTextColor(NoColor);
             }
@@ -68,11 +68,17 @@ namespace JobBars.Gauges {
             SetDiamondValue(0, 0, TotalDiamonds);
         }
 
+        protected override void RefreshUI_Impl() {
+            UI.SetColor(Props.BarColor);
+            RefreshSameColor();
+            SetupDiamondColors();
+        }
+
         private void SetupDiamondColors() {
             int diamondIdx = 0;
             foreach (var part in Props.Parts) {
                 if (part.Diamond) {
-                    if (UI is UIGaugeDiamondCombo combo) {
+                    if (UI is UIBarDiamondCombo combo) {
                         combo.SetDiamondColor(part.Color, diamondIdx, part.MaxCharges);
                     }
                     else if (UI is UIDiamond diamond) {
@@ -134,7 +140,7 @@ namespace JobBars.Gauges {
         public override void ProcessAction(Item action) { }
 
         private void SetDiamondValue(int value, int start, int max) {
-            if (UI is UIGaugeDiamondCombo combo) {
+            if (UI is UIBarDiamondCombo combo) {
                 combo.SetDiamondValue(value, start, max);
             }
             else if (UI is UIDiamond diamond) {
@@ -143,33 +149,27 @@ namespace JobBars.Gauges {
         }
 
         private void SetGaugeValue(float value, int textValue) {
-            if (UI is UIGaugeDiamondCombo combo) {
+            if (UI is UIBarDiamondCombo combo) {
                 combo.SetText(textValue.ToString());
                 combo.SetPercent(value);
             }
-            else if (UI is UIGauge gauge) {
+            else if (UI is UIBar gauge) {
                 gauge.SetText(textValue.ToString());
                 gauge.SetPercent(value);
             }
         }
 
         protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-
         protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(0);
-
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
             if (DrawColorOptions(_ID, Props.BarColor, out string newColorString, out var newColor)) {
                 Props.BarColor = newColor;
-                if (job == GaugeManager.Manager.CurrentJob) {
-                    Props.BarColor = newColor;
-                    Config.Color = newColorString;
-                    Configuration.Config.Save();
-                    UI?.SetColor(Props.BarColor);
-                    RefreshSameColor();
-                    SetupDiamondColors();
-                }
+                Config.Color = newColorString;
+                Configuration.Config.Save();
+
+                RefreshUI();
             }
 
             if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {

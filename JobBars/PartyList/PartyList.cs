@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace JobBars.PartyList {
-    public class PList : IReadOnlyCollection<PartyMember> {
+    public class PartyList : IReadOnlyCollection<PartyMember> {
         private readonly DalamudPluginInterface PluginInterface;
 
         private readonly GetPartyMemberCountDelegate getCrossPartyMemberCount;
@@ -22,7 +22,7 @@ namespace JobBars.PartyList {
         public IntPtr CompanionManagerPtr { get; private set; }
 
 
-        public PList(DalamudPluginInterface pi, SigScanner sig) {
+        public PartyList(DalamudPluginInterface pi, SigScanner sig) {
             PluginInterface = pi;
 
             GroupManager = sig.GetStaticAddressFromSig("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? ?? 76 50");
