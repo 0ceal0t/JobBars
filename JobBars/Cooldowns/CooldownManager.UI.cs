@@ -5,6 +5,9 @@ using JobBars.Data;
 using JobBars.UI;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace JobBars.Cooldowns {
     public unsafe partial class CooldownManager {
@@ -17,6 +20,8 @@ namespace JobBars.Cooldowns {
                 Configuration.Config.Save();
                 if (Configuration.Config.CooldownsEnabled) UIBuilder.Builder.ShowCooldowns();
                 else UIBuilder.Builder.HideCooldowns();
+
+                ResetUI();
             }
 
             var size = ImGui.GetContentRegionAvail();
@@ -40,12 +45,26 @@ namespace JobBars.Cooldowns {
             else {
                 ImGui.BeginChild(_ID + "Selected");
                 foreach (var cooldown in JobToCooldowns[SettingsJobSelected]) {
-                    // cooldown
+                    DrawCooldown(cooldown, _ID);
                 }
                 ImGui.EndChild();
             }
             ImGui.Columns(1);
             ImGui.EndChild();
+        }
+
+        private void DrawCooldown(CooldownProps cooldown, string _ID) {
+            var enabled = !Configuration.Config.CooldownDisabled.Contains(cooldown.Name);
+            ImGui.TextColored(enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
+            if (ImGui.Checkbox("Enabled" + _ID, ref enabled)) {
+                if (enabled) Configuration.Config.CooldownDisabled.Remove(cooldown.Name);
+                else Configuration.Config.CooldownDisabled.Add(cooldown.Name);
+                Configuration.Config.Save();
+
+                ResetUI();
+            }
+
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
         }
     }
 }

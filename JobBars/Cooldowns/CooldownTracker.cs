@@ -1,10 +1,6 @@
 ﻿using JobBars.Data;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Cooldowns {
     public class CooldownTracker {
@@ -49,15 +45,19 @@ namespace JobBars.Cooldowns {
             }
             else if(State == TrackerState.OffCD) {
                 ui.SetOffCD();
-                ui.SetDash(percent);
+                ui.SetNoDash();
                 ui.SetText("");
             }
+        }
+
+        public void Reset() {
+            State = TrackerState.None;
         }
 
         public void ProcessAction(Item action) {
             if(action.Type != ItemType.Buff && action.Id == (uint) Props.Trigger) {
                 LastActiveTime = DateTime.Now;
-                State = TrackerState.Running;
+                State = Props.CD == 0 ? TrackerState.OnCD : TrackerState.Running;
             }
         }
     }

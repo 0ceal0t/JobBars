@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
 using static JobBars.UI.UIColor;
@@ -34,6 +35,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
             Icon = UIBuilder.Builder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;

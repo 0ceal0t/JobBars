@@ -10,7 +10,7 @@ namespace JobBars.Cooldowns {
         private JobIds CurrentJob = JobIds.OTHER;
         private UICooldown UI;
         private readonly List<CooldownTracker> Trackers = new();
-        private uint ObjectId;
+        private readonly uint ObjectId;
 
         public CooldownPartyMember(uint objectId) {
             ObjectId = objectId;
@@ -44,10 +44,13 @@ namespace JobBars.Cooldowns {
             var trackerProps = CooldownManager.Manager.JobToCooldowns.TryGetValue(CurrentJob, out var props) ? props :
                 CooldownManager.Manager.JobToCooldowns[JobIds.OTHER];
             foreach(var prop in trackerProps) {
-                // TODO: check enabled
-
+                if (Configuration.Config.CooldownDisabled.Contains(prop.Name)) continue;
                 Trackers.Add(new CooldownTracker(prop));
             }
+        }
+
+        public void Reset() {
+            foreach (var item in Trackers) item.Reset();
         }
 
         public void SetupUI() {

@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
 using System;
@@ -20,7 +21,7 @@ namespace JobBars.UI {
             RootRes->ChildCount = 3;
 
             TextNode = UIBuilder.Builder.CreateTextNode();
-            TextNode->FontSize = 15;
+            TextNode->FontSize = 14;
             TextNode->LineSpacing = (byte)HEIGHT;
             TextNode->AlignmentFontType = 20;
             TextNode->AtkResNode.Width = WIDTH;
@@ -29,6 +30,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
             Icon = UIBuilder.Builder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
@@ -77,7 +79,7 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            SetTextSize(text.Length > 2 ? (byte) 10 : (byte) 15);
+            SetTextSize(text.Length > 2 ? (byte) 10 : (byte) 14);
             TextNode->SetText(text);
         }
 

@@ -1,10 +1,7 @@
-﻿using Dalamud.Game.ClientState.JobGauge;
-using JobBars.Data;
+﻿using JobBars.Data;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Cooldowns {
     public struct CooldownProps {
@@ -15,7 +12,6 @@ namespace JobBars.Cooldowns {
     }
 
     public partial class CooldownManager {
-
         public Dictionary<JobIds, CooldownProps[]> JobToCooldowns;
 
         private void Init() {
@@ -70,7 +66,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ WAR ==================
-            JobToCooldowns.Add(JobIds.WAR, new CooldownProps[] {
+            JobToCooldowns.Add(JobIds.WAR, new [] {
                 new CooldownProps {
                     Name = "Holmgang",
                     Trigger = ActionIds.Holmgang,
@@ -112,7 +108,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ AST ==================
-            JobToCooldowns.Add(JobIds.AST, new CooldownProps[] {
+            JobToCooldowns.Add(JobIds.AST, new [] {
                 new CooldownProps {
                     Name = "Netural Sect",
                     Trigger = ActionIds.NeutralSect,
@@ -138,7 +134,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ SCH ==================
-            JobToCooldowns.Add(JobIds.SCH, new CooldownProps[] {
+            JobToCooldowns.Add(JobIds.SCH, new [] {
                 new CooldownProps {
                     Name = "Seraph",
                     Trigger = ActionIds.SummonSeraph,
@@ -157,7 +153,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ WHM ==================
-            JobToCooldowns.Add(JobIds.WHM, new CooldownProps[] {
+            JobToCooldowns.Add(JobIds.WHM, new [] {
                 new CooldownProps {
                     Name = "Asylum",
                     Trigger = ActionIds.Asylum,
@@ -177,44 +173,112 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ BRD ==================
-            JobToCooldowns.Add(JobIds.BRD, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.BRD, new [] {
+                new CooldownProps {
+                    Name = "Troubadour",
+                    Trigger = ActionIds.Troubadour,
+                    Duration = 15,
+                    CD = 120
+                },
+                new CooldownProps {
+                    Name = "Nature's Minne",
+                    Trigger = ActionIds.NaturesMinne,
+                    Duration = 15,
+                    CD = 90
+                }
             });
             // ============ DRG ==================
-            JobToCooldowns.Add(JobIds.DRG, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.DRG, new [] {
+                new CooldownProps {
+                    Name = "Feint (DRG)",
+                    Trigger = ActionIds.Feint,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ SMN ==================
-            JobToCooldowns.Add(JobIds.SMN, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.SMN, new [] {
+                new CooldownProps {
+                    Name = "Addle (SMN)",
+                    Trigger = ActionIds.Addle,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ SAM ==================
-            JobToCooldowns.Add(JobIds.SAM, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.SAM, new [] {
+                new CooldownProps {
+                    Name = "Feint (SAM)",
+                    Trigger = ActionIds.Feint,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ BLM ==================
-            JobToCooldowns.Add(JobIds.BLM, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.BLM, new [] {
+                new CooldownProps {
+                    Name = "Addle (BLM)",
+                    Trigger = ActionIds.Addle,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ RDM ==================
-            JobToCooldowns.Add(JobIds.RDM, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.RDM, new [] {
+                new CooldownProps {
+                    Name = "Addle (RDM)",
+                    Trigger = ActionIds.Addle,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ MCH ==================
-            JobToCooldowns.Add(JobIds.MCH, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.MCH, new [] {
+                new CooldownProps {
+                    Name = "Tactician",
+                    Trigger = ActionIds.Tactician,
+                    Duration = 15,
+                    CD = 120
+                }
             });
             // ============ DNC ==================
-            JobToCooldowns.Add(JobIds.DNC, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.DNC, new [] {
+                new CooldownProps {
+                    Name = "Shield Samba",
+                    Trigger = ActionIds.ShieldSamba,
+                    Duration = 15,
+                    CD = 120
+                },
+                new CooldownProps {
+                    Name = "Improvisation",
+                    Trigger = ActionIds.Improvisation,
+                    Duration = 15,
+                    CD = 120
+                }
             });
             // ============ NIN ==================
-            JobToCooldowns.Add(JobIds.NIN, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.NIN, new [] {
+                new CooldownProps {
+                    Name = "Feint (NIN)",
+                    Trigger = ActionIds.Feint,
+                    Duration = 10,
+                    CD = 90
+                }
             });
             // ============ MNK ==================
-            JobToCooldowns.Add(JobIds.MNK, new CooldownProps[] {
-
+            JobToCooldowns.Add(JobIds.MNK, new [] {
+                new CooldownProps {
+                    Name = "Feint (MNK)",
+                    Trigger = ActionIds.Feint,
+                    Duration = 10,
+                    CD = 90
+                },
+                new CooldownProps {
+                    Name = "Mantra",
+                    Trigger = ActionIds.Mantra,
+                    Duration = 15,
+                    CD = 90
+                }
             });
             // ============ BLU ==================
             JobToCooldowns.Add(JobIds.BLU, new CooldownProps[] {

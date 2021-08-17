@@ -1,10 +1,10 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using JobBars.Gauges;
+using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.Data {
     [Serializable]
@@ -108,7 +108,7 @@ namespace JobBars.Data {
 
         public static ElementColor GetColor(string colorName, ElementColor defaultColor) {
             if (string.IsNullOrEmpty(colorName)) return defaultColor;
-            return AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
+            return UIColor.AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
         }
     }
 }

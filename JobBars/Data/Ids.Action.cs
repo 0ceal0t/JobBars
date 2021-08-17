@@ -14,12 +14,14 @@ namespace JobBars.Data {
         LivingShadow = 0x4058,
         BloodSpiller = 0x1CE0,
         Quietus = 0x1CDF,
+
         // WAR ==========
         InnerRelease = 7389,
         FellCleave = 0xDDD,
         Decimate = 0xDDE,
         ShakeItOff = 7388,
         Holmgang = 43,
+
         // PLD ===========
         Requiescat = 7383,
         FastBlade = 0x09,
@@ -35,10 +37,12 @@ namespace JobBars.Data {
         HallowedGround = 30,
         DivineVeil = 3540,
         PassageOfArms = 7385,
+
         // GNB ===========
         NoMercy = 16138,
         HeartOfLight = 16160,
         Superbolide = 16152,
+
         // SCH ===========
         Biolysis = 16540,
         SchBio = 17864,
@@ -47,6 +51,7 @@ namespace JobBars.Data {
         SummonSeraph = 16545,
         DeploymentTactics = 3585,
         Recitation = 16542,
+
         // WHM ===========
         Dia = 16532,
         Aero = 121,
@@ -54,6 +59,7 @@ namespace JobBars.Data {
         Asylum = 3569,
         Temperance = 16536,
         Benediction = 140,
+
         // AST ===========
         Combust1 = 3599,
         Combust2 = 3608,
@@ -71,26 +77,33 @@ namespace JobBars.Data {
         EarthlyStar = 7439,
         CelestialOpposition = 16553,
         NeutralSect = 16559,
+
         // MNK ===========
         TrueNorth = 7546, // All melee
+        Feint = 7549, // All melee
         Brotherhood = 7396,
         PerfectBalance = 69,
         RiddleOfFire = 7395,
         RiddleOfEarth = 7394,
         TwinSnakes = 61,
         Demolish = 66,
+        Mantra = 65,
+
         // DRG ===========
         DragonSight = 7398,
         BattleLitany = 3557,
         LanceCharge = 85,
+
         // NIN ===========
         TrickAttack = 2258,
         Bunshin = 16493,
+
         // SAM ===========
         DoubleMidare = 0x4066,
         Higanbana = 7489,
         Jinpu = 7478,
         Shifu = 7479,
+
         // BRD ===========
         CausticBite = 0x1CEE,
         Stormbite = 0x1CEF,
@@ -101,6 +114,9 @@ namespace JobBars.Data {
         IronJaws = 3560,
         Barrage = 107,
         BloodLetter = 110,
+        Troubadour = 7405,
+        NaturesMinne = 7408,
+
         // MCH ===========
         Wildfire = 2878,
         Hypercharge = 0x4339,
@@ -109,14 +125,21 @@ namespace JobBars.Data {
         GaussRound = 2874,
         Ricochet = 2890,
         Reassemble = 2876,
+        Tactician = 16889,
+
         // DNC ===========
         QuadTechFinish = 16196,
         Devilment = 16011,
+        ShieldSamba = 16012,
+        Improvisation = 16014,
+
         // BLM ===========
+        Addle = 7560, // All casters
         Thunder = 144,
         Thunder2 = 7447,
         Thunder3 = 153,
         Thunder4 = 7420,
+
         // SMN ===========
         ArcBio = 164,
         ArcBio2 = 178,
@@ -129,9 +152,11 @@ namespace JobBars.Data {
         ScarletFlame = 0x4087,
         Devotion = 7423,
         TriDisaster = 3580,
+
         // RDM ===========
         Embolden = 7520,
         Manafication = 7521,
+
         // BLU ===========
         SongOfTorment = 11386,
         PeculiarLight = 11421,

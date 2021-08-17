@@ -7,6 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JobBars.UI {
+    public struct ElementColor {
+        public string Name;
+
+        public ushort AddRed;
+        public ushort AddGreen;
+        public ushort AddBlue;
+
+        public byte MultiplyRed;
+        public byte MultiplyGreen;
+        public byte MultiplyBlue;
+
+        public ElementColor(string name, ushort addRed, ushort addGreen, ushort addBlue, byte multRed, byte multGreen, byte multBlue) {
+            Name = name;
+            AddRed = addRed;
+            AddGreen = addGreen;
+            AddBlue = addBlue;
+            MultiplyRed = multRed;
+            MultiplyGreen = multGreen;
+            MultiplyBlue = multBlue;
+        }
+    }
+
     public class UIColor {
         public static readonly ByteColor BYTE_White = new() {
             R = 255,
@@ -21,28 +43,6 @@ namespace JobBars.UI {
             B = 0,
             A = 0
         };
-
-        public struct ElementColor {
-            public string Name;
-
-            public ushort AddRed;
-            public ushort AddGreen;
-            public ushort AddBlue;
-
-            public byte MultiplyRed;
-            public byte MultiplyGreen;
-            public byte MultiplyBlue;
-
-            public ElementColor(string name, ushort addRed, ushort addGreen, ushort addBlue, byte multRed, byte multGreen, byte multBlue) {
-                Name = name;
-                AddRed = addRed;
-                AddGreen = addGreen;
-                AddBlue = addBlue;
-                MultiplyRed = multRed;
-                MultiplyGreen = multGreen;
-                MultiplyBlue = multBlue;
-            }
-        }
 
         public unsafe static void SetColor(AtkTextNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkNineGridNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);

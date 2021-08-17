@@ -200,7 +200,7 @@ namespace JobBars {
 
         private void CheckForJobChange() {
             var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
-            JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
+            JobIds job = DataManager.IdToJob(jobId.Id);
 
             if (job != CurrentJob) {
                 CurrentJob = job;
@@ -227,11 +227,6 @@ namespace JobBars {
             }
             LastPosition = currentPosition;
             LastScale = currentScale;
-        }
-
-        private void Reset() {
-            GManager?.Reset();
-            BManager?.Reset();
         }
 
         // ======= COMMANDS ============

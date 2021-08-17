@@ -109,10 +109,18 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
-            if (arg1 == 0x40000010) Reset();
+            if (arg1 == 0x40000010) {
+                GManager?.Reset();
+                BManager?.Reset();
+                CDManager?.ResetTrackers();
+            }
         }
 
-        private void ZoneChanged(object sender, ushort e) => Reset();
+        private void ZoneChanged(object sender, ushort e) {
+            GManager?.Reset();
+            BManager?.Reset();
+            // don't reset CDs on zone change
+        }
 
         private bool IsPet(int objectId, int ownerId) {
             if (objectId == 0) return false;

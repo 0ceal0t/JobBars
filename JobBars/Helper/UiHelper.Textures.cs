@@ -37,13 +37,9 @@ namespace JobBars.Helper {
 
         public static void UnloadIcon(AtkImageNode* node) {
             node->UnloadTexture();
-            DisposeIconPartsList(node->PartsList);
+            DisposeAsset(node->PartsList->Parts[0].UldAsset, 1);
+            DisposePartsList(node->PartsList);
             node->PartsList = null;
-        }
-
-        public static void DisposeIconPartsList(AtkUldPartsList* partsList) {
-            DisposeAsset(partsList->Parts[0].UldAsset, 1);
-            DisposePartsList(partsList);
         }
 
         // ===========================
@@ -75,6 +71,9 @@ namespace JobBars.Helper {
         }
 
         public static void DisposeLayout(Asset_PartList layout) {
+            for (var i = 0; i < layout.AssetCount; i++){
+                layout.Asset[i].AtkTexture.ReleaseTexture();
+            }
             DisposeAsset(layout.Asset, layout.AssetCount);
             DisposePartsList(layout.PartsList);
         }

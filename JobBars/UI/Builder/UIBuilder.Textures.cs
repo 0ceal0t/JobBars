@@ -56,7 +56,7 @@ namespace JobBars.UI {
 
             var cdLayout = new Dictionary<string, PartStruct[]>();
             cdLayout.Add("ui/uld/IconA_Frame.tex", new[] {
-                new PartStruct(252, 12, 47, 47),  // CD_BORDER
+                new PartStruct(0, 96, 48, 48),  // CD_BORDER
 
                 new PartStruct(96, 0, 48, 48),  // CD_DASH_START
                 new PartStruct(144, 0, 48, 48),

@@ -23,6 +23,10 @@ namespace JobBars.Data {
         public static int GetIcon(ActionIds action) => GetIcon((uint)action);
         public static int GetIcon(uint action) => (int)Manager.ActionToIcon[action];
 
+        public static JobIds IdToJob(uint job) {
+            return job < 19 ? JobIds.OTHER : (JobIds)job;
+        }
+
         // ==================
 
         private readonly DalamudPluginInterface PluginInterface;
