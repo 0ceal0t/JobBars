@@ -15,6 +15,7 @@ using JobBars.Buffs;
 using JobBars.Cooldowns;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {

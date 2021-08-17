@@ -25,12 +25,16 @@ namespace JobBars.Cooldowns {
         }
 
         public void PerformAction(Item action, uint objectId) {
-            foreach(var member in ObjectIdToMember.Values) {
+            if (!Configuration.Config.CooldownsEnabled) return;
+
+            foreach (var member in ObjectIdToMember.Values) {
                 member.ProcessAction(action, objectId);
             }
         }
 
         public void Tick() {
+            if (!Configuration.Config.CooldownsEnabled) return;
+
             List<CooldownPartyMemberStruct> partyMembers = new();
 
             var localPlayer = PluginInterface.ClientState.LocalPlayer;

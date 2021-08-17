@@ -38,8 +38,8 @@ namespace JobBars {
             if (isSelf || Configuration.Config.BuffIncludeParty) {
                 BManager?.PerformAction(actionItem);
             }
-            if(!isPet) {
-                CDManager?.PerformAction(actionItem, (uint) sourceId);
+            if (!isPet) {
+                CDManager?.PerformAction(actionItem, (uint)sourceId);
             }
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
@@ -109,14 +109,10 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
-            if (arg1 == 0x40000010) { // WIPE
-                Reset();
-            }
+            if (arg1 == 0x40000010) Reset();
         }
 
-        private void ZoneChanged(object sender, ushort e) {
-            Reset();
-        }
+        private void ZoneChanged(object sender, ushort e) => Reset();
 
         private bool IsPet(int objectId, int ownerId) {
             if (objectId == 0) return false;

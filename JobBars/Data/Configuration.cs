@@ -39,6 +39,8 @@ namespace JobBars.Data {
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;
 
+        // ==== GAUGES ====
+
         public float GaugeScale = 1.0f;
         public bool GaugeHorizontal = false;
         public bool GaugeAlignRight = false;
@@ -56,6 +58,8 @@ namespace JobBars.Data {
         public int SeNumber = 0;
         public float GaugeLowTimerWarning = 4.0f;
 
+        // ===== BUFFS ======
+
         public Vector2 BuffPosition { get; set; } = new Vector2(0, 0);
         public float BuffScale = 1.0f;
 
@@ -67,6 +71,11 @@ namespace JobBars.Data {
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
+
+        // ==== COOLDOWNS ======
+
+        public bool CooldownsEnabled = true;
+        public HashSet<string> CooldownDisabled = new();
 
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;

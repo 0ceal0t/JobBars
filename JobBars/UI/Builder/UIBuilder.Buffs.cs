@@ -12,7 +12,7 @@ namespace JobBars.UI {
         public List<UIBuff> Buffs = new();
         public Dictionary<ActionIds, UIBuff> IconToBuff = new();
 
-        private void InitBuffs(AtkUnitBase* addon) {
+        private void InitBuffs(AtkUnitBase* addon, AtkUldPartsList* partsList) {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
@@ -21,7 +21,7 @@ namespace JobBars.UI {
 
             UIBuff lastBuff = null;
             foreach (var icon in BuffManager.Manager.Icons) {
-                var newBuff = new UIBuff(addon, DataManager.GetIcon(icon));
+                var newBuff = new UIBuff(partsList, DataManager.GetIcon(icon));
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;

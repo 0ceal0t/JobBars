@@ -89,7 +89,7 @@ namespace JobBars.Gauges {
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
                 if (inDanger && beforeOk) {
                     if (Configuration.Config.SeNumber > 0) {
-                        UIHelper.PlaySe(Configuration.Config.SeNumber + 36, 0, 0);
+                        UIHelper.PlaySoundEffect(Configuration.Config.SeNumber + 36, 0, 0);
                     }
                 }
                 if (UI is UIBar gauge) {

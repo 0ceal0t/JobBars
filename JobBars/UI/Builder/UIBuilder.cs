@@ -21,8 +21,7 @@ namespace JobBars.UI {
 
         // ===== INSTANCE =======
 
-        public DalamudPluginInterface PluginInterface;
-
+        private DalamudPluginInterface PluginInterface;
         private static readonly uint NODE_IDX_START = 89990001;
         private uint NodeIdx = NODE_IDX_START;
 
@@ -36,10 +35,6 @@ namespace JobBars.UI {
                 PluginLog.Debug("Error setting up UI builder");
                 return;
             }
-            if (addon->UldManager.AssetCount == 1) {
-                SetupTex();
-                SetupPart(addon);
-            }
             Init(addon);
         }
 
@@ -48,25 +43,20 @@ namespace JobBars.UI {
             DisposeCooldowns();
             DisposeGauges();
             DisposeBuffs();
+            DisposeTextures(); // dispose last
 
             var addon = UIHelper.ParameterAddon;
             if (addon == null) return;
             addon->UldManager.UpdateDrawNodeList();
-
-            if (PluginInterface.ClientState?.LocalPlayer == null) { // game closing, remove the orphaned assets
-                PluginLog.Log("==== UNLOADING TEXTURES =======");
-                for (int i = 0; i < addon->UldManager.AssetCount; i++) {
-                    UIHelper.TexUnalloc(new IntPtr(addon->UldManager.Assets) + 0x8 + 0x20 * i);
-                }
-            }
         }
 
         private void Init(AtkUnitBase* addon) {
             NodeIdx = NODE_IDX_START;
 
-            InitGauges(addon);
-            InitBuffs(addon);
-            InitCooldowns();
+            InitTextures(); // init first
+            InitGauges(addon, GaugeBuffAssets.PartsList);
+            InitBuffs(addon, GaugeBuffAssets.PartsList);
+            InitCooldowns(GaugeBuffAssets.PartsList);
 
             // ==== INSERT AT THE END ====
             var lastNode = addon->RootNode->ChildNode;

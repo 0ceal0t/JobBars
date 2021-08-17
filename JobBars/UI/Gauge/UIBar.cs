@@ -1,4 +1,5 @@
-﻿using Dalamud.Plugin;
+﻿using Dalamud.Logging;
+using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
@@ -20,7 +21,7 @@ namespace JobBars.UI {
         private float LastPercent = 1;
         private Animation Anim = null;
 
-        public UIBar(AtkUnitBase* addon) {
+        public UIBar(AtkUldPartsList* partsList) {
 
             // ======= CONTAINERS =========
             RootRes = UIBuilder.Builder.CreateResNode();
@@ -41,7 +42,8 @@ namespace JobBars.UI {
             Background->AtkResNode.X = 0;
             Background->AtkResNode.Y = 0;
             Background->PartId = UIBuilder.GAUGE_BG_PART;
-            Background->PartsList = addon->UldManager.PartsList;
+            Background->PartsList = partsList;
+
             Background->Flags = 0;
             Background->WrapMode = 1;
 
@@ -58,7 +60,7 @@ namespace JobBars.UI {
             BarMainNode->AtkResNode.X = 0;
             BarMainNode->AtkResNode.Y = 0;
             BarMainNode->PartID = UIBuilder.GAUGE_BAR_MAIN;
-            BarMainNode->PartsList = addon->UldManager.PartsList;
+            BarMainNode->PartsList = partsList;
             BarMainNode->TopOffset = 0;
             BarMainNode->BottomOffset = 0;
             BarMainNode->RightOffset = 7;
@@ -75,7 +77,7 @@ namespace JobBars.UI {
             Frame->AtkResNode.X = 0;
             Frame->AtkResNode.Y = 0;
             Frame->PartId = UIBuilder.GAUGE_FRAME_PART;
-            Frame->PartsList = addon->UldManager.PartsList;
+            Frame->PartsList = partsList;
             Frame->Flags = 0;
             Frame->WrapMode = 1;
 
@@ -112,7 +114,7 @@ namespace JobBars.UI {
             TextBlurNode->AtkResNode.OriginX = 0;
             TextBlurNode->AtkResNode.OriginY = 0;
             TextBlurNode->PartID = UIBuilder.GAUGE_TEXT_BLUR_PART;
-            TextBlurNode->PartsList = addon->UldManager.PartsList;
+            TextBlurNode->PartsList = partsList;
             TextBlurNode->TopOffset = 0;
             TextBlurNode->BottomOffset = 0;
             TextBlurNode->RightOffset = 28;

@@ -7,11 +7,11 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public AtkResNode* GaugeRoot = null;
         private static readonly int MAX_GAUGES = 4;
-        public List<UIBar> Gauges = new();
+        public List<UIBar> Bars = new();
         public List<UIArrow> Arrows = new();
         public List<UIDiamond> Diamonds = new();
 
-        private void InitGauges(AtkUnitBase* addon) {
+        private void InitGauges(AtkUnitBase* addon, AtkUldPartsList* partsList) {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
@@ -19,11 +19,11 @@ namespace JobBars.UI {
 
             UIDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
-                var newGauge = new UIBar(addon);
-                var newArrow = new UIArrow(addon);
-                var newDiamond = new UIDiamond(addon);
+                var newGauge = new UIBar(partsList);
+                var newArrow = new UIArrow(partsList);
+                var newDiamond = new UIDiamond(partsList);
 
-                Gauges.Add(newGauge);
+                Bars.Add(newGauge);
                 Arrows.Add(newArrow);
                 Diamonds.Add(newDiamond);
 
@@ -41,15 +41,15 @@ namespace JobBars.UI {
             GaugeRoot->ParentNode = addon->RootNode;
             GaugeRoot->ChildCount = (ushort)(MAX_GAUGES * (
                 Arrows[0].RootRes->ChildCount + 1 +
-                Gauges[0].RootRes->ChildCount + 1 +
+                Bars[0].RootRes->ChildCount + 1 +
                 Diamonds[0].RootRes->ChildCount + 1
             ));
-            GaugeRoot->ChildNode = Gauges[0].RootRes;
+            GaugeRoot->ChildNode = Bars[0].RootRes;
         }
 
         private void DisposeGauges() {
-            Gauges.ForEach(x => x.Dispose());
-            Gauges = null;
+            Bars.ForEach(x => x.Dispose());
+            Bars = null;
 
             Arrows.ForEach(x => x.Dispose());
             Arrows = null;
@@ -78,7 +78,7 @@ namespace JobBars.UI {
         }
 
         public void HideAllGauges() {
-            Gauges.ForEach(x => x.Hide());
+            Bars.ForEach(x => x.Hide());
             Arrows.ForEach(x => x.Hide());
             Diamonds.ForEach(x => x.Hide());
         }

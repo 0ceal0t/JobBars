@@ -47,7 +47,7 @@ namespace JobBars.UI {
         private List<TickStruct> Ticks = new();
         private bool TextVisible = false;
 
-        public UIDiamond(AtkUnitBase* addon) {
+        public UIDiamond(AtkUldPartsList* partsList) {
             RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -70,7 +70,7 @@ namespace JobBars.UI {
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
                 bg->PartId = UIBuilder.DIAMOND_BG;
-                bg->PartsList = addon->UldManager.PartsList;
+                bg->PartsList = partsList;
                 bg->Flags = 0;
                 bg->WrapMode = 1;
 
@@ -108,7 +108,7 @@ namespace JobBars.UI {
                 selected->AtkResNode.OriginX = 16;
                 selected->AtkResNode.OriginY = 16;
                 selected->PartId = UIBuilder.DIAMOND_FG;
-                selected->PartsList = addon->UldManager.PartsList;
+                selected->PartsList = partsList;
                 selected->Flags = 0;
                 selected->WrapMode = 1;
 

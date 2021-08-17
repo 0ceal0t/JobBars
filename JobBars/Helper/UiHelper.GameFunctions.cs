@@ -12,20 +12,12 @@ namespace JobBars.Helper {
     public unsafe partial class UIHelper {
         private static DalamudPluginInterface PluginInterface;
 
-        public delegate long PlaySeDelegate(int a1, long a2, long a3);
-        public static PlaySeDelegate PlaySe { get; private set; }
+        public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3);
+        public static PlaySoundEffectDelegate PlaySoundEffect { get; private set; }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTexDelegate(IntPtr uldManager, IntPtr allocator, IntPtr texPaths, IntPtr assetMapping, uint assetNumber, byte a6);
-        public static LoadTexDelegate LoadTex { get; private set; }
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr LoadTexAllocDelegate(IntPtr allocator, Int64 size, UInt64 a3);
-        public static LoadTexAllocDelegate LoadTexAlloc { get; private set; }
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public delegate IntPtr TexUnallocDelegate(IntPtr tex);
-        public static TexUnallocDelegate TexUnalloc { get; private set; }
+        public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
+        public static TextureLoadPathDelegate TextureLoadPath;
 
         public static bool Ready { get; private set; } = false;
 
@@ -33,16 +25,10 @@ namespace JobBars.Helper {
             PluginInterface = pluginInterface;
             var scanner = pluginInterface.TargetModuleScanner;
 
-            PlaySe = Marshal.GetDelegateForFunctionPointer<PlaySeDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
+            PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
 
-            var loadAssetsPtr = scanner.ScanText("E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??");
-            LoadTex = Marshal.GetDelegateForFunctionPointer<LoadTexDelegate>(loadAssetsPtr);
-
-            var loadTexAllocPtr = scanner.ScanText("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48");
-            LoadTexAlloc = Marshal.GetDelegateForFunctionPointer<LoadTexAllocDelegate>(loadTexAllocPtr);
-
-            var texUnallocPtr = scanner.ScanText("E8 ?? ?? ?? ?? C6 43 10 02");
-            TexUnalloc = Marshal.GetDelegateForFunctionPointer<TexUnallocDelegate>(texUnallocPtr);
+            var texLoadPtr = scanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??");
+            TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(texLoadPtr);
 
             Ready = true;
         }
@@ -82,7 +68,7 @@ namespace JobBars.Helper {
         }
 
         public static void PlaySeComplete() {
-            PlaySe(78, 0, 0);
+            PlaySoundEffect(78, 0, 0);
         }
 
         public static void Dispose() {

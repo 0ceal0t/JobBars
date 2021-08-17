@@ -16,7 +16,7 @@ namespace JobBars.UI {
         private string CurrentText = "";
         private static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
 
-        public UIBuff(AtkUnitBase* addon, int icon) : base() {
+        public UIBuff(AtkUldPartsList* partsList, int icon) : base() {
             RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -53,7 +53,7 @@ namespace JobBars.UI {
             Overlay->AtkResNode.X = 0;
             Overlay->AtkResNode.Y = 0;
             Overlay->PartId = UIBuilder.BUFF_OVERLAY;
-            Overlay->PartsList = addon->UldManager.PartsList;
+            Overlay->PartsList = partsList;
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
 
@@ -63,7 +63,7 @@ namespace JobBars.UI {
             Border->AtkResNode.X = -2;
             Border->AtkResNode.Y = -2;
             Border->PartId = UIBuilder.BUFF_BORDER;
-            Border->PartsList = addon->UldManager.PartsList;
+            Border->PartsList = partsList;
             Border->Flags = 0;
             Border->WrapMode = 1;
             UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);

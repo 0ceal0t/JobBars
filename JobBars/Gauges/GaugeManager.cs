@@ -133,10 +133,10 @@ namespace JobBars.Gauges {
         private static UIGaugeElement GetUI(int idx, GaugeVisualType type) {
             return type switch {
                 GaugeVisualType.Arrow => UIBuilder.Builder.Arrows[idx],
-                GaugeVisualType.Bar => UIBuilder.Builder.Gauges[idx],
+                GaugeVisualType.Bar => UIBuilder.Builder.Bars[idx],
                 GaugeVisualType.Diamond => UIBuilder.Builder.Diamonds[idx],
                 GaugeVisualType.BarDiamondCombo => new UIBarDiamondCombo(
-                    UIBuilder.Builder.Gauges[idx],
+                    UIBuilder.Builder.Bars[idx],
                     UIBuilder.Builder.Diamonds[idx]
                 ), // kind of scuffed, but oh well
                 _ => null,

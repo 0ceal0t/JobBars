@@ -10,7 +10,7 @@ namespace JobBars.UI {
         public List<UICooldown> Cooldowns = new();
         private AtkResNode* CooldownRoot = null;
 
-        private void InitCooldowns() {
+        private void InitCooldowns(AtkUldPartsList* partsList) {
             var addon = UIHelper.PartyListAddon;
 
             CooldownRoot = CreateResNode();

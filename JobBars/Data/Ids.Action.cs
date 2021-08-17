@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace JobBars.Data {
     public enum ActionIds : uint {
         // DRK =========
-        Rampart = 7531, // All tanks
         Reprisal = 7535, // All tanks
-        ShadowWall = 3636,
         DarkMissionary = 16471,
-        DarkMind = 3634,
+        LivingDead = 3638,
         Delirium = 7390,
         LivingShadow = 0x4058,
         BloodSpiller = 0x1CE0,
@@ -20,6 +18,8 @@ namespace JobBars.Data {
         InnerRelease = 7389,
         FellCleave = 0xDDD,
         Decimate = 0xDDE,
+        ShakeItOff = 7388,
+        Holmgang = 43,
         // PLD ===========
         Requiescat = 7383,
         FastBlade = 0x09,
@@ -32,17 +32,28 @@ namespace JobBars.Data {
         HolySpirit = 0x1CD8,
         HolyCircle = 0x404A,
         Confiteor = 0x404B,
+        HallowedGround = 30,
+        DivineVeil = 3540,
+        PassageOfArms = 7385,
         // GNB ===========
         NoMercy = 16138,
+        HeartOfLight = 16160,
+        Superbolide = 16152,
         // SCH ===========
         Biolysis = 16540,
         SchBio = 17864,
         SchBio2 = 17865,
         ChainStratagem = 7436,
+        SummonSeraph = 16545,
+        DeploymentTactics = 3585,
+        Recitation = 16542,
         // WHM ===========
         Dia = 16532,
         Aero = 121,
         Aero2 = 132,
+        Asylum = 3569,
+        Temperance = 16536,
+        Benediction = 140,
         // AST ===========
         Combust1 = 3599,
         Combust2 = 3608,
@@ -56,6 +67,10 @@ namespace JobBars.Data {
         TheSpire = 4406,
         LordOfCrowns = 7444,
         LadyOfCrowns = 7445,
+        CollectiveUnconscious = 3613,
+        EarthlyStar = 7439,
+        CelestialOpposition = 16553,
+        NeutralSect = 16559,
         // MNK ===========
         TrueNorth = 7546, // All melee
         Brotherhood = 7396,

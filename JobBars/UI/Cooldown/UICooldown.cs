@@ -11,6 +11,7 @@ namespace JobBars.UI {
     public unsafe class UICooldownItem : UIElement {
         private AtkImageNode* Icon;
         private AtkTextNode* TextNode;
+        //private AtkImageNode* Border;
 
         public static readonly ushort WIDTH = 30;
         public static readonly ushort HEIGHT = 30;
@@ -19,11 +20,11 @@ namespace JobBars.UI {
             RootRes = UIBuilder.Builder.CreateResNode();
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
-            RootRes->ChildCount = 2;
+            RootRes->ChildCount = 2; // 3
 
             TextNode = UIBuilder.Builder.CreateTextNode();
             TextNode->FontSize = 15;
-            TextNode->LineSpacing = 15;
+            TextNode->LineSpacing = (byte)HEIGHT;
             TextNode->AlignmentFontType = 20;
             TextNode->AtkResNode.Width = WIDTH;
             TextNode->AtkResNode.Height = HEIGHT;
@@ -44,16 +45,34 @@ namespace JobBars.UI {
             UIHelper.LoadIcon(Icon, 405);
             UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
 
+            //Border = UIBuilder.Builder.CreateImageNode();
+            //Border->AtkResNode.Width = (ushort)(WIDTH + 4);
+            //Border->AtkResNode.Height = (ushort)(HEIGHT + 4);
+            //Border->PartsList = textureAddon->UldManager.PartsList;
+            //Border->PartId = UIBuilder.BUFF_BORDER;
+            //Border->AtkResNode.X = -2;
+            //Border->AtkResNode.Y = -2;
+            //Border->Flags |= (byte)ImageNodeFlags.AutoFit;
+            //Border->WrapMode = 1;
+
             TextNode->AtkResNode.ParentNode = RootRes;
             Icon->AtkResNode.ParentNode = RootRes;
+            //Border->AtkResNode.ParentNode = RootRes;
 
             RootRes->ChildNode = (AtkResNode*)Icon;
 
             UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)TextNode);
+            //UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)Border);
+            //UIHelper.Link((AtkResNode*)Border, (AtkResNode*)TextNode);
             TextNode->SetText("");
         }
 
+        private void SetTextSize(byte size) {
+            TextNode->FontSize = size;
+        }
+
         public void SetText(string text) {
+            SetTextSize(text.Length > 2 ? (byte) 10 : (byte) 15);
             TextNode->SetText(text);
         }
 

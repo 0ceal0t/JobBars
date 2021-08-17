@@ -25,6 +25,11 @@ namespace JobBars {
                     ImGui.EndTabItem();
                 }
 
+                if (ImGui.BeginTabItem("Cooldowns" + _ID)) {
+                    CDManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
                 ImGui.EndTabBar();
                 ImGui.End();
             }
