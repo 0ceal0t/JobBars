@@ -56,7 +56,7 @@ namespace JobBars.UI {
             InitTextures(); // init first
             InitGauges(addon, GaugeBuffAssets.PartsList);
             InitBuffs(addon, GaugeBuffAssets.PartsList);
-            InitCooldowns(GaugeBuffAssets.PartsList);
+            InitCooldowns(CooldownAssets.PartsList);
 
             // ==== INSERT AT THE END ====
             var lastNode = addon->RootNode->ChildNode;

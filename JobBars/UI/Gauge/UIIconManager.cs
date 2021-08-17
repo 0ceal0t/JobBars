@@ -135,7 +135,6 @@ namespace JobBars.UI {
 
             public void Tick(float percent) {
                 if (State != IconState.Done) return;
-
                 Border->PartId = (ushort)(6 + percent * 7);
             }
 

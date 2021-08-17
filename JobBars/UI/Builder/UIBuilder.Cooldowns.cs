@@ -1,9 +1,6 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System.Collections.Generic;
-using System.Numerics;
-using System;
-using Dalamud.Logging;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
@@ -22,7 +19,7 @@ namespace JobBars.UI {
 
             UICooldown lastCooldown = null;
             for (int i = 0; i < 8; i++) {
-                var newItem = new UICooldown();
+                var newItem = new UICooldown(partsList);
 
                 Cooldowns.Add(newItem);
                 newItem.RootRes->ParentNode = CooldownRoot;

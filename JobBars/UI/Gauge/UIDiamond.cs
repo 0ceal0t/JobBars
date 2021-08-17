@@ -22,6 +22,7 @@ namespace JobBars.UI {
                 }
 
                 if (Selected != null) {
+                    Selected->UnloadTexture();
                     Selected->AtkResNode.Destroy(true);
                     Selected = null;
                 }
@@ -32,6 +33,7 @@ namespace JobBars.UI {
                 }
 
                 if (Background != null) {
+                    Background->UnloadTexture();
                     Background->AtkResNode.Destroy(true);
                     Background = null;
                 }

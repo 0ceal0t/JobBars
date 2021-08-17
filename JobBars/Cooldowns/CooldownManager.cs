@@ -2,12 +2,14 @@
 using Dalamud.Plugin;
 using JobBars.Data;
 using JobBars.UI;
+using System;
 using System.Collections.Generic;
 
 namespace JobBars.Cooldowns {
     public unsafe partial class CooldownManager {
         public static CooldownManager Manager { get; private set; }
         public static void Dispose() { Manager = null; }
+        private static readonly int MILLIS_LOOP = 250;
 
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
 
@@ -35,6 +37,10 @@ namespace JobBars.Cooldowns {
         public void Tick() {
             if (!Configuration.Config.CooldownsEnabled) return;
 
+            var time = DateTime.Now;
+            int millis = time.Second * 1000 + time.Millisecond;
+            float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
+
             List<CooldownPartyMemberStruct> partyMembers = new();
 
             var localPlayer = PluginInterface.ClientState.LocalPlayer;
@@ -52,7 +58,7 @@ namespace JobBars.Cooldowns {
             for(int idx = 0; idx < partyMembers.Count; idx++) {
                 var partyMember = partyMembers[idx];
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new CooldownPartyMember(partyMember.ObjectId);
-                member.Tick(UIBuilder.Builder.Cooldowns[idx], partyMember.Job);
+                member.Tick(UIBuilder.Builder.Cooldowns[idx], partyMember.Job, percent);
                 newObjectIdToMember[partyMember.ObjectId] = member;
 
                 UIBuilder.Builder.SetCooldownRowVisible(idx, true);

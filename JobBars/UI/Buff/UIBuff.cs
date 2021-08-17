@@ -94,11 +94,13 @@ namespace JobBars.UI {
             }
 
             if (Overlay != null) {
+                Overlay->UnloadTexture();
                 Overlay->AtkResNode.Destroy(true);
                 Overlay = null;
             }
 
             if (Border != null) {
+                Border->UnloadTexture();
                 Border->AtkResNode.Destroy(true);
                 Border = null;
             }

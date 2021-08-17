@@ -145,6 +145,7 @@ namespace JobBars.UI {
             }
 
             if (Background != null) {
+                Background->UnloadTexture();
                 Background->AtkResNode.Destroy(true);
                 Background = null;
             }
@@ -155,11 +156,13 @@ namespace JobBars.UI {
             }
 
             if (BarMainNode != null) {
+                // TODO
                 BarMainNode->AtkResNode.Destroy(true);
                 BarMainNode = null;
             }
 
             if (Frame != null) {
+                Frame->UnloadTexture();
                 Frame->AtkResNode.Destroy(true);
                 Frame = null;
             }
@@ -175,6 +178,7 @@ namespace JobBars.UI {
             }
 
             if (TextBlurNode != null) {
+                // TODO
                 TextBlurNode->AtkResNode.Destroy(true);
                 TextBlurNode = null;
             }

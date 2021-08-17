@@ -25,27 +25,31 @@ namespace JobBars.Cooldowns {
             Props = props;
         }
 
-        public void Tick(UICooldownItem ui) {
+        public void Tick(UICooldownItem ui, float percent) {
             var currentTime = DateTime.Now;
 
             if(State == TrackerState.None) {
                 ui.SetOffCD();
+                ui.SetNoDash();
                 ui.SetText("");
             }
             else if(State == TrackerState.Running) {
                 ui.SetOffCD();
+                ui.SetDash(percent);
                 var timeLeft = Props.Duration - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OnCD;
             }
             else if(State == TrackerState.OnCD) {
                 ui.SetOnCD();
+                ui.SetNoDash();
                 var timeLeft = Props.CD - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OffCD;
             }
             else if(State == TrackerState.OffCD) {
                 ui.SetOffCD();
+                ui.SetDash(percent);
                 ui.SetText("");
             }
         }

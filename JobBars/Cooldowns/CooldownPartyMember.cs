@@ -16,7 +16,7 @@ namespace JobBars.Cooldowns {
             ObjectId = objectId;
         }
 
-        public void Tick(UICooldown ui, JobIds job) {
+        public void Tick(UICooldown ui, JobIds job, float percent) {
             if(CurrentJob != job) {
                 CurrentJob = job;
                 UI = ui;
@@ -29,7 +29,7 @@ namespace JobBars.Cooldowns {
             }
 
             for (int idx = 0; idx < Trackers.Count; idx++) {
-                Trackers[idx].Tick(UI.Items[idx]);
+                Trackers[idx].Tick(UI.Items[idx], percent);
             }
         }
 
