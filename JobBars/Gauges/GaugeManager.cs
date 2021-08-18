@@ -1,7 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin;
 using JobBars.Data;
-using JobBars.PartyList;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -17,17 +16,15 @@ namespace JobBars.Gauges {
         public JobIds CurrentJob = JobIds.OTHER;
 
         private readonly DalamudPluginInterface PluginInterface;
-        private readonly PartyList.PartyList Party;
 
         private Dictionary<JobIds, Gauge[]> JobToGauges;
         private Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
         private readonly IntPtr TargetAddress;
 
-        public GaugeManager(DalamudPluginInterface pluginInterface, PartyList.PartyList party) {
+        public GaugeManager(DalamudPluginInterface pluginInterface) {
             Manager = this;
             PluginInterface = pluginInterface;
-            Party = party;
             TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
 
             Init();
@@ -101,7 +98,6 @@ namespace JobBars.Gauges {
 
             Dictionary<Item, BuffElem> BuffDict = new();
             var currentTime = DateTime.Now;
-
             int ownerId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
@@ -110,16 +106,7 @@ namespace JobBars.Gauges {
             if (prevEnemy != null) AddBuffs(prevEnemy, ownerId, BuffDict);
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                foreach (var pMember in Party) {
-                    if (pMember == null) continue;
-
-                    foreach (var actor in PluginInterface.ClientState.Objects) {
-                        if (actor == null) continue;
-                        if (actor.ObjectId == pMember.ObjectId) {
-                            AddBuffs(actor, ownerId, BuffDict);
-                        }
-                    }
-                }
+                DataManager.GetPartyStatus(ownerId, BuffDict);
             }
 
             foreach (var gauge in CurrentGauges) {

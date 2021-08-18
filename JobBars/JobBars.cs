@@ -36,7 +36,6 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
-        private PartyList.PartyList Party; // TEMP
         private int LastPartyCount = 0;
 
         private bool PlayerExists => PluginInterface.ClientState?.LocalPlayer != null;
@@ -86,8 +85,6 @@ namespace JobBars {
 
             UIHelper.Setup(pluginInterface);
             UIColor.SetupColors();
-
-            Party = new PartyList.PartyList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
 
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Config.Initialize(PluginInterface);
@@ -181,7 +178,7 @@ namespace JobBars {
             BManager = new BuffManager();
             CDManager = new CooldownManager(PluginInterface);
             UIBuilder.Initialize(PluginInterface);
-            GManager = new GaugeManager(PluginInterface, Party);
+            GManager = new GaugeManager(PluginInterface);
             BManager.GetIconsUI();
 
             if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
@@ -194,8 +191,9 @@ namespace JobBars {
 
         private void CheckForPartyChange() {
             // someone left the party. this means that some buffs might not make sense anymore, so reset it
-            if (Party.Count < LastPartyCount) BManager.Reset();
-            LastPartyCount = Party.Count;
+            var partyCount = DataManager.GetPartyCount();
+            if (partyCount < LastPartyCount) BManager.Reset();
+            LastPartyCount = partyCount;
         }
 
         private void CheckForJobChange() {

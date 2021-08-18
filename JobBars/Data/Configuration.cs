@@ -75,7 +75,7 @@ namespace JobBars.Data {
         // ==== COOLDOWNS ======
 
         public bool CooldownsEnabled = true;
-        public HashSet<string> CooldownDisabled = new();
+        public HashSet<string> CooldownNotDefaultEnabled = new();
 
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;

@@ -1,12 +1,10 @@
 ﻿using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using static FFXIVClientStructs.FFXIV.Client.UI.UI3DModule;
 
 namespace JobBars.Cooldowns {
     public unsafe partial class CooldownManager {
@@ -21,55 +19,32 @@ namespace JobBars.Cooldowns {
         public CooldownManager(DalamudPluginInterface pluginInterface) {
             Manager = this;
             PluginInterface = pluginInterface;
-
-            var uiModule = Framework.Instance()->GetUiModule()->GetUI3DModule();
-            PluginLog.Log($"{uiModule->MemberInfoCount}");
-            for(int i = 0; i < 48; i++) {
-                MemberInfo* info = (MemberInfo*)(new IntPtr(uiModule->MemberInfoPointerArray) + 0x8 * i);
-                if (info->BattleChara == null) continue;
-                if ((uint)info->BattleChara == 0xFFFFFFFF) continue;
-                
-                if(info->BattleChara != null) {
-                    PluginLog.Log($"{i} {info->Unk_20}");
-                }
-            }
-
-            PluginLog.Log("---------------");
-
-            var groupManager = GroupManager.Instance();
-            PluginLog.Log($"{groupManager->MemberCount}");
-            PluginLog.Log($"{groupManager->IsAlliance}");
-            PluginLog.Log($"{groupManager->PartyLeaderIndex}"); // could be FFFFFFFF
-            PluginLog.Log($"{groupManager->Unk_3D40} {groupManager->Unk_3D44} {groupManager->Unk_3D48} {groupManager->Unk_3D50} {groupManager->Unk_3D5D}" +
-                $" {groupManager->Unk_3D5F} {groupManager->Unk_3D60}");
-
-            for(int i = 0; i < 8; i++) {
-                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x8 * i);
-                PluginLog.Log($"{info->ObjectID} {info->ClassJob}"); // FFFF0000, E0000000
-            }
-
-            PluginLog.Log("---------------");
-
-            //var numArray = Framework.Instance()->GetUiModule()->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[19];
-
             Init();
         }
 
         public List<CooldownPartyMemberStruct> GetPartyMembers() {
-            List<CooldownPartyMemberStruct> partyMembers = new();
-            var localPlayer = PluginInterface.ClientState.LocalPlayer;
+            var ret = new List<CooldownPartyMemberStruct>();
+            var groupManager = GroupManager.Instance();
 
-            var uiModule = Framework.Instance()->GetUiModule()->GetUI3DModule();
-
-            // TODO?
-
-            if (partyMembers.Count == 0) {
-                partyMembers.Add(new CooldownPartyMemberStruct {
+            if(groupManager == null || groupManager->MemberCount == 0) { // fallback
+                var localPlayer = PluginInterface.ClientState.LocalPlayer;
+                var self = new CooldownPartyMemberStruct {
                     ObjectId = localPlayer.ObjectId,
                     Job = DataManager.IdToJob(localPlayer.ClassJob.Id)
+                };
+                ret.Add(self);
+                return ret;
+            }
+
+            for(int i = 0; i < 8; i++) {
+                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
+                ret.Add(new CooldownPartyMemberStruct {
+                    ObjectId = (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) ? 0 : info->ObjectID,
+                    Job = DataManager.IdToJob(info->ClassJob)
                 });
             }
-            return partyMembers;
+
+            return ret;
         }
 
         public void PerformAction(Item action, uint objectId) {
@@ -87,20 +62,17 @@ namespace JobBars.Cooldowns {
             int millis = time.Second * 1000 + time.Millisecond;
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
-            // ====== TEMP ========
-            List<CooldownPartyMemberStruct> partyMembers = new();
-            var localPlayer = PluginInterface.ClientState.LocalPlayer;
-            var self = new CooldownPartyMemberStruct {
-                ObjectId = localPlayer.ObjectId,
-                Job = localPlayer.ClassJob.Id < 19 ? JobIds.OTHER : (JobIds)localPlayer.ClassJob.Id
-            };
-            if (partyMembers.Count == 0) partyMembers.Add(self);
-            //====================
+            List<CooldownPartyMemberStruct> partyMembers = GetPartyMembers();
 
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
             for(int idx = 0; idx < partyMembers.Count; idx++) {
                 var partyMember = partyMembers[idx];
+                if(partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) { // skip it
+                    UIBuilder.Builder.SetCooldownRowVisible(idx, false);
+                    continue;
+                }
+
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new CooldownPartyMember(partyMember.ObjectId);
                 member.Tick(UIBuilder.Builder.Cooldowns[idx], partyMember.Job, percent);
                 newObjectIdToMember[partyMember.ObjectId] = member;

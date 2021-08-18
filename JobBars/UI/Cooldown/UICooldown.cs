@@ -21,7 +21,7 @@ namespace JobBars.UI {
             RootRes->ChildCount = 3;
 
             TextNode = UIBuilder.Builder.CreateTextNode();
-            TextNode->FontSize = 14;
+            TextNode->FontSize = 13;
             TextNode->LineSpacing = (byte)HEIGHT;
             TextNode->AlignmentFontType = 20;
             TextNode->AtkResNode.Width = WIDTH;
@@ -79,7 +79,7 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            SetTextSize(text.Length > 2 ? (byte) 10 : (byte) 14);
+            SetTextSize(text.Length > 2 ? (byte) 9 : (byte) 13);
             TextNode->SetText(text);
         }
 

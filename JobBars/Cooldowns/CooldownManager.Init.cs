@@ -1,5 +1,4 @@
 ﻿using JobBars.Data;
-using JobBars.UI;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +8,23 @@ namespace JobBars.Cooldowns {
         public ActionIds Trigger;
         public float Duration;
         public float CD;
+        public bool DisabledByDefault;
+
+        public bool Enabled {
+            get {
+                var disabled = Configuration.Config.CooldownNotDefaultEnabled.Contains(Name);
+                return DisabledByDefault ? disabled : !disabled;
+            }
+            set {
+                if((value && !DisabledByDefault) || (!value && DisabledByDefault)) {
+                    Configuration.Config.CooldownNotDefaultEnabled.Remove(Name);
+                }
+                else {
+                    Configuration.Config.CooldownNotDefaultEnabled.Add(Name);
+                }
+                Configuration.Config.Save();
+            }
+        }
     }
 
     public partial class CooldownManager {

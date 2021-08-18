@@ -44,7 +44,7 @@ namespace JobBars.Cooldowns {
             var trackerProps = CooldownManager.Manager.JobToCooldowns.TryGetValue(CurrentJob, out var props) ? props :
                 CooldownManager.Manager.JobToCooldowns[JobIds.OTHER];
             foreach(var prop in trackerProps) {
-                if (Configuration.Config.CooldownDisabled.Contains(prop.Name)) continue;
+                if (!prop.Enabled) continue;
                 Trackers.Add(new CooldownTracker(prop));
             }
         }

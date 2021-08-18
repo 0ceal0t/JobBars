@@ -1,4 +1,8 @@
 ﻿using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Group;
+using JobBars.Cooldowns;
+using JobBars.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +29,50 @@ namespace JobBars.Data {
 
         public static JobIds IdToJob(uint job) {
             return job < 19 ? JobIds.OTHER : (JobIds)job;
+        }
+
+        public unsafe static int GetPartyCount() {
+            var groupManager = GroupManager.Instance();
+            if (groupManager == null) return 0;
+            return groupManager->MemberCount;
+        }
+
+        public unsafe static bool IsInParty(uint objectId) {
+            if (objectId == 0 || objectId == 0xE0000000 || objectId == 0xFFFFFFFF) return false;
+
+            var groupManager = GroupManager.Instance();
+            if (groupManager == null || groupManager->MemberCount == 0) return false;
+
+            for (int i = 0; i < 8; i++) {
+                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
+                if (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF || info->ObjectID == 0) continue;
+                if (objectId == info->ObjectID) return true;
+            }
+            return false;
+        }
+
+        public unsafe static void GetPartyStatus(int ownerId, Dictionary<Item, BuffElem> buffDict) {
+            var groupManager = GroupManager.Instance();
+            if (groupManager == null || groupManager->MemberCount == 0) return;
+
+            for (int i = 0; i < 8; i++) {
+                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
+                if (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF || info->ObjectID == 0) continue;
+                if (info->StatusManager.Status == null) continue;
+
+                for(int j = 0; j < 30; j++) {
+                    Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
+                    if(status->SourceID == ownerId) {
+                        buffDict[new Item {
+                            Id = status->StatusID,
+                            Type = ItemType.Buff
+                        }] = new BuffElem {
+                            Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
+                            StackCount = status->StackCount
+                        };
+                    }
+                }
+            }
         }
 
         // ==================

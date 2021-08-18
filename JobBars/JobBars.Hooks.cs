@@ -20,7 +20,7 @@ namespace JobBars {
             var selfId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
-            var isParty = !isSelf && !isPet && IsInParty(sourceId);
+            var isParty = !isSelf && !isPet && DataManager.IsInParty((uint)sourceId);
 
             if (type != 1 || !(isSelf || isPet || isParty)) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
@@ -132,18 +132,6 @@ namespace JobBars {
                         return npc.OwnerId == ownerId;
                     }
                     return false;
-                }
-            }
-            return false;
-        }
-
-        private bool IsInParty(int objectId) {
-            if (objectId == 0) return false;
-            foreach (var pMember in Party) {
-                if (pMember == null) continue;
-                if (pMember.ObjectId == 0) continue;
-                if (pMember.ObjectId == objectId) {
-                    return true;
                 }
             }
             return false;

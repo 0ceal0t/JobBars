@@ -2,10 +2,8 @@
 using JobBars.Data;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.Buffs {
     public enum BuffState {

@@ -106,9 +106,11 @@ namespace JobBars.Gauges {
                 GaugeManager.Manager.UpdatePositionScale(job);
             }
 
-            var pos = Config.SplitPosition;
-            if (ImGui.InputFloat2("Split Position" + _ID, ref pos)) {
-                SetSplitPosition(pos);
+            if(Configuration.Config.GaugeSplit) {
+                var pos = Config.SplitPosition;
+                if (ImGui.InputFloat2("Split Position" + _ID, ref pos)) {
+                    SetSplitPosition(pos);
+                }
             }
 
             DrawGauge(_ID, job);
