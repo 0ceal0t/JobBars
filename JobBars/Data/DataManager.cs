@@ -1,4 +1,6 @@
-﻿using Dalamud.Plugin;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Logging;
+using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using JobBars.Cooldowns;
@@ -6,6 +8,7 @@ using JobBars.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +30,8 @@ namespace JobBars.Data {
         public static int GetIcon(ActionIds action) => GetIcon((uint)action);
         public static int GetIcon(uint action) => (int)Manager.ActionToIcon[action];
 
+        public static GameObject PreviousEnemyTarget => Manager.GetPreviousEnemyTarget();
+
         public static JobIds IdToJob(uint job) {
             return job < 19 ? JobIds.OTHER : (JobIds)job;
         }
@@ -45,7 +50,6 @@ namespace JobBars.Data {
 
             for (int i = 0; i < 8; i++) {
                 PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
-                if (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF || info->ObjectID == 0) continue;
                 if (objectId == info->ObjectID) return true;
             }
             return false;
@@ -57,20 +61,20 @@ namespace JobBars.Data {
 
             for (int i = 0; i < 8; i++) {
                 PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
-                if (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF || info->ObjectID == 0) continue;
+                if (info->ObjectID == 0 || info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) continue;
                 if (info->StatusManager.Status == null) continue;
 
                 for(int j = 0; j < 30; j++) {
                     Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
-                    if(status->SourceID == ownerId) {
-                        buffDict[new Item {
-                            Id = status->StatusID,
-                            Type = ItemType.Buff
-                        }] = new BuffElem {
-                            Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
-                            StackCount = status->StackCount
-                        };
-                    }
+                    if (status->SourceID != ownerId) continue;
+
+                    buffDict[new Item {
+                        Id = status->StatusID,
+                        Type = ItemType.Buff
+                    }] = new BuffElem {
+                        Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
+                        StackCount = status->StackCount
+                    };
                 }
             }
         }
@@ -81,9 +85,11 @@ namespace JobBars.Data {
 
         private readonly HashSet<uint> GCDs = new();
         private readonly Dictionary<uint, uint> ActionToIcon = new();
+        private readonly IntPtr TargetAddress;
 
         private DataManager(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
+            TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
             SetupActions();
         }
 
@@ -101,6 +107,13 @@ namespace JobBars.Data {
 
                 if (item.Icon != 405) ActionToIcon[item.RowId] = item.Icon;
             }
+        }
+
+        private GameObject GetPreviousEnemyTarget() {
+            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
+            if (actorAddress == IntPtr.Zero) return null;
+
+            return PluginInterface.ClientState.Objects.CreateObjectReference(actorAddress);
         }
     }
 }

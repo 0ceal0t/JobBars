@@ -1,9 +1,8 @@
 ﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.UI;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.Cooldowns {
     public unsafe class CooldownPartyMember {
@@ -43,7 +42,7 @@ namespace JobBars.Cooldowns {
 
             var trackerProps = CooldownManager.Manager.JobToCooldowns.TryGetValue(CurrentJob, out var props) ? props :
                 CooldownManager.Manager.JobToCooldowns[JobIds.OTHER];
-            foreach(var prop in trackerProps) {
+            foreach(var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new CooldownTracker(prop));
             }

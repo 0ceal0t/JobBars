@@ -1,13 +1,8 @@
 ﻿using Dalamud.Logging;
-using Dalamud.Plugin;
 using ImGuiNET;
 using JobBars.Data;
 using JobBars.UI;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Numerics;
-using System.Security.Cryptography;
-using System.Xml.Linq;
 
 namespace JobBars.Cooldowns {
     public unsafe partial class CooldownManager {
@@ -22,6 +17,13 @@ namespace JobBars.Cooldowns {
                 else UIBuilder.Builder.HideCooldowns();
 
                 ResetUI();
+            }
+
+            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat", ref Configuration.Config.CooldownsHideOutOfCombat)) {
+                if (!Configuration.Config.CooldownsHideOutOfCombat && Configuration.Config.CooldownsEnabled) { // since they might be hidden
+                    UIBuilder.Builder.ShowCooldowns();
+                }
+                Configuration.Config.Save();
             }
 
             var size = ImGui.GetContentRegionAvail();
@@ -45,7 +47,7 @@ namespace JobBars.Cooldowns {
             else {
                 ImGui.BeginChild(_ID + "Selected");
                 foreach (var cooldown in JobToCooldowns[SettingsJobSelected]) {
-                    DrawCooldown(cooldown, _ID);
+                    DrawCooldown(cooldown, _ID + cooldown.Name);
                 }
                 ImGui.EndChild();
             }
@@ -58,6 +60,12 @@ namespace JobBars.Cooldowns {
             ImGui.TextColored(enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
             if (ImGui.Checkbox("Enabled" + _ID, ref enabled)) {
                 cooldown.Enabled = enabled;
+                ResetUI();
+            }
+
+            var order = cooldown.Order;
+            if(ImGui.InputInt("Order" + _ID, ref order)) {
+                cooldown.Order = order;
                 ResetUI();
             }
 

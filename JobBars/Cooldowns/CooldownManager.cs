@@ -55,8 +55,13 @@ namespace JobBars.Cooldowns {
             }
         }
 
-        public void Tick() {
+        public void Tick(bool inCombat) {
             if (!Configuration.Config.CooldownsEnabled) return;
+
+            if (Configuration.Config.CooldownsHideOutOfCombat) {
+                if (inCombat) UIBuilder.Builder.ShowCooldowns();
+                else UIBuilder.Builder.HideCooldowns();
+            }
 
             var time = DateTime.Now;
             int millis = time.Second * 1000 + time.Millisecond;

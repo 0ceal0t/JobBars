@@ -75,10 +75,13 @@ namespace JobBars.Data {
         // ==== COOLDOWNS ======
 
         public bool CooldownsEnabled = true;
-        public HashSet<string> CooldownNotDefaultEnabled = new();
+        public bool CooldownsHideOutOfCombat = false;
+        public HashSet<string> CooldownDisabled = new();
+        public Dictionary<string, int> CooldownOrder = new();
 
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;
+
         public static Configuration Config { get; private set; }
 
         public GaugeConfig GetGaugeConfig(string name) {

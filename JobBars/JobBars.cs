@@ -46,8 +46,6 @@ namespace JobBars {
 
         /*
          * SIG LIST:
-         *  Lord have mercy when 6.0 comes
-         * =================================
          * 
          *  FFXIVClientInterface/ClientInterface.cs
          *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
@@ -58,18 +56,6 @@ namespace JobBars {
          *  JobBars.cs
          *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
          *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
-         *  UIBuilder.cs
-         *      loadAssetsPtr (E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??)
-         *      loadTexAllocPtr (48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48)
-         *      texUnallocPtr (E8 ?? ?? ?? ?? C6 43 10 02)
-         *      
-         *  PartyList/PartyList.cs
-         *      GroupManager (48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? ?? 76 50)
-         *      CrossRealmGroupManagerPtr (77 71 48 8B 05)
-         *      CompanionManagerPtr (4C 8B 15 ?? ?? ?? ?? 4C 8B C9)
-         *      GetCrossRealmMemberCountPtr (E8 ?? ?? ?? ?? 3C 01 77 4B)
-         *      GetCrossMemberByGrpIndexPtr (E8 ?? ?? ?? ?? 44 89 7C 24 ?? 4C 8B C8)
-         *      GetCompanionMemberCountPtr (E8 ?? ?? ?? ?? 8B D3 85 C0)
          *      
          *  GaugeManager (TargetManager from Dalamud)
          *      48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB
@@ -212,7 +198,7 @@ namespace JobBars {
             var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
             GManager.Tick(inCombat);
             BManager.Tick(inCombat);
-            CDManager.Tick();
+            CDManager.Tick(inCombat);
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

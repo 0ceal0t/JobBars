@@ -9,23 +9,29 @@ namespace JobBars.Data {
         // DRK
         Delirium = 0x7b4,
         BloodWeapon = 0x2e6,
+
         // WAR
         InnerRelease = 0x499,
         StormsEye = 0x5a,
+
         // PLD
         FightOrFlight = 0x4c,
         Requiescat = 0x558,
         GoringBlade = 725,
+
         // GNB
         NoMercy = 0x727,
+
         // SCH
         Biolysis = 1895,
         Excog = 1220,
+
         // WHM
         Aero = 143,
         Aero2 = 144,
         Dia = 1871,
         PresenceOfMind = 157,
+
         // AST
         TheBalance = 0x75a,
         TheBole = 0x75b,
@@ -40,6 +46,7 @@ namespace JobBars.Data {
         Combust3 = 0x759,
         GiantDominance = 1248,
         Lightspeed = 841,
+
         // MNK
         PerfectBalance = 0x6e,
         RiddleOfFire = 0x49d,
@@ -47,6 +54,7 @@ namespace JobBars.Data {
         TrueNorth = 1250,
         TwinSnakes = 101,
         Demolish = 246,
+
         // DRG
         LanceCharge = 0x748,
         BattleLitany = 0x312,
@@ -54,13 +62,16 @@ namespace JobBars.Data {
         RightEye2 = 0x5ad,
         Disembowel = 1914,
         ChaosThrust = 118,
+
         // NIN
         TrickAttack = 0x27e,
         Bunshin = 0x7a2,
+
         // SAM
         Jinpu = 0x512,
         Shifu = 0x513,
         Higanbana = 1228,
+
         // BRD
         RagingStrikes = 0x7d,
         VenomousBite = 1200,
@@ -68,8 +79,10 @@ namespace JobBars.Data {
         Windbite = 129,
         CausticBite = 124,
         StraightShotReady = 122,
+
         // MCH
         Wildfire = 0x79a,
+
         // DNC
         Devilment = 0x721,
         FlourishingCascade = 1814,
@@ -77,6 +90,7 @@ namespace JobBars.Data {
         FlourishingWindmill = 1816,
         FlourishingShower = 1817,
         FlourishingFanDance = 1820,
+
         // BLM
         Firestarter = 165,
         Thundercloud = 164,
@@ -84,6 +98,7 @@ namespace JobBars.Data {
         Thunder2 = 162,
         Thunder3 = 163,
         Thunder4 = 1210,
+
         // SMN
         ArcBio = 179,
         ArcBio2 = 189,
@@ -91,12 +106,14 @@ namespace JobBars.Data {
         Miasma = 180,
         Miasma3 = 1215,
         Ruin4 = 1212,
+
         // RDM
         Manafication = 0x7b3,
         Embolden = 0x4d7,
         VerfireReady = 1234,
         VerstoneReady = 1235,
         Acceleration = 1238,
+
         // BLU
         BluBleed = 1714,
         Poison = 18,

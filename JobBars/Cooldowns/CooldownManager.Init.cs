@@ -12,16 +12,23 @@ namespace JobBars.Cooldowns {
 
         public bool Enabled {
             get {
-                var disabled = Configuration.Config.CooldownNotDefaultEnabled.Contains(Name);
+                var disabled = Configuration.Config.CooldownDisabled.Contains(Name);
                 return DisabledByDefault ? disabled : !disabled;
             }
             set {
-                if((value && !DisabledByDefault) || (!value && DisabledByDefault)) {
-                    Configuration.Config.CooldownNotDefaultEnabled.Remove(Name);
-                }
-                else {
-                    Configuration.Config.CooldownNotDefaultEnabled.Add(Name);
-                }
+                if (value != DisabledByDefault) Configuration.Config.CooldownDisabled.Remove(Name);
+                else Configuration.Config.CooldownDisabled.Add(Name);
+
+                Configuration.Config.Save();
+            }
+        }
+
+        public int Order {
+            get => Configuration.Config.CooldownOrder.TryGetValue(Name, out var order) ? order : -1;
+            set {
+                if (value == -1) Configuration.Config.CooldownOrder.Remove(Name);
+                else Configuration.Config.CooldownOrder[Name] = value;
+
                 Configuration.Config.Save();
             }
         }

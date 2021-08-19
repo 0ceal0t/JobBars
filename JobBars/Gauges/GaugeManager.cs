@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
 
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
@@ -20,13 +19,9 @@ namespace JobBars.Gauges {
         private Dictionary<JobIds, Gauge[]> JobToGauges;
         private Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
 
-        private readonly IntPtr TargetAddress;
-
         public GaugeManager(DalamudPluginInterface pluginInterface) {
             Manager = this;
             PluginInterface = pluginInterface;
-            TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
-
             Init();
         }
 
@@ -102,7 +97,7 @@ namespace JobBars.Gauges {
 
             AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
 
-            var prevEnemy = GetPreviousEnemyTarget();
+            var prevEnemy = DataManager.PreviousEnemyTarget;
             if (prevEnemy != null) AddBuffs(prevEnemy, ownerId, BuffDict);
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
@@ -145,13 +140,6 @@ namespace JobBars.Gauges {
                     }
                 }
             }
-        }
-
-        private GameObject GetPreviousEnemyTarget() {
-            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
-            if (actorAddress == IntPtr.Zero) return null;
-
-            return PluginInterface.ClientState.Objects.CreateObjectReference(actorAddress);
         }
     }
 
