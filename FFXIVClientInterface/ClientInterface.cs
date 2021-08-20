@@ -17,9 +17,6 @@ namespace FFXIVClientInterface {
             }
         }
 
-        public ClientInterface() {
-        }
-
         public void Dispose() {
             uiModule?.Dispose();
         }

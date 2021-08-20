@@ -1,6 +1,7 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
@@ -49,6 +50,10 @@ namespace JobBars.UI {
             var addon = UIHelper.PartyListAddon;
             addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = null;
             addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
+        }
+
+        public void SetCooldownPosition(Vector2 pos) {
+            UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
         }
 
         public void SetCooldownRowVisible(int idx, bool Visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, Visible);

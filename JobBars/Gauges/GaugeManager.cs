@@ -61,7 +61,7 @@ namespace JobBars.Gauges {
                     }
                     else { // VERTICAL
                         int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.Width : 0;
-                        if(Configuration.Config.GaugeBottomToTop) {
+                        if(Configuration.Config.GaugeBottomToTop) { // BOTTOM TO TOP
                             gauge.UI.SetPosition(new Vector2(xPosition, totalPosition - gauge.Height));
                             totalPosition -= gauge.Height;
                         }

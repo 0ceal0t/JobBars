@@ -19,6 +19,11 @@ namespace JobBars.Cooldowns {
                 ResetUI();
             }
 
+            if (ImGui.InputFloat2("Position" + _ID, ref Configuration.Config.CooldownPosition)) {
+                Configuration.Config.Save();
+                UIBuilder.Builder.SetCooldownPosition(Configuration.Config.CooldownPosition);
+            }
+
             if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat", ref Configuration.Config.CooldownsHideOutOfCombat)) {
                 if (!Configuration.Config.CooldownsHideOutOfCombat && Configuration.Config.CooldownsEnabled) { // since they might be hidden
                     UIBuilder.Builder.ShowCooldowns();

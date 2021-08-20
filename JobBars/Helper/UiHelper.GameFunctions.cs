@@ -16,7 +16,7 @@ namespace JobBars.Helper {
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
-        public static TextureLoadPathDelegate TextureLoadPath;
+        public static TextureLoadPathDelegate TextureLoadPath { get; private set; }
 
         public static bool Ready { get; private set; } = false;
 
@@ -80,6 +80,7 @@ namespace JobBars.Helper {
         }
 
         public static AtkUnitBase* ParameterAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ParameterWidget");
+        public static AtkUnitBase* ChatLogAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ChatLog");
         public static AddonPartyList* PartyListAddon => (AddonPartyList*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_PartyList");
     }
 }

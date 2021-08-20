@@ -13,8 +13,6 @@ https://user-images.githubusercontent.com/18051158/123529151-a4f9e100-d6bb-11eb-
 ## Usage
 To open the settings menu, use `/jobbars`
 
-> Note: you must have your HP/MP visible for this plugin to work properly
-
 ## Why?
 Some people find these useful. If you don't, each gauge and buff can enabled or disabled.
 

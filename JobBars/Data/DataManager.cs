@@ -3,6 +3,8 @@ using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using JobBars.GameStructs;
 using JobBars.Gauges;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace JobBars.Data {
     public class DataManager {
         public static DataManager Manager { get; private set; }
 
-        public static void Initialize(DalamudPluginInterface pluginInterface) {
+        public unsafe static void Initialize(DalamudPluginInterface pluginInterface) {
             Manager = new DataManager(pluginInterface);
         }
 
@@ -29,8 +31,34 @@ namespace JobBars.Data {
 
         public static GameObject PreviousEnemyTarget => Manager.GetPreviousEnemyTarget();
 
-        public static JobIds IdToJob(uint job) {
-            return job < 19 ? JobIds.OTHER : (JobIds)job;
+        public static JobIds IdToJob(uint job) => job < 19 ? JobIds.OTHER : (JobIds)job;
+        public static JobIds IconToJob(uint icon) => icon switch {
+            062119 => JobIds.PLD,
+            062120 => JobIds.MNK,
+            062121 => JobIds.WAR,
+            062122 => JobIds.DRG,
+            062123 => JobIds.BRD,
+            062124 => JobIds.WHM,
+            062125 => JobIds.BLM,
+            062127 => JobIds.SMN,
+            062128 => JobIds.SCH,
+            062130 => JobIds.NIN,
+            062131 => JobIds.MCH,
+            062132 => JobIds.DRK,
+            062133 => JobIds.AST,
+            062134 => JobIds.SAM,
+            062135 => JobIds.RDM,
+            062136 => JobIds.BLU,
+            062137 => JobIds.GNB,
+            062138 => JobIds.DNC,
+            _ => JobIds.OTHER
+        };
+
+        public unsafe static AddonPartyListIntArray* GetPartyUI() {
+            var uiModule = Framework.Instance()->GetUiModule();
+            if (uiModule == null) return null;
+            var numArray = uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[4];
+            return (AddonPartyListIntArray*)numArray->IntArray;
         }
 
         public unsafe static int GetPartyCount() {

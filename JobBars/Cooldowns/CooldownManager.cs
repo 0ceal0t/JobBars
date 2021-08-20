@@ -22,11 +22,15 @@ namespace JobBars.Cooldowns {
             Init();
         }
 
+        public void SetupUI() {
+            UIBuilder.Builder.SetCooldownPosition(Configuration.Config.CooldownPosition);
+        }
+
         public List<CooldownPartyMemberStruct> GetPartyMembers() {
             var ret = new List<CooldownPartyMemberStruct>();
-            var groupManager = GroupManager.Instance();
 
-            if(groupManager == null || groupManager->MemberCount == 0) { // fallback
+            var partyUI = DataManager.GetPartyUI();
+            if(partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
                 var localPlayer = PluginInterface.ClientState.LocalPlayer;
                 var self = new CooldownPartyMemberStruct {
                     ObjectId = localPlayer.ObjectId,
@@ -36,12 +40,13 @@ namespace JobBars.Cooldowns {
                 return ret;
             }
 
-            for(int i = 0; i < 8; i++) {
-                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
+            for(int i = 0; i < partyUI->PartyMemberCount; i++) {
+                var member = partyUI->PartyMember[i];
+                var objectId = (uint)member.ObjectID;
                 ret.Add(new CooldownPartyMemberStruct {
-                    ObjectId = (info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) ? 0 : info->ObjectID,
-                    Job = DataManager.IdToJob(info->ClassJob)
-                });
+                    ObjectId = (objectId == 0xE0000000 || objectId == 0xFFFFFFFF) ? 0 : objectId,
+                    Job = DataManager.IconToJob((uint)member.ClassJobIcon)
+                }); ;
             }
 
             return ret;
@@ -84,7 +89,7 @@ namespace JobBars.Cooldowns {
 
                 UIBuilder.Builder.SetCooldownRowVisible(idx, true);
             }
-            for(int idx = partyMembers.Count; idx < 8; idx++) {
+            for(int idx = partyMembers.Count; idx < 8; idx++) { // hide remaining slots
                 UIBuilder.Builder.SetCooldownRowVisible(idx, false);
             }
 

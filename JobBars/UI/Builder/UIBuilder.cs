@@ -8,9 +8,9 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public static UIBuilder Builder { get; private set; } = null;
 
-        public static void Initialize(DalamudPluginInterface pluginInterface) {
+        public static void Initialize() {
             Builder?.DisposeInstance();
-            Builder = new UIBuilder(pluginInterface);
+            Builder = new UIBuilder();
             Builder.InitializeInstance();
         }
 
@@ -21,16 +21,11 @@ namespace JobBars.UI {
 
         // ===== INSTANCE =======
 
-        private DalamudPluginInterface PluginInterface;
         private static readonly uint NODE_IDX_START = 89990001;
         private uint NodeIdx = NODE_IDX_START;
 
-        private UIBuilder(DalamudPluginInterface pi) {
-            PluginInterface = pi;
-        }
-
         private void InitializeInstance() {
-            var addon = UIHelper.ParameterAddon;
+            var addon = UIHelper.ChatLogAddon;
             if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) {
                 PluginLog.Debug("Error setting up UI builder");
                 return;
@@ -47,7 +42,7 @@ namespace JobBars.UI {
             DisposeBuffs();
             DisposeTextures(); // dispose last
 
-            var addon = UIHelper.ParameterAddon;
+            var addon = UIHelper.ChatLogAddon;
             if (addon == null) return;
             addon->UldManager.UpdateDrawNodeList();
         }
@@ -64,16 +59,16 @@ namespace JobBars.UI {
             Attach(addon);
         }
 
-        public void Attach() => Attach(UIHelper.ParameterAddon);
-        public void Attach(AtkUnitBase* parameterAddon) {
+        public void Attach() => Attach(UIHelper.ChatLogAddon);
+        public void Attach(AtkUnitBase* addon) {
             // ==== INSERT AT THE END ====
-            var lastNode = parameterAddon->RootNode->ChildNode;
+            var lastNode = addon->RootNode->ChildNode;
             while (lastNode->PrevSiblingNode != null) {
                 lastNode = lastNode->PrevSiblingNode;
             }
 
             UIHelper.Link(lastNode, GaugeRoot);
-            parameterAddon->UldManager.UpdateDrawNodeList();
+            addon->UldManager.UpdateDrawNodeList();
 
             AttachCooldown();
         }
@@ -81,14 +76,14 @@ namespace JobBars.UI {
         // ==== HELPER FUNCTIONS ============
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.ParameterAddon;
+            var addon = UIHelper.ChatLogAddon;
             var p = UIHelper.GetNodePosition(addon->RootNode);
             var pScale = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
         }
 
         private void SetScale(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.ParameterAddon;
+            var addon = UIHelper.ChatLogAddon;
             var p = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetScale(node, X / p.X, Y / p.Y);
         }

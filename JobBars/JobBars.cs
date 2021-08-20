@@ -15,7 +15,6 @@ using JobBars.Buffs;
 using JobBars.Cooldowns;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -127,7 +126,7 @@ namespace JobBars {
         }
 
         private void FrameworkOnUpdate(Framework framework) {
-            var addon = UIHelper.ParameterAddon;
+            var addon = UIHelper.ChatLogAddon;
 
             if (!PlayerExists) {
                 if (Initialized && !LoggedOut && addon == null) Logout();
@@ -142,7 +141,7 @@ namespace JobBars {
             }
 
             if(LoggedOut) {
-                UIBuilder.Builder.Attach();
+                UIBuilder.Builder.Attach(); // re-attach after addons have been re-created
                 LoggedOut = false;
                 return;
             }
@@ -168,9 +167,10 @@ namespace JobBars {
 
             BManager = new BuffManager();
             CDManager = new CooldownManager(PluginInterface);
-            UIBuilder.Initialize(PluginInterface);
             GManager = new GaugeManager(PluginInterface);
-            BManager.GetIconsUI();
+            UIBuilder.Initialize();
+            CDManager.SetupUI();
+            BManager.SetupUI();
 
             if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
             if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();

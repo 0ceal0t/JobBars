@@ -24,7 +24,7 @@ namespace JobBars.Buffs {
             }
         }
 
-        public void GetIconsUI() {
+        public void SetupUI() {
             foreach(var buff in AllBuffs) {
                 buff.LoadUI(UIBuilder.Builder.IconToBuff[buff.Icon]);
             }

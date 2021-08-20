@@ -75,6 +75,8 @@ namespace JobBars.Data {
 
         // ==== COOLDOWNS ======
 
+        public Vector2 CooldownPosition = new(-40, 40);
+
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
         public HashSet<string> CooldownDisabled = new();
