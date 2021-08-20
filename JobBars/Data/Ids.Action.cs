@@ -14,6 +14,7 @@ namespace JobBars.Data {
         LivingShadow = 0x4058,
         BloodSpiller = 0x1CE0,
         Quietus = 0x1CDF,
+        TheBlackestNight = 7393,
 
         // WAR ==========
         InnerRelease = 7389,
@@ -21,6 +22,8 @@ namespace JobBars.Data {
         Decimate = 0xDDE,
         ShakeItOff = 7388,
         Holmgang = 43,
+        NascentFlash = 16464,
+        RawIntuition = 3551,
 
         // PLD ===========
         Requiescat = 7383,

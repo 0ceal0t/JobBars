@@ -91,7 +91,8 @@ Some people find these useful. If you don't, each gauge and buff can enabled or 
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
-- [ ] support crossbar for icon replacement
+- [ ] Completely custom gauges/buffs/cds (requires big rework)
+- [ ] Support crossbar for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
 - [ ] Glow around gauges

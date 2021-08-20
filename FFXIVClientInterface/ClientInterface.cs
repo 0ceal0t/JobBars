@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using Dalamud.Data;
-using Dalamud.Game;
 using FFXIVClientInterface.Client.UI;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace FFXIVClientInterface {
     public unsafe class ClientInterface : IDisposable {
-        private bool ready;
-        internal static DataManager DataManager;
-        internal static SigScanner SigScanner;
-        
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate UiModuleStruct* GetUiModuleDelegate();
-        private readonly GetUiModuleDelegate getUiModule;
         
         private UiModule uiModule;
         public UiModule UiModule {
             get {
-                if (!ready) return null;
                 if (uiModule != null && uiModule.IsValid) return uiModule;
-                var fetchedUiModule = getUiModule();
+                var fetchedUiModule = (UiModuleStruct*)Framework.Instance()->GetUiModule();
                 if (fetchedUiModule != null) {
                     uiModule = new UiModule() { Data = fetchedUiModule };
                 }
@@ -27,15 +17,10 @@ namespace FFXIVClientInterface {
             }
         }
 
-        public ClientInterface(SigScanner scanner, DataManager dataManager) {
-            DataManager = dataManager;
-            SigScanner = scanner;
-            this.getUiModule = Marshal.GetDelegateForFunctionPointer<GetUiModuleDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9"));
-            ready = true;
+        public ClientInterface() {
         }
 
         public void Dispose() {
-            ready = false;
             uiModule?.Dispose();
         }
     }

@@ -31,7 +31,10 @@ namespace JobBars.UI {
 
             CooldownRoot->ChildCount = (ushort)((1 + Cooldowns[0].RootRes->ChildCount) * Cooldowns.Count);
             CooldownRoot->ChildNode = Cooldowns[0].RootRes;
+        }
 
+        private void AttachCooldown() {
+            var addon = UIHelper.PartyListAddon;
             addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = CooldownRoot;
             addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }

@@ -102,7 +102,7 @@ namespace JobBars.UI {
         }
 
         public AtkNineGridNode* CreateNineNode() {
-            var addon = (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
+            var addon = UIHelper.ParameterAddon;
             var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
             var node = UIHelper.CloneNode((AtkNineGridNode*)gaugeComp->Component->UldManager.NodeList[3]);
 

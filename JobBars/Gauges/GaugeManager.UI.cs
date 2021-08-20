@@ -80,6 +80,12 @@ namespace JobBars.Gauges {
                 }
 
                 ImGui.SameLine();
+                if (ImGui.Checkbox("Bottom To Top", ref Configuration.Config.GaugeBottomToTop)) {
+                    UpdatePositionScale();
+                    Configuration.Config.Save();
+                }
+
+                ImGui.SameLine();
                 if (ImGui.Checkbox("Align Right", ref Configuration.Config.GaugeAlignRight)) {
                     UpdatePositionScale();
                     Configuration.Config.Save();

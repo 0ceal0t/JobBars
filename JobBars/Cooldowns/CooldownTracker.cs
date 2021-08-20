@@ -1,6 +1,8 @@
 ﻿using JobBars.Data;
 using JobBars.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.Cooldowns {
     public class CooldownTracker {
@@ -55,7 +57,13 @@ namespace JobBars.Cooldowns {
         }
 
         public void ProcessAction(Item action) {
-            if(action.Type != ItemType.Buff && action.Id == (uint) Props.Trigger) {
+            if(action.Type != ItemType.Buff && 
+                (action.Id == (uint) Props.Trigger ||
+                    (
+                        Props.AdditionalTriggers != null && Props.AdditionalTriggers.Contains((ActionIds)action.Id)
+                    )
+                )
+             ){
                 LastActiveTime = DateTime.Now;
                 State = Props.CD == 0 ? TrackerState.OnCD : TrackerState.Running;
             }

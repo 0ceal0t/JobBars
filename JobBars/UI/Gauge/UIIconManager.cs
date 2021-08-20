@@ -200,7 +200,7 @@ namespace JobBars.UI {
 
         private UIIconManager(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
+            Client = new ClientInterface();
         }
 
         public void Setup(List<uint> triggers) {
@@ -209,7 +209,7 @@ namespace JobBars.UI {
 
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
                 if (hotbarModule == null) return;
-                var actionBar = (AddonActionBarBase*)PluginInterface.Framework.Gui.GetUiObjectByName(AllActionBars[abIndex], 1);
+                var actionBar = (AddonActionBarBase*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(AllActionBars[abIndex]);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
                 HotBar* bar = (abIndex < 10) ? hotbarModule.GetBar(abIndex, HotBarType.Normal) : hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
 

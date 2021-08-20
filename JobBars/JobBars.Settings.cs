@@ -31,8 +31,9 @@ namespace JobBars {
                 }
 
                 ImGui.EndTabBar();
-                ImGui.End();
             }
+            ImGui.End();
+
             GManager?.DrawPositionBox();
             BManager?.DrawPositionBox();
         }
@@ -50,7 +51,6 @@ namespace JobBars {
             ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
             ImGui.Begin(Id, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
             newPosition = ImGui.GetWindowPos() - minPosition;
-
             ImGui.PopStyleVar(1);
             ImGui.End();
             return newPosition != position;

@@ -6,6 +6,7 @@ namespace JobBars.Cooldowns {
     public struct CooldownProps {
         public string Name;
         public ActionIds Trigger;
+        public ActionIds[] AdditionalTriggers;
         public float Duration;
         public float CD;
         public bool DisabledByDefault;
@@ -107,6 +108,14 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.ShakeItOff,
                     Duration = 15,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = "Nascent Flash",
+                    Trigger = ActionIds.NascentFlash,
+                    AdditionalTriggers = new[] {ActionIds.RawIntuition },
+                    Duration = 6,
+                    CD = 25,
+                    DisabledByDefault = true
                 }
             });
             // ============ DRK ==================
@@ -128,6 +137,13 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.DarkMissionary,
                     Duration = 15,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = "The Blackest Night",
+                    Trigger = ActionIds.TheBlackestNight,
+                    Duration = 7,
+                    CD = 15,
+                    DisabledByDefault = true
                 }
             });
             // ============ AST ==================

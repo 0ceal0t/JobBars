@@ -40,15 +40,13 @@ namespace JobBars {
 
         private bool PlayerExists => PluginInterface.ClientState?.LocalPlayer != null;
         private bool Initialized = false;
+        private bool LoggedOut = false;
 
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
         /*
          * SIG LIST:
-         * 
-         *  FFXIVClientInterface/ClientInterface.cs
-         *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
          *      
          *  Helper/UiHelper.GameFunctions.cs
          *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
@@ -110,6 +108,7 @@ namespace JobBars {
 
             GaugeManager.Dispose();
             BuffManager.Dispose();
+            CooldownManager.Dispose();
             GManager = null;
             BManager = null;
             CDManager = null;
@@ -131,7 +130,7 @@ namespace JobBars {
             var addon = UIHelper.ParameterAddon;
 
             if (!PlayerExists) {
-                if (Initialized && addon == null) Logout();
+                if (Initialized && !LoggedOut && addon == null) Logout();
                 return;
             }
 
@@ -139,6 +138,12 @@ namespace JobBars {
 
             if (!Initialized) {
                 InitializeUI();
+                return;
+            }
+
+            if(LoggedOut) {
+                UIBuilder.Builder.Attach();
+                LoggedOut = false;
                 return;
             }
 
@@ -153,7 +158,7 @@ namespace JobBars {
             UIIconManager.Manager.Reset();
             Animation.Dispose();
 
-            Initialized = false;
+            LoggedOut = true;
             CurrentJob = JobIds.OTHER;
         }
 

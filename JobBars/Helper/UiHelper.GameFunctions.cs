@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using Dalamud.Logging;
 using Dalamud.Plugin;
@@ -26,9 +25,7 @@ namespace JobBars.Helper {
             var scanner = pluginInterface.TargetModuleScanner;
 
             PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
-
-            var texLoadPtr = scanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??");
-            TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(texLoadPtr);
+            TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
 
             Ready = true;
         }
@@ -82,7 +79,7 @@ namespace JobBars.Helper {
             return timeElapsed > 0;
         }
 
-        public static AtkUnitBase* ParameterAddon => (AtkUnitBase*)PluginInterface?.Framework.Gui.GetUiObjectByName("_ParameterWidget", 1);
-        public static AddonPartyList* PartyListAddon => (AddonPartyList*)PluginInterface?.Framework.Gui.GetUiObjectByName("_PartyList", 1);
+        public static AtkUnitBase* ParameterAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ParameterWidget");
+        public static AddonPartyList* PartyListAddon => (AddonPartyList*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_PartyList");
     }
 }

@@ -39,7 +39,9 @@ namespace JobBars.UI {
         }
 
         private void DisposeInstance() {
-            GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
+            if(GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
+                GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
+            }
             DisposeCooldowns();
             DisposeGauges();
             DisposeBuffs();
@@ -58,16 +60,22 @@ namespace JobBars.UI {
             InitBuffs(addon, GaugeBuffAssets.PartsList);
             InitCooldowns(CooldownAssets.PartsList);
 
+            UIHelper.Link(GaugeRoot, BuffRoot);
+            Attach(addon);
+        }
+
+        public void Attach() => Attach(UIHelper.ParameterAddon);
+        public void Attach(AtkUnitBase* parameterAddon) {
             // ==== INSERT AT THE END ====
-            var lastNode = addon->RootNode->ChildNode;
+            var lastNode = parameterAddon->RootNode->ChildNode;
             while (lastNode->PrevSiblingNode != null) {
                 lastNode = lastNode->PrevSiblingNode;
             }
 
             UIHelper.Link(lastNode, GaugeRoot);
-            UIHelper.Link(GaugeRoot, BuffRoot);
+            parameterAddon->UldManager.UpdateDrawNodeList();
 
-            addon->UldManager.UpdateDrawNodeList();
+            AttachCooldown();
         }
 
         // ==== HELPER FUNCTIONS ============

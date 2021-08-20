@@ -9,7 +9,7 @@ using System.Numerics;
 namespace JobBars.Data {
     [Serializable]
     public class GaugeConfig {
-        public Vector2 SplitPosition = new(0);
+        public Vector2 SplitPosition = new(200, 200);
         public float Scale = 1;
         public bool Enabled = true;
         public int Order = -1;
@@ -44,8 +44,9 @@ namespace JobBars.Data {
         public float GaugeScale = 1.0f;
         public bool GaugeHorizontal = false;
         public bool GaugeAlignRight = false;
+        public bool GaugeBottomToTop = false;
         public bool GaugeSplit = false;
-        public Vector2 GaugePosition { get; set; } = new Vector2(0, 0);
+        public Vector2 GaugePosition = new(200, 200);
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
@@ -60,7 +61,7 @@ namespace JobBars.Data {
 
         // ===== BUFFS ======
 
-        public Vector2 BuffPosition { get; set; } = new Vector2(0, 0);
+        public Vector2 BuffPosition = new(200, 200);
         public float BuffScale = 1.0f;
 
         public bool BuffBarEnabled = true;
