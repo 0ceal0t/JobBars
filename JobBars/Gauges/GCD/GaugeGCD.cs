@@ -14,7 +14,7 @@ namespace JobBars.Gauges {
 
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps props) : this(name, type, new[] { props }) { }
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps[] props) : base(name) {
-            Type = Config.Type != null ? Config.Type.Value : type;
+            Type = Configuration.Config.GaugeType.Get(Name, type);
 
             SubGauges = new SubGaugeGCD[props.Length];
             for (int i = 0; i < props.Length; i++) {
@@ -51,9 +51,8 @@ namespace JobBars.Gauges {
         protected override void DrawGauge(string _ID, JobIds job) {
             foreach (var sg in SubGauges) sg.DrawSubGauge(_ID, job);
 
-            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Type, out var newType)) {
-                Config.Type = Type = newType;
-                Configuration.Config.Save();
+            if(Configuration.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var value)) {
+                Type = value;
                 GaugeManager.Manager.ResetJob(job);
             }
         }

@@ -5,7 +5,6 @@ using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public struct GaugeProcProps {
@@ -39,7 +38,7 @@ namespace JobBars.Gauges {
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
-            Props.NoSoundOnFull = GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
+            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
 
             for (int idx = 0; idx < Props.Procs.Length; idx++) Props.Procs[idx].Idx = idx;
             Size = Props.Procs.Length;
@@ -101,9 +100,8 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (ImGui.Checkbox($"Don't Play Sound On Proc {_ID}", ref Props.NoSoundOnFull)) {
-                Config.Invert = Props.NoSoundOnFull;
-                Configuration.Config.Save();
+            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, out var newSound)) {
+                Props.NoSoundOnFull = newSound;
             }
         }
     }

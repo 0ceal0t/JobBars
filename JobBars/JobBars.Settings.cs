@@ -30,6 +30,11 @@ namespace JobBars {
                     ImGui.EndTabItem();
                 }
 
+                if (ImGui.BeginTabItem("Utilities" + _ID)) {
+                    UtilManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
                 ImGui.EndTabBar();
             }
             ImGui.End();

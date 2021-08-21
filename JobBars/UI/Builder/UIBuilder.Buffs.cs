@@ -12,12 +12,11 @@ namespace JobBars.UI {
         public List<UIBuff> Buffs = new();
         public Dictionary<ActionIds, UIBuff> IconToBuff = new();
 
-        private void InitBuffs(AtkUnitBase* addon, AtkUldPartsList* partsList) {
+        private void InitBuffs(AtkUldPartsList* partsList) {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
             BuffRoot->Flags = 9395;
-            BuffRoot->ParentNode = addon->RootNode;
 
             UIBuff lastBuff = null;
             foreach (var icon in BuffManager.Manager.Icons) {
@@ -45,24 +44,10 @@ namespace JobBars.UI {
             BuffRoot = null;
         }
 
-        public void SetBuffPosition(Vector2 pos) {
-            SetPosition(BuffRoot, pos.X, pos.Y);
-        }
-
-        public void SetBuffScale(float scale) {
-            SetScale(BuffRoot, scale, scale);
-        }
-
-        public void ShowBuffs() {
-            UIHelper.Show(BuffRoot);
-        }
-
-        public void HideBuffs() {
-            UIHelper.Hide(BuffRoot);
-        }
-
-        public void HideAllBuffs() {
-            Buffs.ForEach(x => x.Hide());
-        }
+        public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);
+        public void SetBuffScale(float scale) => SetScale(BuffRoot, scale, scale);
+        public void ShowBuffs() => UIHelper.Show(BuffRoot);
+        public void HideBuffs() => UIHelper.Hide(BuffRoot);
+        public void HideAllBuffs() => Buffs.ForEach(x => x.Hide());
     }
 }

@@ -11,7 +11,7 @@ namespace JobBars.UI {
         public List<UIArrow> Arrows = new();
         public List<UIDiamond> Diamonds = new();
 
-        private void InitGauges(AtkUnitBase* addon, AtkUldPartsList* partsList) {
+        private void InitGauges(AtkUldPartsList* partsList) {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
@@ -38,7 +38,6 @@ namespace JobBars.UI {
                 lastDiamond = newDiamond;
             }
 
-            GaugeRoot->ParentNode = addon->RootNode;
             GaugeRoot->ChildCount = (ushort)(MAX_GAUGES * (
                 Arrows[0].RootRes->ChildCount + 1 +
                 Bars[0].RootRes->ChildCount + 1 +
@@ -61,21 +60,10 @@ namespace JobBars.UI {
             GaugeRoot = null;
         }
 
-        public void SetGaugePosition(Vector2 pos) {
-            SetPosition(GaugeRoot, pos.X, pos.Y);
-        }
-
-        public void SetGaugeScale(float scale) {
-            SetScale(GaugeRoot, scale, scale);
-        }
-
-        public void ShowGauges() {
-            UIHelper.Show(GaugeRoot);
-        }
-
-        public void HideGauges() {
-            UIHelper.Hide(GaugeRoot);
-        }
+        public void SetGaugePosition(Vector2 pos) => SetPosition(GaugeRoot, pos.X, pos.Y);
+        public void SetGaugeScale(float scale) => SetScale(GaugeRoot, scale, scale);
+        public void ShowGauges() => UIHelper.Show(GaugeRoot);
+        public void HideGauges() => UIHelper.Hide(GaugeRoot);
 
         public void HideAllGauges() {
             Bars.ForEach(x => x.Hide());

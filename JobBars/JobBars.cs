@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using Dalamud.Plugin;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Game;
+
 using JobBars.Helper;
 using JobBars.UI;
 using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
 using JobBars.Cooldowns;
+using JobBars.Utilities;
+
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
 
@@ -25,6 +26,7 @@ namespace JobBars {
         private GaugeManager GManager;
         private BuffManager BManager;
         private CooldownManager CDManager;
+        private UtilityManager UtilManager;
         private Configuration Config;
 
         private JobIds CurrentJob = JobIds.OTHER;
@@ -108,9 +110,11 @@ namespace JobBars {
             GaugeManager.Dispose();
             BuffManager.Dispose();
             CooldownManager.Dispose();
+            UtilityManager.Dispose();
             GManager = null;
             BManager = null;
             CDManager = null;
+            UtilManager = null;
 
             Animation.Dispose();
             UIIconManager.Dispose();
@@ -168,6 +172,7 @@ namespace JobBars {
             BManager = new BuffManager();
             CDManager = new CooldownManager(PluginInterface);
             GManager = new GaugeManager(PluginInterface);
+            UtilManager = new UtilityManager(PluginInterface);
             UIBuilder.Initialize();
             CDManager.SetupUI();
             BManager.SetupUI();
@@ -204,6 +209,7 @@ namespace JobBars {
             GManager.Tick(inCombat);
             BManager.Tick(inCombat);
             CDManager.Tick(inCombat);
+            UtilManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

@@ -1,5 +1,6 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
+using ImGuiNET;
 using JobBars.Gauges;
 using JobBars.UI;
 using System;
@@ -8,31 +9,154 @@ using System.Numerics;
 
 namespace JobBars.Data {
     [Serializable]
-    public class GaugeConfig {
-        public Vector2 SplitPosition = new(200, 200);
-        public float Scale = 1;
-        public bool Enabled = true;
-        public int Order = -1;
-#nullable enable
-        public bool? NoSoundOnFull = null;
-        public bool? Invert = null;
-        public string? Color = null;
-        public GaugeVisualType? Type = null;
-#nullable disable
+    public abstract class ValueConfig<T> {
+        public Dictionary<string, T> Values = new();
 
-        public ElementColor GetColor(ElementColor defaultColor) => Configuration.GetColor(Color, defaultColor);
+        [NonSerialized]
+        protected T Default;
+        
+        public ValueConfig(T defaultValue) {
+            Default = defaultValue;
+        }
+
+        public ValueConfig() {
+            Default = default;
+        }
+
+        public T Get(string name) => Get(name, Default);
+        public T Get(string name, T defaultValue) => Values.TryGetValue(name, out var val) ? val : defaultValue;
+        public void Set(string name, T value) {
+            Values[name] = value;
+            Configuration.Config.Save();
+        }
+
+        public bool Draw(string id, string name) => Draw(id, name, Default, out var _);
+        public bool Draw(string id, string name, T defaultValue) => Draw(id, name, defaultValue, out var _);
+        public bool Draw(string id, string name, out T value) => Draw(id, name, Default, out value);
+        public abstract bool Draw(string id, string name, T defaultValue, out T value);
     }
 
     [Serializable]
-    public class SubGaugeConfig {
-        public bool IconEnabled = true;
-#nullable enable
-        public bool? NoSoundOnFull = null;
-        public bool? Invert = null;
-        public string? Color = null;
-#nullable disable
+    public class VectorValueConfig : ValueConfig<Vector2> {
+        public VectorValueConfig(Vector2 defaultValue) : base(defaultValue) { }
 
-        public ElementColor GetColor(ElementColor defaultColor) => Configuration.GetColor(Color, defaultColor);
+        public override bool Draw(string id, string name, Vector2 defaultValue, out Vector2 value) {
+            value = Get(name, defaultValue);
+            if (ImGui.InputFloat2(id, ref value)) {
+                Set(name, value);
+                return true;
+            }
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class BoolValueConfig : ValueConfig<bool> {
+        public BoolValueConfig(bool defaultValue) : base(defaultValue) { }
+
+        public override bool Draw(string id, string name, bool defaultValue, out bool value) {
+            value = Get(name, defaultValue);
+            if (ImGui.Checkbox(id, ref value)) {
+                Set(name, value);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class IntValueConfig : ValueConfig<int> {
+        public IntValueConfig(int defaultValue) : base(defaultValue) { }
+
+        public override bool Draw(string id, string name, int defaultValue, out int value) {
+            value = Get(name, defaultValue);
+            if (ImGui.InputInt(id, ref value)) {
+                Set(name, value);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class FloatValueConfig : ValueConfig<float> {
+        public FloatValueConfig(float defaultValue) : base(defaultValue) { }
+
+        public override bool Draw(string id, string name, float defaultValue, out float value) {
+            value = Get(name, defaultValue);
+            if (ImGui.InputFloat(id, ref value)) {
+                Set(name, value);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class TypeValueConfig : ValueConfig<GaugeVisualType> {
+        public TypeValueConfig() : base() { }
+
+        public override bool Draw(string id, string name, GaugeVisualType defaultValue, out GaugeVisualType value) { // whatever
+            value = default;
+            return false;
+        }
+
+        public bool Draw(string id, string name, GaugeVisualType[] typeOptions, GaugeVisualType defaultValue, out GaugeVisualType value) {
+            value = Get(name, defaultValue);
+            if (ImGui.BeginCombo(id, $"{value}")) {
+                foreach (GaugeVisualType gType in typeOptions) {
+                    if (ImGui.Selectable($"{gType}##Combo", gType == value)) {
+
+                        value = gType;
+                        Set(name, value);
+
+                        ImGui.EndCombo();
+                        return true;
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            return false;
+        }
+    }
+
+    [Serializable]
+    public class ColorConfig {
+        public Dictionary<string, string> Color = new();
+
+        public ElementColor Get(string name, ElementColor defaultColor) => Color.TryGetValue(name, out var val) ?
+            GetColorInternal(val, defaultColor) : defaultColor;
+
+        public void Set(string name, ElementColor color) {
+            Color[name] = color.Name;
+            Configuration.Config.Save();
+        }
+
+        private static ElementColor GetColorInternal(string colorName, ElementColor defaultColor) {
+            if (string.IsNullOrEmpty(colorName)) return defaultColor;
+            return UIColor.AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
+        }
+
+        public bool Draw(string id, string name, ElementColor defaultValue, out ElementColor value) {
+            value = Get(name, defaultValue);
+            if (ImGui.BeginCombo(id, value.Name)) {
+                foreach (var entry in UIColor.AllColors) {
+                    if (ImGui.Selectable($"{entry.Key}##Combo", value.Name == entry.Key)) {
+
+                        value = entry.Value;
+                        Set(name, value);
+
+                        ImGui.EndCombo();
+                        return true;
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            return false;
+        }
     }
 
     [Serializable]
@@ -53,10 +177,17 @@ namespace JobBars.Data {
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
 
-        public Dictionary<string, GaugeConfig> GaugeConfigMap = new();
-        public Dictionary<string, SubGaugeConfig> SubGaugeConfigMap = new();
+        public VectorValueConfig GaugeSplitPosition = new VectorValueConfig(new Vector2(200, 200));
+        public FloatValueConfig GaugeIndividualScale = new(1.0f);
+        public BoolValueConfig GaugeEnabled = new(true);
+        public BoolValueConfig GaugeIconEnabled = new(true);
+        public IntValueConfig GaugeOrder = new(-1);
+        public BoolValueConfig GaugeNoSoundOnFull = new(false);
+        public BoolValueConfig GaugeInvert = new(false);
+        public ColorConfig GaugeColor = new();
+        public TypeValueConfig GaugeType = new();
 
-        public int SeNumber = 0;
+        public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;
 
         // ===== BUFFS ======
@@ -67,7 +198,8 @@ namespace JobBars.Data {
         public bool BuffBarEnabled = true;
         public bool BuffHideOutOfCombat = false;
         public bool BuffIncludeParty = true;
-        public HashSet<string> BuffDisabled = new();
+
+        public BoolValueConfig BuffEnabled = new(true);
 
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
@@ -79,29 +211,14 @@ namespace JobBars.Data {
 
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
-        public HashSet<string> CooldownDisabled = new();
-        public Dictionary<string, int> CooldownOrder = new();
+
+        public BoolValueConfig CooldownEnabled = new(true);
+        public IntValueConfig CooldownOrder = new(-1);
 
         [NonSerialized]
         private DalamudPluginInterface PluginInterface;
 
         public static Configuration Config { get; private set; }
-
-        public GaugeConfig GetGaugeConfig(string name) {
-            if(GaugeConfigMap.TryGetValue(name, out var config)) return config;
-            else {
-                var newConfig = GaugeConfigMap[name] = new GaugeConfig();
-                return newConfig;
-            }
-        }
-
-        public SubGaugeConfig GetSubGaugeConfig(string name) {
-            if (SubGaugeConfigMap.TryGetValue(name, out var config)) return config;
-            else {
-                var newConfig = SubGaugeConfigMap[name] = new SubGaugeConfig();
-                return newConfig;
-            }
-        }
 
         public void Initialize(DalamudPluginInterface pluginInterface) {
             PluginInterface = pluginInterface;
@@ -110,11 +227,6 @@ namespace JobBars.Data {
 
         public void Save() {
             PluginInterface.SavePluginConfig(this);
-        }
-
-        public static ElementColor GetColor(string colorName, ElementColor defaultColor) {
-            if (string.IsNullOrEmpty(colorName)) return defaultColor;
-            return UIColor.AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
         }
     }
 }

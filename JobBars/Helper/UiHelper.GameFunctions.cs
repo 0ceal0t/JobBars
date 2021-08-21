@@ -79,6 +79,14 @@ namespace JobBars.Helper {
             return timeElapsed > 0;
         }
 
+        public static bool GetRecastActiveAndTotal(uint actionId, out float timeElapsed, out float timeTotal, ActionType actionType = ActionType.Spell) {
+            var actionManager = ActionManager.Instance();
+            var adjustedId = actionManager->GetAdjustedActionId(actionId);
+            timeElapsed = actionManager->GetRecastTimeElapsed(actionType, adjustedId);
+            timeTotal = actionManager->GetRecastTime(actionType, adjustedId);
+            return timeElapsed > 0;
+        }
+
         public static AtkUnitBase* ParameterAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ParameterWidget");
         public static AtkUnitBase* ChatLogAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ChatLog");
         public static AddonPartyList* PartyListAddon => (AddonPartyList*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_PartyList");

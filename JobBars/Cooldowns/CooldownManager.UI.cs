@@ -61,16 +61,13 @@ namespace JobBars.Cooldowns {
         }
 
         private void DrawCooldown(CooldownProps cooldown, string _ID) {
-            var enabled = cooldown.Enabled;
-            ImGui.TextColored(enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
-            if (ImGui.Checkbox("Enabled" + _ID, ref enabled)) {
-                cooldown.Enabled = enabled;
+            ImGui.TextColored(cooldown.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
+
+            if (Configuration.Config.CooldownEnabled.Draw($"Enabled{_ID}", cooldown.Name, cooldown.Enabled)) {
                 ResetUI();
             }
 
-            var order = cooldown.Order;
-            if(ImGui.InputInt("Order" + _ID, ref order)) {
-                cooldown.Order = order;
+            if (Configuration.Config.CooldownOrder.Draw($"Order{_ID}", cooldown.Name)) {
                 ResetUI();
             }
 

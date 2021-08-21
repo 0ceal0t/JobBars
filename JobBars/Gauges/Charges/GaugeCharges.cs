@@ -35,9 +35,9 @@ namespace JobBars.Gauges {
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
-            Props.Type = GetConfigValue(Config.Type, Props.Type).Value;
-            Props.NoSoundOnFull = GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
-            Props.BarColor = Config.GetColor(Props.BarColor);
+            Props.Type = Configuration.Config.GaugeType.Get(Name, Props.Type);
+            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            Props.BarColor = Configuration.Config.GaugeColor.Get(Name, Props.BarColor);
 
             RefreshSameColor();
             foreach (var part in Props.Parts) {
@@ -164,23 +164,18 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (DrawColorOptions(_ID, Props.BarColor, out string newColorString, out var newColor)) {
+            if(Configuration.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
                 Props.BarColor = newColor;
-                Config.Color = newColorString;
-                Configuration.Config.Save();
-
                 RefreshUI();
             }
 
-            if (DrawTypeOptions(_ID, ValidGaugeVisualType, Props.Type, out var newType)) {
-                Config.Type = Props.Type = newType;
-                Configuration.Config.Save();
+            if (Configuration.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
+                Props.Type = newType;
                 GaugeManager.Manager.ResetJob(job);
             }
 
-            if (ImGui.Checkbox($"Don't Play Sound When Full {_ID}", ref Props.NoSoundOnFull)) {
-                Config.Invert = Props.NoSoundOnFull;
-                Configuration.Config.Save();
+            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {
+                Props.NoSoundOnFull = newSound;
             }
         }
     }

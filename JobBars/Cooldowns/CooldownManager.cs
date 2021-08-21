@@ -1,6 +1,5 @@
 ﻿using Dalamud.Logging;
 using Dalamud.Plugin;
-using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using JobBars.Data;
 using JobBars.UI;
 using System;

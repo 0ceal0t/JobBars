@@ -39,9 +39,9 @@ namespace JobBars.Gauges {
         public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name) {
             ParentGauge = gauge;
             Props = props;
-            Props.Invert = Gauge.GetConfigValue(Config.Invert, Props.Invert).Value;
-            Props.NoSoundOnFull = Gauge.GetConfigValue(Config.NoSoundOnFull, Props.NoSoundOnFull).Value;
-            Props.Color = Config.GetColor(Props.Color);
+            Props.Invert = Configuration.Config.GaugeInvert.Get(Name, Props.Invert);
+            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            Props.Color = Configuration.Config.GaugeColor.Get(Name, Props.Color);
         }
 
         public void Reset() {
@@ -127,22 +127,17 @@ namespace JobBars.Gauges {
         public void DrawSubGauge(string _ID, JobIds job) {
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
 
-            if (Gauge.DrawColorOptions(_ID, Props.Color, out var newColorString, out var newColor, title: "Color" + suffix)) {
+            if (Configuration.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;
-                Config.Color = newColorString;
-                Configuration.Config.Save();
-
                 ParentGauge.RefreshUI();
             }
 
-            if (ImGui.Checkbox($"Invert Counter{suffix}{_ID}{Props.SubName}", ref Props.Invert)) {
-                Config.Invert = Props.Invert;
-                Configuration.Config.Save();
+            if (Configuration.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, out var newInvert)) {
+                Props.Invert = newInvert;
             }
 
-            if (ImGui.Checkbox($"Don't Play Sound When Full{suffix}{_ID}{Props.SubName}", ref Props.NoSoundOnFull)) {
-                Config.Invert = Props.NoSoundOnFull;
-                Configuration.Config.Save();
+            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
+                Props.NoSoundOnFull = newSound;
             }
         }
     }

@@ -20,6 +20,7 @@ namespace JobBars.UI {
 
         public Asset_PartList GaugeBuffAssets;
         public Asset_PartList CooldownAssets;
+        public Asset_PartList CursorAssets;
 
         private void InitTextures() {
             PluginLog.Log("LOADING TEXTURES");
@@ -70,6 +71,20 @@ namespace JobBars.UI {
             });
 
             CooldownAssets = UIHelper.LoadLayout(cdLayout);
+
+            // ==================
+
+            List<PartStruct> cursorParts = new();
+            var cursorLayout = new Dictionary<string, PartStruct[]>();
+            for(int idx = 0; idx < 80; idx++) {
+                var row = idx % 9;
+                var column = (idx - row) / 9;
+
+                cursorParts.Add(new PartStruct((ushort)(44 * row), (ushort)(48 * column), 44, 46));
+            }
+            cursorLayout.Add("ui/uld/IconA_Recast2.tex", cursorParts.ToArray());
+
+            CursorAssets = UIHelper.LoadLayout(cursorLayout);
         }
 
         private void DisposeTextures() {
@@ -78,6 +93,9 @@ namespace JobBars.UI {
 
             UIHelper.DisposeLayout(CooldownAssets);
             CooldownAssets = new();
+
+            UIHelper.DisposeLayout(CursorAssets);
+            CursorAssets = new();
         }
     }
 }

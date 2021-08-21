@@ -40,6 +40,7 @@ namespace JobBars.UI {
             DisposeCooldowns();
             DisposeGauges();
             DisposeBuffs();
+            DisposeCursor();
             DisposeTextures(); // dispose last
 
             var addon = UIHelper.ChatLogAddon;
@@ -51,11 +52,17 @@ namespace JobBars.UI {
             NodeIdx = NODE_IDX_START;
 
             InitTextures(); // init first
-            InitGauges(addon, GaugeBuffAssets.PartsList);
-            InitBuffs(addon, GaugeBuffAssets.PartsList);
+            InitGauges(GaugeBuffAssets.PartsList);
+            InitBuffs(GaugeBuffAssets.PartsList);
             InitCooldowns(CooldownAssets.PartsList);
+            InitCursor(CursorAssets.PartsList);
 
+            GaugeRoot->ParentNode = addon->RootNode;
+            BuffRoot->ParentNode = addon->RootNode;
+            CursorRoot->ParentNode = addon->RootNode;
             UIHelper.Link(GaugeRoot, BuffRoot);
+            UIHelper.Link(BuffRoot, CursorRoot);
+
             Attach(addon);
         }
 

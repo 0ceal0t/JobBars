@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
+using JobBars.Gauges;
 using JobBars.UI;
 using System;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace JobBars.Buffs {
         public Buff(string name, BuffProps props) {
             Name = name;
             Props = props;
-            Enabled = !Configuration.Config.BuffDisabled.Contains(Name);
+            Enabled = Configuration.Config.BuffEnabled.Get(Name);
             if (Props.CD != null) Props.CD = Props.CD.Value - Props.Duration;
         }
 
@@ -114,16 +115,12 @@ namespace JobBars.Buffs {
             var _ID = id + Name;
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name}");
-            if (ImGui.Checkbox("Enabled" + _ID, ref Enabled)) {
-                if (Enabled) {
-                    Configuration.Config.BuffDisabled.Remove(Name);
-                }
-                else {
+            if (Configuration.Config.BuffEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
+                Enabled = newEnabled;
+                if(!Enabled) {
                     UI.Hide();
                     Reset();
-                    Configuration.Config.BuffDisabled.Add(Name);
                 }
-                Configuration.Config.Save();
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

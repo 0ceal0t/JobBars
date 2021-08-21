@@ -52,18 +52,9 @@ namespace JobBars.UI {
             addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
-        public void SetCooldownPosition(Vector2 pos) {
-            UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
-        }
-
+        public void SetCooldownPosition(Vector2 pos) => UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
         public void SetCooldownRowVisible(int idx, bool Visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, Visible);
-
-        public void ShowCooldowns() {
-            UIHelper.Show(CooldownRoot);
-        }
-
-        public void HideCooldowns() {
-            UIHelper.Hide(CooldownRoot);
-        }
+        public void ShowCooldowns() => UIHelper.Show(CooldownRoot);
+        public void HideCooldowns() => UIHelper.Hide(CooldownRoot);
     }
 }
