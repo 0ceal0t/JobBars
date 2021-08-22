@@ -8,7 +8,8 @@ namespace JobBars.Cursors {
         GCD,
         CastTime,
         MpTick,
-        StaticCircle
+        StaticCircle,
+        StaticRing
     }
 
     public class Cursor {
@@ -38,7 +39,8 @@ namespace JobBars.Cursors {
             CursorType.GCD => GetGCD(),
             CursorType.CastTime => GetCastTime(),
             CursorType.MpTick => UIHelper.GetMpTick(),
-            CursorType.StaticCircle => 2,
+            CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
+            CursorType.StaticRing => 1,
             _ => 0
         };
         

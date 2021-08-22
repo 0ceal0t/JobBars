@@ -5,7 +5,7 @@ using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
-        public AtkResNode* CreateResNode() {
+        public static AtkResNode* CreateResNode() {
             var node = UIHelper.CleanAlloc<AtkResNode>();
             node->Ctor();
 
@@ -29,7 +29,7 @@ namespace JobBars.UI {
             return node;
         }
 
-        public AtkTextNode* CreateTextNode() {
+        public static AtkTextNode* CreateTextNode() {
             var node = UIHelper.CleanAlloc<AtkTextNode>();
             node->Ctor();
 
@@ -73,7 +73,7 @@ namespace JobBars.UI {
             return node;
         }
 
-        public AtkImageNode* CreateImageNode() {
+        public static AtkImageNode* CreateImageNode() {
             var node = UIHelper.CleanAlloc<AtkImageNode>();
             node->Ctor();
 
@@ -101,10 +101,9 @@ namespace JobBars.UI {
             return node;
         }
 
-        public AtkNineGridNode* CreateNineNode() {
-            var addon = UIHelper.ParameterAddon;
-            var gaugeComp = (AtkComponentNode*)addon->RootNode->ChildNode;
-            var node = UIHelper.CloneNode((AtkNineGridNode*)gaugeComp->Component->UldManager.NodeList[3]);
+        public static AtkNineGridNode* CreateNineNode() {
+            var node = UIHelper.CleanAlloc<AtkNineGridNode>();
+            node->Ctor();
 
             node->PartsTypeRenderType = 128;
 
@@ -118,19 +117,6 @@ namespace JobBars.UI {
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
             node->AtkResNode.Color = UIColor.BYTE_White;
-            node->AtkResNode.MultiplyRed = 100; // need this since cloning
-            node->AtkResNode.MultiplyRed_2 = 100;
-            node->AtkResNode.MultiplyGreen = 100;
-            node->AtkResNode.MultiplyGreen_2 = 100;
-            node->AtkResNode.MultiplyBlue = 100;
-            node->AtkResNode.MultiplyBlue_2 = 100;
-            node->AtkResNode.AddRed = 0;
-            node->AtkResNode.AddRed_2 = 0;
-            node->AtkResNode.AddGreen = 0;
-            node->AtkResNode.AddGreen_2 = 0;
-            node->AtkResNode.AddBlue = 0;
-            node->AtkResNode.AddBlue_2 = 0;
-            node->AtkResNode.Alpha_2 = 255;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;

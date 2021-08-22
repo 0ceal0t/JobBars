@@ -7,7 +7,7 @@ namespace JobBars {
         public bool Visible = false;
 
         private void BuildSettingsUI() {
-            if (!PlayerExists || !Initialized) return;
+            if (!PlayerExists) return;
             if (!Visible) return;
 
             string _ID = "##JobBars_Settings";

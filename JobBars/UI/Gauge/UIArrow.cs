@@ -42,7 +42,7 @@ namespace JobBars.UI {
         private int LastValue = 0;
 
         public UIArrow(AtkUldPartsList* partsList) : base() {
-            RootRes = JobBars.Builder.CreateResNode();
+            RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
@@ -52,13 +52,13 @@ namespace JobBars.UI {
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
-                var tick = JobBars.Builder.CreateResNode();
+                var tick = UIBuilder.CreateResNode();
                 tick->X = 18 * idx;
                 tick->Y = 0;
                 tick->Width = 32;
                 tick->Height = 32;
 
-                var bg = JobBars.Builder.CreateImageNode();
+                var bg = UIBuilder.CreateImageNode();
                 bg->AtkResNode.Width = 32;
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
@@ -69,7 +69,7 @@ namespace JobBars.UI {
                 bg->WrapMode = 1;
 
                 // ======== SELECTED ========
-                var selectedContainer = JobBars.Builder.CreateResNode();
+                var selectedContainer = UIBuilder.CreateResNode();
                 selectedContainer->X = 0;
                 selectedContainer->Y = 0;
                 selectedContainer->Width = 32;
@@ -77,7 +77,7 @@ namespace JobBars.UI {
                 selectedContainer->OriginX = 16;
                 selectedContainer->OriginY = 16;
 
-                var selected = JobBars.Builder.CreateImageNode();
+                var selected = UIBuilder.CreateImageNode();
                 selected->AtkResNode.Width = 32;
                 selected->AtkResNode.Height = 32;
                 selected->AtkResNode.X = 0;

@@ -16,14 +16,14 @@ namespace JobBars.UI {
         private static int BUFFS_HORIZONTAL => JobBars.Config.BuffHorizontal;
 
         public UIBuff(AtkUldPartsList* partsList, int icon) : base() {
-            RootRes = JobBars.Builder.CreateResNode();
+            RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
             RootRes->ChildCount = 4;
 
-            TextNode = JobBars.Builder.CreateTextNode();
+            TextNode = UIBuilder.CreateTextNode();
             TextNode->FontSize = 15;
             TextNode->LineSpacing = 15;
             TextNode->AlignmentFontType = 20;
@@ -35,7 +35,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
-            Icon = JobBars.Builder.CreateImageNode();
+            Icon = UIBuilder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
@@ -47,7 +47,7 @@ namespace JobBars.UI {
             UIHelper.LoadIcon(Icon, icon);
             UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
 
-            Overlay = JobBars.Builder.CreateImageNode();
+            Overlay = UIBuilder.CreateImageNode();
             Overlay->AtkResNode.Width = WIDTH;
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
@@ -57,7 +57,7 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
 
-            Border = JobBars.Builder.CreateImageNode();
+            Border = UIBuilder.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -2;

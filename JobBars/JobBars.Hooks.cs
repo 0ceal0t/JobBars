@@ -9,7 +9,7 @@ using Dalamud.Logging;
 namespace JobBars {
     public unsafe partial class JobBars {
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
-            if (!PlayerExists || !Initialized) {
+            if (!PlayerExists) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }

@@ -15,12 +15,12 @@ namespace JobBars.UI {
         public static readonly ushort HEIGHT = 30;
 
         public UICooldownItem(AtkUldPartsList* partsList) {
-            RootRes = JobBars.Builder.CreateResNode();
+            RootRes = UIBuilder.CreateResNode();
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
             RootRes->ChildCount = 3;
 
-            TextNode = JobBars.Builder.CreateTextNode();
+            TextNode = UIBuilder.CreateTextNode();
             TextNode->FontSize = 13;
             TextNode->LineSpacing = (byte)HEIGHT;
             TextNode->AlignmentFontType = 20;
@@ -32,7 +32,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
-            Icon = JobBars.Builder.CreateImageNode();
+            Icon = UIBuilder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
@@ -44,7 +44,7 @@ namespace JobBars.UI {
             UIHelper.LoadIcon(Icon, 405);
             UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
 
-            Border = JobBars.Builder.CreateImageNode();
+            Border = UIBuilder.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -2;
@@ -131,7 +131,7 @@ namespace JobBars.UI {
         public List<UICooldownItem> Items = new();
 
         public UICooldown(AtkUldPartsList* partsList) {
-            RootRes = JobBars.Builder.CreateResNode();
+            RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = (ushort)((3 + UICooldownItem.WIDTH) * MAX_ITEMS); // with padding

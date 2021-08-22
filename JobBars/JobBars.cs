@@ -57,8 +57,7 @@ namespace JobBars {
         private int LastPartyCount = 0;
 
         private bool PlayerExists => ClientState?.LocalPlayer != null;
-        private bool Initialized = false;
-        private bool LoggedOut = false;
+        private bool LoggedOut = true;
 
         private Vector2 LastPosition;
         private Vector2 LastScale;
@@ -104,6 +103,8 @@ namespace JobBars {
 
             Icon = new UIIconManager();
 
+            InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
+
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             receiveActionEffectHook.Enable();
@@ -118,6 +119,26 @@ namespace JobBars {
             Framework.OnUpdateEvent += FrameworkOnUpdate;
             ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
+        }
+
+        private void InitializeUI() { // this only ever gets run ONCE
+            // these are created before the addons are even visible, so they aren't attached yet
+            PluginLog.Log("==== INIT ====");
+            Icon.Reset();
+
+            BuffManager = new BuffManager();
+            CooldownManager = new CooldownManager();
+            GaugeManager = new GaugeManager();
+            CursorManager = new CursorManager();
+            Builder = new UIBuilder();
+            CooldownManager.SetupUI();
+            BuffManager.SetupUI();
+            CursorManager.SetupUI();
+
+            if (!Config.GaugesEnabled) Builder.HideGauges();
+            if (!Config.BuffBarEnabled) Builder.HideBuffs();
+            Builder.HideAllBuffs();
+            Builder.HideAllGauges();
         }
 
         public void Dispose() {
@@ -162,19 +183,14 @@ namespace JobBars {
             var addon = UIHelper.ChatLogAddon;
 
             if (!PlayerExists) {
-                if (Initialized && !LoggedOut && addon == null) Logout();
+                if (!LoggedOut && addon == null) Logout();
                 return;
             }
 
             if (addon == null || addon->RootNode == null) return;
 
-            if (!Initialized) {
-                InitializeUI();
-                return;
-            }
-
             if(LoggedOut) {
-                Builder.Attach(); // re-attach after addons have been re-created
+                Builder.Attach(); // re-attach after addons have been created
                 LoggedOut = false;
                 return;
             }
@@ -192,28 +208,6 @@ namespace JobBars {
 
             LoggedOut = true;
             CurrentJob = JobIds.OTHER;
-        }
-
-        private void InitializeUI() { // this only ever gets run ONCE
-            PluginLog.Log("==== INIT ====");
-            Icon.Reset();
-
-            BuffManager = new BuffManager();
-            CooldownManager = new CooldownManager();
-            GaugeManager = new GaugeManager();
-            CursorManager = new CursorManager();
-            Builder = new UIBuilder();
-            Builder.Initialize();
-            CooldownManager.SetupUI();
-            BuffManager.SetupUI();
-            CursorManager.SetupUI();
-
-            if (!Config.GaugesEnabled) Builder.HideGauges();
-            if (!Config.BuffBarEnabled) Builder.HideBuffs();
-            Builder.HideAllBuffs();
-            Builder.HideAllGauges();
-
-            Initialized = true;
         }
 
         private void CheckForPartyChange() {

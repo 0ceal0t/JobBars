@@ -15,7 +15,6 @@ namespace JobBars.UI {
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
             CooldownRoot->Flags = 9395;
-            CooldownRoot->ParentNode = addon->AtkUnitBase.RootNode;
             UIHelper.SetPosition(CooldownRoot, -40, 40);
 
             UICooldown lastCooldown = null;
@@ -32,12 +31,6 @@ namespace JobBars.UI {
 
             CooldownRoot->ChildCount = (ushort)((1 + Cooldowns[0].RootRes->ChildCount) * Cooldowns.Count);
             CooldownRoot->ChildNode = Cooldowns[0].RootRes;
-        }
-
-        private void AttachCooldown() {
-            var addon = UIHelper.PartyListAddon;
-            addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = CooldownRoot;
-            addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
         private void DisposeCooldowns() {

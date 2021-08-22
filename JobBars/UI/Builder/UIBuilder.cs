@@ -6,15 +6,18 @@ using JobBars.Helper;
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         private static readonly uint NODE_IDX_START = 89990001;
-        private uint NodeIdx = NODE_IDX_START;
+        private static uint NodeIdx = NODE_IDX_START;
 
-        public void Initialize() {
-            var addon = UIHelper.ChatLogAddon;
-            if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) {
-                PluginLog.Debug("Error setting up UI builder");
-                return;
-            }
-            Init(addon);
+        public UIBuilder() {
+            NodeIdx = NODE_IDX_START;
+            InitTextures(); // init first
+            InitGauges(GaugeBuffAssets.PartsList);
+            InitBuffs(GaugeBuffAssets.PartsList);
+            InitCooldowns(CooldownAssets.PartsList);
+            InitCursor(CursorAssets.PartsList);
+
+            UIHelper.Link(GaugeRoot, BuffRoot);
+            UIHelper.Link(BuffRoot, CursorRoot);
         }
 
         public void Dispose() {
@@ -32,36 +35,26 @@ namespace JobBars.UI {
             addon->UldManager.UpdateDrawNodeList();
         }
 
-        private void Init(AtkUnitBase* addon) {
-            NodeIdx = NODE_IDX_START;
+        public void Attach() {
+            var chatAddon = UIHelper.ChatLogAddon;
 
-            InitTextures(); // init first
-            InitGauges(GaugeBuffAssets.PartsList);
-            InitBuffs(GaugeBuffAssets.PartsList);
-            InitCooldowns(CooldownAssets.PartsList);
-            InitCursor(CursorAssets.PartsList);
+            GaugeRoot->ParentNode = chatAddon->RootNode;
+            BuffRoot->ParentNode = chatAddon->RootNode;
+            CursorRoot->ParentNode = chatAddon->RootNode;
 
-            GaugeRoot->ParentNode = addon->RootNode;
-            BuffRoot->ParentNode = addon->RootNode;
-            CursorRoot->ParentNode = addon->RootNode;
-            UIHelper.Link(GaugeRoot, BuffRoot);
-            UIHelper.Link(BuffRoot, CursorRoot);
-
-            Attach(addon);
-        }
-
-        public void Attach() => Attach(UIHelper.ChatLogAddon);
-        public void Attach(AtkUnitBase* addon) {
-            // ==== INSERT AT THE END ====
-            var lastNode = addon->RootNode->ChildNode;
-            while (lastNode->PrevSiblingNode != null) {
-                lastNode = lastNode->PrevSiblingNode;
-            }
+            var lastNode = chatAddon->RootNode->ChildNode;
+            while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
 
             UIHelper.Link(lastNode, GaugeRoot);
-            addon->UldManager.UpdateDrawNodeList();
+            chatAddon->UldManager.UpdateDrawNodeList();
 
-            AttachCooldown();
+            // ===== COOLDOWNS =========
+
+            var partyListAddon = UIHelper.PartyListAddon;
+
+            CooldownRoot->ParentNode = partyListAddon->AtkUnitBase.RootNode;
+            partyListAddon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = CooldownRoot;
+            partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
         // ==== HELPER FUNCTIONS ============
