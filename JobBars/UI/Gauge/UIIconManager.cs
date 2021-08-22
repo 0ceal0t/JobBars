@@ -1,6 +1,4 @@
-﻿using Dalamud.Logging;
-using Dalamud.Plugin;
-using FFXIVClientInterface;
+﻿using FFXIVClientInterface;
 using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -166,16 +164,6 @@ namespace JobBars.UI {
             }
         }
 
-        public static UIIconManager Manager { get; private set; }
-        public static void Initialize(DalamudPluginInterface pluginInterface) {
-            Manager = new UIIconManager(pluginInterface);
-        }
-
-        public static void Dispose() {
-            Manager?.DisposeInstance();
-            Manager = null;
-        }
-
         // ==================
         private readonly string[] AllActionBars = {
             "_ActionBar",
@@ -196,10 +184,8 @@ namespace JobBars.UI {
 
         private readonly List<Icon> Icons = new();
         private readonly ClientInterface Client;
-        private readonly DalamudPluginInterface PluginInterface;
 
-        private UIIconManager(DalamudPluginInterface pluginInterface) {
-            PluginInterface = pluginInterface;
+        public UIIconManager() {
             Client = new ClientInterface();
         }
 
@@ -286,7 +272,7 @@ namespace JobBars.UI {
             Icons.Clear();
         }
 
-        private void DisposeInstance() {
+        public void Dispose() {
             Reset();
             Client.Dispose();
         }

@@ -1,12 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using JobBars.Helper;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIBarDiamondCombo : UIGaugeElement {
@@ -85,8 +78,8 @@ namespace JobBars.UI {
         }
 
         public override void SetSplitPosition(Vector2 pos) {
-            var p = UIHelper.GetNodePosition(UIBuilder.Builder.GaugeRoot);
-            var pScale = UIHelper.GetNodeScale(UIBuilder.Builder.GaugeRoot);
+            var p = UIHelper.GetNodePosition(JobBars.Builder.GaugeRoot);
+            var pScale = UIHelper.GetNodeScale(JobBars.Builder.GaugeRoot);
             var x = (pos.X - p.X) / pScale.X;
             var y = (pos.Y - p.Y) / pScale.Y;
 

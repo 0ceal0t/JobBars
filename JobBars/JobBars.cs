@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using System.Reflection;
-using Dalamud.Plugin;
-using Dalamud.Hooking;
-using Dalamud.Logging;
-using Dalamud.Game;
 
 using JobBars.Helper;
 using JobBars.UI;
@@ -12,22 +8,43 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Buffs;
 using JobBars.Cooldowns;
-using JobBars.Utilities;
+using JobBars.Cursors;
 
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Threading;
 
+using Dalamud.Plugin;
+using Dalamud.Hooking;
+using Dalamud.Logging;
+using Dalamud.Game;
+using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.Command;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Data;
+
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
-        public string Name => "JobBars";
-        public DalamudPluginInterface PluginInterface { get; private set; }
-        public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
+        public static DalamudPluginInterface PluginInterface { get; private set; }
+        public static ClientState ClientState { get; private set; }
+        public static Framework Framework { get; private set; }
+        public static Condition Condition { get; private set; }
+        public static CommandManager CommandManager { get; private set; }
+        public static ObjectTable Objects { get; private set; }
+        public static SigScanner SigScanner { get; private set; }
+        public static DataManager DataManager { get; private set; }
 
-        private GaugeManager GManager;
-        private BuffManager BManager;
-        private CooldownManager CDManager;
-        private UtilityManager UtilManager;
-        private Configuration Config;
+        public static Configuration Config { get; private set; }
+        public static UIBuilder Builder { get; private set; }
+        public static UIIconManager Icon { get; private set;}
+
+        public static GaugeManager GaugeManager { get; private set; }
+        public static BuffManager BuffManager { get; private set; }
+        public static CooldownManager CooldownManager { get; private set; }
+        public static CursorManager CursorManager { get; private set; }
+
+        public string Name => "JobBars";
+        public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
 
         private JobIds CurrentJob = JobIds.OTHER;
 
@@ -39,7 +56,7 @@ namespace JobBars {
 
         private int LastPartyCount = 0;
 
-        private bool PlayerExists => PluginInterface.ClientState?.LocalPlayer != null;
+        private bool PlayerExists => ClientState?.LocalPlayer != null;
         private bool Initialized = false;
         private bool LoggedOut = false;
 
@@ -60,33 +77,46 @@ namespace JobBars {
          *      48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB
          */
 
-        public void Initialize(DalamudPluginInterface pluginInterface) {
+        public JobBars(
+                DalamudPluginInterface pluginInterface,
+                ClientState clientState,
+                CommandManager commandManager,
+                Condition condition,
+                Framework framework,
+                ObjectTable objects,
+                SigScanner sigScanner,
+                DataManager dataManager
+            ) {
             PluginInterface = pluginInterface;
+            ClientState = clientState;
+            Framework = framework;
+            Condition = condition;
+            CommandManager = commandManager;
+            Objects = objects;
+            SigScanner = sigScanner;
+            DataManager = dataManager;
 
             if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
 
-            UIIconManager.Initialize(pluginInterface);
-            DataManager.Initialize(pluginInterface);
-
-            UIHelper.Setup(pluginInterface);
+            UIHelper.Setup();
             UIColor.SetupColors();
-
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Config.Initialize(PluginInterface);
 
-            IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
+            Icon = new UIIconManager();
+
+            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             receiveActionEffectHook.Enable();
 
-            IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
+            IntPtr actorControlSelfPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
             actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             actorControlSelfHook.Enable();
 
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
             PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
-            PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
-            PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
+            Framework.OnUpdateEvent += FrameworkOnUpdate;
+            ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
         }
 
@@ -104,23 +134,22 @@ namespace JobBars {
             PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
             PluginInterface.UiBuilder.Draw -= Animate;
             PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfig;
-            PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
-            PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
+            Framework.OnUpdateEvent -= FrameworkOnUpdate;
+            ClientState.TerritoryChanged -= ZoneChanged;
 
-            GaugeManager.Dispose();
-            BuffManager.Dispose();
-            CooldownManager.Dispose();
-            UtilityManager.Dispose();
-            GManager = null;
-            BManager = null;
-            CDManager = null;
-            UtilManager = null;
+            GaugeManager = null;
+            BuffManager = null;
+            CooldownManager = null;
+            CursorManager = null;
 
             Animation.Dispose();
-            UIIconManager.Dispose();
-            UIBuilder.Dispose();
-            UIHelper.Dispose();
-            DataManager.Dispose();
+            Icon?.Dispose();
+            Builder?.Dispose();
+            Icon = null;
+            Builder = null;
+
+            PluginInterface = null;
+            Config = null;
 
             RemoveCommands();
         }
@@ -145,7 +174,7 @@ namespace JobBars {
             }
 
             if(LoggedOut) {
-                UIBuilder.Builder.Attach(); // re-attach after addons have been re-created
+                Builder.Attach(); // re-attach after addons have been re-created
                 LoggedOut = false;
                 return;
             }
@@ -158,58 +187,62 @@ namespace JobBars {
 
         private void Logout() {
             PluginLog.Log("==== LOGOUT ===");
-            UIIconManager.Manager.Reset();
+            Icon.Reset();
             Animation.Dispose();
 
             LoggedOut = true;
             CurrentJob = JobIds.OTHER;
         }
 
-        private void InitializeUI() {
+        private void InitializeUI() { // this only ever gets run ONCE
             PluginLog.Log("==== INIT ====");
-            UIIconManager.Manager.Reset();
+            Icon.Reset();
 
-            BManager = new BuffManager();
-            CDManager = new CooldownManager(PluginInterface);
-            GManager = new GaugeManager(PluginInterface);
-            UtilManager = new UtilityManager(PluginInterface);
-            UIBuilder.Initialize();
-            CDManager.SetupUI();
-            BManager.SetupUI();
+            BuffManager = new BuffManager();
+            CooldownManager = new CooldownManager();
+            GaugeManager = new GaugeManager();
+            CursorManager = new CursorManager();
+            Builder = new UIBuilder();
+            Builder.Initialize();
+            CooldownManager.SetupUI();
+            BuffManager.SetupUI();
+            CursorManager.SetupUI();
 
-            if (!Configuration.Config.GaugesEnabled) UIBuilder.Builder.HideGauges();
-            if (!Configuration.Config.BuffBarEnabled) UIBuilder.Builder.HideBuffs();
-            UIBuilder.Builder.HideAllBuffs();
-            UIBuilder.Builder.HideAllGauges();
+            if (!Config.GaugesEnabled) Builder.HideGauges();
+            if (!Config.BuffBarEnabled) Builder.HideBuffs();
+            Builder.HideAllBuffs();
+            Builder.HideAllGauges();
 
             Initialized = true;
         }
 
         private void CheckForPartyChange() {
             // someone left the party. this means that some buffs might not make sense anymore, so reset it
-            var partyCount = DataManager.GetPartyCount();
-            if (partyCount < LastPartyCount) BManager.Reset();
+            var partyCount = UIHelper.GetPartyCount();
+            if (partyCount < LastPartyCount) BuffManager.Reset();
             LastPartyCount = partyCount;
         }
 
         private void CheckForJobChange() {
-            var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
-            JobIds job = DataManager.IdToJob(jobId.Id);
+            var jobId = ClientState.LocalPlayer.ClassJob;
+            JobIds job = UIHelper.IdToJob(jobId.Id);
 
             if (job != CurrentJob) {
                 CurrentJob = job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                BManager.Reset();
-                GManager.SetJob(CurrentJob);
+                BuffManager.Reset();
+                GaugeManager.SetJob(CurrentJob);
+                CursorManager.SetJob(CurrentJob);
             }
         }
 
         private void Tick() {
-            var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat];
-            GManager.Tick(inCombat);
-            BManager.Tick(inCombat);
-            CDManager.Tick(inCombat);
-            UtilManager.Tick();
+            var inCombat = Condition[ConditionFlag.InCombat];
+            UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
+            GaugeManager.Tick(inCombat);
+            BuffManager.Tick(inCombat);
+            CooldownManager.Tick(inCombat);
+            CursorManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {
@@ -217,8 +250,8 @@ namespace JobBars {
             var currentScale = UIHelper.GetNodeScale(addon->RootNode);
 
             if (currentPosition != LastPosition || currentScale != LastScale) {
-                GManager.UpdatePositionScale();
-                BManager.UpdatePositionScale();
+                GaugeManager.UpdatePositionScale();
+                BuffManager.UpdatePositionScale();
             }
             LastPosition = currentPosition;
             LastScale = currentScale;
@@ -227,7 +260,7 @@ namespace JobBars {
         // ======= COMMANDS ============
 
         private void SetupCommands() {
-            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnCommand) {
+            CommandManager.AddHandler("/jobbars", new CommandInfo(OnCommand) {
                 HelpMessage = $"Open config window for {Name}",
                 ShowInHelp = true
             });
@@ -242,7 +275,7 @@ namespace JobBars {
         }
 
         public void RemoveCommands() {
-            PluginInterface.CommandManager.RemoveHandler("/jobbars");
+            CommandManager.RemoveHandler("/jobbars");
         }
     }
 }

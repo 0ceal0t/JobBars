@@ -1,7 +1,6 @@
 ﻿using JobBars.Data;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Cooldowns {

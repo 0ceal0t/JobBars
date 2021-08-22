@@ -2,9 +2,6 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.UI {
     public struct ElementColor {
@@ -94,6 +91,11 @@ namespace JobBars.UI {
             AllColors.Add(Yellow.Name, Yellow);
             AllColors.Add(White.Name, White);
             AllColors.Add(DarkBlue.Name, DarkBlue);
+        }
+
+        public static ElementColor GetColor(string colorName, ElementColor defaultColor) {
+            if (string.IsNullOrEmpty(colorName)) return defaultColor;
+            return AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
         }
     }
 }

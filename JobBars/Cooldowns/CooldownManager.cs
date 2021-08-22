@@ -1,39 +1,34 @@
-﻿using Dalamud.Logging;
-using Dalamud.Plugin;
-using JobBars.Data;
-using JobBars.UI;
+﻿using JobBars.Data;
+using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 
 namespace JobBars.Cooldowns {
-    public unsafe partial class CooldownManager {
-        public static CooldownManager Manager { get; private set; }
-        public static void Dispose() { Manager = null; }
+    public unsafe partial class CooldownManager : JobConfigurationManager<CooldownProps[]> {
         private static readonly int MILLIS_LOOP = 250;
-
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
 
-        private readonly DalamudPluginInterface PluginInterface;
-
-        public CooldownManager(DalamudPluginInterface pluginInterface) {
-            Manager = this;
-            PluginInterface = pluginInterface;
+        public CooldownManager() : base("##JobBars_Cooldowns") {
             Init();
         }
 
         public void SetupUI() {
-            UIBuilder.Builder.SetCooldownPosition(Configuration.Config.CooldownPosition);
+            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+        }
+
+        public CooldownProps[] GetCooldownProps(JobIds job) {
+            return JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
         }
 
         public List<CooldownPartyMemberStruct> GetPartyMembers() {
             var ret = new List<CooldownPartyMemberStruct>();
 
-            var partyUI = DataManager.GetPartyUI();
+            var partyUI = UIHelper.GetPartyUI();
             if(partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
-                var localPlayer = PluginInterface.ClientState.LocalPlayer;
+                var localPlayer = JobBars.ClientState.LocalPlayer;
                 var self = new CooldownPartyMemberStruct {
                     ObjectId = localPlayer.ObjectId,
-                    Job = DataManager.IdToJob(localPlayer.ClassJob.Id)
+                    Job = UIHelper.IdToJob(localPlayer.ClassJob.Id)
                 };
                 ret.Add(self);
                 return ret;
@@ -44,7 +39,7 @@ namespace JobBars.Cooldowns {
                 var objectId = (uint)member.ObjectID;
                 ret.Add(new CooldownPartyMemberStruct {
                     ObjectId = (objectId == 0xE0000000 || objectId == 0xFFFFFFFF) ? 0 : objectId,
-                    Job = DataManager.IconToJob((uint)member.ClassJobIcon)
+                    Job = UIHelper.IconToJob((uint)member.ClassJobIcon)
                 }); ;
             }
 
@@ -52,7 +47,7 @@ namespace JobBars.Cooldowns {
         }
 
         public void PerformAction(Item action, uint objectId) {
-            if (!Configuration.Config.CooldownsEnabled) return;
+            if (!JobBars.Config.CooldownsEnabled) return;
 
             foreach (var member in ObjectIdToMember.Values) {
                 member.ProcessAction(action, objectId);
@@ -60,11 +55,11 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick(bool inCombat) {
-            if (!Configuration.Config.CooldownsEnabled) return;
+            if (!JobBars.Config.CooldownsEnabled) return;
 
-            if (Configuration.Config.CooldownsHideOutOfCombat) {
-                if (inCombat) UIBuilder.Builder.ShowCooldowns();
-                else UIBuilder.Builder.HideCooldowns();
+            if (JobBars.Config.CooldownsHideOutOfCombat) {
+                if (inCombat) JobBars.Builder.ShowCooldowns();
+                else JobBars.Builder.HideCooldowns();
             }
 
             var time = DateTime.Now;
@@ -78,18 +73,18 @@ namespace JobBars.Cooldowns {
             for(int idx = 0; idx < partyMembers.Count; idx++) {
                 var partyMember = partyMembers[idx];
                 if(partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) { // skip it
-                    UIBuilder.Builder.SetCooldownRowVisible(idx, false);
+                    JobBars.Builder.SetCooldownRowVisible(idx, false);
                     continue;
                 }
 
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new CooldownPartyMember(partyMember.ObjectId);
-                member.Tick(UIBuilder.Builder.Cooldowns[idx], partyMember.Job, percent);
+                member.Tick(JobBars.Builder.Cooldowns[idx], partyMember.Job, percent);
                 newObjectIdToMember[partyMember.ObjectId] = member;
 
-                UIBuilder.Builder.SetCooldownRowVisible(idx, true);
+                JobBars.Builder.SetCooldownRowVisible(idx, true);
             }
             for(int idx = partyMembers.Count; idx < 8; idx++) { // hide remaining slots
-                UIBuilder.Builder.SetCooldownRowVisible(idx, false);
+                JobBars.Builder.SetCooldownRowVisible(idx, false);
             }
 
             ObjectIdToMember = newObjectIdToMember;

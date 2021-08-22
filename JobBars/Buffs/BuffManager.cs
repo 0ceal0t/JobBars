@@ -1,43 +1,35 @@
 ﻿using JobBars.Data;
-using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Buffs {
-    public unsafe partial class BuffManager {
-        public static BuffManager Manager { get; private set; }
-        public static void Dispose() { Manager = null; }
-
+    public unsafe partial class BuffManager : JobConfigurationManager<Buff[]> {
         public List<ActionIds> Icons => AllBuffs.Select(x => x.Icon).ToList();
-
-        private Dictionary<JobIds, Buff[]> JobToBuffs;
         private readonly List<Buff> AllBuffs;
 
-        public BuffManager() {
-            Manager = this;
-
+        public BuffManager() : base("##JobBars_Buffs") {
             Init();
             AllBuffs = new List<Buff>();
-            foreach (var jobEntry in JobToBuffs) {
+            foreach (var jobEntry in JobToValue) {
                 foreach (var buff in jobEntry.Value) AllBuffs.Add(buff);
             }
         }
 
         public void SetupUI() {
             foreach(var buff in AllBuffs) {
-                buff.LoadUI(UIBuilder.Builder.IconToBuff[buff.Icon]);
+                buff.LoadUI(JobBars.Builder.IconToBuff[buff.Icon]);
             }
         }
 
         public void Reset() {
             AllBuffs.ForEach(buff => buff.Reset());
-            UIBuilder.Builder.HideAllBuffs();
+            JobBars.Builder.HideAllBuffs();
             UpdatePositionScale();
         }
 
         public void PerformAction(Item action) {
-            if (!Configuration.Config.BuffBarEnabled) return;
+            if (!JobBars.Config.BuffBarEnabled) return;
 
             foreach (var buff in AllBuffs) {
                 if (!buff.Enabled) { continue; }
@@ -46,11 +38,11 @@ namespace JobBars.Buffs {
         }
 
         public void Tick(bool inCombat) {
-            if (!Configuration.Config.BuffBarEnabled) return;
+            if (!JobBars.Config.BuffBarEnabled) return;
 
-            if (Configuration.Config.BuffHideOutOfCombat) {
-                if (inCombat) UIBuilder.Builder.ShowBuffs();
-                else UIBuilder.Builder.HideBuffs();
+            if (JobBars.Config.BuffHideOutOfCombat) {
+                if (inCombat) JobBars.Builder.ShowBuffs();
+                else JobBars.Builder.HideBuffs();
             }
 
             var idx = 0;
@@ -66,8 +58,8 @@ namespace JobBars.Buffs {
         }
 
         public void UpdatePositionScale() {
-            UIBuilder.Builder.SetBuffPosition(Configuration.Config.BuffPosition);
-            UIBuilder.Builder.SetBuffScale(Configuration.Config.BuffScale);
+            JobBars.Builder.SetBuffPosition(JobBars.Config.BuffPosition);
+            JobBars.Builder.SetBuffScale(JobBars.Config.BuffScale);
         }
     }
 }

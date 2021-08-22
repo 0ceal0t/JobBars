@@ -2,9 +2,7 @@
 using JobBars.Data;
 using JobBars.Helper;
 using System.Collections.Generic;
-using System;
 using System.Numerics;
-using JobBars.Buffs;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
@@ -19,8 +17,8 @@ namespace JobBars.UI {
             BuffRoot->Flags = 9395;
 
             UIBuff lastBuff = null;
-            foreach (var icon in BuffManager.Manager.Icons) {
-                var newBuff = new UIBuff(partsList, DataManager.GetIcon(icon));
+            foreach (var icon in JobBars.BuffManager.Icons) {
+                var newBuff = new UIBuff(partsList, UIHelper.GetIcon(icon));
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;
@@ -38,7 +36,6 @@ namespace JobBars.UI {
         private void DisposeBuffs() {
             Buffs.ForEach(x => x.Dispose());
             Buffs = null;
-
 
             BuffRoot->Destroy(true);
             BuffRoot = null;

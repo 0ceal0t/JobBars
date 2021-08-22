@@ -1,7 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs;
-using System.Runtime.InteropServices;
-
-namespace JobBars.GameStructs {
+﻿namespace JobBars.GameStructs {
     public enum ActionEffectType : byte {
         Nothing = 0,
         Miss = 1,

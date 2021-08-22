@@ -1,30 +1,14 @@
 ﻿using System;
 using Dalamud.Logging;
-using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
-        public static UIBuilder Builder { get; private set; } = null;
-
-        public static void Initialize() {
-            Builder?.DisposeInstance();
-            Builder = new UIBuilder();
-            Builder.InitializeInstance();
-        }
-
-        public static void Dispose() {
-            Builder?.DisposeInstance();
-            Builder = null;
-        }
-
-        // ===== INSTANCE =======
-
         private static readonly uint NODE_IDX_START = 89990001;
         private uint NodeIdx = NODE_IDX_START;
 
-        private void InitializeInstance() {
+        public void Initialize() {
             var addon = UIHelper.ChatLogAddon;
             if (addon == null || addon->UldManager.Assets == null || addon->UldManager.PartsList == null) {
                 PluginLog.Debug("Error setting up UI builder");
@@ -33,7 +17,7 @@ namespace JobBars.UI {
             Init(addon);
         }
 
-        private void DisposeInstance() {
+        public void Dispose() {
             if(GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
                 GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
             }

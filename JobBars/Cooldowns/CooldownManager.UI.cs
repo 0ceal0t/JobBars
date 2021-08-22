@@ -1,77 +1,48 @@
-﻿using Dalamud.Logging;
-using ImGuiNET;
-using JobBars.Data;
-using JobBars.UI;
+﻿using ImGuiNET;
 using System.Numerics;
 
 namespace JobBars.Cooldowns {
     public unsafe partial class CooldownManager {
-        private JobIds SettingsJobSelected = JobIds.OTHER;
-
-        public void Draw() {
-            string _ID = "##JobBars_Cooldowns";
-
-            if (ImGui.Checkbox("Cooldowns Enabled" + _ID, ref Configuration.Config.CooldownsEnabled)) {
-                Configuration.Config.Save();
-                if (Configuration.Config.CooldownsEnabled) UIBuilder.Builder.ShowCooldowns();
-                else UIBuilder.Builder.HideCooldowns();
+        protected override void DrawHeader() {
+            if (ImGui.Checkbox("Cooldowns Enabled" + _ID, ref JobBars.Config.CooldownsEnabled)) {
+                JobBars.Config.Save();
+                if (JobBars.Config.CooldownsEnabled) JobBars.Builder.ShowCooldowns();
+                else JobBars.Builder.HideCooldowns();
 
                 ResetUI();
             }
 
-            if (ImGui.InputFloat2("Position" + _ID, ref Configuration.Config.CooldownPosition)) {
-                Configuration.Config.Save();
-                UIBuilder.Builder.SetCooldownPosition(Configuration.Config.CooldownPosition);
+            if (ImGui.InputFloat2("Position" + _ID, ref JobBars.Config.CooldownPosition)) {
+                JobBars.Config.Save();
+                JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
             }
 
-            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat", ref Configuration.Config.CooldownsHideOutOfCombat)) {
-                if (!Configuration.Config.CooldownsHideOutOfCombat && Configuration.Config.CooldownsEnabled) { // since they might be hidden
-                    UIBuilder.Builder.ShowCooldowns();
+            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat", ref JobBars.Config.CooldownsHideOutOfCombat)) {
+                if (!JobBars.Config.CooldownsHideOutOfCombat && JobBars.Config.CooldownsEnabled) { // since they might be hidden
+                    JobBars.Builder.ShowCooldowns();
                 }
-                Configuration.Config.Save();
+                JobBars.Config.Save();
             }
-
-            var size = ImGui.GetContentRegionAvail();
-            ImGui.BeginChild(_ID + "/Child", size, true);
-            ImGui.Columns(2);
-            ImGui.SetColumnWidth(0, 150);
-
-            ImGui.BeginChild(_ID + "Tree");
-            foreach (var job in JobToCooldowns.Keys) {
-                if (job == JobIds.OTHER) continue;
-                if (ImGui.Selectable(job + _ID + "/Job", SettingsJobSelected == job)) {
-                    SettingsJobSelected = job;
-                }
-            }
-            ImGui.EndChild();
-            ImGui.NextColumn();
-
-            if (SettingsJobSelected == JobIds.OTHER) {
-                ImGui.Text("Select a job...");
-            }
-            else {
-                ImGui.BeginChild(_ID + "Selected");
-                foreach (var cooldown in JobToCooldowns[SettingsJobSelected]) {
-                    DrawCooldown(cooldown, _ID + cooldown.Name);
-                }
-                ImGui.EndChild();
-            }
-            ImGui.Columns(1);
-            ImGui.EndChild();
         }
 
-        private void DrawCooldown(CooldownProps cooldown, string _ID) {
+        private void DrawCooldown(CooldownProps cooldown) {
             ImGui.TextColored(cooldown.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
 
-            if (Configuration.Config.CooldownEnabled.Draw($"Enabled{_ID}", cooldown.Name, cooldown.Enabled)) {
+            if (JobBars.Config.CooldownEnabled.Draw($"Enabled{_ID}{cooldown.Name}", cooldown.Name, cooldown.Enabled)) {
                 ResetUI();
             }
 
-            if (Configuration.Config.CooldownOrder.Draw($"Order{_ID}", cooldown.Name)) {
+            if (JobBars.Config.CooldownOrder.Draw($"Order{_ID}{cooldown.Name}", cooldown.Name)) {
                 ResetUI();
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+        }
+
+        protected override void DrawItem(CooldownProps[] item) {
+            foreach (var cdProp in item) {
+                DrawCooldown(cdProp);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Dalamud.Logging;
-using JobBars.Data;
+﻿using JobBars.Data;
 using JobBars.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +39,7 @@ namespace JobBars.Cooldowns {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = CooldownManager.Manager.JobToCooldowns.TryGetValue(CurrentJob, out var props) ? props :
-                CooldownManager.Manager.JobToCooldowns[JobIds.OTHER];
+            var trackerProps = JobBars.CooldownManager.GetCooldownProps(CurrentJob);
             foreach(var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new CooldownTracker(prop));

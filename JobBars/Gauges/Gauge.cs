@@ -24,13 +24,13 @@ namespace JobBars.Gauges {
         public UIGaugeElement UI;
         public bool Enabled;
 
-        public int Order => Configuration.Config.GaugeOrder.Get(Name);
-        public Vector2 Position => Configuration.Config.GaugeSplitPosition.Get(Name);
-        public float Scale => Configuration.Config.GaugeIndividualScale.Get(Name);
+        public int Order => JobBars.Config.GaugeOrder.Get(Name);
+        public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
+        public float Scale => JobBars.Config.GaugeIndividualScale.Get(Name);
 
         public Gauge(string name) {
             Name = name;
-            Enabled = Configuration.Config.GaugeEnabled.Get(Name);
+            Enabled = JobBars.Config.GaugeEnabled.Get(Name);
         }
 
         public void LoadUI(UIGaugeElement ui) {
@@ -47,7 +47,7 @@ namespace JobBars.Gauges {
             UI.SetVisible(Enabled);
             UI.SetScale(Scale);
 
-            if(Configuration.Config.GaugeSplit) UI.SetSplitPosition(Position);
+            if(JobBars.Config.GaugeSplit) UI.SetSplitPosition(Position);
 
             RefreshUI_Impl();
         }
@@ -83,25 +83,26 @@ namespace JobBars.Gauges {
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 
-            if(Configuration.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
+            if(JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
                 Enabled = newEnabled;
                 RefreshUI();
-                GaugeManager.Manager.UpdatePositionScale(job);
+                JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
-            if (Configuration.Config.GaugeOrder.Draw($"Order{_ID}", Name)) {
-                GaugeManager.Manager.UpdatePositionScale(job);
-            }
-
-            if (Configuration.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var scale)) {
-                Configuration.Config.GaugeIndividualScale.Set(Name, Math.Max(scale, 0.1f));
+            if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var scale)) {
+                JobBars.Config.GaugeIndividualScale.Set(Name, Math.Max(scale, 0.1f));
                 RefreshUI();
-                GaugeManager.Manager.UpdatePositionScale(job);
+                JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
-            if(Configuration.Config.GaugeSplit) {
-                if (Configuration.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var pos)) {
+            if(JobBars.Config.GaugeSplit) {
+                if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var pos)) {
                     SetSplitPosition(pos);
+                }
+            }
+            else {
+                if (JobBars.Config.GaugeOrder.Draw($"Order{_ID}", Name)) {
+                    JobBars.GaugeManager.UpdatePositionScale(job);
                 }
             }
 
@@ -111,7 +112,7 @@ namespace JobBars.Gauges {
 
         public void DrawPositionBox() {
             if (JobBars.DrawPositionView(Name + "##GaugePosition", Position, out var pos)) {
-                Configuration.Config.GaugeSplitPosition.Set(Name, pos);
+                JobBars.Config.GaugeSplitPosition.Set(Name, pos);
                 SetSplitPosition(pos);
             }
         }

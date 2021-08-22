@@ -1,5 +1,4 @@
 ﻿using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
 using System.Numerics;
 
@@ -16,22 +15,22 @@ namespace JobBars {
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {
-                    GManager?.Draw();
+                    GaugeManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
                 if (ImGui.BeginTabItem("Buffs" + _ID)) {
-                    BManager?.Draw();
+                    BuffManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
                 if (ImGui.BeginTabItem("Cooldowns" + _ID)) {
-                    CDManager?.Draw();
+                    CooldownManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Utilities" + _ID)) {
-                    UtilManager?.Draw();
+                if (ImGui.BeginTabItem("Cursor" + _ID)) {
+                    CursorManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
@@ -39,8 +38,8 @@ namespace JobBars {
             }
             ImGui.End();
 
-            GManager?.DrawPositionBox();
-            BManager?.DrawPositionBox();
+            GaugeManager?.DrawPositionBox();
+            BuffManager?.DrawPositionBox();
         }
 
         public static void SetWindowPosition(string Id, Vector2 position) {

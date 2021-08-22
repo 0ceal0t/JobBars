@@ -1,12 +1,9 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
-using JobBars.Data;
+﻿using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public struct SubGaugeGCDProps {
@@ -39,9 +36,9 @@ namespace JobBars.Gauges {
         public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name) {
             ParentGauge = gauge;
             Props = props;
-            Props.Invert = Configuration.Config.GaugeInvert.Get(Name, Props.Invert);
-            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-            Props.Color = Configuration.Config.GaugeColor.Get(Name, Props.Color);
+            Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
+            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
         }
 
         public void Reset() {
@@ -58,7 +55,7 @@ namespace JobBars.Gauges {
                 diamond.SetMaxValue(Props.MaxCounter);
             }
             else if (UI is UIBar gauge) {
-                gauge.SetTextColor(NoColor);
+                gauge.SetTextColor(UIColor.NoColor);
             }
             SetValue(Counter);
             CheckInactive();
@@ -84,7 +81,7 @@ namespace JobBars.Gauges {
         }
 
         private void CheckInactive() {
-            if (Configuration.Config.GaugeHideGCDInactive) UI.SetVisible(State != GaugeState.Inactive);
+            if (JobBars.Config.GaugeHideGCDInactive) UI.SetVisible(State != GaugeState.Inactive);
         }
 
         public void ProcessAction(Item action) {
@@ -124,19 +121,19 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void DrawSubGauge(string _ID, JobIds job) {
+        public void DrawSubGauge(string _ID) {
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
 
-            if (Configuration.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
+            if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;
                 ParentGauge.RefreshUI();
             }
 
-            if (Configuration.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, out var newInvert)) {
+            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, out var newInvert)) {
                 Props.Invert = newInvert;
             }
 
-            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }

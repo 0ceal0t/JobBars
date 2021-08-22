@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {

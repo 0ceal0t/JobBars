@@ -84,6 +84,10 @@ namespace JobBars.UI {
             }
             cursorLayout.Add("ui/uld/IconA_Recast2.tex", cursorParts.ToArray());
 
+            cursorLayout.Add("ui/uld/CursorLocation.tex", new[] {
+                new PartStruct(0, 0, 128, 128)
+            });
+
             CursorAssets = UIHelper.LoadLayout(cursorLayout);
         }
 

@@ -1,6 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Plugin;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -8,28 +8,19 @@ using System.Linq;
 using System.Numerics;
 
 namespace JobBars.Gauges {
-    public unsafe partial class GaugeManager {
-        public static GaugeManager Manager { get; private set; }
-        public static void Dispose() { Manager = null; }
-
+    public unsafe partial class GaugeManager : JobConfigurationManager<Gauge[]> {
         public JobIds CurrentJob = JobIds.OTHER;
+        private Gauge[] CurrentGauges => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
-        private readonly DalamudPluginInterface PluginInterface;
-
-        private Dictionary<JobIds, Gauge[]> JobToGauges;
-        private Gauge[] CurrentGauges => JobToGauges.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToGauges[JobIds.OTHER];
-
-        public GaugeManager(DalamudPluginInterface pluginInterface) {
-            Manager = this;
-            PluginInterface = pluginInterface;
+        public GaugeManager() : base("##JobBars_Gauges") {
             Init();
         }
 
         public void SetJob(JobIds job) {
             //===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) gauge.UnloadUI();
-            UIBuilder.Builder.HideAllGauges();
-            UIIconManager.Manager.Reset();
+            JobBars.Builder.HideAllGauges();
+            JobBars.Icon.Reset();
 
             //====== SET UP NEW =======
             CurrentJob = job;
@@ -46,22 +37,22 @@ namespace JobBars.Gauges {
         }
 
         public void UpdatePositionScale() {
-            UIBuilder.Builder.SetGaugePosition(Configuration.Config.GaugePosition);
-            UIBuilder.Builder.SetGaugeScale(Configuration.Config.GaugeScale);
+            JobBars.Builder.SetGaugePosition(JobBars.Config.GaugePosition);
+            JobBars.Builder.SetGaugeScale(JobBars.Config.GaugeScale);
 
             int totalPosition = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
-                if (Configuration.Config.GaugeSplit) { // SPLIT
+                if (JobBars.Config.GaugeSplit) { // SPLIT
                     gauge.UI.SetSplitPosition(gauge.Position);
                 }
                 else {
-                    if (Configuration.Config.GaugeHorizontal) { // HORIZONTAL
+                    if (JobBars.Config.GaugeHorizontal) { // HORIZONTAL
                         gauge.UI.SetPosition(new Vector2(totalPosition, gauge.UI.GetHorizontalYOffset()));
                         totalPosition += gauge.Width;
                     }
                     else { // VERTICAL
-                        int xPosition = Configuration.Config.GaugeAlignRight ? 160 - gauge.Width : 0;
-                        if(Configuration.Config.GaugeBottomToTop) { // BOTTOM TO TOP
+                        int xPosition = JobBars.Config.GaugeAlignRight ? 160 - gauge.Width : 0;
+                        if(JobBars.Config.GaugeBottomToTop) { // BOTTOM TO TOP
                             gauge.UI.SetPosition(new Vector2(xPosition, totalPosition - gauge.Height));
                             totalPosition -= gauge.Height;
                         }
@@ -81,7 +72,7 @@ namespace JobBars.Gauges {
         }
 
         public void PerformAction(Item action) {
-            if (!Configuration.Config.GaugesEnabled) return;
+            if (!JobBars.Config.GaugesEnabled) return;
 
             foreach (var gauge in CurrentGauges) {
                 if (!gauge.DoProcessInput()) continue;
@@ -90,24 +81,24 @@ namespace JobBars.Gauges {
         }
 
         public void Tick(bool inCombat) {
-            if (!Configuration.Config.GaugesEnabled) return;
+            if (!JobBars.Config.GaugesEnabled) return;
 
-            if (Configuration.Config.GaugesHideOutOfCombat) {
-                if (inCombat) UIBuilder.Builder.ShowGauges();
-                else UIBuilder.Builder.HideGauges();
+            if (JobBars.Config.GaugesHideOutOfCombat) {
+                if (inCombat) JobBars.Builder.ShowGauges();
+                else JobBars.Builder.HideGauges();
             }
 
             Dictionary<Item, BuffElem> BuffDict = new();
             var currentTime = DateTime.Now;
-            int ownerId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
+            int ownerId = (int)JobBars.ClientState.LocalPlayer.ObjectId;
 
-            AddBuffs(PluginInterface.ClientState.LocalPlayer, ownerId, BuffDict);
+            AddBuffs(JobBars.ClientState.LocalPlayer, ownerId, BuffDict);
 
-            var prevEnemy = DataManager.PreviousEnemyTarget;
+            var prevEnemy = UIHelper.PreviousEnemyTarget;
             if (prevEnemy != null) AddBuffs(prevEnemy, ownerId, BuffDict);
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                DataManager.GetPartyStatus(ownerId, BuffDict);
+                UIHelper.GetPartyStatus(ownerId, BuffDict);
             }
 
             foreach (var gauge in CurrentGauges) {
@@ -115,17 +106,17 @@ namespace JobBars.Gauges {
                 gauge.Tick(currentTime, BuffDict);
             }
 
-            UIIconManager.Manager.Tick();
+            JobBars.Icon.Tick();
         }
 
         private static UIGaugeElement GetUI(int idx, GaugeVisualType type) {
             return type switch {
-                GaugeVisualType.Arrow => UIBuilder.Builder.Arrows[idx],
-                GaugeVisualType.Bar => UIBuilder.Builder.Bars[idx],
-                GaugeVisualType.Diamond => UIBuilder.Builder.Diamonds[idx],
+                GaugeVisualType.Arrow => JobBars.Builder.Arrows[idx],
+                GaugeVisualType.Bar => JobBars.Builder.Bars[idx],
+                GaugeVisualType.Diamond => JobBars.Builder.Diamonds[idx],
                 GaugeVisualType.BarDiamondCombo => new UIBarDiamondCombo(
-                    UIBuilder.Builder.Bars[idx],
-                    UIBuilder.Builder.Diamonds[idx]
+                    JobBars.Builder.Bars[idx],
+                    JobBars.Builder.Diamonds[idx]
                 ), // kind of scuffed, but oh well
                 _ => null,
             };

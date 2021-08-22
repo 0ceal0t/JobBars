@@ -1,6 +1,4 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
-using JobBars.Data;
+﻿using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
@@ -38,7 +36,7 @@ namespace JobBars.Gauges {
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
-            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
 
             for (int idx = 0; idx < Props.Procs.Length; idx++) Props.Procs[idx].Idx = idx;
             Size = Props.Procs.Length;
@@ -100,7 +98,7 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }

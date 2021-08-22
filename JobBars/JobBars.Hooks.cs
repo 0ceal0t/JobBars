@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using JobBars.GameStructs;
 using JobBars.Data;
-using Dalamud.Logging;
 using Dalamud.Game.ClientState.Objects.Types;
-using System.Linq;
+using JobBars.Helper;
+using Dalamud.Logging;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -17,10 +17,10 @@ namespace JobBars {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             byte type = *((byte*)effectHeader.ToPointer() + 0x1F); // 1 = action
 
-            var selfId = (int)PluginInterface.ClientState.LocalPlayer.ObjectId;
+            var selfId = (int)ClientState.LocalPlayer.ObjectId;
             var isSelf = sourceId == selfId;
-            var isPet = !isSelf && (GManager?.CurrentJob == JobIds.SMN || GManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
-            var isParty = !isSelf && !isPet && DataManager.IsInParty((uint)sourceId);
+            var isPet = !isSelf && (GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
+            var isParty = !isSelf && !isPet && UIHelper.IsInParty((uint)sourceId);
 
             if (type != 1 || !(isSelf || isPet || isParty)) {
                 receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
@@ -29,17 +29,17 @@ namespace JobBars {
 
             var actionItem = new Item {
                 Id = id,
-                Type = (DataManager.IsGCD(id) ? ItemType.GCD : ItemType.OGCD)
+                Type = (UIHelper.IsGCD(id) ? ItemType.GCD : ItemType.OGCD)
             };
 
             if (!isParty) { // don't let party members affect our gauge
-                GManager?.PerformAction(actionItem);
+                GaugeManager?.PerformAction(actionItem);
             }
-            if (isSelf || Configuration.Config.BuffIncludeParty) {
-                BManager?.PerformAction(actionItem);
+            if (isSelf || Config.BuffIncludeParty) {
+                BuffManager?.PerformAction(actionItem);
             }
             if (!isPet) {
-                CDManager?.PerformAction(actionItem, (uint)sourceId);
+                CooldownManager?.PerformAction(actionItem, (uint)sourceId);
             }
 
             byte targetCount = *(byte*)(effectHeader + 0x21);
@@ -93,13 +93,13 @@ namespace JobBars {
                     };
 
                     if (!isParty) { // don't let party members affect our gauge
-                        GManager?.PerformAction(buffItem);
+                        GaugeManager?.PerformAction(buffItem);
                     }
 
                     // only care about buffs that we are getting
                     // ignore if we don't care about party members' CDs
-                    if ((int)tTarget == selfId && Configuration.Config.BuffIncludeParty) {
-                        BManager?.PerformAction(buffItem);
+                    if ((int)tTarget == selfId && JobBars.Config.BuffIncludeParty) {
+                        BuffManager?.PerformAction(buffItem);
                     }
                 }
             }
@@ -109,22 +109,25 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
+
             if (arg1 == 0x40000010) {
-                GManager?.Reset();
-                BManager?.Reset();
-                CDManager?.ResetTrackers();
+                GaugeManager?.Reset();
+                BuffManager?.Reset();
+                CooldownManager?.ResetTrackers();
+                UIHelper.ResetMp();
             }
         }
 
         private void ZoneChanged(object sender, ushort e) {
-            GManager?.Reset();
-            BManager?.Reset();
+            GaugeManager?.Reset();
+            BuffManager?.Reset();
             // don't reset CDs on zone change
+            UIHelper.ResetMp();
         }
 
         private bool IsPet(int objectId, int ownerId) {
             if (objectId == 0) return false;
-            foreach (var actor in PluginInterface.ClientState.Objects) {
+            foreach (var actor in Objects) {
                 if (actor == null) continue;
                 if (actor.ObjectId == objectId) {
                     if (actor is BattleNpc npc) {

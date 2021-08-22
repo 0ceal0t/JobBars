@@ -5,14 +5,13 @@ using JobBars.UI;
 namespace JobBars.Buffs {
     public unsafe partial class BuffManager {
         private void Init() {
-            JobToBuffs = new();
-            JobToBuffs.Add(JobIds.OTHER, Array.Empty<Buff>());
+            JobToValue.Add(JobIds.OTHER, Array.Empty<Buff>());
             // ======= GNB ==========
-            JobToBuffs.Add(JobIds.GNB, Array.Empty<Buff>());
+            JobToValue.Add(JobIds.GNB, Array.Empty<Buff>());
             // ======= PLD ==========
-            JobToBuffs.Add(JobIds.PLD, Array.Empty<Buff>());
+            JobToValue.Add(JobIds.PLD, Array.Empty<Buff>());
             // ======= WAR ==========
-            JobToBuffs.Add(JobIds.WAR, new Buff[] {
+            JobToValue.Add(JobIds.WAR, new Buff[] {
                 new Buff("Inner Release", new BuffProps {
                     CD = 90,
                     Duration = 10,
@@ -21,7 +20,8 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.InnerRelease) }
                 })
             });
-            JobToBuffs.Add(JobIds.DRK, new Buff[] {
+            // ======= DRK =========
+            JobToValue.Add(JobIds.DRK, new Buff[] {
                 new Buff("Delirium", new BuffProps {
                     CD = 90,
                     Duration = 10,
@@ -38,7 +38,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= AST ==========
-            JobToBuffs.Add(JobIds.AST, new Buff[] {
+            JobToValue.Add(JobIds.AST, new Buff[] {
                 new Buff("The Balance", new BuffProps {
                     Duration = 15,
                     Icon = ActionIds.TheBalance,
@@ -96,7 +96,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= SCH ==========
-            JobToBuffs.Add(JobIds.SCH, new Buff[] {
+            JobToValue.Add(JobIds.SCH, new Buff[] {
                 new Buff("Chain Stratagem", new BuffProps {
                     CD = 120,
                     Duration = 15,
@@ -106,9 +106,9 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= WHM ==========
-            JobToBuffs.Add(JobIds.WHM, Array.Empty<Buff>());
+            JobToValue.Add(JobIds.WHM, Array.Empty<Buff>());
             // ======= BRD ==========
-            JobToBuffs.Add(JobIds.BRD, new Buff[] {
+            JobToValue.Add(JobIds.BRD, new Buff[] {
                 new Buff("Battle Voice", new BuffProps {
                     CD = 180,
                     Duration = 20,
@@ -133,7 +133,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= DRG ==========
-            JobToBuffs.Add(JobIds.DRG, new Buff[] {
+            JobToValue.Add(JobIds.DRG, new Buff[] {
                 new Buff("Dragon Sight", new BuffProps {
                     CD = 120,
                     Duration = 20,
@@ -157,7 +157,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= SMN ==========
-            JobToBuffs.Add(JobIds.SMN, new Buff[] {
+            JobToValue.Add(JobIds.SMN, new Buff[] {
                 new Buff("Devotion", new BuffProps {
                     CD = 180,
                     Duration = 15,
@@ -181,7 +181,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= SAM ==========
-            JobToBuffs.Add(JobIds.SAM, new Buff[] {
+            JobToValue.Add(JobIds.SAM, new Buff[] {
                 new Buff("Double Midare", new BuffProps {
                     CD = 60,
                     Duration = 5,
@@ -191,9 +191,9 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= BLM ==========
-            JobToBuffs.Add(JobIds.BLM, Array.Empty<Buff>());
+            JobToValue.Add(JobIds.BLM, Array.Empty<Buff>());
             // ======= RDM ==========
-            JobToBuffs.Add(JobIds.RDM, new Buff[] {
+            JobToValue.Add(JobIds.RDM, new Buff[] {
                 new Buff("Manafication", new BuffProps {
                     CD = 110,
                     Duration = 10,
@@ -210,7 +210,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= MCH ==========
-            JobToBuffs.Add(JobIds.MCH, new Buff[] {
+            JobToValue.Add(JobIds.MCH, new Buff[] {
                 new Buff("Wildfire", new BuffProps {
                     CD = 120,
                     Duration = 10,
@@ -228,7 +228,7 @@ namespace JobBars.Buffs {
                 }),
             });
             // ======= DNC ==========
-            JobToBuffs.Add(JobIds.DNC, new Buff[] {
+            JobToValue.Add(JobIds.DNC, new Buff[] {
                 new Buff("Technical Finish", new BuffProps {
                     CD = 120,
                     Duration = 20,
@@ -245,7 +245,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= NIN ==========
-            JobToBuffs.Add(JobIds.NIN, new Buff[] {
+            JobToValue.Add(JobIds.NIN, new Buff[] {
                 new Buff("Trick Attack", new BuffProps {
                     CD = 60,
                     Duration = 15,
@@ -262,7 +262,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= MNK ==========
-            JobToBuffs.Add(JobIds.MNK, new Buff[] {
+            JobToValue.Add(JobIds.MNK, new Buff[] {
                 new Buff("Brotherhood", new BuffProps {
                     CD = 90,
                     Duration = 15,
@@ -286,7 +286,7 @@ namespace JobBars.Buffs {
                 })
             });
             // ======= BLU ==========
-            JobToBuffs.Add(JobIds.BLU, new Buff[] {
+            JobToValue.Add(JobIds.BLU, new Buff[] {
                 new Buff("Off-Guard", new BuffProps {
                     CD = 60,
                     Duration = 15,

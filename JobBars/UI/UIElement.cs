@@ -1,8 +1,6 @@
-﻿using Dalamud.Plugin;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System.Numerics;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public abstract unsafe class UIElement {

@@ -1,10 +1,7 @@
-﻿using Dalamud.Logging;
-using Dalamud.Plugin;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
 using System;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIBar : UIGaugeElement {
@@ -24,19 +21,19 @@ namespace JobBars.UI {
         public UIBar(AtkUldPartsList* partsList) {
 
             // ======= CONTAINERS =========
-            RootRes = UIBuilder.Builder.CreateResNode();
+            RootRes = JobBars.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = 160;
             RootRes->Height = 46;
 
-            GaugeContainer = UIBuilder.Builder.CreateResNode();
+            GaugeContainer = JobBars.Builder.CreateResNode();
             GaugeContainer->X = 0;
             GaugeContainer->Y = 0;
             GaugeContainer->Width = 160;
             GaugeContainer->Height = 32;
 
-            Background = UIBuilder.Builder.CreateImageNode();
+            Background = JobBars.Builder.CreateImageNode();
             Background->AtkResNode.Width = 160;
             Background->AtkResNode.Height = 20;
             Background->AtkResNode.X = 0;
@@ -48,13 +45,13 @@ namespace JobBars.UI {
             Background->WrapMode = 1;
 
             // ========= BAR ============
-            BarContainer = UIBuilder.Builder.CreateResNode();
+            BarContainer = JobBars.Builder.CreateResNode();
             BarContainer->X = 0;
             BarContainer->Y = 0;
             BarContainer->Width = 160;
             BarContainer->Height = 20;
 
-            BarMainNode = UIBuilder.Builder.CreateNineNode();
+            BarMainNode = JobBars.Builder.CreateNineNode();
             BarMainNode->AtkResNode.Width = 160;
             BarMainNode->AtkResNode.Height = 20;
             BarMainNode->AtkResNode.X = 0;
@@ -71,7 +68,7 @@ namespace JobBars.UI {
             BarContainer->ChildNode = (AtkResNode*)BarMainNode;
             BarMainNode->AtkResNode.ParentNode = BarContainer;
 
-            Frame = UIBuilder.Builder.CreateImageNode();
+            Frame = JobBars.Builder.CreateImageNode();
             Frame->AtkResNode.Width = 160;
             Frame->AtkResNode.Height = 20;
             Frame->AtkResNode.X = 0;
@@ -93,19 +90,19 @@ namespace JobBars.UI {
             UIHelper.Link(BarContainer, (AtkResNode*)Frame);
 
             // ======== TEXT ==========
-            TextContainer = UIBuilder.Builder.CreateResNode();
+            TextContainer = JobBars.Builder.CreateResNode();
             TextContainer->X = 112;
             TextContainer->Y = 6;
             TextContainer->Width = 47;
             TextContainer->Height = 40;
 
-            TextNode = UIBuilder.Builder.CreateTextNode();
+            TextNode = JobBars.Builder.CreateTextNode();
             TextNode->AtkResNode.X = 14;
             TextNode->AtkResNode.Y = 5;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
 
-            TextBlurNode = UIBuilder.Builder.CreateNineNode();
+            TextBlurNode = JobBars.Builder.CreateNineNode();
             TextBlurNode->AtkResNode.Flags = 8371;
             TextBlurNode->AtkResNode.Width = 47;
             TextBlurNode->AtkResNode.Height = 40;

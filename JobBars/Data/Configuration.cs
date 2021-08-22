@@ -1,11 +1,11 @@
 ﻿using Dalamud.Configuration;
-using Dalamud.Plugin;
 using ImGuiNET;
-using JobBars.Gauges;
-using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using JobBars.Gauges;
+using JobBars.UI;
+using JobBars.Cursors;
 
 namespace JobBars.Data {
     [Serializable]
@@ -27,7 +27,7 @@ namespace JobBars.Data {
         public T Get(string name, T defaultValue) => Values.TryGetValue(name, out var val) ? val : defaultValue;
         public void Set(string name, T value) {
             Values[name] = value;
-            Configuration.Config.Save();
+            JobBars.Config.Save();
         }
 
         public bool Draw(string id, string name) => Draw(id, name, Default, out var _);
@@ -60,7 +60,6 @@ namespace JobBars.Data {
                 Set(name, value);
                 return true;
             }
-
             return false;
         }
     }
@@ -96,28 +95,19 @@ namespace JobBars.Data {
     }
 
     [Serializable]
-    public class TypeValueConfig : ValueConfig<GaugeVisualType> {
-        public TypeValueConfig() : base() { }
+    public class ComboValueConfig<T> : ValueConfig<T> {
+        public ComboValueConfig() : base() { }
 
-        public override bool Draw(string id, string name, GaugeVisualType defaultValue, out GaugeVisualType value) { // whatever
+        public override bool Draw(string id, string name, T defaultValue, out T value) { // whatever
             value = default;
             return false;
         }
 
-        public bool Draw(string id, string name, GaugeVisualType[] typeOptions, GaugeVisualType defaultValue, out GaugeVisualType value) {
+        public bool Draw(string id, string name, T[] comboOptions, T defaultValue, out T value) {
             value = Get(name, defaultValue);
-            if (ImGui.BeginCombo(id, $"{value}")) {
-                foreach (GaugeVisualType gType in typeOptions) {
-                    if (ImGui.Selectable($"{gType}##Combo", gType == value)) {
-
-                        value = gType;
-                        Set(name, value);
-
-                        ImGui.EndCombo();
-                        return true;
-                    }
-                }
-                ImGui.EndCombo();
+            if(Configuration.DrawCombo(id, comboOptions, value, out value)) {
+                Set(name, value);
+                return true;
             }
             return false;
         }
@@ -128,32 +118,18 @@ namespace JobBars.Data {
         public Dictionary<string, string> Color = new();
 
         public ElementColor Get(string name, ElementColor defaultColor) => Color.TryGetValue(name, out var val) ?
-            GetColorInternal(val, defaultColor) : defaultColor;
+            UIColor.GetColor(val, defaultColor) : defaultColor;
 
         public void Set(string name, ElementColor color) {
             Color[name] = color.Name;
-            Configuration.Config.Save();
-        }
-
-        private static ElementColor GetColorInternal(string colorName, ElementColor defaultColor) {
-            if (string.IsNullOrEmpty(colorName)) return defaultColor;
-            return UIColor.AllColors.TryGetValue(colorName, out var newColor) ? newColor : defaultColor;
+            JobBars.Config.Save();
         }
 
         public bool Draw(string id, string name, ElementColor defaultValue, out ElementColor value) {
             value = Get(name, defaultValue);
-            if (ImGui.BeginCombo(id, value.Name)) {
-                foreach (var entry in UIColor.AllColors) {
-                    if (ImGui.Selectable($"{entry.Key}##Combo", value.Name == entry.Key)) {
-
-                        value = entry.Value;
-                        Set(name, value);
-
-                        ImGui.EndCombo();
-                        return true;
-                    }
-                }
-                ImGui.EndCombo();
+            if(Configuration.DrawColor(id, value, out value)) {
+                Set(name, value);
+                return true;
             }
             return false;
         }
@@ -177,7 +153,7 @@ namespace JobBars.Data {
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
 
-        public VectorValueConfig GaugeSplitPosition = new VectorValueConfig(new Vector2(200, 200));
+        public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200));
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public BoolValueConfig GaugeIconEnabled = new(true);
@@ -185,7 +161,7 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeNoSoundOnFull = new(false);
         public BoolValueConfig GaugeInvert = new(false);
         public ColorConfig GaugeColor = new();
-        public TypeValueConfig GaugeType = new();
+        public ComboValueConfig<GaugeVisualType> GaugeType = new();
 
         public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;
@@ -215,18 +191,51 @@ namespace JobBars.Data {
         public BoolValueConfig CooldownEnabled = new(true);
         public IntValueConfig CooldownOrder = new(-1);
 
-        [NonSerialized]
-        private DalamudPluginInterface PluginInterface;
+        // ===== CURSOR =======
 
-        public static Configuration Config { get; private set; }
+        public bool CursorsEnabled = true;
+        public bool CursorHideWhenHeld = false;
+        public float CursorInnerScale = 1.5f;
+        public float CursorOuterScale = 1.2f;
+        public string CursorInnerColor = UIColor.MpPink.Name;
+        public string CursorOuterColor = UIColor.HealthGreen.Name;
 
-        public void Initialize(DalamudPluginInterface pluginInterface) {
-            PluginInterface = pluginInterface;
-            Config = this;
-        }
+        public ComboValueConfig<CursorType> CursorType = new();
+
+        // =====================
 
         public void Save() {
-            PluginInterface.SavePluginConfig(this);
+            JobBars.PluginInterface.SavePluginConfig(this);
+        }
+
+        public static bool DrawCombo<T>(string id, T[] comboOptions, T currentValue, out T value) {
+            value = currentValue;
+            if (ImGui.BeginCombo(id, $"{currentValue}")) {
+                foreach (T option in comboOptions) {
+                    if (ImGui.Selectable($"{option}##Combo", option.Equals(currentValue))) {
+                        value = option;
+                        ImGui.EndCombo();
+                        return true;
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            return false;
+        }
+
+        public static bool DrawColor(string id, ElementColor currentValue, out ElementColor value) {
+            value = currentValue;
+            if (ImGui.BeginCombo(id, value.Name)) {
+                foreach (var entry in UIColor.AllColors) {
+                    if (ImGui.Selectable($"{entry.Key}##Combo", value.Name == entry.Key)) {
+                        value = entry.Value;
+                        ImGui.EndCombo();
+                        return true;
+                    }
+                }
+                ImGui.EndCombo();
+            }
+            return false;
         }
     }
 }

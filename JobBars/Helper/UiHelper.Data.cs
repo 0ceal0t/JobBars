@@ -1,35 +1,21 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Logging;
-using Dalamud.Plugin;
+﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using JobBars.Data;
 using JobBars.GameStructs;
 using JobBars.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
-namespace JobBars.Data {
-    public class DataManager {
-        public static DataManager Manager { get; private set; }
-
-        public unsafe static void Initialize(DalamudPluginInterface pluginInterface) {
-            Manager = new DataManager(pluginInterface);
-        }
-
-        public static void Dispose() {
-            Manager = null;
-        }
-
+namespace JobBars.Helper {
+    public unsafe partial class UIHelper {
         public static bool IsGCD(ActionIds action) => IsGCD((uint)action);
-        public static bool IsGCD(uint action) => Manager.GCDs.Contains(action);
+        public static bool IsGCD(uint action) => GCDs.Contains(action);
 
         public static int GetIcon(ActionIds action) => GetIcon((uint)action);
-        public static int GetIcon(uint action) => (int)Manager.ActionToIcon[action];
-
-        public static GameObject PreviousEnemyTarget => Manager.GetPreviousEnemyTarget();
+        public static int GetIcon(uint action) => (int)ActionToIcon[action];
 
         public static JobIds IdToJob(uint job) => job < 19 ? JobIds.OTHER : (JobIds)job;
         public static JobIds IconToJob(uint icon) => icon switch {
@@ -106,20 +92,42 @@ namespace JobBars.Data {
 
         // ==================
 
-        private readonly DalamudPluginInterface PluginInterface;
+        private static readonly HashSet<uint> GCDs = new();
+        private static readonly Dictionary<uint, uint> ActionToIcon = new();
 
-        private readonly HashSet<uint> GCDs = new();
-        private readonly Dictionary<uint, uint> ActionToIcon = new();
-        private readonly IntPtr TargetAddress;
+        private static bool MpTickActive = false;
+        private static DateTime MpTime;
+        private static uint LastMp = 0;
 
-        private DataManager(DalamudPluginInterface pluginInterface) {
-            PluginInterface = pluginInterface;
-            TargetAddress = PluginInterface.TargetModuleScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
-            SetupActions();
+        public static bool GetCurrentCast(out float currentTime, out float totalTime) {
+            currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
+            totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
+            return JobBars.ClientState.LocalPlayer.IsCasting;
         }
 
-        private void SetupActions() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
+        public static void UpdateMp(uint currentMp) {
+            if(currentMp != 10000 && currentMp > LastMp && !MpTickActive) {
+                MpTickActive = true;
+                MpTime = DateTime.Now;
+            }
+
+            LastMp = currentMp;
+        }
+
+        public static void ResetMp() {
+            MpTickActive = false;
+        }
+
+        public static float GetMpTick() {
+            if (!MpTickActive) return 0;
+            if (LastMp == 10000) return 0; // already max
+            var currentTime = DateTime.Now;
+            var diff = (currentTime - MpTime).TotalSeconds;
+            return (float)(diff % 3.0f / 3.0f);
+        }
+
+        private static void SetupActions() {
+            var sheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
             foreach (var item in sheet) {
@@ -132,13 +140,6 @@ namespace JobBars.Data {
 
                 if (item.Icon != 405) ActionToIcon[item.RowId] = item.Icon;
             }
-        }
-
-        private GameObject GetPreviousEnemyTarget() {
-            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
-            if (actorAddress == IntPtr.Zero) return null;
-
-            return PluginInterface.ClientState.Objects.CreateObjectReference(actorAddress);
         }
     }
 }

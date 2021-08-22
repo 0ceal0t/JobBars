@@ -1,8 +1,6 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Data;
 using JobBars.Helper;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.UI {
     public unsafe class UIBuff : UIElement {
@@ -15,17 +13,17 @@ namespace JobBars.UI {
         private AtkImageNode* Border;
 
         private string CurrentText = "";
-        private static int BUFFS_HORIZONTAL => Configuration.Config.BuffHorizontal;
+        private static int BUFFS_HORIZONTAL => JobBars.Config.BuffHorizontal;
 
         public UIBuff(AtkUldPartsList* partsList, int icon) : base() {
-            RootRes = UIBuilder.Builder.CreateResNode();
+            RootRes = JobBars.Builder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
             RootRes->ChildCount = 4;
 
-            TextNode = UIBuilder.Builder.CreateTextNode();
+            TextNode = JobBars.Builder.CreateTextNode();
             TextNode->FontSize = 15;
             TextNode->LineSpacing = 15;
             TextNode->AlignmentFontType = 20;
@@ -37,7 +35,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Flags_2 = 1;
             TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
-            Icon = UIBuilder.Builder.CreateImageNode();
+            Icon = JobBars.Builder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
@@ -49,7 +47,7 @@ namespace JobBars.UI {
             UIHelper.LoadIcon(Icon, icon);
             UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
 
-            Overlay = UIBuilder.Builder.CreateImageNode();
+            Overlay = JobBars.Builder.CreateImageNode();
             Overlay->AtkResNode.Width = WIDTH;
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
@@ -59,7 +57,7 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
 
-            Border = UIBuilder.Builder.CreateImageNode();
+            Border = JobBars.Builder.CreateImageNode();
             Border->AtkResNode.Width = 47;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -2;
@@ -117,8 +115,8 @@ namespace JobBars.UI {
             var position_x = idx % BUFFS_HORIZONTAL;
             var position_y = (idx - position_x) / BUFFS_HORIZONTAL;
 
-            int xMod = Configuration.Config.BuffRightToLeft ? -1 : 1;
-            int yMod = Configuration.Config.BuffBottomToTop ? -1 : 1;
+            int xMod = JobBars.Config.BuffRightToLeft ? -1 : 1;
+            int yMod = JobBars.Config.BuffBottomToTop ? -1 : 1;
 
             UIHelper.SetPosition(RootRes, xMod * (WIDTH + 9) * position_x, yMod * (HEIGHT + 7) * position_y);
         }

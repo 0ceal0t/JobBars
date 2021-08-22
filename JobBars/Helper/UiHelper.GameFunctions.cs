@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Dalamud.Logging;
-using Dalamud.Plugin;
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -9,8 +8,6 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
-        private static DalamudPluginInterface PluginInterface;
-
         public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3);
         public static PlaySoundEffectDelegate PlaySoundEffect { get; private set; }
 
@@ -18,14 +15,15 @@ namespace JobBars.Helper {
         public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
         public static TextureLoadPathDelegate TextureLoadPath { get; private set; }
 
+        private static IntPtr TargetAddress;
+
         public static bool Ready { get; private set; } = false;
 
-        public static void Setup(DalamudPluginInterface pluginInterface) {
-            PluginInterface = pluginInterface;
-            var scanner = pluginInterface.TargetModuleScanner;
-
-            PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
-            TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(scanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
+        public static void Setup() {
+            PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
+            TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
+            TargetAddress = JobBars.SigScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
+            SetupActions();
 
             Ready = true;
         }
@@ -68,10 +66,6 @@ namespace JobBars.Helper {
             PlaySoundEffect(78, 0, 0);
         }
 
-        public static void Dispose() {
-            PluginInterface = null;
-        }
-
         public static bool GetRecastActive(uint actionId, out float timeElapsed, ActionType actionType = ActionType.Spell) {
             var actionManager = ActionManager.Instance();
             var adjustedId = actionManager->GetAdjustedActionId(actionId);
@@ -85,6 +79,15 @@ namespace JobBars.Helper {
             timeElapsed = actionManager->GetRecastTimeElapsed(actionType, adjustedId);
             timeTotal = actionManager->GetRecastTime(actionType, adjustedId);
             return timeElapsed > 0;
+        }
+
+        public static GameObject PreviousEnemyTarget => GetPreviousEnemyTarget();
+
+        private static GameObject GetPreviousEnemyTarget() {
+            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
+            if (actorAddress == IntPtr.Zero) return null;
+
+            return JobBars.Objects.CreateObjectReference(actorAddress);
         }
 
         public static AtkUnitBase* ParameterAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ParameterWidget");

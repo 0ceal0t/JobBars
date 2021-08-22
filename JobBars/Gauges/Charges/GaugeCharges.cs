@@ -1,11 +1,8 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
-using JobBars.Data;
+﻿using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
-using static JobBars.UI.UIColor;
 
 namespace JobBars.Gauges {
     public struct GaugeChargesProps {
@@ -35,9 +32,9 @@ namespace JobBars.Gauges {
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Props = props;
-            Props.Type = Configuration.Config.GaugeType.Get(Name, Props.Type);
-            Props.NoSoundOnFull = Configuration.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-            Props.BarColor = Configuration.Config.GaugeColor.Get(Name, Props.BarColor);
+            Props.Type = JobBars.Config.GaugeType.Get(Name, Props.Type);
+            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            Props.BarColor = JobBars.Config.GaugeColor.Get(Name, Props.BarColor);
 
             RefreshSameColor();
             foreach (var part in Props.Parts) {
@@ -51,7 +48,7 @@ namespace JobBars.Gauges {
             if (UI is UIBarDiamondCombo combo) {
                 SetupDiamondColors();
                 combo.SetGaugeColor(Props.BarColor);
-                combo.SetTextColor(NoColor);
+                combo.SetTextColor(UIColor.NoColor);
                 combo.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIDiamond diamond) {
@@ -60,7 +57,7 @@ namespace JobBars.Gauges {
             }
             else if (UI is UIBar gauge) {
                 gauge.SetColor(Props.BarColor);
-                gauge.SetTextColor(NoColor);
+                gauge.SetTextColor(UIColor.NoColor);
             }
 
             GaugeFull = true;
@@ -164,17 +161,17 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if(Configuration.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
+            if(JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
                 Props.BarColor = newColor;
                 RefreshUI();
             }
 
-            if (Configuration.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
+            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
                 Props.Type = newType;
-                GaugeManager.Manager.ResetJob(job);
+                JobBars.GaugeManager.ResetJob(job);
             }
 
-            if (Configuration.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }

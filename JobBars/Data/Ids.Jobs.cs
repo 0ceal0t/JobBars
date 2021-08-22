@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JobBars.Data {
+﻿namespace JobBars.Data {
     public enum JobIds : uint {
         OTHER = 0,
         GNB = 37,

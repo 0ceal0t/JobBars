@@ -1,7 +1,7 @@
-﻿using Dalamud.Plugin;
-using JobBars.Data;
+﻿using JobBars.Data;
 using System;
 using System.Collections.Generic;
+
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
         private readonly SubGaugeTimer[] SubGauges;

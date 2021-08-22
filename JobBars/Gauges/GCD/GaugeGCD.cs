@@ -1,5 +1,4 @@
-﻿using Dalamud.Plugin;
-using JobBars.Data;
+﻿using JobBars.Data;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +13,7 @@ namespace JobBars.Gauges {
 
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps props) : this(name, type, new[] { props }) { }
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps[] props) : base(name) {
-            Type = Configuration.Config.GaugeType.Get(Name, type);
+            Type = JobBars.Config.GaugeType.Get(Name, type);
 
             SubGauges = new SubGaugeGCD[props.Length];
             for (int i = 0; i < props.Length; i++) {
@@ -49,11 +48,11 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            foreach (var sg in SubGauges) sg.DrawSubGauge(_ID, job);
+            foreach (var sg in SubGauges) sg.DrawSubGauge(_ID);
 
-            if(Configuration.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var value)) {
+            if(JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var value)) {
                 Type = value;
-                GaugeManager.Manager.ResetJob(job);
+                JobBars.GaugeManager.ResetJob(job);
             }
         }
     }
