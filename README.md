@@ -30,71 +30,71 @@ Some people find these useful. If you don't, each gauge and buff can enabled or 
 
 **Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
 
-### <img src="Assets/JobIcons/DRK.png" height="20px" width="20px"> DRK
+### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> DRK
 + **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon
 + **Buffs**: Delirium, Living Shadow
 
-### <img src="Assets/JobIcons/WAR.png" height="20px" width="20px"> WAR
+### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> WAR
 + **Gauges**: GCDS used in Inner Release, Storm's Eye
 + **Buffs**: Inner Release
 
-### <img src="Assets/JobIcons/PLD.png" height="20px" width="20px"> PLD
+### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> PLD
 + **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
 
-### <img src="Assets/JobIcons/GNB.png" height="20px" width="20px"> GNB
+### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> GNB
 + **Gauges**: GCDS used in No Mercy
 
-### <img src="Assets/JobIcons/SCH.png" height="20px" width="20px"> SCH
+### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> SCH
 + **Gauges**: Excog, Biolysis
 + **Buffs**: Chain Stratagem
 
-### <img src="Assets/JobIcons/WHM.png" height="20px" width="20px"> WHM
+### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> WHM
 + **Gauges**: Dia
 
-### <img src="Assets/JobIcons/AST.png" height="20px" width="20px"> AST
+### <img src="assets/job_icons/AST.png" height="20px" width="20px"> AST
 + **Gauges**: Combust, Upgraded Earthly Star, Lightspeed
 + **Buffs**: Cards, Divination
 
-### <img src="Assets/JobIcons/MNK.png" height="20px" width="20px"> MNK
+### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> MNK
 + **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
 + **Buffs**: Brotherhood, Riddle of Fire
 
-### <img src="Assets/JobIcons/DRG.png" height="20px" width="20px"> DRG
+### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> DRG
 + **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight, Charges + time left on True North
 + **Buffs**: Battle Litany, Dragonsight, Lance Charge
 
-### <img src="Assets/JobIcons/NIN.png" height="20px" width="20px"> NIN
+### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> NIN
 + **Gauges**: GCDS used in Bunshin, Charges + time left on True North
 + **Buffs**: Trick Attack, Bunshin
 
-### <img src="Assets/JobIcons/SAM.png" height="20px" width="20px"> SAM
+### <img src="assets/job_icons/SAM.png" height="20px" width="20px"> SAM
 + **Gauges**: Jinpu, Shifu, Higanbana, Charges + time left on True North
 + **Buffs**: Double Midare
 
-### <img src="Assets/JobIcons/BRD.png" height="20px" width="20px"> BRD
+### <img src="assets/job_icons/BRD.png" height="20px" width="20px"> BRD
 + **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
 + **Buffs**: Battle Voice, Raging Strikes, Barrage
 
-### <img src="Assets/JobIcons/MCH.png" height="20px" width="20px"> MCH
+### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> MCH
 + **Gauges**: GCDS used in Hypercharge, GCDS used in Wildfire, Charges of Ricochet, Charges of Gauss Round
 + **Buffs**: Wildfire, Reassemble
 
-### <img src="Assets/JobIcons/DNC.png" height="20px" width="20px"> DNC
+### <img src="assets/job_icons/DNC.png" height="20px" width="20px"> DNC
 + **Gauges**: Procs
 + **Buffs**: Technical Step, Devilment
 
-### <img src="Assets/JobIcons/BLM.png" height="20px" width="20px"> BLM
+### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> BLM
 + **Gauges**: Thunder 3+4, Fire and Thunder procs
 
-### <img src="Assets/JobIcons/SMN.png" height="20px" width="20px"> SMN
+### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> SMN
 + **Gauges**: Ruin 4, Bio, Miasma, Wyrmwave and Scarlet Flame
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
 
-### <img src="Assets/JobIcons/RDM.png" height="20px" width="20px"> RDM
+### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> RDM
 + **Gauges**: GCDS used in Manification, Fire and Stone procs, Acceleration stacks
 + **Buffs**: Embolden, Manafication
 
-### <img src="Assets/JobIcons/BLU.png" height="20px" width="20px"> BLU
+### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> BLU
 + **Gauges**: Song of Torment, Bad Breath, Condensed Libra
 + **Buffs**: Off-guard, Peculiar Light
 

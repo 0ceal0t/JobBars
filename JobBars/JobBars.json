@@ -7,7 +7,7 @@
   "AssemblyVersion": "1.1.0.0",
   "Tags": [ "UI", "Bars" ],
   "RepoUrl": "https://github.com/0ceal0t/JobBars",
-  "IconUrl": "https://user-images.githubusercontent.com/18051158/130373942-51133607-b92a-4abc-afea-e823b7499adf.png",
+  "IconUrl": "https://raw.githubusercontent.com/0ceal0t/JobBars/main/assets/icon.png",
   "ApplicableVersion": "any",
   "DalamudApiLevel": 4
 }
