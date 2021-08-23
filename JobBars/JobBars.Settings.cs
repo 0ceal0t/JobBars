@@ -1,12 +1,5 @@
 ﻿using Dalamud.Interface;
-using Dalamud.Plugin;
 using ImGuiNET;
-using JobBars.Data;
-using JobBars.Gauges;
-using JobBars.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace JobBars {
@@ -14,8 +7,7 @@ namespace JobBars {
         public bool Visible = false;
 
         private void BuildSettingsUI() {
-            if (!Ready || !Init) return;
-
+            if (!PlayerExists) return;
             if (!Visible) return;
 
             string _ID = "##JobBars_Settings";
@@ -23,39 +15,55 @@ namespace JobBars {
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {
-                    GManager?.Draw();
+                    GaugeManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
                 if (ImGui.BeginTabItem("Buffs" + _ID)) {
-                    BManager?.Draw();
+                    BuffManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Cooldowns" + _ID)) {
+                    CooldownManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Cursor" + _ID)) {
+                    CursorManager?.Draw();
                     ImGui.EndTabItem();
                 }
 
                 ImGui.EndTabBar();
-                ImGui.End();
             }
-            GManager?.DrawPositionBox();
-            BManager?.DrawPositionBox();
+            ImGui.End();
+
+            GaugeManager?.DrawPositionBox();
+            BuffManager?.DrawPositionBox();
         }
 
-        public static bool DrawPositionView(string _ID, string text, Vector2 position, out Vector2 newPosition) {
+        public static void SetWindowPosition(string Id, Vector2 position) {
+            var minPosition = ImGuiHelpers.MainViewport.Pos;
+            ImGui.SetWindowPos(Id, position + minPosition);
+        }
+
+        public static bool DrawPositionView(string Id, Vector2 position, out Vector2 newPosition) {
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGui.SetNextWindowPos(position, ImGuiCond.FirstUseEver);
+            var minPosition = ImGuiHelpers.MainViewport.Pos;
+            ImGui.SetNextWindowPos(position + minPosition, ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowSize(new Vector2(200, 200));
             ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.7f);
-            ImGui.Begin(text + _ID, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
-            newPosition = ImGui.GetWindowPos();
-            if (ImGui.InputFloat2("Position" + _ID, ref newPosition)) {
-                ImGui.SetWindowPos(text + _ID, newPosition);
-            }
+            ImGui.Begin(Id, ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
+            newPosition = ImGui.GetWindowPos() - minPosition;
             ImGui.PopStyleVar(1);
             ImGui.End();
             return newPosition != position;
         }
 
         public static void Separator() {
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2); ImGui.Separator(); ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+            ImGui.Separator();
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
         }
     }
 }

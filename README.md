@@ -1,26 +1,38 @@
 # JobBars
 A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges and a party buff tracker
+
 - Number of GCDs under buffs (Fight or Flight, Inner Release)
 - DoT tracker (Dia, Miasma)
 - Proc display (Verfire/Verstone Ready)
 - Number of charges (Ricochet, Gauss Round)
 - Number of stacks (Ruin IV)
 - Party buffs coming off of cooldown
+- Mitigation tracker
+- Cursor displays (cast time, GCD timer, MP tick)
 
-https://user-images.githubusercontent.com/18051158/123529151-a4f9e100-d6bb-11eb-9197-b16f7b827689.mp4
+https://user-images.githubusercontent.com/18051158/130377508-ee88e07f-b41f-4a39-83db-4b9cc79a47b0.mp4
 
-**Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
+https://user-images.githubusercontent.com/18051158/130377516-5c299fb5-9a3a-4b47-bb5f-b03297c3ea6f.mp4
+
+https://user-images.githubusercontent.com/18051158/130377606-2490ab26-1c2b-43fa-93f3-80e6c95e9fff.mp4
+
+https://user-images.githubusercontent.com/18051158/130377610-86fb7e17-9780-4827-81df-0739908bd709.mp4
+
+https://user-images.githubusercontent.com/18051158/130377598-2398d33a-9c0c-4d0c-8fd7-4187451a7e56.mp4
 
 ## Usage
 To open the settings menu, use `/jobbars`
 
-> Note: you must have your HP/MP visible for this plugin to work properly
+## Why?
+Some people find these useful. If you don't, each gauge and buff can enabled or disabled.
 
 ## Jobs
 
+**Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
+
 ### <img src="Assets/JobIcons/DRK.png" height="20px" width="20px"> DRK
 + **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon
-+ **Buffs**: Delerium, Living Shadow
++ **Buffs**: Delirium, Living Shadow
 
 ### <img src="Assets/JobIcons/WAR.png" height="20px" width="20px"> WAR
 + **Gauges**: GCDS used in Inner Release, Storm's Eye
@@ -87,15 +99,16 @@ To open the settings menu, use `/jobbars`
 + **Buffs**: Off-guard, Peculiar Light
 
 ## TODO
-- [ ] support crossbar for icon replacement
+- [ ] Completely custom gauges/buffs/cds (requires big rework)
+- [ ] Support crossbar for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
 - [ ] Glow around gauges
 - [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs
-- [ ] GCD timer
-- [ ] DoT tick timer
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~GCD timer~~ (cursor)
+- [x] ~~DoT tick timer / MP timer~~ (cursor)
 - [x] ~~Add invert counter option to GCDs~~
 - [x] ~~Better bar placement options~~
 - [x] ~~Animate gauge movement~~ (kinda)

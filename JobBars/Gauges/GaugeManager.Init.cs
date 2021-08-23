@@ -1,18 +1,13 @@
 ﻿using JobBars.Data;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         private void Init() {
-            JobToGauges = new Dictionary<JobIds, Gauge[]>();
-            JobToGauges.Add(JobIds.OTHER, new Gauge[] { });
+            JobToValue.Add(JobIds.OTHER, Array.Empty<Gauge>());
             // ============ GNB ==================
-            JobToGauges.Add(JobIds.GNB, new Gauge[] {
+            JobToValue.Add(JobIds.GNB, new Gauge[] {
                 new GaugeGCD("No Mercy", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 9,
                     MaxDuration = 20,
@@ -23,7 +18,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ PLD ==================
-            JobToGauges.Add(JobIds.PLD, new Gauge[] {
+            JobToValue.Add(JobIds.PLD, new Gauge[] {
                 new GaugeGCD("Requiescat", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 12,
@@ -41,6 +36,7 @@ namespace JobBars.Gauges {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,
+                    NoSoundOnFull = true,
                     Increment = new []{
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
@@ -66,7 +62,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ WAR ==================
-            JobToGauges.Add(JobIds.WAR, new Gauge[] {
+            JobToValue.Add(JobIds.WAR, new Gauge[] {
                 new GaugeGCD("Inner Release", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
@@ -89,7 +85,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DRK ==================
-            JobToGauges.Add(JobIds.DRK, new Gauge[] {
+            JobToValue.Add(JobIds.DRK, new Gauge[] {
                 new GaugeGCD("Delirium", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
@@ -112,7 +108,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ AST ==================
-            JobToGauges.Add(JobIds.AST, new Gauge[] {
+            JobToValue.Add(JobIds.AST, new Gauge[] {
                 new GaugeProc("Earthly Star Primed", new GaugeProcProps{
                     Procs = new []{
                         new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
@@ -157,8 +153,9 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ SCH ==================
-            JobToGauges.Add(JobIds.SCH, new Gauge[] {
+            JobToValue.Add(JobIds.SCH, new Gauge[] {
                 new GaugeProc("Excog", new GaugeProcProps{
+                    NoSoundOnFull = true,
                     Procs = new []{
                         new Proc(BuffIds.Excog, UIColor.BrightGreen)
                     }
@@ -179,7 +176,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ WHM ==================
-            JobToGauges.Add(JobIds.WHM, new Gauge[] {
+            JobToValue.Add(JobIds.WHM, new Gauge[] {
                 new GaugeTimer("Dia", new []{
                     new SubGaugeTimerProps {
                         MaxDuration = 30,
@@ -219,7 +216,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ BRD ==================
-            JobToGauges.Add(JobIds.BRD, new Gauge[] {
+            JobToValue.Add(JobIds.BRD, new Gauge[] {
                 new GaugeProc("Straight Shot Ready/BloodLetter", new GaugeProcProps {
                     Procs = new []{
                         new Proc(BuffIds.StraightShotReady, UIColor.Yellow),
@@ -260,7 +257,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DRG ==================
-            JobToGauges.Add(JobIds.DRG, new Gauge[] {
+            JobToValue.Add(JobIds.DRG, new Gauge[] {
                 new GaugeGCD("Lance Charge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 8,
                     MaxDuration = 20,
@@ -282,6 +279,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -302,7 +300,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ SMN ==================
-            JobToGauges.Add(JobIds.SMN, new Gauge[] {
+            JobToValue.Add(JobIds.SMN, new Gauge[] {
                 new GaugeStacks("Ruin 4", new GaugeStacksProps {
                     MaxStacks = 4,
                     Triggers = new []{
@@ -367,7 +365,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ SAM ==================
-            JobToGauges.Add(JobIds.SAM, new Gauge[] {
+            JobToValue.Add(JobIds.SAM, new Gauge[] {
                 new GaugeTimer("Jinpu", new SubGaugeTimerProps {
                     MaxDuration = 40,
                     Color = UIColor.DarkBlue,
@@ -393,6 +391,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -413,7 +412,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ BLM ==================
-            JobToGauges.Add(JobIds.BLM, new Gauge[] {
+            JobToValue.Add(JobIds.BLM, new Gauge[] {
                 new GaugeProc("Firestarter/Thundercloud", new GaugeProcProps{
                     ShowText = true,
                     Procs = new []{
@@ -453,7 +452,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ RDM ==================
-            JobToGauges.Add(JobIds.RDM, new Gauge[] {
+            JobToValue.Add(JobIds.RDM, new Gauge[] {
                 new GaugeProc("Verfire/Verstone", new GaugeProcProps{
                     Procs = new []{
                         new Proc(BuffIds.VerstoneReady, UIColor.White),
@@ -470,6 +469,7 @@ namespace JobBars.Gauges {
                 }),
                 new GaugeStacks("Acceleration", new GaugeStacksProps {
                     MaxStacks = 3,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Acceleration)
                     },
@@ -478,7 +478,7 @@ namespace JobBars.Gauges {
                 }),
             });
             // ============ MCH ==================
-            JobToGauges.Add(JobIds.MCH, new Gauge[] {
+            JobToValue.Add(JobIds.MCH, new Gauge[] {
                 new GaugeGCD("Hypercharge", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 9,
@@ -529,7 +529,7 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DNC ==================
-            JobToGauges.Add(JobIds.DNC, new Gauge[] {
+            JobToValue.Add(JobIds.DNC, new Gauge[] {
                 new GaugeProc("Dancer Procs", new GaugeProcProps{
                     Procs = new []{
                         new Proc(BuffIds.FlourishingCascade, UIColor.BrightGreen),
@@ -541,11 +541,12 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ NIN ==================
-            JobToGauges.Add(JobIds.NIN, new Gauge[] {
+            JobToValue.Add(JobIds.NIN, new Gauge[] {
                 new GaugeGCD("Bunshin", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 15,
                     Color = UIColor.Red,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Bunshin)
                     }
@@ -554,6 +555,7 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.White,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -574,11 +576,12 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ MNK ==================
-            JobToGauges.Add(JobIds.MNK, new Gauge[] {
+            JobToValue.Add(JobIds.MNK, new Gauge[] {
                 new GaugeGCD("Perfect Balance", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 6,
                     MaxDuration = 15,
                     Color = UIColor.Orange,
+                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.PerfectBalance)
                     }
@@ -602,6 +605,7 @@ namespace JobBars.Gauges {
                 new GaugeCharges("True North / Riddle of Earth", new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
+                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -639,7 +643,7 @@ namespace JobBars.Gauges {
                 }),
             });
             // ============ BLU ==================
-            JobToGauges.Add(JobIds.BLU, new Gauge[] {
+            JobToValue.Add(JobIds.BLU, new Gauge[] {
                 new GaugeProc("Condensed Libra", new GaugeProcProps{
                     Procs = new []{
                         new Proc(BuffIds.AstralAttenuation, UIColor.White),

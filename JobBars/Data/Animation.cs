@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Data {
     public class Animation {
 
-        public static List<Animation> Anims = new List<Animation>();
+        private static List<Animation> Anims = new();
+
         public static Animation AddAnim(Action<float> function, float duration, float startValue, float endValue) {
             var anim = new Animation(function, duration, startValue, endValue);
             Anims.Add(anim);
             return anim;
         }
-        
+
         public static void Tick() {
             var currentTime = DateTime.Now;
 
-            foreach(var item in Anims) {
+            foreach (var item in Anims) {
                 if (item.Remove) continue;
                 var timeElapsed = (currentTime - item.Start).TotalSeconds;
-                if(timeElapsed > item.Duration) {
+                if (timeElapsed > item.Duration) {
                     timeElapsed = item.Duration;
                 }
 
                 var value = item.StartValue + (item.EndValue - item.StartValue) * (timeElapsed / item.Duration);
-                item.F((float) value);
+                item.F((float)value);
             }
 
             Anims.RemoveAll(x => (currentTime - x.Start).TotalSeconds >= x.Duration || x.Remove);
         }
 
-        public static void Cleanup () {
+        public static void Dispose() {
             Anims = new();
         }
 

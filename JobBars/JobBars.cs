@@ -1,37 +1,52 @@
-﻿using Dalamud.Plugin;
-using ImGuiNET;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System;
 using System.Numerics;
 using System.Reflection;
+using System.Threading;
+
 using JobBars.Helper;
-using Dalamud.Game.Internal;
 using JobBars.UI;
-using Dalamud.Hooking;
 using JobBars.Data;
 using JobBars.Gauges;
-using Dalamud.Game.ClientState.Actors.Resolvers;
 using JobBars.Buffs;
-using JobBars.PartyList;
-using FFXIVClientInterface;
+using JobBars.Cooldowns;
+using JobBars.Cursors;
 
-#pragma warning disable CS0659
+using FFXIVClientStructs.FFXIV.Component.GUI;
+
+using Dalamud.Plugin;
+using Dalamud.Hooking;
+using Dalamud.Logging;
+using Dalamud.Game;
+using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.Command;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Data;
+
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
+        public static DalamudPluginInterface PluginInterface { get; private set; }
+        public static ClientState ClientState { get; private set; }
+        public static Framework Framework { get; private set; }
+        public static Condition Condition { get; private set; }
+        public static CommandManager CommandManager { get; private set; }
+        public static ObjectTable Objects { get; private set; }
+        public static SigScanner SigScanner { get; private set; }
+        public static DataManager DataManager { get; private set; }
+
+        public static Configuration Config { get; private set; }
+        public static UIBuilder Builder { get; private set; }
+        public static UIIconManager Icon { get; private set;}
+
+        public static GaugeManager GaugeManager { get; private set; }
+        public static BuffManager BuffManager { get; private set; }
+        public static CooldownManager CooldownManager { get; private set; }
+        public static CursorManager CursorManager { get; private set; }
+
         public string Name => "JobBars";
-        public DalamudPluginInterface PluginInterface { get; private set; }
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
 
-        private UIBuilder UI;
-        private GaugeManager GManager;
-        private BuffManager BManager;
-        private Configuration Config;
-        private HashSet<uint> GCDs = new HashSet<uint>();
-
         private JobIds CurrentJob = JobIds.OTHER;
-        private byte LastLevel = 0;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
@@ -39,202 +54,204 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
-        private PList Party; // TEMP
         private int LastPartyCount = 0;
 
-        private bool Ready => PluginInterface.ClientState?.LocalPlayer != null;
-        private bool Init = false;
+        private bool PlayerExists => ClientState?.LocalPlayer != null;
+        private bool LoggedOut = true;
 
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
-        public static ClientInterface Client;
-
         /*
          * SIG LIST:
-         *  Lord have mercy when 6.0 comes
-         * =================================
-         * 
-         *  FFXIVClientInterface/ClientInterface.cs
-         *      Get UI Module (E8 ?? ?? ?? ?? 48 8B C8 48 8B 10 FF 52 40 80 88 ?? ?? ?? ?? 01 E9)
-         *  FFXIVClientInterface/Client/UI/Agent/AgentModule.cs
-         *      getAgentByInternalID (E8 ?? ?? ?? ?? 83 FF 0D)
-         *  FFXIVClientInterface/Client/Game/ActionManager.cs
-         *      BaseAddress (E8 ?? ?? ?? ?? 33 C0 E9 ?? ?? ?? ?? 8B 7D 0C)
-         *      GetRecastGroup (E8 ?? ?? ?? ?? 8B D0 48 8B CD 8B F0) 
-         *      GetGroupTimer (E8 ?? ?? ?? ?? 0F 57 FF 48 85 C0)
-         *      GetAdjustedActionId (E8 ?? ?? ?? ?? 8B F8 3B DF) 
          *      
-         *  Helper/UiHelper.GameFunctions.cs
-         *      _atkTextNodeSetText (E8 ?? ?? ?? ?? 49 8B FC)
-         *      _gameAlloc (E8 ?? ?? ?? ?? 45 8D 67 23)
-         *      _getGameAllocator (E8 ?? ?? ?? ?? 8B 75 08)
-         *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
+         *  UiHelper
+         *      PlaySoundEffect (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
+         *      TextureLoadPath (E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??)
+         *      TargetAddress (48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB)
          *      
-         *  JobBars.cs
+         *  JobBars
          *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
          *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
-         *  UIIconManager.cs
-         *      setIconRecastPtr (40 53 48 83 EC 20 48 8B D9 E8 ?? ?? ?? ?? 48 8B 4B 10 48 85 C9 74 23)
-         *      setIconRecastPtr2 (40 53 48 83 EC 20 0F B6 81 ?? ?? ?? ?? 48 8B D9 48 83 C1 08 A8 01 74 1E 48 83 79 ?? ?? 74 17 A8 08 75 0E 48 83 79 ?? ?? 75 07 E8 ?? ?? ?? ?? EB 05 E8 ?? ?? ?? ?? F6 83 ?? ?? ?? ?? ?? 0F 84 ?? ?? ?? ?? 48 8B 93 ?? ?? ?? ??)
-         *      setIconTextPtr (55 57 48 83 EC 28 0F B6 44 24 ?? 8B EA 48 89 5C 24 ?? 48 8B F9)
-         *      setIconTextPtr2 (4C 8B DC 53 55 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 89 73 18 48 8B EA)
-         *  UIBuilder.cs
-         *      loadAssetsPtr (E8 ?? ?? ?? ?? 48 8B 84 24 ?? ?? ?? ?? 41 B9 ?? ?? ?? ??)
-         *      loadTexAllocPtr (48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B 01 49 8B D8 48 8B FA 48 8B F1 FF 50 48)
-         *      texUnallocPtr (E8 ?? ?? ?? ?? C6 43 10 02)
-         *      
-         *  PartyList/PartyList.cs
-         *      GroupManager (48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? ?? 76 50)
-         *      CrossRealmGroupManagerPtr (77 71 48 8B 05)
-         *      CompanionManagerPtr (4C 8B 15 ?? ?? ?? ?? 4C 8B C9)
-         *      GetCrossRealmMemberCountPtr (E8 ?? ?? ?? ?? 3C 01 77 4B)
-         *      GetCrossMemberByGrpIndexPtr (E8 ?? ?? ?? ?? 44 89 7C 24 ?? 4C 8B C8)
-         *      GetCompanionMemberCountPtr (E8 ?? ?? ?? ?? 8B D3 85 C0)
          */
 
-        public void Initialize(DalamudPluginInterface pluginInterface) {
+        public JobBars(
+                DalamudPluginInterface pluginInterface,
+                ClientState clientState,
+                CommandManager commandManager,
+                Condition condition,
+                Framework framework,
+                ObjectTable objects,
+                SigScanner sigScanner,
+                DataManager dataManager
+            ) {
             PluginInterface = pluginInterface;
-            Client = new ClientInterface(pluginInterface.TargetModuleScanner, pluginInterface.Data);
-            UiHelper.Setup(pluginInterface.TargetModuleScanner);
+            ClientState = clientState;
+            Framework = framework;
+            Condition = condition;
+            CommandManager = commandManager;
+            Objects = objects;
+            SigScanner = sigScanner;
+            DataManager = dataManager;
+
+            if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
+
+            UIHelper.Setup();
             UIColor.SetupColors();
-
-            Party = new PList(pluginInterface, pluginInterface.TargetModuleScanner); // TEMP
-
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            Config.Initialize(PluginInterface);
-            SetupActions();
-            UI = new UIBuilder(pluginInterface);
 
-            IntPtr receiveActionEffectFuncPtr = PluginInterface.TargetModuleScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
-            receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, (ReceiveActionEffectDelegate)ReceiveActionEffect);
+            Icon = new UIIconManager();
+
+            InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
+
+            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
+            receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             receiveActionEffectHook.Enable();
 
-            IntPtr actorControlSelfPtr = pluginInterface.TargetModuleScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
-            actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, (ActorControlSelfDelegate)ActorControlSelf);
+            IntPtr actorControlSelfPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
+            actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             actorControlSelfHook.Enable();
 
-            PluginInterface.UiBuilder.OnBuildUi += BuildSettingsUI;
-            PluginInterface.UiBuilder.OnBuildUi += Animate;
-            PluginInterface.UiBuilder.OnOpenConfigUi += OnOpenConfig;
-            PluginInterface.Framework.OnUpdateEvent += FrameworkOnUpdate;
-            PluginInterface.ClientState.TerritoryChanged += ZoneChanged;
+            PluginInterface.UiBuilder.Draw += BuildSettingsUI;
+            PluginInterface.UiBuilder.Draw += Animate;
+            PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
+            Framework.OnUpdateEvent += FrameworkOnUpdate;
+            ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
+        }
+
+        private void InitializeUI() { // this only ever gets run ONCE
+            // these are created before the addons are even visible, so they aren't attached yet
+            PluginLog.Log("==== INIT ====");
+            Icon.Reset();
+
+            BuffManager = new BuffManager();
+            CooldownManager = new CooldownManager();
+            GaugeManager = new GaugeManager();
+            CursorManager = new CursorManager();
+            Builder = new UIBuilder();
+            CooldownManager.SetupUI();
+            BuffManager.SetupUI();
+            CursorManager.SetupUI();
+
+            if (!Config.GaugesEnabled) Builder.HideGauges();
+            if (!Config.BuffBarEnabled) Builder.HideBuffs();
+            Builder.HideAllBuffs();
+            Builder.HideAllGauges();
         }
 
         public void Dispose() {
             receiveActionEffectHook?.Disable();
-            receiveActionEffectHook?.Dispose();
-            receiveActionEffectHook = null;
-
             actorControlSelfHook?.Disable();
+
+            Thread.Sleep(500);
+
+            receiveActionEffectHook?.Dispose();
             actorControlSelfHook?.Dispose();
+            receiveActionEffectHook = null;
             actorControlSelfHook = null;
 
-            PluginInterface.UiBuilder.OnBuildUi -= BuildSettingsUI;
-            PluginInterface.UiBuilder.OnBuildUi -= Animate;
-            PluginInterface.UiBuilder.OnOpenConfigUi -= OnOpenConfig;
-            PluginInterface.Framework.OnUpdateEvent -= FrameworkOnUpdate;
-            PluginInterface.ClientState.TerritoryChanged -= ZoneChanged;
+            PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
+            PluginInterface.UiBuilder.Draw -= Animate;
+            PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfig;
+            Framework.OnUpdateEvent -= FrameworkOnUpdate;
+            ClientState.TerritoryChanged -= ZoneChanged;
 
-            GManager = null;
-            BManager = null;
+            GaugeManager = null;
+            BuffManager = null;
+            CooldownManager = null;
+            CursorManager = null;
 
-            Animation.Cleanup();
-            UI.Dispose();
-            Client.Dispose();
+            Animation.Dispose();
+            Icon?.Dispose();
+            Builder?.Dispose();
+            Icon = null;
+            Builder = null;
+
+            PluginInterface = null;
+            Config = null;
 
             RemoveCommands();
         }
 
-        private void SetupActions() {
-            var sheet = PluginInterface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
-                x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
-            );
-            foreach(var item in sheet) {
-                var name = item.Name.ToString();
-                var attackType = item.ActionCategory.Value.Name.ToString();
-                var actionId = item.ActionCategory.Value.RowId;
-                if (actionId == 2 || actionId == 3) { // spell or weaponskill
-                    GCDs.Add(item.RowId);
-                }
-            }
-        }
-
-        private void Animate() {
-            Animation.Tick();
-        }
+        private void Animate() => Animation.Tick();
 
         private void FrameworkOnUpdate(Framework framework) {
-            if (!Ready) {
-                if(Init && !UI.IsInitialized()) { // a logout, need to recreate everything once we're done
-                    PluginLog.Log("LOGOUT");
-                    Animation.Cleanup();
-                    Init = false;
-                    CurrentJob = JobIds.OTHER;
-                }
+            var addon = UIHelper.ChatLogAddon;
+
+            if (!PlayerExists) {
+                if (!LoggedOut && addon == null) Logout();
                 return;
             }
 
-            var addon = UI._ADDON;
-            if (!Init) {
-                if (addon == null) return;
-                PluginLog.Log("INIT");
-                if(UI.Setup()) {
-                    GManager = new GaugeManager(PluginInterface, UI);
-                    BManager = new BuffManager(UI);
-                    UI.HideAllBuffs();
-                    UI.HideAllGauges();
-                    Init = true;
-                }
+            if (addon == null || addon->RootNode == null) return;
+
+            if(LoggedOut) {
+                Builder.Attach(); // re-attach after addons have been created
+                LoggedOut = false;
                 return;
             }
 
-            // ======== SWITCH JOB ============
-            var level = PluginInterface.ClientState.LocalPlayer.Level;
-            var jobId = PluginInterface.ClientState.LocalPlayer.ClassJob;
-            JobIds job = jobId.Id < 19 ? JobIds.OTHER : (JobIds)jobId.Id;
+            CheckForJobChange();
+            Tick();
+            CheckForPartyChange();
+            CheckForHUDChange(addon);
+        }
+
+        private void Logout() {
+            PluginLog.Log("==== LOGOUT ===");
+            Icon.Reset();
+            Animation.Dispose();
+
+            LoggedOut = true;
+            CurrentJob = JobIds.OTHER;
+        }
+
+        private void CheckForPartyChange() {
+            // someone left the party. this means that some buffs might not make sense anymore, so reset it
+            var partyCount = UIHelper.GetPartyCount();
+            if (partyCount < LastPartyCount) BuffManager.Reset();
+            LastPartyCount = partyCount;
+        }
+
+        private void CheckForJobChange() {
+            var jobId = ClientState.LocalPlayer.ClassJob;
+            JobIds job = UIHelper.IdToJob(jobId.Id);
+
             if (job != CurrentJob) {
                 CurrentJob = job;
-                LastLevel = level; // switching to a different job, might have a different level
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                Reset();
+                BuffManager.Reset();
+                GaugeManager.SetJob(CurrentJob);
+                CursorManager.SetJob(CurrentJob);
             }
-            else if(level != LastLevel) {
-                LastLevel = level;
-                // TODO
-            }
+        }
 
-            // ========= TICK =============
-            var inCombat = PluginInterface.ClientState.Condition[Dalamud.Game.ClientState.ConditionFlag.InCombat];
-            GManager.Tick(Party, inCombat);
-            BManager.Tick(inCombat);
+        private void Tick() {
+            var inCombat = Condition[ConditionFlag.InCombat];
+            UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
+            GaugeManager.Tick(inCombat);
+            BuffManager.Tick(inCombat);
+            CooldownManager.Tick(inCombat);
+            CursorManager.Tick();
+        }
 
-            // ========= PARTY CHANGE ===========
-            if (Party.Count < LastPartyCount) { // someone left the party. this means that some buffs might not make sense anymore, so reset it
-                BManager.SetJob(CurrentJob);
-            }
-            LastPartyCount = Party.Count;
+        private void CheckForHUDChange(AtkUnitBase* addon) {
+            var currentPosition = UIHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
+            var currentScale = UIHelper.GetNodeScale(addon->RootNode);
 
-            // ========= HUD LAYOUT CHANGE ==========
-            var currentPosition = UiHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
-            var currentScale = UiHelper.GetNodeScale(addon->RootNode);
-            if(currentPosition != LastPosition || currentScale != LastScale) {
-                GManager.SetPositionScale();
-                BManager.SetPositionScale();
+            if (currentPosition != LastPosition || currentScale != LastScale) {
+                GaugeManager.UpdatePositionScale();
+                BuffManager.UpdatePositionScale();
             }
             LastPosition = currentPosition;
             LastScale = currentScale;
         }
 
-        private void Reset() {
-            GManager?.SetJob(CurrentJob);
-            BManager?.SetJob(CurrentJob);
-        }
-
         // ======= COMMANDS ============
-        public void SetupCommands() {
-            PluginInterface.CommandManager.AddHandler("/jobbars", new Dalamud.Game.Command.CommandInfo(OnCommand) {
+
+        private void SetupCommands() {
+            CommandManager.AddHandler("/jobbars", new CommandInfo(OnCommand) {
                 HelpMessage = $"Open config window for {Name}",
                 ShowInHelp = true
             });
@@ -249,53 +266,7 @@ namespace JobBars {
         }
 
         public void RemoveCommands() {
-            PluginInterface.CommandManager.RemoveHandler("/jobbars");
-        }
-    }
-
-    // ===== BUFF OR ACTION ======
-    public enum ItemType {
-        Buff,
-        Action, // either GCD or OGCD
-        GCD,
-        OGCD
-    }
-
-    public struct Item {
-        public uint Id;
-        public ItemType Type;
-
-        public Item(ActionIds action) {
-            Id = (uint)action;
-            Type = ItemType.Action;
-        }
-
-        public Item(BuffIds buff) {
-            Id = (uint)buff;
-            Type = ItemType.Buff;
-        }
-
-        public override bool Equals(object obj) {
-            return obj is Item overrides && Equals(overrides);
-        }
-
-        public bool Equals(Item other) {
-            return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
-        }
-
-        public static bool operator ==(Item left, Item right) {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Item left, Item right) {
-            return !(left == right);
-        }
-
-        public override int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();
-            return hash;
+            CommandManager.RemoveHandler("/jobbars");
         }
     }
 }

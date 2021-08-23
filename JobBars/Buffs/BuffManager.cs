@@ -1,68 +1,48 @@
 ﻿using JobBars.Data;
-using JobBars.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Buffs {
-    public unsafe partial class BuffManager {
-        public static BuffManager Manager;
+    public unsafe partial class BuffManager : JobConfigurationManager<Buff[]> {
+        public List<ActionIds> Icons => AllBuffs.Select(x => x.Icon).ToList();
+        private readonly List<Buff> AllBuffs;
 
-        public Dictionary<JobIds, Buff[]> JobToBuffs;
-        public Buff[] CurrentBuffs => JobToBuffs.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToBuffs[JobIds.OTHER];
-
-        private UIBuilder UI;
-        private List<Buff> AllBuffs;
-        public JobIds CurrentJob = JobIds.OTHER;
-
-        public BuffManager(UIBuilder ui) {
-            Manager = this;
-            UI = ui;
-            if (!Configuration.Config.BuffBarEnabled) {
-                UI.HideBuffs();
-            }
-            // ===== SETUP =========
+        public BuffManager() : base("##JobBars_Buffs") {
             Init();
             AllBuffs = new List<Buff>();
-            foreach (var jobEntry in JobToBuffs) {
-                foreach (var buff in jobEntry.Value) {
-                    buff.UI = UI.IconToBuff[buff.Icon];
-                    buff.Setup();
-                    AllBuffs.Add(buff);
-                }
+            foreach (var jobEntry in JobToValue) {
+                foreach (var buff in jobEntry.Value) AllBuffs.Add(buff);
             }
         }
 
-        public void SetJob(JobIds job) {
-            CurrentJob = job;
-            AllBuffs.ForEach(buff => buff.Reset());
-            UI.HideAllBuffs();
-            SetPositionScale();
-        }
-
-        public void SetPositionScale() {
-            UI.SetBuffPosition(Configuration.Config.BuffPosition);
-            UI.SetBuffScale(Configuration.Config.BuffScale);
+        public void SetupUI() {
+            foreach(var buff in AllBuffs) {
+                buff.LoadUI(JobBars.Builder.IconToBuff[buff.Icon]);
+            }
         }
 
         public void Reset() {
-            SetJob(CurrentJob);
+            AllBuffs.ForEach(buff => buff.Reset());
+            JobBars.Builder.HideAllBuffs();
+            UpdatePositionScale();
         }
 
         public void PerformAction(Item action) {
-            if (!Configuration.Config.BuffBarEnabled) return;
+            if (!JobBars.Config.BuffBarEnabled) return;
 
             foreach (var buff in AllBuffs) {
-                if(!buff.Enabled) { continue; }
+                if (!buff.Enabled) { continue; }
                 buff.ProcessAction(action);
             }
         }
 
         public void Tick(bool inCombat) {
-            if (!Configuration.Config.BuffBarEnabled) return;
-            if(Configuration.Config.BuffHideOutOfCombat) {
-                if (inCombat) UI.ShowBuffs();
-                else UI.HideBuffs();
+            if (!JobBars.Config.BuffBarEnabled) return;
+
+            if (JobBars.Config.BuffHideOutOfCombat) {
+                if (inCombat) JobBars.Builder.ShowBuffs();
+                else JobBars.Builder.HideBuffs();
             }
 
             var idx = 0;
@@ -75,6 +55,11 @@ namespace JobBars.Buffs {
                     idx++;
                 }
             }
+        }
+
+        public void UpdatePositionScale() {
+            JobBars.Builder.SetBuffPosition(JobBars.Config.BuffPosition);
+            JobBars.Builder.SetBuffScale(JobBars.Config.BuffScale);
         }
     }
 }
