@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Reflection;
+using System.Threading;
 
 using JobBars.Helper;
 using JobBars.UI;
@@ -11,7 +12,6 @@ using JobBars.Cooldowns;
 using JobBars.Cursors;
 
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using System.Threading;
 
 using Dalamud.Plugin;
 using Dalamud.Hooking;
@@ -65,15 +65,14 @@ namespace JobBars {
         /*
          * SIG LIST:
          *      
-         *  Helper/UiHelper.GameFunctions.cs
-         *      _playSe (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
+         *  UiHelper
+         *      PlaySoundEffect (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
+         *      TextureLoadPath (E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??)
+         *      TargetAddress (48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB)
          *      
-         *  JobBars.cs
+         *  JobBars
          *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
          *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
-         *      
-         *  GaugeManager (TargetManager from Dalamud)
-         *      48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB
          */
 
         public JobBars(
@@ -175,9 +174,7 @@ namespace JobBars {
             RemoveCommands();
         }
 
-        private void Animate() {
-            Animation.Tick();
-        }
+        private void Animate() => Animation.Tick();
 
         private void FrameworkOnUpdate(Framework framework) {
             var addon = UIHelper.ChatLogAddon;

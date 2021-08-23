@@ -6,9 +6,8 @@ namespace JobBars.Buffs {
         private bool LOCKED = true;
 
         protected override void DrawHeader() {
-            ImGui.Checkbox("Locked" + _ID, ref LOCKED);
+            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
 
-            ImGui.SameLine();
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref JobBars.Config.BuffBarEnabled)) {
                 JobBars.Config.Save();
                 if (JobBars.Config.BuffBarEnabled) JobBars.Builder.ShowBuffs();
@@ -46,11 +45,12 @@ namespace JobBars.Buffs {
                 JobBars.Config.Save();
             }
 
+            ImGui.SameLine(250);
             if (ImGui.Checkbox("Right-to-Left" + _ID, ref JobBars.Config.BuffRightToLeft)) {
                 JobBars.Config.Save();
             }
 
-            ImGui.SameLine();
+            ImGui.SameLine(500);
             if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
                 JobBars.Config.Save();
             }

@@ -1,5 +1,6 @@
 # JobBars
 A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges and a party buff tracker
+
 - Number of GCDs under buffs (Fight or Flight, Inner Release)
 - DoT tracker (Dia, Miasma)
 - Proc display (Verfire/Verstone Ready)
@@ -7,6 +8,7 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - Number of stacks (Ruin IV)
 - Party buffs coming off of cooldown
 - Mitigation tracker
+- Cursor displays (cast time, GCD timer, MP tick)
 
 https://user-images.githubusercontent.com/18051158/130377508-ee88e07f-b41f-4a39-83db-4b9cc79a47b0.mp4
 
@@ -104,9 +106,9 @@ Some people find these useful. If you don't, each gauge and buff can enabled or 
 - [ ] Glow around gauges
 - [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs
-- [ ] GCD timer
-- [ ] DoT tick timer / MP timer
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~GCD timer~~ (cursor)
+- [x] ~~DoT tick timer / MP timer~~ (cursor)
 - [x] ~~Add invert counter option to GCDs~~
 - [x] ~~Better bar placement options~~
 - [x] ~~Animate gauge movement~~ (kinda)

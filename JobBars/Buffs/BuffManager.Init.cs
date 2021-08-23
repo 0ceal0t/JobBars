@@ -230,7 +230,7 @@ namespace JobBars.Buffs {
             // ======= DNC ==========
             JobToValue.Add(JobIds.DNC, new Buff[] {
                 new Buff("Technical Finish", new BuffProps {
-                    CD = 120,
+                    CD = 115, // -5 seconds for the dance to actually be cast
                     Duration = 20,
                     Icon = ActionIds.QuadTechFinish,
                     Color = UIColor.Orange,

@@ -6,16 +6,14 @@ namespace JobBars.Gauges {
         private bool LOCKED = true;
 
         protected override void DrawHeader() {
-            ImGui.Checkbox("Locked" + _ID, ref LOCKED);
+            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
 
-            ImGui.SameLine();
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref JobBars.Config.GaugesEnabled)) {
                 if (JobBars.Config.GaugesEnabled) JobBars.Builder.ShowGauges();
                 else JobBars.Builder.HideGauges();
                 JobBars.Config.Save();
             }
 
-            ImGui.SameLine();
             if (ImGui.Checkbox("Split Gauges" + _ID, ref JobBars.Config.GaugeSplit)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();
@@ -43,7 +41,7 @@ namespace JobBars.Gauges {
                 JobBars.Config.Save();
             }
 
-            ImGui.SameLine();
+            ImGui.SameLine(250);
             if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref JobBars.Config.GaugesHideOutOfCombat)) {
                 if (!JobBars.Config.GaugesHideOutOfCombat && JobBars.Config.GaugesEnabled) { // since they might be hidden
                     JobBars.Builder.ShowGauges();
@@ -51,17 +49,16 @@ namespace JobBars.Gauges {
                 JobBars.Config.Save();
             }
 
-            JobBars.Separator(); // =====================================
-
-            ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
+            ImGui.SetNextItemWidth(25f);
+            if (ImGui.InputInt("Sound # When DoTs Low (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
+                if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
+                if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
                 JobBars.Config.Save();
             }
 
-            ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Sound Effect # When DoTs Are Low (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
-                if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
-                if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
+            ImGui.SameLine(250);
+            ImGui.SetNextItemWidth(50f);
+            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
                 JobBars.Config.Save();
             }
 
@@ -73,13 +70,13 @@ namespace JobBars.Gauges {
                     JobBars.Config.Save();
                 }
 
-                ImGui.SameLine();
-                if (ImGui.Checkbox("Bottom To Top", ref JobBars.Config.GaugeBottomToTop)) {
+                ImGui.SameLine(250);
+                if (ImGui.Checkbox("Bottom-to-Top", ref JobBars.Config.GaugeBottomToTop)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
                 }
 
-                ImGui.SameLine();
+                ImGui.SameLine(500);
                 if (ImGui.Checkbox("Align Right", ref JobBars.Config.GaugeAlignRight)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
