@@ -98,7 +98,7 @@ namespace JobBars {
 
                     // only care about buffs that we are getting
                     // ignore if we don't care about party members' CDs
-                    if ((int)tTarget == selfId && JobBars.Config.BuffIncludeParty) {
+                    if ((int)tTarget == selfId && Config.BuffIncludeParty) {
                         BuffManager?.PerformAction(buffItem);
                     }
                 }
@@ -109,12 +109,15 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
+            if (entityId > 0 && entityId == ClientState?.LocalPlayer?.ObjectId && id == 23) {
+                UIHelper.UpdateActorTick();
+            }
 
             if (arg1 == 0x40000010) {
                 GaugeManager?.Reset();
                 BuffManager?.Reset();
                 CooldownManager?.ResetTrackers();
-                UIHelper.ResetMp();
+                UIHelper.ResetTicks();
             }
         }
 
@@ -122,7 +125,7 @@ namespace JobBars {
             GaugeManager?.Reset();
             BuffManager?.Reset();
             // don't reset CDs on zone change
-            UIHelper.ResetMp();
+            UIHelper.ResetTicks();
         }
 
         private bool IsPet(int objectId, int ownerId) {

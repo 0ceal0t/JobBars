@@ -128,7 +128,7 @@ namespace JobBars.Gauges {
                 foreach (var status in charaActor.StatusList) {
                     if (status.SourceID == ownerId) {
                         buffDict[new Item {
-                            Id = status.StatusID,
+                            Id = status.StatusId,
                             Type = ItemType.Buff
                         }] = new BuffElem {
                             Duration = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,

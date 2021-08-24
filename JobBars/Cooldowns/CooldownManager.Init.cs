@@ -122,7 +122,7 @@ namespace JobBars.Cooldowns {
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new [] {
                 new CooldownProps {
-                    Name = "Netural Sect",
+                    Name = "Neutral Sect",
                     Trigger = ActionIds.NeutralSect,
                     Duration = 20,
                     CD = 120

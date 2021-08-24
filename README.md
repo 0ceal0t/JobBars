@@ -7,8 +7,8 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - Number of charges (Ricochet, Gauss Round)
 - Number of stacks (Ruin IV)
 - Party buffs coming off of cooldown
-- Mitigation tracker
-- Cursor displays (cast time, GCD timer, MP tick)
+- Mitigation tracker **[COMING SOON]**
+- Cursor displays (cast time, GCD timer, MP tick) **[COMING SOON]**
 
 https://user-images.githubusercontent.com/18051158/130377508-ee88e07f-b41f-4a39-83db-4b9cc79a47b0.mp4
 
@@ -33,66 +33,83 @@ Some people find these useful. If you don't, each gauge and buff can enabled or 
 ### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> DRK
 + **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon
 + **Buffs**: Delirium, Living Shadow
++ **Mitigation**: Living Dead, Reprisal, Dark Missionary, The Blackest Night
 
 ### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> WAR
 + **Gauges**: GCDS used in Inner Release, Storm's Eye
 + **Buffs**: Inner Release
++ **Mitigation**: Holmgang, Reprisal, Shake it Off, Nascent Flash
 
 ### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> PLD
 + **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
++ **Mitigation**: Hallowed Ground, Reprisal, Divine Veil, Passage of Arms
 
 ### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> GNB
 + **Gauges**: GCDS used in No Mercy
++ **Mitigation**: Superbolide, Reprisal, Heart of Light
 
 ### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> SCH
 + **Gauges**: Excog, Biolysis
 + **Buffs**: Chain Stratagem
++ **Mitigation**: Seraph, Deployment Tactics, Recitation
 
 ### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> WHM
 + **Gauges**: Dia
++ **Mitigation**: Temperance, Benediction, Asylum
 
 ### <img src="assets/job_icons/AST.png" height="20px" width="20px"> AST
 + **Gauges**: Combust, Upgraded Earthly Star, Lightspeed
 + **Buffs**: Cards, Divination
++ **Mitigation**: Neutral Sect, Celestial Opposition, Collective Unconscious, Earthly Star
 
 ### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> MNK
 + **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
 + **Buffs**: Brotherhood, Riddle of Fire
++ **Mitigation**: Feint, Mantra
 
 ### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> DRG
 + **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight, Charges + time left on True North
 + **Buffs**: Battle Litany, Dragonsight, Lance Charge
++ **Mitigation**: Feint
 
 ### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> NIN
 + **Gauges**: GCDS used in Bunshin, Charges + time left on True North
 + **Buffs**: Trick Attack, Bunshin
++ **Mitigation**: Feint
 
 ### <img src="assets/job_icons/SAM.png" height="20px" width="20px"> SAM
 + **Gauges**: Jinpu, Shifu, Higanbana, Charges + time left on True North
 + **Buffs**: Double Midare
++ **Mitigation**: Feint
 
 ### <img src="assets/job_icons/BRD.png" height="20px" width="20px"> BRD
 + **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
 + **Buffs**: Battle Voice, Raging Strikes, Barrage
++ **Mitigation**: Troubadour, Nature's Minne
 
 ### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> MCH
 + **Gauges**: GCDS used in Hypercharge, GCDS used in Wildfire, Charges of Ricochet, Charges of Gauss Round
 + **Buffs**: Wildfire, Reassemble
++ **Mitigation**: Tactician
 
 ### <img src="assets/job_icons/DNC.png" height="20px" width="20px"> DNC
 + **Gauges**: Procs
 + **Buffs**: Technical Step, Devilment
++ **Mitigation**: Shield Samba, Improvisation
 
 ### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> BLM
 + **Gauges**: Thunder 3+4, Fire and Thunder procs
++ **Mitigation**: Addle
 
 ### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> SMN
 + **Gauges**: Ruin 4, Bio, Miasma, Wyrmwave and Scarlet Flame
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
++ **Mitigation**: Addle
 
 ### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> RDM
 + **Gauges**: GCDS used in Manification, Fire and Stone procs, Acceleration stacks
 + **Buffs**: Embolden, Manafication
++ **Mitigation**: Addle
 
 ### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> BLU
 + **Gauges**: Song of Torment, Bad Breath, Condensed Libra

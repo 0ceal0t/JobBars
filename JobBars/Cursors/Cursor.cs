@@ -8,6 +8,7 @@ namespace JobBars.Cursors {
         GCD,
         CastTime,
         MpTick,
+        ActorTick,
         StaticCircle,
         StaticRing
     }
@@ -39,6 +40,7 @@ namespace JobBars.Cursors {
             CursorType.GCD => GetGCD(),
             CursorType.CastTime => GetCastTime(),
             CursorType.MpTick => UIHelper.GetMpTick(),
+            CursorType.ActorTick => UIHelper.GetActorTick(),
             CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
             CursorType.StaticRing => 1,
             _ => 0

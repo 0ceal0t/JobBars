@@ -115,7 +115,7 @@ namespace JobBars {
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
             PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
-            Framework.OnUpdateEvent += FrameworkOnUpdate;
+            Framework.Update += FrameworkOnUpdate;
             ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
         }
@@ -154,7 +154,7 @@ namespace JobBars {
             PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
             PluginInterface.UiBuilder.Draw -= Animate;
             PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfig;
-            Framework.OnUpdateEvent -= FrameworkOnUpdate;
+            Framework.Update -= FrameworkOnUpdate;
             ClientState.TerritoryChanged -= ZoneChanged;
 
             GaugeManager = null;
@@ -237,7 +237,7 @@ namespace JobBars {
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {
-            var currentPosition = UIHelper.GetNodePosition(addon->RootNode); // changing HP/MP in hud layout
+            var currentPosition = UIHelper.GetNodePosition(addon->RootNode);
             var currentScale = UIHelper.GetNodeScale(addon->RootNode);
 
             if (currentPosition != LastPosition || currentScale != LastScale) {

@@ -99,6 +99,9 @@ namespace JobBars.Helper {
         private static DateTime MpTime;
         private static uint LastMp = 0;
 
+        private static bool ActorTickActive = false;
+        private static DateTime ActorTick;
+
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {
             currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
             totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
@@ -110,12 +113,26 @@ namespace JobBars.Helper {
                 MpTickActive = true;
                 MpTime = DateTime.Now;
             }
-
             LastMp = currentMp;
         }
 
-        public static void ResetMp() {
+        public static void UpdateActorTick() {
+            if(!ActorTickActive) {
+                ActorTickActive = true;
+                ActorTick = DateTime.Now;
+            }
+        }
+
+        public static void ResetTicks() {
             MpTickActive = false;
+            ActorTickActive = false;
+        }
+
+        public static float GetActorTick() {
+            if (!ActorTickActive) return 0;
+            var currentTime = DateTime.Now;
+            var diff = (currentTime - ActorTick).TotalSeconds;
+            return (float)(diff % 3.0f / 3.0f);
         }
 
         public static float GetMpTick() {

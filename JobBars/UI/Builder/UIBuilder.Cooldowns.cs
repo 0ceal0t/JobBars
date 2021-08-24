@@ -41,6 +41,7 @@ namespace JobBars.UI {
             CooldownRoot = null;
 
             var addon = UIHelper.PartyListAddon;
+            if (addon == null) return;
             addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = null;
             addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
