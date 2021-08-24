@@ -255,7 +255,7 @@ namespace JobBars.Buffs {
                 }),
                 new Buff("Bunshin", new BuffProps {
                     CD = 90,
-                    Duration = 15,
+                    Duration = 30,
                     Icon = ActionIds.Bunshin,
                     Color = UIColor.Orange,
                     Triggers = new []{ new Item(ActionIds.Bunshin) }
