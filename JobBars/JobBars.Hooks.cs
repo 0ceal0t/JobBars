@@ -35,10 +35,8 @@ namespace JobBars {
             if (!isParty) { // don't let party members affect our gauge
                 GaugeManager?.PerformAction(actionItem);
             }
-            if (isSelf || Config.BuffIncludeParty) {
-                BuffManager?.PerformAction(actionItem);
-            }
             if (!isPet) {
+                BuffManager?.PerformAction(actionItem, (uint) sourceId);
                 CooldownManager?.PerformAction(actionItem, (uint)sourceId);
             }
 
@@ -95,12 +93,6 @@ namespace JobBars {
                     if (!isParty) { // don't let party members affect our gauge
                         GaugeManager?.PerformAction(buffItem);
                     }
-
-                    // only care about buffs that we are getting
-                    // ignore if we don't care about party members' CDs
-                    if ((int)tTarget == selfId && Config.BuffIncludeParty) {
-                        BuffManager?.PerformAction(buffItem);
-                    }
                 }
             }
 
@@ -115,7 +107,7 @@ namespace JobBars {
 
             if (arg1 == 0x40000010) {
                 GaugeManager?.Reset();
-                BuffManager?.Reset();
+                BuffManager?.ResetTrackers();
                 CooldownManager?.ResetTrackers();
                 UIHelper.ResetTicks();
             }
@@ -123,7 +115,7 @@ namespace JobBars {
 
         private void ZoneChanged(object sender, ushort e) {
             GaugeManager?.Reset();
-            BuffManager?.Reset();
+            BuffManager?.ResetTrackers();
             // don't reset CDs on zone change
             UIHelper.ResetTicks();
         }

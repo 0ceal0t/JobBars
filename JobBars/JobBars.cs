@@ -54,8 +54,6 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> actorControlSelfHook;
 
-        private int LastPartyCount = 0;
-
         private bool PlayerExists => ClientState?.LocalPlayer != null;
         private bool LoggedOut = true;
 
@@ -125,19 +123,11 @@ namespace JobBars {
             PluginLog.Log("==== INIT ====");
             Icon.Reset();
 
+            Builder = new UIBuilder();
             BuffManager = new BuffManager();
             CooldownManager = new CooldownManager();
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
-            Builder = new UIBuilder();
-            CooldownManager.SetupUI();
-            BuffManager.SetupUI();
-            CursorManager.SetupUI();
-
-            if (!Config.GaugesEnabled) Builder.HideGauges();
-            if (!Config.BuffBarEnabled) Builder.HideBuffs();
-            Builder.HideAllBuffs();
-            Builder.HideAllGauges();
         }
 
         public void Dispose() {
@@ -194,7 +184,6 @@ namespace JobBars {
 
             CheckForJobChange();
             Tick();
-            CheckForPartyChange();
             CheckForHUDChange(addon);
         }
 
@@ -207,13 +196,6 @@ namespace JobBars {
             CurrentJob = JobIds.OTHER;
         }
 
-        private void CheckForPartyChange() {
-            // someone left the party. this means that some buffs might not make sense anymore, so reset it
-            var partyCount = UIHelper.GetPartyCount();
-            if (partyCount < LastPartyCount) BuffManager.Reset();
-            LastPartyCount = partyCount;
-        }
-
         private void CheckForJobChange() {
             var jobId = ClientState.LocalPlayer.ClassJob;
             JobIds job = UIHelper.IdToJob(jobId.Id);
@@ -221,7 +203,6 @@ namespace JobBars {
             if (job != CurrentJob) {
                 CurrentJob = job;
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
-                BuffManager.Reset();
                 GaugeManager.SetJob(CurrentJob);
                 CursorManager.SetJob(CurrentJob);
             }
@@ -257,7 +238,7 @@ namespace JobBars {
             });
         }
 
-        private void OnOpenConfig(object sender, EventArgs eventArgs) {
+        private void OnOpenConfig() {
             Visible = true;
         }
 

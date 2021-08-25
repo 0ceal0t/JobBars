@@ -60,7 +60,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
             bool anyTriggerMax = false;
             foreach (var trigger in Props.Triggers) {
                 var value = buffDict.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;

@@ -93,7 +93,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public unsafe override void Tick(Dictionary<Item, BuffElem> buffDict) {
             bool barAssigned = false;
             int diamondIdx = 0;
             foreach (var part in Props.Parts) {

@@ -15,11 +15,11 @@ namespace JobBars.Cursors {
             Init();
             InnerColor = UIColor.GetColor(JobBars.Config.CursorInnerColor, UIColor.MpPink);
             OuterColor = UIColor.GetColor(JobBars.Config.CursorOuterColor, UIColor.HealthGreen);
-        }
 
-        public void SetupUI() {
             JobBars.Builder.SetCursorInnerColor(InnerColor);
             JobBars.Builder.SetCursorOuterColor(OuterColor);
+            if (JobBars.Config.CursorsEnabled) JobBars.Builder.ShowCursor();
+            else JobBars.Builder.HideCursor();
         }
 
         public void SetJob(JobIds job) {

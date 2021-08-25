@@ -12,6 +12,8 @@ namespace JobBars.Buffs {
                 JobBars.Config.Save();
                 if (JobBars.Config.BuffBarEnabled) JobBars.Builder.ShowBuffs();
                 else JobBars.Builder.HideBuffs();
+
+                ResetUI();
             }
 
             if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.BuffScale)) {
@@ -34,8 +36,9 @@ namespace JobBars.Buffs {
             }
 
             if (ImGui.Checkbox("Show Party Members' CDs and Buffs", ref JobBars.Config.BuffIncludeParty)) {
-                Reset();
                 JobBars.Config.Save();
+
+                ResetUI();
             }
 
             JobBars.Separator(); // =====================================
@@ -43,22 +46,31 @@ namespace JobBars.Buffs {
             ImGui.SetNextItemWidth(25f);
             if (ImGui.InputInt("Buffs Per Line" + _ID, ref JobBars.Config.BuffHorizontal, 0)) {
                 JobBars.Config.Save();
+                JobBars.Builder.RefreshBuffLayout();
             }
 
             ImGui.SameLine(250);
             if (ImGui.Checkbox("Right-to-Left" + _ID, ref JobBars.Config.BuffRightToLeft)) {
                 JobBars.Config.Save();
+                JobBars.Builder.RefreshBuffLayout();
             }
 
             ImGui.SameLine(500);
             if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
                 JobBars.Config.Save();
+                JobBars.Builder.RefreshBuffLayout();
             }
         }
 
-        protected override void DrawItem(Buff[] item) {
+        private void DrawBuff(BuffProps buff) {
+            ImGui.TextColored(buff.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{buff.Name}");
+            if (JobBars.Config.BuffEnabled.Draw($"Enabled{_ID}{buff.Name}", buff.Name, buff.Enabled)) {
+                ResetUI();
+            }
+        }
+        protected override void DrawItem(BuffProps[] item) {
             foreach (var buff in item) {
-                buff.Draw(_ID);
+                DrawBuff(buff);
             }
         }
 

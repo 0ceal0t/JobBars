@@ -14,6 +14,8 @@ namespace JobBars.Gauges {
 
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
+            if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
+            JobBars.Builder.HideAllGauges();
         }
 
         public void SetJob(JobIds job) {
@@ -82,14 +84,12 @@ namespace JobBars.Gauges {
 
         public void Tick(bool inCombat) {
             if (!JobBars.Config.GaugesEnabled) return;
-
             if (JobBars.Config.GaugesHideOutOfCombat) {
                 if (inCombat) JobBars.Builder.ShowGauges();
                 else JobBars.Builder.HideGauges();
             }
 
             Dictionary<Item, BuffElem> BuffDict = new();
-            var currentTime = DateTime.Now;
             int ownerId = (int)JobBars.ClientState.LocalPlayer.ObjectId;
 
             AddBuffs(JobBars.ClientState.LocalPlayer, ownerId, BuffDict);
@@ -103,7 +103,7 @@ namespace JobBars.Gauges {
 
             foreach (var gauge in CurrentGauges) {
                 if (!gauge.DoProcessInput()) continue;
-                gauge.Tick(currentTime, BuffDict);
+                gauge.Tick(BuffDict);
             }
 
             JobBars.Icon.Tick();
@@ -126,22 +126,10 @@ namespace JobBars.Gauges {
             if (actor == null) return;
             if (actor is BattleChara charaActor) {
                 foreach (var status in charaActor.StatusList) {
-                    if (status.SourceID == ownerId) {
-                        buffDict[new Item {
-                            Id = status.StatusId,
-                            Type = ItemType.Buff
-                        }] = new BuffElem {
-                            Duration = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                            StackCount = status.StackCount
-                        };
-                    }
+                    if(status.SourceID != ownerId) continue;
+                    UIHelper.StatusToBuffElem(buffDict, status);
                 }
             }
         }
-    }
-
-    public struct BuffElem {
-        public float Duration;
-        public byte StackCount;
     }
 }

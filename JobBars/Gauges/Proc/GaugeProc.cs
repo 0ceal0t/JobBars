@@ -63,7 +63,7 @@ namespace JobBars.Gauges {
             for (var i = 0; i < Size; i++) ProcsActive.Add(true);
         }
 
-        public unsafe override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public unsafe override void Tick(Dictionary<Item, BuffElem> buffDict) {
             for(int idx = 0; idx < Size; idx++) {
                 var proc = Props.Procs[idx];
                 bool procActive;

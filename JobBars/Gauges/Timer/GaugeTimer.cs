@@ -1,4 +1,5 @@
 ﻿using JobBars.Data;
+using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 
@@ -39,9 +40,9 @@ namespace JobBars.Gauges {
             ActiveSubGauge.UseSubGauge();
         }
 
-        public override void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
             foreach (var sg in SubGauges) {
-                sg.Tick(time, buffDict);
+                sg.Tick(buffDict);
             }
         }
 

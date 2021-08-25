@@ -1,5 +1,6 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.Helper;
 
 namespace JobBars.UI {
@@ -12,10 +13,13 @@ namespace JobBars.UI {
         private AtkImageNode* Icon;
         private AtkImageNode* Border;
 
+        private ActionIds LastIconId = 0;
+        public ActionIds Iconid => LastIconId;
+
         private string CurrentText = "";
         private static int BUFFS_HORIZONTAL => JobBars.Config.BuffHorizontal;
 
-        public UIBuff(AtkUldPartsList* partsList, int icon) : base() {
+        public UIBuff(AtkUldPartsList* partsList) : base() {
             RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -44,7 +48,7 @@ namespace JobBars.UI {
             Icon->Flags = 0;
             Icon->WrapMode = 1;
 
-            UIHelper.LoadIcon(Icon, icon);
+            UIHelper.LoadIcon(Icon, 405);
             UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
 
             Overlay = UIBuilder.CreateImageNode();
@@ -145,6 +149,12 @@ namespace JobBars.UI {
             int yOffset = HEIGHT - h;
             UIHelper.SetSize(Overlay, null, h);
             UIHelper.SetPosition(Overlay, 0, yOffset);
+        }
+
+        public void LoadIcon(ActionIds action) {
+            LastIconId = action;
+            var icon = UIHelper.GetIcon(action);
+            Icon->LoadIconTexture(icon, 0);
         }
 
         public void SetColor(ElementColor color) {

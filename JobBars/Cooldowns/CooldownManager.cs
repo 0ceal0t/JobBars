@@ -10,9 +10,6 @@ namespace JobBars.Cooldowns {
 
         public CooldownManager() : base("##JobBars_Cooldowns") {
             Init();
-        }
-
-        public void SetupUI() {
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
         }
 
@@ -20,7 +17,7 @@ namespace JobBars.Cooldowns {
             return JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
         }
 
-        public List<CooldownPartyMemberStruct> GetPartyMembers() {
+        private List<CooldownPartyMemberStruct> GetPartyMembers() {
             var ret = new List<CooldownPartyMemberStruct>();
 
             var partyUI = UIHelper.GetPartyUI();
@@ -56,7 +53,6 @@ namespace JobBars.Cooldowns {
 
         public void Tick(bool inCombat) {
             if (!JobBars.Config.CooldownsEnabled) return;
-
             if (JobBars.Config.CooldownsHideOutOfCombat) {
                 if (inCombat) JobBars.Builder.ShowCooldowns();
                 else JobBars.Builder.HideCooldowns();
@@ -66,8 +62,7 @@ namespace JobBars.Cooldowns {
             int millis = time.Second * 1000 + time.Millisecond;
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
-            List<CooldownPartyMemberStruct> partyMembers = GetPartyMembers();
-
+            var partyMembers = GetPartyMembers();
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
             for(int idx = 0; idx < partyMembers.Count; idx++) {

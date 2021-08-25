@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace JobBars.Gauges {
         public virtual bool DoProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
         public abstract GaugeVisualType GetVisualType();
-        public abstract void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict);
+        public abstract void Tick(Dictionary<Item, BuffElem> buffDict);
 
         public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
         public int Width => UI == null ? 0 : (int)(Scale * GetWidth());
@@ -120,24 +121,6 @@ namespace JobBars.Gauges {
         public void SetSplitPosition(Vector2 pos) {
             RefreshUI();
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
-        }
-
-        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
-            if (lastActiveTrigger.Type == ItemType.Buff) {
-                if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
-                    return elem.Duration;
-                }
-                else { // time isn't there, are we just waiting on it?
-                    var timeSinceActive = (time - lastActiveTime).TotalSeconds;
-                    if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
-                        return defaultDuration;
-                    }
-                    return -1; // yeah lmao it's gone
-                }
-            }
-            else {
-                return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
-            }
         }
     }
 }

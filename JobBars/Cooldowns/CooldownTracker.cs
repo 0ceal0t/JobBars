@@ -51,10 +51,6 @@ namespace JobBars.Cooldowns {
             }
         }
 
-        public void Reset() {
-            State = TrackerState.None;
-        }
-
         public void ProcessAction(Item action) {
             if(action.Type != ItemType.Buff && 
                 (action.Id == (uint) Props.Trigger ||
@@ -64,8 +60,12 @@ namespace JobBars.Cooldowns {
                 )
              ){
                 LastActiveTime = DateTime.Now;
-                State = Props.CD == 0 ? TrackerState.OnCD : TrackerState.Running;
+                State = Props.Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
             }
+        }
+
+        public void Reset() {
+            State = TrackerState.None;
         }
     }
 }

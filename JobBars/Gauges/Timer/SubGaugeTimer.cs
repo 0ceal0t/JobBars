@@ -19,10 +19,8 @@ namespace JobBars.Gauges {
 #nullable disable
     }
 
-    public class SubGaugeTimer : SubGauge {
+    public class SubGaugeTimer : SubGauge<GaugeTimer> {
         private SubGaugeTimerProps Props;
-        private readonly GaugeTimer ParentGauge;
-        private UIGaugeElement UI => ParentGauge.UI;
         private bool IconEnabled;
 
         private float TimeLeft;
@@ -34,8 +32,7 @@ namespace JobBars.Gauges {
         private DateTime LastActiveTime;
         private readonly List<uint> Icons;
 
-        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name) {
-            ParentGauge = gauge;
+        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge) {
             Props = props;
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.DefaultDuration = Props.DefaultDuration == null ? Props.MaxDuration : Props.DefaultDuration.Value;
@@ -50,7 +47,7 @@ namespace JobBars.Gauges {
             if(!NoIcon()) JobBars.Icon.Setup(Icons);
         }
 
-        public void UseSubGauge() {
+        public override void UseSubGauge() {
             UI.SetColor(Props.Color);
             if (UI is UIBar gauge) {
                 gauge.SetTextColor(InDanger ? UIColor.Red : UIColor.NoColor);
@@ -72,8 +69,8 @@ namespace JobBars.Gauges {
             return !IconEnabled || (Icons == null) || !JobBars.Config.GaugeIconReplacement;
         }
 
-        public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
-            var timeLeft = Gauge.TimeLeft(Props.DefaultDuration.Value, time, buffDict, LastActiveTrigger, LastActiveTime);
+        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
+            var timeLeft = UIHelper.TimeLeft(Props.DefaultDuration.Value, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
             if (timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
             }
@@ -103,7 +100,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void ProcessAction(Item action) {
+        public override void ProcessAction(Item action) {
             if (Props.Triggers.Contains(action) && (!(State == GaugeState.Active) || !Props.NoRefresh)) { // START
                 LastActiveTrigger = action;
                 LastActiveTime = DateTime.Now;

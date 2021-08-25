@@ -4,7 +4,6 @@ using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using JobBars.Data;
 using JobBars.GameStructs;
-using JobBars.Gauges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +38,24 @@ namespace JobBars.Helper {
             062138 => JobIds.DNC,
             _ => JobIds.OTHER
         };
+
+        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+            if (lastActiveTrigger.Type == ItemType.Buff) {
+                if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
+                    return elem.Duration;
+                }
+                else { // time isn't there, are we just waiting on it?
+                    var timeSinceActive = (time - lastActiveTime).TotalSeconds;
+                    if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
+                        return defaultDuration;
+                    }
+                    return -1; // yeah lmao it's gone
+                }
+            }
+            else {
+                return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
+            }
+        }
 
         public unsafe static AddonPartyListIntArray* GetPartyUI() {
             var uiModule = Framework.Instance()->GetUiModule();
@@ -78,16 +95,29 @@ namespace JobBars.Helper {
                 for(int j = 0; j < 30; j++) {
                     Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
                     if (status->SourceID != ownerId) continue;
-
-                    buffDict[new Item {
-                        Id = status->StatusID,
-                        Type = ItemType.Buff
-                    }] = new BuffElem {
-                        Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
-                        StackCount = status->StackCount
-                    };
+                    StatusToBuffElem(buffDict, status);
                 }
             }
+        }
+
+        public static void StatusToBuffElem(Dictionary<Item, BuffElem> buffDict, Status* status) {
+            buffDict[new Item {
+                Id = status->StatusID,
+                Type = ItemType.Buff
+            }] = new BuffElem {
+                Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
+                StackCount = status->StackCount
+            };
+        }
+
+        public static void StatusToBuffElem(Dictionary<Item, BuffElem> buffDict, Dalamud.Game.ClientState.Statuses.Status status) {
+            buffDict[new Item {
+                Id = status.StatusId,
+                Type = ItemType.Buff
+            }] = new BuffElem {
+                Duration = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
+                StackCount = status.StackCount
+            };
         }
 
         // ==================
@@ -158,5 +188,10 @@ namespace JobBars.Helper {
                 if (item.Icon != 405) ActionToIcon[item.RowId] = item.Icon;
             }
         }
+    }
+
+    public struct BuffElem {
+        public float Duration;
+        public byte StackCount;
     }
 }

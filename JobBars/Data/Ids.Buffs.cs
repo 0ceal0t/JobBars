@@ -73,9 +73,11 @@
         Windbite = 129,
         CausticBite = 124,
         StraightShotReady = 122,
+        Barrage = 128,
 
         // MCH
         Wildfire = 0x79a,
+        Reassemble = 851,
 
         // DNC
         Devilment = 0x721,

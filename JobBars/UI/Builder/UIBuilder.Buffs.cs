@@ -8,7 +8,7 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         private AtkResNode* BuffRoot = null;
         public List<UIBuff> Buffs = new();
-        public Dictionary<ActionIds, UIBuff> IconToBuff = new();
+        public static int MAX_BUFFS = 10;
 
         private void InitBuffs(AtkUldPartsList* partsList) {
             BuffRoot = CreateResNode();
@@ -17,13 +17,11 @@ namespace JobBars.UI {
             BuffRoot->Flags = 9395;
 
             UIBuff lastBuff = null;
-            foreach (var icon in JobBars.BuffManager.Icons) {
-                var newBuff = new UIBuff(partsList, UIHelper.GetIcon(icon));
+            for (var i = 0; i < MAX_BUFFS; i++) {
+                var newBuff = new UIBuff(partsList);
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;
-
-                IconToBuff[icon] = newBuff;
 
                 if (lastBuff != null) UIHelper.Link(lastBuff.RootRes, newBuff.RootRes);
                 lastBuff = newBuff;
@@ -31,6 +29,8 @@ namespace JobBars.UI {
 
             BuffRoot->ChildCount = (ushort)(5 * Buffs.Count);
             BuffRoot->ChildNode = Buffs[0].RootRes;
+
+            RefreshBuffLayout();
         }
 
         private void DisposeBuffs() {
@@ -39,6 +39,12 @@ namespace JobBars.UI {
 
             BuffRoot->Destroy(true);
             BuffRoot = null;
+        }
+
+        public void RefreshBuffLayout() {
+            for (int i = 0; i < Buffs.Count; i++) {
+                Buffs[i].SetPosition(i);
+            }
         }
 
         public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);

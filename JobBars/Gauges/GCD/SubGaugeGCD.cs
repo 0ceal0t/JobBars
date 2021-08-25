@@ -1,5 +1,4 @@
-﻿using JobBars.Data;
-using JobBars.Helper;
+﻿using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -19,10 +18,8 @@ namespace JobBars.Gauges {
 #nullable disable
     }
 
-    public class SubGaugeGCD : SubGauge {
+    public class SubGaugeGCD : SubGauge<GaugeGCD> {
         private SubGaugeGCDProps Props;
-        private readonly GaugeGCD ParentGauge;
-        private UIGaugeElement UI => ParentGauge.UI;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
@@ -33,8 +30,7 @@ namespace JobBars.Gauges {
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
 
-        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name) {
-            ParentGauge = gauge;
+        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge) {
             Props = props;
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
@@ -46,7 +42,7 @@ namespace JobBars.Gauges {
             State = GaugeState.Inactive;
         }
 
-        public void UseSubGauge() {
+        public override void UseSubGauge() {
             UI.SetColor(Props.Color);
             if (UI is UIArrow arrows) {
                 arrows.SetMaxValue(Props.MaxCounter);
@@ -61,17 +57,17 @@ namespace JobBars.Gauges {
             CheckInactive();
         }
 
-        public void Tick(DateTime time, Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
             if (State == GaugeState.Active) {
-                float timeLeft = Gauge.TimeLeft(Props.MaxDuration, time, buffDict, LastActiveTrigger, LastActiveTime);
+                float timeLeft = UIHelper.TimeLeft(Props.MaxDuration, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
                     State = GaugeState.Finished;
-                    StopTime = time;
+                    StopTime = DateTime.Now;
                 }
                 SetValue(Props.Invert ? Props.MaxCounter - Counter : Counter);
             }
             else if (State == GaugeState.Finished) {
-                if ((time - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
+                if ((DateTime.Now - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
                     State = GaugeState.Inactive;
                     Counter = 0;
                     SetValue(0);
@@ -84,7 +80,7 @@ namespace JobBars.Gauges {
             if (JobBars.Config.GaugeHideGCDInactive) UI.SetVisible(State != GaugeState.Inactive);
         }
 
-        public void ProcessAction(Item action) {
+        public override void ProcessAction(Item action) {
             if (Props.Triggers.Contains(action) && !(State == GaugeState.Active)) { // START
                 LastActiveTrigger = action;
                 LastActiveTime = DateTime.Now;
