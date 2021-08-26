@@ -12,9 +12,12 @@ namespace JobBars.Gauges {
         public JobIds CurrentJob = JobIds.OTHER;
         private Gauge[] CurrentGauges => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
+        private static List<BuffIds> GaugeBuffsOnPartyMembers = new( new[] { BuffIds.Excog }); // which buffs on party members do we care about?
+
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
             if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
+            JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeTextVisible);
             JobBars.Builder.HideAllGauges();
         }
 
@@ -89,21 +92,13 @@ namespace JobBars.Gauges {
                 else JobBars.Builder.HideGauges();
             }
 
-            Dictionary<Item, BuffElem> BuffDict = new();
-            int ownerId = (int)JobBars.ClientState.LocalPlayer.ObjectId;
-
-            AddBuffs(JobBars.ClientState.LocalPlayer, ownerId, BuffDict);
-
-            var prevEnemy = UIHelper.PreviousEnemyTarget;
-            if (prevEnemy != null) AddBuffs(prevEnemy, ownerId, BuffDict);
-
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                UIHelper.GetPartyStatus(ownerId, BuffDict);
+                UIHelper.SearchForPartyMemberStatus((int)JobBars.ClientState.LocalPlayer.ObjectId, UIHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
             }
 
             foreach (var gauge in CurrentGauges) {
                 if (!gauge.DoProcessInput()) continue;
-                gauge.Tick(BuffDict);
+                gauge.Tick();
             }
 
             JobBars.Icon.Tick();
@@ -120,16 +115,6 @@ namespace JobBars.Gauges {
                 ), // kind of scuffed, but oh well
                 _ => null,
             };
-        }
-
-        private static void AddBuffs(GameObject actor, int ownerId, Dictionary<Item, BuffElem> buffDict) {
-            if (actor == null) return;
-            if (actor is BattleChara charaActor) {
-                foreach (var status in charaActor.StatusList) {
-                    if(status.SourceID != ownerId) continue;
-                    UIHelper.StatusToBuffElem(buffDict, status);
-                }
-            }
         }
     }
 }

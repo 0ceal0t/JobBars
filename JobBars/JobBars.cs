@@ -211,6 +211,8 @@ namespace JobBars {
         private void Tick() {
             var inCombat = Condition[ConditionFlag.InCombat];
             UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
+            UIHelper.UpdatePlayerStatus();
+
             GaugeManager.Tick(inCombat);
             BuffManager.Tick(inCombat);
             CooldownManager.Tick(inCombat);

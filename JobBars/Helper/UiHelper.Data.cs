@@ -1,15 +1,49 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Client.Game.Group;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using JobBars.Data;
-using JobBars.GameStructs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JobBars.Data;
 
 namespace JobBars.Helper {
+    public struct StatusNameId {
+        public string Name;
+        public Item Status;
+
+        public override string ToString() {
+            return Name;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is StatusNameId overrides && Equals(overrides);
+        }
+
+        public bool Equals(StatusNameId other) {
+            return Status.Id == other.Status.Id;
+        }
+
+        public override int GetHashCode() {
+            int hash = 13;
+            hash = (hash * 7) + Name.GetHashCode();
+            hash = (hash * 7) + Status.GetHashCode();
+            return hash;
+        }
+
+        public static bool operator ==(StatusNameId left, StatusNameId right) {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(StatusNameId left, StatusNameId right) {
+            return !(left == right);
+        }
+    }
+
     public unsafe partial class UIHelper {
+        private static readonly HashSet<uint> GCDs = new();
+        private static readonly Dictionary<uint, uint> ActionToIcon = new();
+
+        public static StatusNameId[] StatusNames { get; private set; }
+
+        // ===============
+
         public static bool IsGCD(ActionIds action) => IsGCD((uint)action);
         public static bool IsGCD(uint action) => GCDs.Contains(action);
 
@@ -39,7 +73,37 @@ namespace JobBars.Helper {
             _ => JobIds.OTHER
         };
 
-        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, BuffElem> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+
+        private static void SetupSheets() {
+            var actionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
+                x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
+            );
+            foreach (var item in actionSheet) {
+                var name = item.Name.ToString();
+                var attackType = item.ActionCategory.Value.Name.ToString();
+                var actionId = item.ActionCategory.Value.RowId;
+                if (actionId == 2 || actionId == 3) { // spell or weaponskill
+                    GCDs.Add(item.RowId);
+                }
+
+                if (item.Icon != 405 && item.Icon != 0) ActionToIcon[item.RowId] = item.Icon;
+            }
+
+            List<StatusNameId> statusList = new();
+            var statusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
+            foreach(var item in statusSheet) {
+                statusList.Add(new StatusNameId {
+                    Name = item.Name,
+                    Status = new Item {
+                        Id = item.RowId,
+                        Type = ItemType.Buff
+                    }
+                });
+            }
+            StatusNames = statusList.ToArray();
+        }
+
+        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, StatusDuration> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
             if (lastActiveTrigger.Type == ItemType.Buff) {
                 if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
                     return elem.Duration;
@@ -57,141 +121,10 @@ namespace JobBars.Helper {
             }
         }
 
-        public unsafe static AddonPartyListIntArray* GetPartyUI() {
-            var uiModule = Framework.Instance()->GetUiModule();
-            if (uiModule == null) return null;
-            var numArray = uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[4];
-            return (AddonPartyListIntArray*)numArray->IntArray;
-        }
-
-        public unsafe static int GetPartyCount() {
-            var groupManager = GroupManager.Instance();
-            if (groupManager == null) return 0;
-            return groupManager->MemberCount;
-        }
-
-        public unsafe static bool IsInParty(uint objectId) {
-            if (objectId == 0 || objectId == 0xE0000000 || objectId == 0xFFFFFFFF) return false;
-
-            var groupManager = GroupManager.Instance();
-            if (groupManager == null || groupManager->MemberCount == 0) return false;
-
-            for (int i = 0; i < 8; i++) {
-                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
-                if (objectId == info->ObjectID) return true;
-            }
-            return false;
-        }
-
-        public unsafe static void GetPartyStatus(int ownerId, Dictionary<Item, BuffElem> buffDict) {
-            var groupManager = GroupManager.Instance();
-            if (groupManager == null || groupManager->MemberCount == 0) return;
-
-            for (int i = 0; i < 8; i++) {
-                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
-                if (info->ObjectID == 0 || info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) continue;
-                if (info->StatusManager.Status == null) continue;
-
-                for(int j = 0; j < 30; j++) {
-                    Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
-                    if (status->SourceID != ownerId) continue;
-                    StatusToBuffElem(buffDict, status);
-                }
-            }
-        }
-
-        public static void StatusToBuffElem(Dictionary<Item, BuffElem> buffDict, Status* status) {
-            buffDict[new Item {
-                Id = status->StatusID,
-                Type = ItemType.Buff
-            }] = new BuffElem {
-                Duration = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
-                StackCount = status->StackCount
-            };
-        }
-
-        public static void StatusToBuffElem(Dictionary<Item, BuffElem> buffDict, Dalamud.Game.ClientState.Statuses.Status status) {
-            buffDict[new Item {
-                Id = status.StatusId,
-                Type = ItemType.Buff
-            }] = new BuffElem {
-                Duration = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                StackCount = status.StackCount
-            };
-        }
-
-        // ==================
-
-        private static readonly HashSet<uint> GCDs = new();
-        private static readonly Dictionary<uint, uint> ActionToIcon = new();
-
-        private static bool MpTickActive = false;
-        private static DateTime MpTime;
-        private static uint LastMp = 0;
-
-        private static bool ActorTickActive = false;
-        private static DateTime ActorTick;
-
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {
             currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
             totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
             return JobBars.ClientState.LocalPlayer.IsCasting;
         }
-
-        public static void UpdateMp(uint currentMp) {
-            if(currentMp != 10000 && currentMp > LastMp && !MpTickActive) {
-                MpTickActive = true;
-                MpTime = DateTime.Now;
-            }
-            LastMp = currentMp;
-        }
-
-        public static void UpdateActorTick() {
-            if(!ActorTickActive) {
-                ActorTickActive = true;
-                ActorTick = DateTime.Now;
-            }
-        }
-
-        public static void ResetTicks() {
-            MpTickActive = false;
-            ActorTickActive = false;
-        }
-
-        public static float GetActorTick() {
-            if (!ActorTickActive) return 0;
-            var currentTime = DateTime.Now;
-            var diff = (currentTime - ActorTick).TotalSeconds;
-            return (float)(diff % 3.0f / 3.0f);
-        }
-
-        public static float GetMpTick() {
-            if (!MpTickActive) return 0;
-            if (LastMp == 10000) return 0; // already max
-            var currentTime = DateTime.Now;
-            var diff = (currentTime - MpTime).TotalSeconds;
-            return (float)(diff % 3.0f / 3.0f);
-        }
-
-        private static void SetupActions() {
-            var sheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
-                x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
-            );
-            foreach (var item in sheet) {
-                var name = item.Name.ToString();
-                var attackType = item.ActionCategory.Value.Name.ToString();
-                var actionId = item.ActionCategory.Value.RowId;
-                if (actionId == 2 || actionId == 3) { // spell or weaponskill
-                    GCDs.Add(item.RowId);
-                }
-
-                if (item.Icon != 405) ActionToIcon[item.RowId] = item.Icon;
-            }
-        }
-    }
-
-    public struct BuffElem {
-        public float Duration;
-        public byte StackCount;
     }
 }

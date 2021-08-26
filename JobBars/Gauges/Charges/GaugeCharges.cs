@@ -93,13 +93,13 @@ namespace JobBars.Gauges {
             }
         }
 
-        public unsafe override void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public unsafe override void Tick() {
             bool barAssigned = false;
             int diamondIdx = 0;
             foreach (var part in Props.Parts) {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
-                        var buffExists = buffDict.TryGetValue(trigger, out var buff);
+                        var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
                         if (part.Bar && !barAssigned && buffExists) {
                             barAssigned = true;
                             SetGaugeValue(buff.Duration / part.Duration, (int)Math.Round(buff.Duration));
@@ -161,14 +161,14 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if(JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
-                Props.BarColor = newColor;
-                RefreshUI();
-            }
-
             if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
                 Props.Type = newType;
                 JobBars.GaugeManager.ResetJob(job);
+            }
+
+            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
+                Props.BarColor = newColor;
+                RefreshUI();
             }
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {

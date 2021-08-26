@@ -23,7 +23,7 @@ namespace JobBars.Helper {
             PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
             TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
             TargetAddress = JobBars.SigScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
-            SetupActions();
+            SetupSheets();
 
             Ready = true;
         }

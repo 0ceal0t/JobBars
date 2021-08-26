@@ -15,7 +15,7 @@ namespace JobBars.Gauges {
         }
 
         public abstract void UseSubGauge();
-        public abstract void Tick(Dictionary<Item, BuffElem> buffDict);
+        public abstract void Tick();
         public abstract void ProcessAction(Item action);
     }
 }

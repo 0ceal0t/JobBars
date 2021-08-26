@@ -57,9 +57,9 @@ namespace JobBars.Gauges {
             CheckInactive();
         }
 
-        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick() {
             if (State == GaugeState.Active) {
-                float timeLeft = UIHelper.TimeLeft(Props.MaxDuration, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
+                float timeLeft = UIHelper.TimeLeft(Props.MaxDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
                     State = GaugeState.Finished;
                     StopTime = DateTime.Now;

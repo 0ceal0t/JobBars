@@ -208,6 +208,8 @@ namespace JobBars.UI {
             UIColor.SetColor(TextNode, color);
         }
 
+        public void SetTextVisible(bool visible) => UIHelper.SetVisibility(TextContainer, visible);
+
         public void SetPercent(float value) {
             if (value > 1) value = 1;
             else if (value < 0) value = 0;

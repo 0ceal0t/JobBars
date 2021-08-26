@@ -63,13 +63,13 @@ namespace JobBars.Gauges {
             for (var i = 0; i < Size; i++) ProcsActive.Add(true);
         }
 
-        public unsafe override void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public unsafe override void Tick() {
             for(int idx = 0; idx < Size; idx++) {
                 var proc = Props.Procs[idx];
                 bool procActive;
 
                 if (proc.Trigger.Type == ItemType.Buff) {
-                    SetValue(proc.Idx, procActive = buffDict.TryGetValue(proc.Trigger, out var buff), buff.Duration);
+                    SetValue(proc.Idx, procActive = UIHelper.PlayerStatus.TryGetValue(proc.Trigger, out var buff), buff.Duration);
                 }
                 else {
                     var recastActive = UIHelper.GetRecastActive(proc.Trigger.Id, out _);

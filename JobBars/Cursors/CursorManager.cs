@@ -4,6 +4,8 @@ using Dalamud.Interface;
 using JobBars.Data;
 using JobBars.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Helper;
+using System.Collections.Generic;
 
 namespace JobBars.Cursors {
     public unsafe partial class CursorManager : JobConfigurationManager<Cursor> {

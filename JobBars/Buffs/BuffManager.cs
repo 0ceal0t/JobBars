@@ -50,7 +50,7 @@ namespace JobBars.Buffs {
                 };
 
                 foreach(var status in localPlayer.StatusList) {
-                    UIHelper.StatusToBuffElem(localPlayerStruct.BuffDict, status);
+                    UIHelper.StatusToDuration(localPlayerStruct.BuffDict, status);
                 }
 
                 ret.Add(localPlayerStruct);
@@ -71,7 +71,7 @@ namespace JobBars.Buffs {
                 for (int j = 0; j < 30; j++) {
                     Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
                     if (status->StatusID == 0) continue;
-                    UIHelper.StatusToBuffElem(playerStruct.BuffDict, status);
+                    UIHelper.StatusToDuration(playerStruct.BuffDict, status);
                 }
 
                 ret.Add(playerStruct);
@@ -141,7 +141,7 @@ namespace JobBars.Buffs {
     public struct BuffPartyMemberStruct {
         public uint ObjectId;
         public JobIds Job;
-        public Dictionary<Item, BuffElem> BuffDict;
+        public Dictionary<Item, StatusDuration> BuffDict;
         public bool IsPlayer;
     }
 }

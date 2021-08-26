@@ -60,10 +60,10 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick() {
             bool anyTriggerMax = false;
             foreach (var trigger in Props.Triggers) {
-                var value = buffDict.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
+                var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
                 if (value == Props.MaxStacks) anyTriggerMax = true;
                 SetValue(value);
             }
@@ -79,14 +79,14 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.Color, out var newColor)) {
-                Props.Color = newColor;
-                RefreshUI();
-            }
-
             if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
                 Props.Type = newType;
                 JobBars.GaugeManager.ResetJob(job);
+            }
+
+            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.Color, out var newColor)) {
+                Props.Color = newColor;
+                RefreshUI();
             }
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {

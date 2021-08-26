@@ -96,7 +96,14 @@ namespace JobBars.Data {
 
     [Serializable]
     public class ComboValueConfig<T> : ValueConfig<T> {
-        public ComboValueConfig() : base() { }
+        [NonSerialized]
+        private bool ShowSearch;
+        [NonSerialized]
+        private string SearchInput = "";
+
+        public ComboValueConfig(bool showSearch=false) : base() {
+            ShowSearch = showSearch;
+        }
 
         public override bool Draw(string id, string name, T defaultValue, out T value) { // whatever
             value = default;
@@ -105,9 +112,42 @@ namespace JobBars.Data {
 
         public bool Draw(string id, string name, T[] comboOptions, T defaultValue, out T value) {
             value = Get(name, defaultValue);
-            if(Configuration.DrawCombo(id, comboOptions, value, out value)) {
+            if(DrawCombo(id, comboOptions, value, out value)) {
                 Set(name, value);
                 return true;
+            }
+            return false;
+        }
+
+        private bool DrawCombo<T>(string id, T[] comboOptions, T currentValue, out T value) {
+            value = currentValue;
+            if (ImGui.BeginCombo(id, $"{currentValue}", ImGuiComboFlags.HeightLargest)) {
+                if (ShowSearch) {
+                    ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth() - 50);
+                    ImGui.InputText("Search##Combo", ref SearchInput, 256);
+                }
+
+                if(ShowSearch) ImGui.BeginChild("Child##Combo", new Vector2(ImGui.GetWindowContentRegionWidth(), 200), true);
+
+                var idx = 0;
+                foreach (T option in comboOptions) {
+                    if (ShowSearch && !string.IsNullOrEmpty(SearchInput)) {
+                        var optionString = option.ToString();
+                        if (!optionString.ToLower().Contains(SearchInput.ToLower())) continue;
+                    }
+
+                    if (ImGui.Selectable($"{option}##Combo{idx}", option.Equals(currentValue))) {
+                        value = option;
+
+                        if (ShowSearch) ImGui.EndChild();
+                        ImGui.EndCombo();
+                        return true;
+                    }
+                    idx++;
+                }
+
+                if (ShowSearch) ImGui.EndChild();
+                ImGui.EndCombo();
             }
             return false;
         }
@@ -139,7 +179,7 @@ namespace JobBars.Data {
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;
 
-        // ==== GAUGES ====
+        // ====== GAUGES ======
 
         public float GaugeScale = 1.0f;
         public bool GaugeHorizontal = false;
@@ -152,6 +192,7 @@ namespace JobBars.Data {
         public bool GaugesHideOutOfCombat = false;
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
+        public bool GaugeTextVisible = true;
 
         public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200));
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
@@ -181,7 +222,7 @@ namespace JobBars.Data {
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
 
-        // ==== COOLDOWNS ======
+        // ===== COOLDOWNS ======
 
         public Vector2 CooldownPosition = new(-40, 40);
 
@@ -201,26 +242,13 @@ namespace JobBars.Data {
         public string CursorOuterColor = UIColor.HealthGreen.Name;
 
         public ComboValueConfig<CursorType> CursorType = new();
+        public ComboValueConfig<Helper.StatusNameId> CursorStatus = new(true);
+        public FloatValueConfig CursorStatusDuration = new(5f);
 
         // =====================
 
         public void Save() {
             JobBars.PluginInterface.SavePluginConfig(this);
-        }
-
-        public static bool DrawCombo<T>(string id, T[] comboOptions, T currentValue, out T value) {
-            value = currentValue;
-            if (ImGui.BeginCombo(id, $"{currentValue}")) {
-                foreach (T option in comboOptions) {
-                    if (ImGui.Selectable($"{option}##Combo", option.Equals(currentValue))) {
-                        value = option;
-                        ImGui.EndCombo();
-                        return true;
-                    }
-                }
-                ImGui.EndCombo();
-            }
-            return false;
         }
 
         public static bool DrawColor(string id, ElementColor currentValue, out ElementColor value) {

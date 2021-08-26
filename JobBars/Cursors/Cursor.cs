@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using Dalamud.Logging;
+using JobBars.Data;
 using JobBars.Helper;
 using System;
 
@@ -10,7 +11,8 @@ namespace JobBars.Cursors {
         MpTick,
         ActorTick,
         StaticCircle,
-        StaticRing
+        StaticRing,
+        StatusTime
     }
 
     public class Cursor {
@@ -23,6 +25,11 @@ namespace JobBars.Cursors {
         private CursorType InnerType;
         private CursorType OuterType;
 
+        private StatusNameId InnerStatus;
+        private StatusNameId OuterStatus;
+        private float InnerStatusDuration;
+        private float OuterStatusDuration;
+
         public Cursor(JobIds job, CursorType inner, CursorType outer) {
             Name = $"{job}";
             InnerName = Name + "_Inner";
@@ -30,12 +37,23 @@ namespace JobBars.Cursors {
 
             InnerType = JobBars.Config.CursorType.Get(InnerName, inner);
             OuterType = JobBars.Config.CursorType.Get(OuterName, outer);
+
+            InnerStatus = JobBars.Config.CursorStatus.Get(InnerName, new StatusNameId {
+                Name = "[NONE]",
+                Status = new Item()
+            });
+            OuterStatus = JobBars.Config.CursorStatus.Get(OuterName, new StatusNameId {
+                Name = "[NONE]",
+                Status = new Item()
+            });
+            InnerStatusDuration = JobBars.Config.CursorStatusDuration.Get(InnerName, 5f);
+            OuterStatusDuration = JobBars.Config.CursorStatusDuration.Get(OuterName, 5f);
         }
 
-        public float GetInner() => GetValue(InnerType);
-        public float GetOuter() => GetValue(OuterType);
+        public float GetInner() => GetValue(InnerType, InnerStatus, InnerStatusDuration);
+        public float GetOuter() => GetValue(OuterType, OuterStatus, OuterStatusDuration);
 
-        private float GetValue(CursorType type) => type switch {
+        private float GetValue(CursorType type, StatusNameId status, float statusDuration) => type switch {
             CursorType.None => 0,
             CursorType.GCD => GetGCD(),
             CursorType.CastTime => GetCastTime(),
@@ -43,8 +61,16 @@ namespace JobBars.Cursors {
             CursorType.ActorTick => UIHelper.GetActorTick(),
             CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
             CursorType.StaticRing => 1,
+            CursorType.StatusTime => GetStatusTime(status, statusDuration),
             _ => 0
         };
+
+        private static float GetStatusTime(StatusNameId status, float statusDuration) {
+            if (statusDuration == 0) return 0;
+            if (status.Status.Id == 0) return 0;
+            var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.Duration > 0 ? value.Duration : value.Duration * -1) : 0) / statusDuration;
+            return Math.Min(ret, 1f);
+        }
         
         private static float GetGCD() {
             var recast = UIHelper.GetRecastActiveAndTotal((uint)ActionIds.GoringBlade, out var timeElapsed, out var total);
@@ -63,8 +89,28 @@ namespace JobBars.Cursors {
                 InnerType = newInnerValue;
             }
 
+            if(InnerType == CursorType.StatusTime) {
+                if(JobBars.Config.CursorStatus.Draw($"Inner Status{_ID}", InnerName, UIHelper.StatusNames, InnerStatus, out var newInnerStatus)) {
+                    InnerStatus = newInnerStatus;
+                }
+                if(JobBars.Config.CursorStatusDuration.Draw($"Inner Status Duration{_ID}", InnerName, InnerStatusDuration, out var newInnerStatusDuration)) {
+                    InnerStatusDuration = newInnerStatusDuration;
+                }
+            }
+
+            JobBars.Separator();
+
             if (JobBars.Config.CursorType.Draw($"Outer Type{_ID}", OuterName, ValidCursorType, OuterType, out var newOuterValue)) {
                 OuterType = newOuterValue;
+            }
+
+            if (OuterType == CursorType.StatusTime) {
+                if (JobBars.Config.CursorStatus.Draw($"Outer Status{_ID}", OuterName, UIHelper.StatusNames, OuterStatus, out var newOuterStatus)) {
+                    OuterStatus = newOuterStatus;
+                }
+                if (JobBars.Config.CursorStatusDuration.Draw($"Outer Status Duration{_ID}", OuterName, OuterStatusDuration, out var newOuterStautsDuration)) {
+                    OuterStatusDuration = newOuterStautsDuration;
+                }
             }
         }
     }

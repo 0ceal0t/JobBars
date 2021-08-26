@@ -40,9 +40,9 @@ namespace JobBars.Gauges {
             ActiveSubGauge.UseSubGauge();
         }
 
-        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public override void Tick() {
             foreach (var sg in SubGauges) {
-                sg.Tick(buffDict);
+                sg.Tick();
             }
         }
 

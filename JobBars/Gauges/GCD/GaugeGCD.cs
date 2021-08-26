@@ -36,8 +36,8 @@ namespace JobBars.Gauges {
             ActiveSubGauge.UseSubGauge();
         }
 
-        public override void Tick(Dictionary<Item, BuffElem> buffDict) {
-            foreach (var sg in SubGauges) sg.Tick(buffDict);
+        public override void Tick() {
+            foreach (var sg in SubGauges) sg.Tick();
         }
 
         public override void ProcessAction(Item action) {
@@ -49,12 +49,12 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            foreach (var sg in SubGauges) sg.DrawSubGauge(_ID);
-
-            if(JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var value)) {
+            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var value)) {
                 Type = value;
                 JobBars.GaugeManager.ResetJob(job);
             }
+
+            foreach (var sg in SubGauges) sg.DrawSubGauge(_ID);
         }
     }
 }

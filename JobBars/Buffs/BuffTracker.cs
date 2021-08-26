@@ -35,7 +35,7 @@ namespace JobBars.Buffs {
             if (Props.Triggers.Contains(action)) SetActive(action);
         }
 
-        public void Tick(Dictionary<Item, BuffElem> buffDict) {
+        public void Tick(Dictionary<Item, StatusDuration> buffDict) {
             if (State != BuffState.Running) { // check for buff triggers
                 foreach (var trigger in Props.Triggers) {
                     if (trigger.Type != ItemType.Buff) continue;

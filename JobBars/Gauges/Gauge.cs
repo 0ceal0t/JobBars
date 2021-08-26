@@ -62,7 +62,7 @@ namespace JobBars.Gauges {
         public virtual bool DoProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
         public abstract GaugeVisualType GetVisualType();
-        public abstract void Tick(Dictionary<Item, BuffElem> buffDict);
+        public abstract void Tick();
 
         public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
         public int Width => UI == null ? 0 : (int)(Scale * GetWidth());

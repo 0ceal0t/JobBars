@@ -65,6 +65,10 @@ namespace JobBars.UI {
         public void ShowGauges() => UIHelper.Show(GaugeRoot);
         public void HideGauges() => UIHelper.Hide(GaugeRoot);
 
+        public void SetGaugeTextVisible(bool visible) {
+            foreach (var bar in Bars) bar.SetTextVisible(visible);
+        }
+
         public void HideAllGauges() {
             Bars.ForEach(x => x.Hide());
             Arrows.ForEach(x => x.Hide());
