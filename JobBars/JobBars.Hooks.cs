@@ -82,16 +82,15 @@ namespace JobBars {
             for (int i = 0; i < entries.Count; i++) {
                 ulong tTarget = targets[i / 8];
 
-                if (entries[i].type == ActionEffectType.Gp_Or_Status || entries[i].type == ActionEffectType.ApplyStatusEffectTarget) {
-                    // idk what's up with Gp_Or_Status. sometimes the enum is wrong?
+                if (entries[i].type == ActionEffectType.ApplyStatusTarget || entries[i].type == ActionEffectType.ApplyStatusSource) {
 
                     var buffItem = new Item {
                         Id = entries[i].value,
                         Type = ItemType.Buff
                     };
 
-                    if (!isParty) { // don't let party members affect our gauge
-                        GaugeManager?.PerformAction(buffItem);
+                    if (!isParty) {
+                        GaugeManager?.PerformAction(buffItem); // more accurate than using the status list
                     }
                 }
             }

@@ -1,12 +1,9 @@
 ﻿using Dalamud.Logging;
 using JobBars.Helper;
 using JobBars.UI;
-using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Buffs {
     public class BuffTracker {
@@ -42,7 +39,7 @@ namespace JobBars.Buffs {
             if (State != BuffState.Running) { // check for buff triggers
                 foreach (var trigger in Props.Triggers) {
                     if (trigger.Type != ItemType.Buff) continue;
-                    if (buffDict.ContainsKey(trigger)) SetActive(trigger);
+                    if (buffDict.ContainsKey(trigger) && buffDict[trigger].Duration > 0) SetActive(trigger);
                 }
             }
 
