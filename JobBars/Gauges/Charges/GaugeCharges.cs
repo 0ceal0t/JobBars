@@ -47,6 +47,7 @@ namespace JobBars.Gauges {
         protected override void LoadUI_Impl() {
             if (UI is UIBarDiamondCombo combo) {
                 SetupDiamondColors();
+                combo.SetSegments(1);
                 combo.SetGaugeColor(Props.BarColor);
                 combo.SetTextColor(UIColor.NoColor);
                 combo.SetMaxValue(TotalDiamonds);
@@ -56,6 +57,7 @@ namespace JobBars.Gauges {
                 diamond.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIBar gauge) {
+                gauge.SetSegments(1);
                 gauge.SetColor(Props.BarColor);
                 gauge.SetTextColor(UIColor.NoColor);
             }

@@ -6,14 +6,15 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public static readonly ushort GAUGE_BG_PART = 0;
         public static readonly ushort GAUGE_FRAME_PART = 1;
-        public static readonly ushort GAUGE_BAR_MAIN = 2;
-        public static readonly ushort GAUGE_TEXT_BLUR_PART = 3;
-        public static readonly ushort ARROW_BG = 4;
-        public static readonly ushort ARROW_FG = 5;
-        public static readonly ushort DIAMOND_BG = 6;
-        public static readonly ushort DIAMOND_FG = 7;
-        public static readonly ushort BUFF_BORDER = 8;
-        public static readonly ushort BUFF_OVERLAY = 9;
+        public static readonly ushort GAUGE_SEPARATOR = 2;
+        public static readonly ushort GAUGE_BAR_MAIN = 3;
+        public static readonly ushort GAUGE_TEXT_BLUR_PART = 4;
+        public static readonly ushort ARROW_BG = 5;
+        public static readonly ushort ARROW_FG = 6;
+        public static readonly ushort DIAMOND_BG = 7;
+        public static readonly ushort DIAMOND_FG = 8;
+        public static readonly ushort BUFF_BORDER = 9;
+        public static readonly ushort BUFF_OVERLAY = 10;
 
         public static readonly ushort CD_BORDER = 0;
         public static readonly ushort CD_DASH_START = 1;
@@ -29,7 +30,8 @@ namespace JobBars.UI {
             gaugeBuffLayout.Add("ui/uld/Parameter_Gauge.tex", new[] {
                 new PartStruct(0, 100, 160, 20), // GAUGE_BG_PART
                 new PartStruct(0, 0, 160, 20),   // GAUGE_FRAME_PART
-                new PartStruct(0, 40, 160, 20),  // GAUGE_BAR_MAIN
+                new PartStruct(10, 3, 10, 5),    // GAUGE_SEPARATOR
+                new PartStruct(6, 40, 148, 20),  // GAUGE_BAR_MAIN
             });
 
             gaugeBuffLayout.Add("ui/uld/JobHudNumBg.tex", new[] {

@@ -40,12 +40,6 @@ namespace JobBars.Helper {
             else Hide(node);
         }
 
-        public static void Link(AtkResNode* next, AtkResNode* prev) {
-            if (next == null || prev == null) return;
-            next->PrevSiblingNode = prev;
-            prev->NextSiblingNode = next;
-        }
-
         public static void SetSize(AtkResNode* node, int? width, int? height) {
             if (width != null && width >= ushort.MinValue && width <= ushort.MaxValue) node->Width = (ushort)width.Value;
             if (height != null && height >= ushort.MinValue && height <= ushort.MaxValue) node->Height = (ushort)height.Value;
@@ -63,6 +57,61 @@ namespace JobBars.Helper {
             atkUnitBase->ScaleY = scaleY.Value;
             atkUnitBase->Flags_2 |= 0x1;
             atkUnitBase->Flags_2 |= 0x4;
+        }
+
+        public static void Link(AtkResNode* next, AtkResNode* prev) {
+            if (next == null || prev == null) return;
+            next->PrevSiblingNode = prev;
+            prev->NextSiblingNode = next;
+        }
+    }
+
+    public unsafe struct LayoutNode {
+        public AtkResNode* Node;
+        public LayoutNode[] Childen;
+
+        public LayoutNode(AtkImageNode* node) : this((AtkResNode*)node) { }
+        public LayoutNode(AtkNineGridNode* node) : this((AtkResNode*)node) { }
+        public LayoutNode(AtkTextNode* node) : this((AtkResNode*)node) { }
+        public LayoutNode(AtkResNode* node) {
+            Node = node;
+            Childen = null;
+        }
+
+        public LayoutNode(AtkResNode* node, LayoutNode[] children) {
+            Node = node;
+            Childen = children;
+        }
+
+        public LayoutNode(AtkResNode* node, AtkResNode*[] children) {
+            Node = node;
+            Childen = new LayoutNode[children.Length];
+            for(int i = 0; i < Childen.Length; i++) {
+                Childen[i] = new LayoutNode(children[i]);
+            }
+        }
+
+        public int Setup() {
+            if (Childen == null || Childen.Length == 0) return 0; // just the node
+
+            var count = Childen.Length;
+            for(int i = 0; i < Childen.Length; i++) {
+                Childen[i].Node->ParentNode = Node;
+                count += Childen[i].Setup();
+                if (i < Childen.Length - 1) UIHelper.Link(Childen[i].Node, Childen[i + 1].Node);
+            }
+            Node->ChildNode = Childen[0].Node;
+            Node->ChildCount = (ushort)count;
+            return count;
+        }
+
+        public void Cleanup() {
+            if (Childen != null) {
+                for (int i = 0; i < Childen.Length; i++) {
+                    Childen[i].Cleanup();
+                }
+            }
+            Node = null;
         }
     }
 }

@@ -36,6 +36,7 @@ namespace JobBars.Gauges {
                 arrow.SetMaxValue(Props.MaxStacks);
             }
             else if (UI is UIBar gauge) {
+                gauge.SetSegments(1);
                 gauge.SetTextColor(UIColor.NoColor);
             }
 

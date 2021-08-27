@@ -25,23 +25,23 @@ using Dalamud.Data;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
-        public static DalamudPluginInterface PluginInterface { get; private set; }
-        public static ClientState ClientState { get; private set; }
-        public static Framework Framework { get; private set; }
-        public static Condition Condition { get; private set; }
-        public static CommandManager CommandManager { get; private set; }
-        public static ObjectTable Objects { get; private set; }
-        public static SigScanner SigScanner { get; private set; }
-        public static DataManager DataManager { get; private set; }
+        public static DalamudPluginInterface PluginInterface    { get; private set; }
+        public static ClientState ClientState                   { get; private set; }
+        public static Framework Framework                       { get; private set; }
+        public static Condition Condition                       { get; private set; }
+        public static CommandManager CommandManager             { get; private set; }
+        public static ObjectTable Objects                       { get; private set; }
+        public static SigScanner SigScanner                     { get; private set; }
+        public static DataManager DataManager                   { get; private set; }
 
-        public static Configuration Config { get; private set; }
-        public static UIBuilder Builder { get; private set; }
-        public static UIIconManager Icon { get; private set;}
+        public static Configuration Config                      { get; private set; }
+        public static UIBuilder Builder                         { get; private set; }
+        public static UIIconManager Icon                        { get; private set; }
 
-        public static GaugeManager GaugeManager { get; private set; }
-        public static BuffManager BuffManager { get; private set; }
-        public static CooldownManager CooldownManager { get; private set; }
-        public static CursorManager CursorManager { get; private set; }
+        public static GaugeManager GaugeManager                 { get; private set; }
+        public static BuffManager BuffManager                   { get; private set; }
+        public static CooldownManager CooldownManager           { get; private set; }
+        public static CursorManager CursorManager               { get; private set; }
 
         public string Name => "JobBars";
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;

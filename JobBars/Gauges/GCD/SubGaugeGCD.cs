@@ -51,6 +51,7 @@ namespace JobBars.Gauges {
                 diamond.SetMaxValue(Props.MaxCounter);
             }
             else if (UI is UIBar gauge) {
+                gauge.SetSegments(1);
                 gauge.SetTextColor(UIColor.NoColor);
             }
             SetValue(Counter);

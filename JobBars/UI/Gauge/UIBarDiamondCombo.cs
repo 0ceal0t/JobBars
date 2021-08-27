@@ -24,58 +24,28 @@ namespace JobBars.UI {
             UIHelper.Show(Diamond.RootRes);
         }
 
-        public void SetText(string text) {
-            Gauge.SetText(text);
-        }
+        public void SetText(string text) => Gauge.SetText(text);
+        public void SetTextColor(ElementColor color) => Gauge.SetTextColor(color);
 
-        public void SetTextColor(ElementColor color) {
-            Gauge.SetTextColor(color);
-        }
+        public void SetSegments(int segments) => Gauge.SetSegments(segments);
+        public void SetPercent(float value) => Gauge.SetPercent(value);
+        public void SetMaxValue(int value) => Diamond.SetMaxValue(value);
 
-        public void SetPercent(float value) {
-            Gauge.SetPercent(value);
-        }
-
-        public void SetMaxValue(int value) {
-            Diamond.SetMaxValue(value);
-        }
-
-        public void SetDiamondValue(int value, int start, int count) {
-            Diamond.SetValue(value, start, count);
-        }
-
-        public void SetDiamondValue(int value) {
-            Diamond.SetValue(value);
-        }
+        public void SetDiamondValue(int value, int start, int count) => Diamond.SetValue(value, start, count);
+        public void SetDiamondValue(int value) => Diamond.SetValue(value);
 
         public override void SetColor(ElementColor color) {
             SetGaugeColor(color);
             SetDiamondColor(color);
         }
 
-        public void SetGaugeColor(ElementColor color) {
-            Gauge.SetColor(color);
-        }
+        public void SetGaugeColor(ElementColor color) => Gauge.SetColor(color);
+        public void SetDiamondColor(ElementColor color) => Diamond.SetColor(color);
+        public void SetDiamondColor(ElementColor color, int start, int count) => Diamond.SetColor(color, start, count);
 
-        public void SetDiamondColor(ElementColor color) {
-            Diamond.SetColor(color);
-        }
-
-        public void SetDiamondColor(ElementColor color, int start, int count) {
-            Diamond.SetColor(color, start, count);
-        }
-
-        public override int GetHeight(int param) {
-            return 50;
-        }
-
-        public override int GetWidth(int param) {
-            return Gauge.GetWidth(param);
-        }
-
-        public override int GetHorizontalYOffset() {
-            return Gauge.GetHorizontalYOffset();
-        }
+        public override int GetHeight(int param) => 50;
+        public override int GetWidth(int param) => Gauge.GetWidth(param);
+        public override int GetHorizontalYOffset() => Gauge.GetHorizontalYOffset();
 
         public override void SetSplitPosition(Vector2 pos) {
             var p = UIHelper.GetNodePosition(JobBars.Builder.GaugeRoot);

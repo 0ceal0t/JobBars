@@ -1,23 +1,32 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
+using Lumina.Excel.GeneratedSheets;
 using System;
+using System.Collections.Generic;
 
 namespace JobBars.UI {
     public unsafe class UIBar : UIGaugeElement {
+        private static readonly int MAX_SEGMENTS = 4;
+
         private AtkResNode* GaugeContainer;
         private AtkImageNode* Background;
         private AtkResNode* BarContainer;
         private AtkNineGridNode* BarMainNode;
+        private AtkNineGridNode* BarSecondaryNode;
         private AtkImageNode* Frame;
+
         private AtkResNode* TextContainer;
         private AtkTextNode* TextNode;
         private AtkNineGridNode* TextBlurNode;
 
+        private AtkImageNode*[] Separators;
+
         private string CurrentText;
         private float LastPercent = 1;
         private Animation Anim = null;
+        private int Segments = 1;
 
         public UIBar(AtkUldPartsList* partsList) {
 
@@ -53,21 +62,43 @@ namespace JobBars.UI {
             BarContainer->Height = 20;
 
             BarMainNode = UIBuilder.CreateNineNode();
-            BarMainNode->AtkResNode.Width = 160;
+            BarMainNode->AtkResNode.Width = 148;
             BarMainNode->AtkResNode.Height = 20;
-            BarMainNode->AtkResNode.X = 0;
+            BarMainNode->AtkResNode.X = 6;
             BarMainNode->AtkResNode.Y = 0;
             BarMainNode->PartID = UIBuilder.GAUGE_BAR_MAIN;
             BarMainNode->PartsList = partsList;
             BarMainNode->TopOffset = 0;
             BarMainNode->BottomOffset = 0;
-            BarMainNode->RightOffset = 7;
-            BarMainNode->LeftOffset = 7;
+            BarMainNode->RightOffset = 0;
+            BarMainNode->LeftOffset = 0;
 
-            // ======= BAR SETUP =========
-            BarContainer->ChildCount = 1;
-            BarContainer->ChildNode = (AtkResNode*)BarMainNode;
-            BarMainNode->AtkResNode.ParentNode = BarContainer;
+            BarSecondaryNode = UIBuilder.CreateNineNode();
+            BarSecondaryNode->AtkResNode.Width = 0;
+            BarSecondaryNode->AtkResNode.Height = 20;
+            BarSecondaryNode->AtkResNode.X = 6;
+            BarSecondaryNode->AtkResNode.Y = 0;
+            BarSecondaryNode->PartID = UIBuilder.GAUGE_BAR_MAIN;
+            BarSecondaryNode->PartsList = partsList;
+            BarSecondaryNode->TopOffset = 0;
+            BarSecondaryNode->BottomOffset = 0;
+            BarSecondaryNode->RightOffset = 0;
+            BarSecondaryNode->LeftOffset = 0;
+            UIColor.SetColor(BarSecondaryNode, UIColor.NoColor);
+
+            Separators = new AtkImageNode*[MAX_SEGMENTS - 1];
+            for (int i = 0; i < MAX_SEGMENTS - 1; i++) {
+                Separators[i] = UIBuilder.CreateImageNode();
+                Separators[i]->AtkResNode.Width = 10;
+                Separators[i]->AtkResNode.Height = 5;
+                Separators[i]->AtkResNode.Rotation = (float)(Math.PI / 2f);
+                Separators[i]->AtkResNode.X = 0;
+                Separators[i]->AtkResNode.Y = 5;
+                Separators[i]->PartId = UIBuilder.GAUGE_SEPARATOR;
+                Separators[i]->PartsList = partsList;
+                Separators[i]->Flags = 0;
+                Separators[i]->WrapMode = 1;
+            }
 
             Frame = UIBuilder.CreateImageNode();
             Frame->AtkResNode.Width = 160;
@@ -78,17 +109,6 @@ namespace JobBars.UI {
             Frame->PartsList = partsList;
             Frame->Flags = 0;
             Frame->WrapMode = 1;
-
-            // ======== GAUGE CONTAINER SETUP ========
-            Background->AtkResNode.ParentNode = GaugeContainer;
-            BarContainer->ParentNode = GaugeContainer;
-            Frame->AtkResNode.ParentNode = GaugeContainer;
-
-            GaugeContainer->ChildCount = (ushort)(3 + BarContainer->ChildCount);
-            GaugeContainer->ChildNode = (AtkResNode*)Background;
-
-            UIHelper.Link((AtkResNode*)Background, BarContainer);
-            UIHelper.Link(BarContainer, (AtkResNode*)Frame);
 
             // ======== TEXT ==========
             TextContainer = UIBuilder.CreateResNode();
@@ -118,22 +138,30 @@ namespace JobBars.UI {
             TextBlurNode->RightOffset = 28;
             TextBlurNode->LeftOffset = 28;
 
-            // ====== TEXT SETUP =========
-            TextContainer->ChildCount = 2;
-            TextContainer->ChildNode = (AtkResNode*)TextNode;
-            TextNode->AtkResNode.ParentNode = TextContainer;
-            TextBlurNode->AtkResNode.ParentNode = TextContainer;
+            List<LayoutNode> barNodes = new();
+            barNodes.Add(new LayoutNode(BarSecondaryNode));
+            barNodes.Add(new LayoutNode(BarMainNode));
+            foreach(var sep in Separators) {
+                barNodes.Add(new LayoutNode(sep));
+            }
 
-            UIHelper.Link((AtkResNode*)TextNode, (AtkResNode*)TextBlurNode);
+            var layout = new LayoutNode(RootRes, new[] {
+                new LayoutNode(GaugeContainer, new[] {
+                    new LayoutNode(Background),
+                    new LayoutNode(BarContainer,
+                        barNodes.ToArray()
+                    ),
+                    new LayoutNode(Frame)
+                }),
+                new LayoutNode(TextContainer, new[] {
+                    new LayoutNode(TextNode),
+                    new LayoutNode(TextBlurNode)
+                })
+            });;
+            layout.Setup();
+            layout.Cleanup();
 
-            // ====== CONTAINER SETUP ======
-            UIHelper.Link(GaugeContainer, TextContainer);
-
-            // ====== ROOT SETUP =====
-            RootRes->ChildNode = GaugeContainer;
-            GaugeContainer->ParentNode = RootRes;
-            TextContainer->ParentNode = RootRes;
-            RootRes->ChildCount = (ushort)(GaugeContainer->ChildCount + TextContainer->ChildCount + 2);
+            SetSegments(1); // Default 1 big segment
         }
 
         public override void Dispose() {
@@ -157,6 +185,18 @@ namespace JobBars.UI {
                 // TODO
                 BarMainNode->AtkResNode.Destroy(true);
                 BarMainNode = null;
+            }
+
+            if (BarSecondaryNode != null) {
+                // TODO
+                BarSecondaryNode->AtkResNode.Destroy(true);
+                BarSecondaryNode = null;
+            }
+
+            for (int i = 0; i < Separators.Length; i++) {
+                Separators[i]->UnloadTexture();
+                Separators[i]->AtkResNode.Destroy(true);
+                Separators[i] = null;
             }
 
             if (Frame != null) {
@@ -184,6 +224,22 @@ namespace JobBars.UI {
             if (RootRes != null) {
                 RootRes->Destroy(true);
                 RootRes = null;
+            }
+        }
+
+        public void SetSegments(int segments) {
+            segments = Math.Clamp(segments, 1, MAX_SEGMENTS);
+            Segments = segments;
+
+            var diff = 148 / segments;
+            UIHelper.SetVisibility(BarSecondaryNode, segments > 1);
+
+            for (int i = 0; i < segments - 1; i++) {
+                UIHelper.Show(Separators[i]);
+                Separators[i]->AtkResNode.X = 8 + (i + 1) * diff;
+            }
+            for(int i = segments - 1; i < MAX_SEGMENTS - 1; i++) {
+                UIHelper.Hide(Separators[i]);
             }
         }
 
@@ -218,15 +274,33 @@ namespace JobBars.UI {
             if (difference == 0) return;
 
 
-            var item = (AtkResNode*)BarMainNode;
             Anim?.Delete();
             if (difference > 0.1f) {
-                Anim = Animation.AddAnim(f => UIHelper.SetSize(item, (int)(160 * f), 20), 0.2f, LastPercent, value);
+                Anim = Animation.AddAnim(f => SetPercentInternal(f), 0.2f, LastPercent, value);
             }
             else {
-                UIHelper.SetSize(item, (int)(160 * value), 20);
+                SetPercentInternal(value);
             }
             LastPercent = value;
+        }
+
+        public void SetPercentInternal(float value) {
+            if (Segments == 1) {
+                UIHelper.SetSize(BarMainNode, (int)(148 * value), 20);
+            }
+            else {
+                var segmentValue = 1f / Segments;
+
+                var partialValue = value % segmentValue;
+                var fullValue = value - partialValue;
+
+                var fullWidth = (int)(148 * fullValue);
+                var partialWidth = (int)(148 * value);
+
+                UIHelper.SetSize(BarMainNode, fullWidth, 20);
+                UIHelper.SetSize(BarSecondaryNode, partialWidth, 20);
+                //UIHelper.SetPosition((AtkResNode*)BarSecondaryNode, 6 + fullWidth, 0);
+            }
         }
 
         public override void SetColor(ElementColor color) {
