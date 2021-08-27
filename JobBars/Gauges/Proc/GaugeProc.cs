@@ -93,8 +93,8 @@ namespace JobBars.Gauges {
 
         public override void ProcessAction(Item action) { }
 
-        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(Size);
+        protected override int GetHeight() => UI.GetHeight(0);
+        protected override int GetWidth() => UI.GetWidth(Size);
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {

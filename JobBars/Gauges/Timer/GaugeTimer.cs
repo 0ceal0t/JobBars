@@ -1,13 +1,10 @@
 ﻿using JobBars.Data;
-using JobBars.Helper;
-using System;
-using System.Collections.Generic;
 
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
-        private readonly SubGaugeTimer[] SubGauges;
         public SubGaugeTimer ActiveSubGauge;
 
+        private readonly SubGaugeTimer[] SubGauges;
         private bool IconEnabled = false;
 
         public GaugeTimer(string name, SubGaugeTimerProps props) : this(name, new[] { props }) { }
@@ -54,8 +51,8 @@ namespace JobBars.Gauges {
 
         public override bool DoProcessInput() => Enabled || IconEnabled;
 
-        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(0);
+        protected override int GetHeight() => UI.GetHeight(0);
+        protected override int GetWidth() => UI.GetWidth(0);
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Bar;
 
         protected override void DrawGauge(string _ID, JobIds job) {

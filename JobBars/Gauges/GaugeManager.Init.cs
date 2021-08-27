@@ -86,6 +86,10 @@ namespace JobBars.Gauges {
             });
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new Gauge[] {
+                new GaugeResources("MP (DRK)", GaugeResources.DrkMp, new GaugeResourcesProps {
+                    Color = UIColor.Purple,
+                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f}
+                }),
                 new GaugeGCD("Delirium", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,

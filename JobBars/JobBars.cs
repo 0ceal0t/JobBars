@@ -49,10 +49,10 @@ namespace JobBars {
         private JobIds CurrentJob = JobIds.OTHER;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
-        private Hook<ReceiveActionEffectDelegate> receiveActionEffectHook;
+        private Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
 
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
-        private Hook<ActorControlSelfDelegate> actorControlSelfHook;
+        private Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
         private bool PlayerExists => ClientState?.LocalPlayer != null;
         private bool LoggedOut = true;
@@ -97,18 +97,19 @@ namespace JobBars {
             UIHelper.Setup();
             UIColor.SetupColors();
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            if (Config.Version == 0) Config = new Configuration(); // remove outdated
 
             Icon = new UIIconManager();
 
             InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
 
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
-            receiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
-            receiveActionEffectHook.Enable();
+            ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
+            ReceiveActionEffectHook.Enable();
 
             IntPtr actorControlSelfPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
-            actorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
-            actorControlSelfHook.Enable();
+            ActorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
+            ActorControlSelfHook.Enable();
 
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
@@ -131,15 +132,15 @@ namespace JobBars {
         }
 
         public void Dispose() {
-            receiveActionEffectHook?.Disable();
-            actorControlSelfHook?.Disable();
+            ReceiveActionEffectHook?.Disable();
+            ActorControlSelfHook?.Disable();
 
             Thread.Sleep(500);
 
-            receiveActionEffectHook?.Dispose();
-            actorControlSelfHook?.Dispose();
-            receiveActionEffectHook = null;
-            actorControlSelfHook = null;
+            ReceiveActionEffectHook?.Dispose();
+            ActorControlSelfHook?.Dispose();
+            ReceiveActionEffectHook = null;
+            ActorControlSelfHook = null;
 
             PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
             PluginInterface.UiBuilder.Draw -= Animate;

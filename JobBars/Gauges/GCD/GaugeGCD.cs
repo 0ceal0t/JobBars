@@ -44,8 +44,8 @@ namespace JobBars.Gauges {
             foreach (var sg in SubGauges) sg.ProcessAction(action);
         }
 
-        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(MaxWidth);
+        protected override int GetHeight() => UI.GetHeight(0);
+        protected override int GetWidth() => UI.GetWidth(MaxWidth);
         public override GaugeVisualType GetVisualType() => Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {

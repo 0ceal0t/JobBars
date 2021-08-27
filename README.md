@@ -7,8 +7,9 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - Number of charges (Ricochet, Gauss Round)
 - Number of stacks (Ruin IV)
 - Party buffs coming off of cooldown
-- Mitigation tracker **[COMING SOON]**
-- Cursor displays (cast time, GCD timer, MP tick) **[COMING SOON]**
+
+- ~~Mitigation tracker~~ **COMING SOON**
+- ~~Cursor displays (cast time, GCD timer, MP tick)~~ **COMING SOON**
 
 https://user-images.githubusercontent.com/18051158/130377508-ee88e07f-b41f-4a39-83db-4b9cc79a47b0.mp4
 
@@ -16,8 +17,10 @@ https://user-images.githubusercontent.com/18051158/130377516-5c299fb5-9a3a-4b47-
 
 https://user-images.githubusercontent.com/18051158/130377606-2490ab26-1c2b-43fa-93f3-80e6c95e9fff.mp4
 
+**COMING SOON**
 https://user-images.githubusercontent.com/18051158/130377610-86fb7e17-9780-4827-81df-0739908bd709.mp4
 
+**COMING SOON**
 https://user-images.githubusercontent.com/18051158/130377598-2398d33a-9c0c-4d0c-8fd7-4187451a7e56.mp4
 
 ## Usage

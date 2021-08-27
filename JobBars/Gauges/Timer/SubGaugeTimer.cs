@@ -50,7 +50,7 @@ namespace JobBars.Gauges {
         public override void UseSubGauge() {
             UI.SetColor(Props.Color);
             if (UI is UIBar gauge) {
-                gauge.SetSegments(1);
+                gauge.ClearSegments();
                 gauge.SetTextColor(InDanger ? UIColor.Red : UIColor.NoColor);
             }
             SetValue(TimeLeft);

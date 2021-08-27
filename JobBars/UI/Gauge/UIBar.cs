@@ -26,7 +26,7 @@ namespace JobBars.UI {
         private string CurrentText;
         private float LastPercent = 1;
         private Animation Anim = null;
-        private int Segments = 1;
+        private float[] Segments = null;
 
         public UIBar(AtkUldPartsList* partsList) {
 
@@ -99,6 +99,7 @@ namespace JobBars.UI {
                 Separators[i]->Flags = 0;
                 Separators[i]->WrapMode = 1;
             }
+            ClearSegments();
 
             Frame = UIBuilder.CreateImageNode();
             Frame->AtkResNode.Width = 160;
@@ -160,8 +161,6 @@ namespace JobBars.UI {
             });;
             layout.Setup();
             layout.Cleanup();
-
-            SetSegments(1); // Default 1 big segment
         }
 
         public override void Dispose() {
@@ -227,20 +226,21 @@ namespace JobBars.UI {
             }
         }
 
-        public void SetSegments(int segments) {
-            segments = Math.Clamp(segments, 1, MAX_SEGMENTS);
+        public void SetSegments(float[] segments) { // [0.5f, 1.0f]
             Segments = segments;
 
-            var diff = 148 / segments;
-            UIHelper.SetVisibility(BarSecondaryNode, segments > 1);
-
-            for (int i = 0; i < segments - 1; i++) {
+            for(int i = 0; i < segments.Length - 1; i++) {
                 UIHelper.Show(Separators[i]);
-                Separators[i]->AtkResNode.X = 8 + (i + 1) * diff;
+                Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
             }
-            for(int i = segments - 1; i < MAX_SEGMENTS - 1; i++) {
+            for (int i = segments.Length - 1; i < MAX_SEGMENTS - 1; i++) {
                 UIHelper.Hide(Separators[i]);
             }
+        }
+
+        public void ClearSegments() {
+            Segments = null;
+            foreach (var seps in Separators) UIHelper.Hide(seps);
         }
 
         public void SetText(string text) {
@@ -285,21 +285,24 @@ namespace JobBars.UI {
         }
 
         public void SetPercentInternal(float value) {
-            if (Segments == 1) {
+            if (Segments == null) {
                 UIHelper.SetSize(BarMainNode, (int)(148 * value), 20);
             }
             else {
-                var segmentValue = 1f / Segments;
+                var fullValue = 0f;
+                var partialValue = value;
 
-                var partialValue = value % segmentValue;
-                var fullValue = value - partialValue;
+                for(int i = 0; i < Segments.Length; i++) {
+                    if (Segments[i] <= value) fullValue = Segments[i];
+                    else break;
+                }
+                if (fullValue == value) partialValue = 0;
 
                 var fullWidth = (int)(148 * fullValue);
-                var partialWidth = (int)(148 * value);
+                var partialWidth = (int)(148 * partialValue);
 
                 UIHelper.SetSize(BarMainNode, fullWidth, 20);
                 UIHelper.SetSize(BarSecondaryNode, partialWidth, 20);
-                //UIHelper.SetPosition((AtkResNode*)BarSecondaryNode, 6 + fullWidth, 0);
             }
         }
 

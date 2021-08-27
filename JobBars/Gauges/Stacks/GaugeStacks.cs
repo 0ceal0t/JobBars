@@ -36,7 +36,7 @@ namespace JobBars.Gauges {
                 arrow.SetMaxValue(Props.MaxStacks);
             }
             else if (UI is UIBar gauge) {
-                gauge.SetSegments(1);
+                gauge.ClearSegments();
                 gauge.SetTextColor(UIColor.NoColor);
             }
 
@@ -75,8 +75,8 @@ namespace JobBars.Gauges {
 
         public override void ProcessAction(Item action) { }
 
-        protected override int GetHeight() => UI == null ? 0 : UI.GetHeight(0);
-        protected override int GetWidth() => UI == null ? 0 : UI.GetWidth(Props.MaxStacks);
+        protected override int GetHeight() => UI.GetHeight(0);
+        protected override int GetWidth() => UI.GetWidth(Props.MaxStacks);
         public override GaugeVisualType GetVisualType() => Props.Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {

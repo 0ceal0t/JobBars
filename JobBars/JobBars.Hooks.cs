@@ -10,7 +10,7 @@ namespace JobBars {
     public unsafe partial class JobBars {
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
             if (!PlayerExists) {
-                receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+                ReceiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
 
@@ -23,7 +23,7 @@ namespace JobBars {
             var isParty = !isSelf && !isPet && UIHelper.IsInParty((uint)sourceId);
 
             if (type != 1 || !(isSelf || isPet || isParty)) {
-                receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+                ReceiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
 
@@ -95,11 +95,11 @@ namespace JobBars {
                 }
             }
 
-            receiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
+            ReceiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
         }
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
-            actorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
+            ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
             if (entityId > 0 && entityId == ClientState?.LocalPlayer?.ObjectId && id == 23) {
                 UIHelper.UpdateActorTick();
             }

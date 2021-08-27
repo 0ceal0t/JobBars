@@ -47,7 +47,6 @@ namespace JobBars.Gauges {
 
             UI.SetVisible(Enabled);
             UI.SetScale(Scale);
-
             if(JobBars.Config.GaugeSplit) UI.SetSplitPosition(Position);
 
             RefreshUI_Impl();
@@ -79,6 +78,7 @@ namespace JobBars.Gauges {
                 GaugeProc _ => "PROCS",
                 GaugeCharges _ => "CHARGES",
                 GaugeStacks _ => "STACKS",
+                GaugeResources _ => "RESOURCES",
                 _ => ""
             };
 
