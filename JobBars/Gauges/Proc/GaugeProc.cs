@@ -67,7 +67,7 @@ namespace JobBars.Gauges {
                 bool procActive;
 
                 if (proc.Trigger.Type == ItemType.Buff) {
-                    SetValue(proc.Idx, procActive = UIHelper.PlayerStatus.TryGetValue(proc.Trigger, out var buff), buff.Duration);
+                    SetValue(proc.Idx, procActive = UIHelper.PlayerStatus.TryGetValue(proc.Trigger, out var buff), buff.RemainingTime);
                 }
                 else {
                     var recastActive = UIHelper.GetRecastActive(proc.Trigger.Id, out _);

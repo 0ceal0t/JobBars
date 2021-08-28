@@ -30,54 +30,11 @@ namespace JobBars.Buffs {
         public BuffProps[] GetBuffProps(JobIds job, bool isLocalPlayer) {
             var jobValue = JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
             if (!isLocalPlayer) return jobValue;
+
             var combinedProps = new List<BuffProps>();
             combinedProps.AddRange(LocalPlayerBuffs);
             combinedProps.AddRange(jobValue.Where(x => !x.IsPlayerOnly));
             return combinedProps.ToArray();
-        }
-
-        private List<BuffPartyMemberStruct> GetPartyMembers() {
-            var ret = new List<BuffPartyMemberStruct>();
-            var localPlayer = JobBars.ClientState.LocalPlayer;
-
-            var groupManager = GroupManager.Instance();
-            if (groupManager == null || groupManager->MemberCount == 0) { // fallback
-                var localPlayerStruct = new BuffPartyMemberStruct {
-                    IsPlayer = true,
-                    ObjectId = localPlayer.ObjectId,
-                    Job = UIHelper.IdToJob(localPlayer.ClassJob.Id),
-                    BuffDict = new()
-                };
-
-                foreach(var status in localPlayer.StatusList) {
-                    UIHelper.StatusToDuration(localPlayerStruct.BuffDict, status);
-                }
-
-                ret.Add(localPlayerStruct);
-                return ret;
-            }
-
-            for (int i = 0; i < 8; i++) {
-                PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
-                if (info->ObjectID == 0 || info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) continue;
-                var playerStruct = new BuffPartyMemberStruct {
-                    IsPlayer = info->ObjectID == localPlayer.ObjectId,
-                    ObjectId = info->ObjectID,
-                    Job = UIHelper.IdToJob(info->ClassJob),
-                    BuffDict = new()
-                };
-
-                if (info->StatusManager.Status == null) continue;
-                for (int j = 0; j < 30; j++) {
-                    Status* status = (Status*)(new IntPtr(info->StatusManager.Status) + 0xC * j);
-                    if (status->StatusID == 0) continue;
-                    UIHelper.StatusToDuration(playerStruct.BuffDict, status);
-                }
-
-                ret.Add(playerStruct);
-            }
-
-            return ret;
         }
 
         public void PerformAction(Item action, uint objectId) {
@@ -96,11 +53,10 @@ namespace JobBars.Buffs {
                 else JobBars.Builder.HideBuffs();
             }
 
-            var partyMembers = GetPartyMembers();
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             List<BuffTracker> activeBuffs = new();
 
-            foreach (var partyMember in partyMembers) {
+            foreach (var partyMember in JobBars.PartyMembers) {
                 if (partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) continue;
                 if (!JobBars.Config.BuffIncludeParty && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) continue;
 
@@ -136,12 +92,5 @@ namespace JobBars.Buffs {
         public void ResetTrackers() {
             foreach (var item in ObjectIdToMember.Values) item.Reset();
         }
-    }
-
-    public struct BuffPartyMemberStruct {
-        public uint ObjectId;
-        public JobIds Job;
-        public Dictionary<Item, StatusDuration> BuffDict;
-        public bool IsPlayer;
     }
 }

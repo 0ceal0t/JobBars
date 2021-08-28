@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 
 namespace JobBars.Cooldowns {
+    public struct CooldownPartyMemberStruct {
+        public uint ObjectId;
+        public JobIds Job;
+    }
+
     public unsafe partial class CooldownManager : JobConfigurationManager<CooldownProps[]> {
         private static readonly int MILLIS_LOOP = 250;
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
@@ -92,10 +97,5 @@ namespace JobBars.Cooldowns {
         public void ResetTrackers() {
             foreach (var item in ObjectIdToMember.Values) item.Reset();
         }
-    }
-
-    public struct CooldownPartyMemberStruct {
-        public uint ObjectId;
-        public JobIds Job;
     }
 }

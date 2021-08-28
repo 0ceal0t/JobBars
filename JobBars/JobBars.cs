@@ -54,7 +54,7 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
-        private bool PlayerExists => ClientState?.LocalPlayer != null;
+        private static bool PlayerExists => ClientState?.LocalPlayer != null;
         private bool LoggedOut = true;
 
         private Vector2 LastPosition;
@@ -214,6 +214,7 @@ namespace JobBars {
             UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
             UIHelper.UpdatePlayerStatus();
 
+            UpdatePartyMembers();
             GaugeManager.Tick(inCombat);
             BuffManager.Tick(inCombat);
             CooldownManager.Tick(inCombat);

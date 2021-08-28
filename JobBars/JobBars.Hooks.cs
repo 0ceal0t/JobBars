@@ -20,7 +20,7 @@ namespace JobBars {
             var selfId = (int)ClientState.LocalPlayer.ObjectId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && (GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
-            var isParty = !isSelf && !isPet && UIHelper.IsInParty((uint)sourceId);
+            var isParty = !isSelf && !isPet && IsInParty((uint)sourceId);
 
             if (type != 1 || !(isSelf || isPet || isParty)) {
                 ReceiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
@@ -80,18 +80,15 @@ namespace JobBars {
             }
 
             for (int i = 0; i < entries.Count; i++) {
-                ulong tTarget = targets[i / 8];
+                ulong entryTarget = targets[i / 8];
 
                 if (entries[i].type == ActionEffectType.ApplyStatusTarget || entries[i].type == ActionEffectType.ApplyStatusSource) {
-
                     var buffItem = new Item {
                         Id = entries[i].value,
                         Type = ItemType.Buff
                     };
 
-                    if (!isParty) {
-                        GaugeManager?.PerformAction(buffItem); // more accurate than using the status list
-                    }
+                    if (!isParty) GaugeManager?.PerformAction(buffItem); // more accurate than using the status list
                 }
             }
 
@@ -100,9 +97,8 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
-            if (entityId > 0 && entityId == ClientState?.LocalPlayer?.ObjectId && id == 23) {
-                UIHelper.UpdateActorTick();
-            }
+
+            if (entityId > 0 && entityId == ClientState?.LocalPlayer?.ObjectId && id == 23) UIHelper.UpdateActorTick();
 
             if (arg1 == 0x40000010) {
                 GaugeManager?.Reset();
@@ -119,7 +115,7 @@ namespace JobBars {
             UIHelper.ResetTicks();
         }
 
-        private bool IsPet(int objectId, int ownerId) {
+        private static bool IsPet(int objectId, int ownerId) {
             if (objectId == 0) return false;
             foreach (var actor in Objects) {
                 if (actor == null) continue;

@@ -107,7 +107,7 @@ namespace JobBars.Gauges {
                         var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
                         if (part.Bar && !barAssigned && buffExists) {
                             barAssigned = true;
-                            SetGaugeValue(buff.Duration / part.Duration, (int)Math.Round(buff.Duration));
+                            SetGaugeValue(buff.RemainingTime / part.Duration, (int)Math.Round(buff.RemainingTime));
                         }
                         if (part.Diamond) {
                             SetDiamondValue(buffExists ? buff.StackCount : 0, diamondIdx, part.MaxCharges);

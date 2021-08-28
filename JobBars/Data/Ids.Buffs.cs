@@ -1,32 +1,33 @@
 ﻿namespace JobBars.Data {
     public enum BuffIds : uint {
-        // DRK
+
+        // DRK =========
         Delirium = 0x7b4,
         BloodWeapon = 0x2e6,
 
-        // WAR
+        // WAR =========
         InnerRelease = 0x499,
         StormsEye = 0x5a,
 
-        // PLD
+        // PLD =========
         FightOrFlight = 0x4c,
         Requiescat = 0x558,
         GoringBlade = 725,
 
-        // GNB
+        // GNB =========
         NoMercy = 0x727,
 
-        // SCH
+        // SCH =========
         Biolysis = 1895,
         Excog = 1220,
 
-        // WHM
+        // WHM =========
         Aero = 143,
         Aero2 = 144,
         Dia = 1871,
         PresenceOfMind = 157,
 
-        // AST
+        // AST =========
         TheBalance = 0x75a,
         TheBole = 0x75b,
         TheArrow = 0x75c,
@@ -41,7 +42,7 @@
         GiantDominance = 1248,
         Lightspeed = 841,
 
-        // MNK
+        // MNK =========
         PerfectBalance = 0x6e,
         RiddleOfFire = 0x49d,
         RiddleOfEarth = 1179,
@@ -49,7 +50,7 @@
         TwinSnakes = 101,
         Demolish = 246,
 
-        // DRG
+        // DRG =========
         LanceCharge = 0x748,
         BattleLitany = 0x312,
         RightEye = 0x776,
@@ -57,16 +58,16 @@
         Disembowel = 1914,
         ChaosThrust = 118,
 
-        // NIN
+        // NIN =========
         TrickAttack = 0x27e,
         Bunshin = 0x7a2,
 
-        // SAM
+        // SAM =========
         Jinpu = 0x512,
         Shifu = 0x513,
         Higanbana = 1228,
 
-        // BRD
+        // BRD =========
         RagingStrikes = 0x7d,
         VenomousBite = 1200,
         Stormbite = 1201,
@@ -75,11 +76,11 @@
         StraightShotReady = 122,
         Barrage = 128,
 
-        // MCH
+        // MCH =========
         Wildfire = 0x79a,
         Reassemble = 851,
 
-        // DNC
+        // DNC =========
         Devilment = 0x721,
         FlourishingCascade = 1814,
         FlourishingFountain = 1815,
@@ -87,7 +88,7 @@
         FlourishingShower = 1817,
         FlourishingFanDance = 1820,
 
-        // BLM
+        // BLM =========
         Firestarter = 165,
         Thundercloud = 164,
         Thunder = 161,
@@ -95,7 +96,7 @@
         Thunder3 = 163,
         Thunder4 = 1210,
 
-        // SMN
+        // SMN =========
         ArcBio = 179,
         ArcBio2 = 189,
         Bio3 = 1214,
@@ -103,14 +104,14 @@
         Miasma3 = 1215,
         Ruin4 = 1212,
 
-        // RDM
+        // RDM =========
         Manafication = 0x7b3,
         Embolden = 0x4d7,
         VerfireReady = 1234,
         VerstoneReady = 1235,
         Acceleration = 1238,
 
-        // BLU
+        // BLU =========
         BluBleed = 1714,
         Poison = 18,
         AstralAttenuation = 2121,

@@ -1,10 +1,5 @@
-﻿using Dalamud.Logging;
-using JobBars.Data;
-using System;
+﻿using JobBars.Data;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Buffs {
     public class BuffPartyMember {
@@ -18,7 +13,7 @@ namespace JobBars.Buffs {
             IsPlayer = isPlayer;
         }
 
-        public void Tick(List<BuffTracker> trackers, BuffPartyMemberStruct partyMember) {
+        public void Tick(List<BuffTracker> trackers, CurrentPartyMember partyMember) {
             if(CurrentJob != partyMember.Job) {
                 CurrentJob = partyMember.Job;
                 SetupTrackers();

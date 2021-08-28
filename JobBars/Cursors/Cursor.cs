@@ -68,7 +68,7 @@ namespace JobBars.Cursors {
         private static float GetStatusTime(StatusNameId status, float statusDuration) {
             if (statusDuration == 0) return 0;
             if (status.Status.Id == 0) return 0;
-            var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.Duration > 0 ? value.Duration : value.Duration * -1) : 0) / statusDuration;
+            var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1) : 0) / statusDuration;
             return Math.Min(ret, 1f);
         }
         

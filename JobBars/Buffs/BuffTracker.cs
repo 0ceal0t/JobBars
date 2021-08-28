@@ -1,4 +1,5 @@
 ﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
@@ -35,11 +36,11 @@ namespace JobBars.Buffs {
             if (Props.Triggers.Contains(action)) SetActive(action);
         }
 
-        public void Tick(Dictionary<Item, StatusDuration> buffDict) {
+        public void Tick(Dictionary<Item, Status> buffDict) {
             if (State != BuffState.Running) { // check for buff triggers
                 foreach (var trigger in Props.Triggers) {
                     if (trigger.Type != ItemType.Buff) continue;
-                    if (buffDict.ContainsKey(trigger) && buffDict[trigger].Duration > 0) SetActive(trigger);
+                    if (buffDict.ContainsKey(trigger) && buffDict[trigger].RemainingTime > 0) SetActive(trigger);
                 }
             }
 

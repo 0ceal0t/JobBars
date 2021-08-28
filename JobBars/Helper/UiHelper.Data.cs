@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
 
 namespace JobBars.Helper {
@@ -21,10 +22,7 @@ namespace JobBars.Helper {
         }
 
         public override int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Name.GetHashCode();
-            hash = (hash * 7) + Status.GetHashCode();
-            return hash;
+            return HashCode.Combine(Name, Status);
         }
 
         public static bool operator ==(StatusNameId left, StatusNameId right) {
@@ -103,10 +101,10 @@ namespace JobBars.Helper {
             StatusNames = statusList.ToArray();
         }
 
-        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, StatusDuration> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
             if (lastActiveTrigger.Type == ItemType.Buff) {
                 if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
-                    return elem.Duration;
+                    return elem.RemainingTime;
                 }
                 else { // time isn't there, are we just waiting on it?
                     var timeSinceActive = (time - lastActiveTime).TotalSeconds;

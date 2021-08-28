@@ -12,7 +12,7 @@ namespace JobBars.Gauges {
         public JobIds CurrentJob = JobIds.OTHER;
         private Gauge[] CurrentGauges => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
-        private static List<BuffIds> GaugeBuffsOnPartyMembers = new( new[] { BuffIds.Excog }); // which buffs on party members do we care about?
+        private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new( new[] { BuffIds.Excog }); // which buffs on party members do we care about?
 
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
@@ -93,7 +93,7 @@ namespace JobBars.Gauges {
             }
 
             if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
-                UIHelper.SearchForPartyMemberStatus((int)JobBars.ClientState.LocalPlayer.ObjectId, UIHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
+                JobBars.SearchForPartyMemberStatus((int)JobBars.ClientState.LocalPlayer.ObjectId, UIHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
             }
 
             foreach (var gauge in CurrentGauges) {

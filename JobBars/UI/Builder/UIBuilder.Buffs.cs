@@ -8,7 +8,7 @@ namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         private AtkResNode* BuffRoot = null;
         public List<UIBuff> Buffs = new();
-        public static int MAX_BUFFS = 10;
+        public static int MAX_BUFFS = 20;
 
         private void InitBuffs(AtkUldPartsList* partsList) {
             BuffRoot = CreateResNode();
