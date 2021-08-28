@@ -26,14 +26,13 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUI_Impl() {
+        protected override void LoadUI_() {
             foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
-            ActiveSubGauge.UseSubGauge();
         }
 
-        protected override void RefreshUI_Impl() {
-            ActiveSubGauge.UseSubGauge();
+        protected override void ApplyUIConfig_() {
+            ActiveSubGauge.ApplySubGauge();
         }
 
         public override void Tick() {

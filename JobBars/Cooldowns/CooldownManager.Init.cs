@@ -294,7 +294,17 @@ namespace JobBars.Cooldowns {
             });
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new CooldownProps[] {
-
+                new CooldownProps {
+                    Name = "Addle (BLU)",
+                    Trigger = ActionIds.Addle,
+                    Duration = 10,
+                    CD = 90
+                },
+                new CooldownProps {
+                    Name = "Angel Whisper",
+                    Trigger = ActionIds.AngelWhisper,
+                    CD = 300
+                },
             });
         }
     }

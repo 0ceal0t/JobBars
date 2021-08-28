@@ -27,14 +27,13 @@ namespace JobBars.Gauges {
             IconEnabled = false;
         }
 
-        protected override void LoadUI_Impl() {
+        protected override void LoadUI_() {
             foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
-            ActiveSubGauge.UseSubGauge();
         }
 
-        protected override void RefreshUI_Impl() {
-            ActiveSubGauge.UseSubGauge();
+        protected override void ApplyUIConfig_() {
+            ActiveSubGauge.ApplySubGauge();
         }
 
         public override void Tick() {
@@ -49,7 +48,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public override bool DoProcessInput() => Enabled || IconEnabled;
+        public override bool CanProcessInput() => Enabled || IconEnabled;
 
         protected override int GetHeight() => UI.GetHeight(0);
         protected override int GetWidth() => UI.GetWidth(0);

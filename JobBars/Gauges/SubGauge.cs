@@ -14,7 +14,7 @@ namespace JobBars.Gauges {
             ParentGauge = parentGauge;
         }
 
-        public abstract void UseSubGauge();
+        public abstract void ApplySubGauge();
         public abstract void Tick();
         public abstract void ProcessAction(Item action);
     }

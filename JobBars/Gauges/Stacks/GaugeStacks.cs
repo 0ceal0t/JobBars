@@ -27,8 +27,7 @@ namespace JobBars.Gauges {
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
         }
 
-        protected override void LoadUI_Impl() {
-            UI.SetColor(Props.Color);
+        protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Props.MaxStacks);
             }
@@ -44,7 +43,7 @@ namespace JobBars.Gauges {
             SetValue(0);
         }
 
-        protected override void RefreshUI_Impl() {
+        protected override void ApplyUIConfig_() {
             UI.SetColor(Props.Color);
         }
 
@@ -87,7 +86,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;
-                RefreshUI();
+                ApplyUIConfig();
             }
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {

@@ -280,7 +280,7 @@ namespace JobBars.Gauges {
                     }
                 }),
                 new GaugeCharges("True North (DRG)", new GaugeChargesProps {
-                    BarColor = UIColor.White,
+                    BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
                     NoSoundOnFull = true,
@@ -392,7 +392,7 @@ namespace JobBars.Gauges {
                     }
                 }),
                 new GaugeCharges("True North (SAM)", new GaugeChargesProps {
-                    BarColor = UIColor.White,
+                    BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
                     NoSoundOnFull = true,
@@ -459,7 +459,7 @@ namespace JobBars.Gauges {
             JobToValue.Add(JobIds.RDM, new Gauge[] {
                 new GaugeProc("Verfire/Verstone", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.VerstoneReady, UIColor.White),
+                        new Proc(BuffIds.VerstoneReady, UIColor.NoColor),
                         new Proc(BuffIds.VerfireReady, UIColor.Red)
                     }
                 }),
@@ -556,7 +556,7 @@ namespace JobBars.Gauges {
                     }
                 }),
                 new GaugeCharges("True North (NIN)", new GaugeChargesProps {
-                    BarColor = UIColor.White,
+                    BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
                     NoSoundOnFull = true,
@@ -623,7 +623,7 @@ namespace JobBars.Gauges {
                         new GaugesChargesPartProps {
                             Diamond = true,
                             MaxCharges = 2,
-                            Color = UIColor.White,
+                            Color = UIColor.NoColor,
                             CD = 45,
                             Triggers = new []{
                                 new Item(ActionIds.TrueNorth)
@@ -650,7 +650,7 @@ namespace JobBars.Gauges {
             JobToValue.Add(JobIds.BLU, new Gauge[] {
                 new GaugeProc("Condensed Libra", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.AstralAttenuation, UIColor.White),
+                        new Proc(BuffIds.AstralAttenuation, UIColor.NoColor),
                         new Proc(BuffIds.UmbralAttenuation, UIColor.DarkBlue),
                         new Proc(BuffIds.PhysicalAttenuation, UIColor.Orange)
                     }

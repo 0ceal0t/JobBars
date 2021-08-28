@@ -1,5 +1,5 @@
 # JobBars
-A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges and a party buff tracker
+A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges, a party buff tracker, and more.
 
 - Number of GCDs under buffs (Fight or Flight, Inner Release)
 - DoT tracker (Dia, Miasma)
@@ -28,14 +28,14 @@ https://user-images.githubusercontent.com/18051158/130377598-2398d33a-9c0c-4d0c-
 To open the settings menu, use `/jobbars`
 
 ## Why?
-Some people find these useful. If you don't, each gauge and buff can enabled or disabled.
+The goal of this project is to augment the existing UI by displaying information in a more convenient format. It is not meant to be a complete overhaul, or to replace existing job gauges. If you personally only find certain parts useful, every gauge/buff/mitigation/etc. can be enabled and disabled individually.
 
 ## Jobs
 
 **Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
 
 ### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> DRK
-+ **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon
++ **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon, MP
 + **Buffs**: Delirium, Living Shadow
 + **Mitigation**: Living Dead, Reprisal, Dark Missionary, The Blackest Night
 
@@ -118,6 +118,7 @@ Some people find these useful. If you don't, each gauge and buff can enabled or 
 ### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> BLU
 + **Gauges**: Song of Torment, Bad Breath, Condensed Libra
 + **Buffs**: Off-guard, Peculiar Light
++ **Mitigation**: Addle, Angel Whisper
 
 ## TODO
 - [ ] Completely custom gauges/buffs/cds (requires big rework)

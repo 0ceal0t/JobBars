@@ -10,7 +10,7 @@ namespace JobBars.Gauges {
     public class GaugeResources : Gauge {
 
         public delegate void ResourceFunction(out float percent, out string text);
-        private ResourceFunction Function;
+        private readonly ResourceFunction Function;
         private GaugeResourcesProps Props;
 
         public GaugeResources(string name, ResourceFunction function, GaugeResourcesProps props) : base(name) {
@@ -18,8 +18,7 @@ namespace JobBars.Gauges {
             Function = function;
         }
 
-        protected override void LoadUI_Impl() {
-            UI.SetColor(Props.Color);
+        protected override void LoadUI_() {
             if (UI is UIBar gauge) {
                 gauge.SetSegments(Props.Segments);
                 gauge.SetTextColor(UIColor.NoColor);
@@ -28,7 +27,7 @@ namespace JobBars.Gauges {
             SetValue(0, "0");
         }
 
-        protected override void RefreshUI_Impl() {
+        protected override void ApplyUIConfig_() {
             UI.SetColor(Props.Color);
         }
 
@@ -53,7 +52,7 @@ namespace JobBars.Gauges {
         protected override void DrawGauge(string _ID, JobIds job) {
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;
-                RefreshUI();
+                ApplyUIConfig();
             }
         }
 

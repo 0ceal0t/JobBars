@@ -32,9 +32,9 @@ namespace JobBars.Gauges {
 
         public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge) {
             Props = props;
+            Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-            Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
         }
 
         public void Reset() {
@@ -42,7 +42,7 @@ namespace JobBars.Gauges {
             State = GaugeState.Inactive;
         }
 
-        public override void UseSubGauge() {
+        public override void ApplySubGauge() {
             UI.SetColor(Props.Color);
             if (UI is UIArrow arrows) {
                 arrows.SetMaxValue(Props.MaxCounter);
@@ -90,7 +90,7 @@ namespace JobBars.Gauges {
                 CheckInactive();
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
-                    UseSubGauge();
+                    ApplySubGauge();
                 }
             }
 
@@ -104,7 +104,8 @@ namespace JobBars.Gauges {
             }
         }
 
-        private void SetValue(int value) {
+        private void SetValue(int value) => SetValue(value, value);
+        private void SetValue(int value, int textValue) {
             if (ParentGauge.ActiveSubGauge != this) return;
             if (UI is UIArrow arrows) {
                 arrows.SetValue(value);
@@ -113,8 +114,8 @@ namespace JobBars.Gauges {
                 diamond.SetValue(value);
             }
             else if (UI is UIBar gauge) {
-                gauge.SetText(value.ToString());
                 gauge.SetPercent(((float)value) / Props.MaxCounter);
+                gauge.SetText(textValue.ToString());
             }
         }
 
@@ -123,7 +124,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
                 Props.Color = newColor;
-                ParentGauge.RefreshUI();
+                ParentGauge.ApplyUIConfig();
             }
 
             if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, out var newInvert)) {

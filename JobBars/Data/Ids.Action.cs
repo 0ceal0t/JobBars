@@ -160,6 +160,7 @@
         OffGuard = 11411,
         Nightbloom = 23290,
         BadBreath = 11388,
-        CondensedLibra = 18321
+        CondensedLibra = 18321,
+        AngelWhisper = 18317
     }
 }

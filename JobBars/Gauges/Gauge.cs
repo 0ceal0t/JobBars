@@ -36,29 +36,27 @@ namespace JobBars.Gauges {
 
         public void LoadUI(UIGaugeElement ui) {
             UI = ui;
-            UI.SetVisible(Enabled);
-            UI.SetScale(Scale);
-            LoadUI_Impl();
+            LoadUI_();
+            ApplyUIConfig();
         }
-        protected abstract void LoadUI_Impl();
+        protected abstract void LoadUI_();
 
-        public void RefreshUI() {
+        public void ApplyUIConfig() {
             if (UI == null) return;
-
             UI.SetVisible(Enabled);
             UI.SetScale(Scale);
             if(JobBars.Config.GaugeSplit) UI.SetSplitPosition(Position);
 
-            RefreshUI_Impl();
+            ApplyUIConfig_();
         }
-        protected abstract void RefreshUI_Impl();
+        protected abstract void ApplyUIConfig_();
 
         public void UnloadUI() {
             UI.Cleanup();
             UI = null;
         }
 
-        public virtual bool DoProcessInput() => Enabled;
+        public virtual bool CanProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
         public abstract GaugeVisualType GetVisualType();
         public abstract void Tick();
@@ -86,13 +84,13 @@ namespace JobBars.Gauges {
 
             if(JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
                 Enabled = newEnabled;
-                RefreshUI();
+                ApplyUIConfig();
                 JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
             if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var scale)) {
                 JobBars.Config.GaugeIndividualScale.Set(Name, Math.Max(scale, 0.1f));
-                RefreshUI();
+                ApplyUIConfig();
                 JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
@@ -119,7 +117,7 @@ namespace JobBars.Gauges {
         }
 
         public void SetSplitPosition(Vector2 pos) {
-            RefreshUI();
+            ApplyUIConfig();
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
         }
     }

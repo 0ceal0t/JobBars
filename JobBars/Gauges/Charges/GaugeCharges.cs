@@ -2,7 +2,6 @@
 using JobBars.Helper;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
 
 namespace JobBars.Gauges {
     public struct GaugeChargesProps {
@@ -44,21 +43,17 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUI_Impl() {
+        protected override void LoadUI_() {
             if (UI is UIBarDiamondCombo combo) {
-                SetupDiamondColors();
                 combo.ClearSegments();
-                combo.SetGaugeColor(Props.BarColor);
                 combo.SetTextColor(UIColor.NoColor);
                 combo.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIDiamond diamond) {
-                SetupDiamondColors();
                 diamond.SetMaxValue(TotalDiamonds);
             }
             else if (UI is UIBar gauge) {
                 gauge.ClearSegments();
-                gauge.SetColor(Props.BarColor);
                 gauge.SetTextColor(UIColor.NoColor);
             }
 
@@ -67,10 +62,18 @@ namespace JobBars.Gauges {
             SetDiamondValue(0, 0, TotalDiamonds);
         }
 
-        protected override void RefreshUI_Impl() {
-            UI.SetColor(Props.BarColor);
+        protected override void ApplyUIConfig_() {
             RefreshSameColor();
-            SetupDiamondColors();
+            if (UI is UIBarDiamondCombo combo) {
+                SetupDiamondColors();
+                combo.SetGaugeColor(Props.BarColor);
+            }
+            else if (UI is UIDiamond) {
+                SetupDiamondColors();
+            }
+            else if (UI is UIBar gauge) {
+                gauge.SetColor(Props.BarColor);
+            }
         }
 
         private void SetupDiamondColors() {
@@ -170,7 +173,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
                 Props.BarColor = newColor;
-                RefreshUI();
+                ApplyUIConfig();
             }
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {

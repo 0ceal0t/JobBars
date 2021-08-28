@@ -31,31 +31,29 @@ namespace JobBars.Gauges {
     public class GaugeProc : Gauge {
         private GaugeProcProps Props;
         private readonly int Size;
-
         private readonly List<bool> ProcsActive = new();
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
 
-            for (int idx = 0; idx < Props.Procs.Length; idx++) Props.Procs[idx].Idx = idx;
             Size = Props.Procs.Length;
-
-            ResetProcActive();
+            for (int idx = 0; idx < Props.Procs.Length; idx++)
+                Props.Procs[idx].Idx = idx;
         }
 
-        protected override void LoadUI_Impl() {
+        protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size, showText: Props.ShowText);
-                foreach (var proc in Props.Procs) diamond.SetColor(proc.Color, proc.Idx);
             }
             foreach (var proc in Props.Procs) SetValue(proc.Idx, false);
-
             ResetProcActive();
         }
 
-        protected override void RefreshUI_Impl() {
-            
+        protected override void ApplyUIConfig_() {
+            if (UI is UIDiamond diamond) {
+                foreach (var proc in Props.Procs) diamond.SetColor(proc.Color, proc.Idx);
+            }
         }
 
         private void ResetProcActive() {

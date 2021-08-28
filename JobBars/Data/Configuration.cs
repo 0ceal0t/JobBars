@@ -97,7 +97,7 @@ namespace JobBars.Data {
     [Serializable]
     public class ComboValueConfig<T> : ValueConfig<T> {
         [NonSerialized]
-        private bool ShowSearch;
+        private readonly bool ShowSearch;
         [NonSerialized]
         private string SearchInput = "";
 
@@ -119,7 +119,7 @@ namespace JobBars.Data {
             return false;
         }
 
-        private bool DrawCombo<T>(string id, T[] comboOptions, T currentValue, out T value) {
+        private bool DrawCombo(string id, T[] comboOptions, T currentValue, out T value) {
             value = currentValue;
             if (ImGui.BeginCombo(id, $"{currentValue}", ImGuiComboFlags.HeightLargest)) {
                 if (ShowSearch) {
@@ -192,7 +192,7 @@ namespace JobBars.Data {
         public bool GaugesHideOutOfCombat = false;
         public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
-        public bool GaugeTextVisible = true;
+        public bool GaugeGCDTextVisible = true;
 
         public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200));
         public FloatValueConfig GaugeIndividualScale = new(1.0f);

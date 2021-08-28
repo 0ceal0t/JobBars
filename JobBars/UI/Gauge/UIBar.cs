@@ -2,13 +2,12 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
-using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
 
 namespace JobBars.UI {
     public unsafe class UIBar : UIGaugeElement {
-        private static readonly int MAX_SEGMENTS = 4;
+        private static readonly int MAX_SEGMENTS = 5;
 
         private AtkResNode* GaugeContainer;
         private AtkImageNode* Background;
@@ -21,7 +20,7 @@ namespace JobBars.UI {
         private AtkTextNode* TextNode;
         private AtkNineGridNode* TextBlurNode;
 
-        private AtkImageNode*[] Separators;
+        private readonly AtkImageNode*[] Separators;
 
         private string CurrentText;
         private float LastPercent = 1;
@@ -138,6 +137,8 @@ namespace JobBars.UI {
             TextBlurNode->BottomOffset = 0;
             TextBlurNode->RightOffset = 28;
             TextBlurNode->LeftOffset = 28;
+
+            // =====================
 
             List<LayoutNode> barNodes = new();
             barNodes.Add(new LayoutNode(BarSecondaryNode));
@@ -275,7 +276,7 @@ namespace JobBars.UI {
 
 
             Anim?.Delete();
-            if (difference > 0.1f) {
+            if (difference >= 0.05f) {
                 Anim = Animation.AddAnim(f => SetPercentInternal(f), 0.2f, LastPercent, value);
             }
             else {

@@ -17,7 +17,7 @@ namespace JobBars.Gauges {
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
             if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
-            JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeTextVisible);
+            JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeGCDTextVisible);
             JobBars.Builder.HideAllGauges();
         }
 
@@ -80,7 +80,7 @@ namespace JobBars.Gauges {
             if (!JobBars.Config.GaugesEnabled) return;
 
             foreach (var gauge in CurrentGauges) {
-                if (!gauge.DoProcessInput()) continue;
+                if (!gauge.CanProcessInput()) continue;
                 gauge.ProcessAction(action);
             }
         }
@@ -97,7 +97,7 @@ namespace JobBars.Gauges {
             }
 
             foreach (var gauge in CurrentGauges) {
-                if (!gauge.DoProcessInput()) continue;
+                if (!gauge.CanProcessInput()) continue;
                 gauge.Tick();
             }
 
