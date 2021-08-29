@@ -3,8 +3,8 @@
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
         public SubGaugeTimer ActiveSubGauge;
-
         private readonly SubGaugeTimer[] SubGauges;
+
         private bool IconEnabled = false;
 
         public GaugeTimer(string name, SubGaugeTimerProps props) : this(name, new[] { props }) { }
@@ -19,7 +19,7 @@ namespace JobBars.Gauges {
 
         public void RefreshIconEnabled() {
             foreach (var sg in SubGauges) {
-                if (!sg.NoIcon()) {
+                if (!sg.NoIcon) {
                     IconEnabled = true;
                     return;
                 }
@@ -37,15 +37,11 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            foreach (var sg in SubGauges) {
-                sg.Tick();
-            }
+            foreach (var sg in SubGauges) sg.Tick();
         }
 
         public override void ProcessAction(Item action) {
-            foreach (var sg in SubGauges) {
-                sg.ProcessAction(action);
-            }
+            foreach (var sg in SubGauges) sg.ProcessAction(action);
         }
 
         public override bool CanProcessInput() => Enabled || IconEnabled;
@@ -56,7 +52,7 @@ namespace JobBars.Gauges {
 
         protected override void DrawGauge(string _ID, JobIds job) {
             foreach (var sg in SubGauges) {
-                sg.DrawSubGauge(_ID, job);
+                sg.Draw(_ID, job);
             }
         }
     }

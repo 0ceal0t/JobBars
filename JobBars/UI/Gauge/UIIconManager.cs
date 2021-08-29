@@ -12,8 +12,9 @@ namespace JobBars.UI {
         private class Icon {
             private enum IconState {
                 None,
-                Running,
-                Done
+                TimerRunning,
+                TimerDone,
+                BuffRunning
             }
 
             public readonly uint Id;
@@ -23,9 +24,10 @@ namespace JobBars.UI {
             private AtkImageNode* Border;
             private AtkImageNode* CD;
             private AtkTextNode* Text;
+            private AtkTextNode* BigText;
             private IconState State = IconState.None;
 
-            public Icon(uint id, AtkComponentNode* component) {
+            public Icon(uint id, AtkComponentNode* component, bool hideOriginal = true) {
                 Id = id;
                 Component = component;
                 var nodeList = Component->Component->UldManager.NodeList;
@@ -37,10 +39,6 @@ namespace JobBars.UI {
                 Border = UIHelper.CleanAlloc<AtkImageNode>();
                 Border->Ctor();
                 Border->AtkResNode.NodeID = 200;
-                Border->AtkResNode.ChildCount = 0;
-                Border->AtkResNode.ChildNode = null;
-                Border->AtkResNode.PrevSiblingNode = null;
-                Border->AtkResNode.NextSiblingNode = null;
                 Border->AtkResNode.Type = NodeType.Image;
                 Border->AtkResNode.X = -2;
                 Border->AtkResNode.Width = 48;
@@ -56,10 +54,6 @@ namespace JobBars.UI {
                 CD->Ctor();
                 CD->AtkResNode.NodeID = 201;
                 CD->AtkResNode.Type = NodeType.Image;
-                Border->AtkResNode.ChildCount = 0;
-                Border->AtkResNode.ChildNode = null;
-                Border->AtkResNode.PrevSiblingNode = null;
-                Border->AtkResNode.NextSiblingNode = null;
                 CD->AtkResNode.X = 0;
                 CD->AtkResNode.Y = 2;
                 CD->AtkResNode.Width = 44;
@@ -75,10 +69,6 @@ namespace JobBars.UI {
                 Text->Ctor();
                 Text->AtkResNode.NodeID = 202;
                 Text->AtkResNode.Type = NodeType.Text;
-                Border->AtkResNode.ChildCount = 0;
-                Border->AtkResNode.ChildNode = null;
-                Border->AtkResNode.PrevSiblingNode = null;
-                Border->AtkResNode.NextSiblingNode = null;
                 Text->AtkResNode.X = 1;
                 Text->AtkResNode.Y = 37;
                 Text->AtkResNode.Width = 48;
@@ -94,6 +84,25 @@ namespace JobBars.UI {
                 Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
                 Text->SetText("");
 
+                BigText = UIHelper.CleanAlloc<AtkTextNode>();
+                BigText->Ctor();
+                BigText->AtkResNode.NodeID = 203;
+                BigText->AtkResNode.Type = NodeType.Text;
+                BigText->AtkResNode.X = 2;
+                BigText->AtkResNode.Y = 3;
+                BigText->AtkResNode.Width = 40;
+                BigText->AtkResNode.Height = 40;
+                BigText->AtkResNode.Flags = 8243;
+                BigText->AtkResNode.Flags_2 = 1;
+                BigText->AtkResNode.Flags_2 |= 4;
+                BigText->LineSpacing = 40;
+                BigText->AlignmentFontType = 20;
+                BigText->FontSize = 16;
+                BigText->TextFlags = 16;
+                BigText->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
+                BigText->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+                BigText->SetText("");
+
                 var macroIcon = nodeList[15];
                 var rootNode = (AtkResNode*)Component;
 
@@ -103,36 +112,61 @@ namespace JobBars.UI {
 
                 UIHelper.Link(OriginalOverlay, (AtkResNode*)Border);
                 UIHelper.Link((AtkResNode*)Border, (AtkResNode*)CD);
-                UIHelper.Link((AtkResNode*)CD, (AtkResNode*)Text);
+                UIHelper.Link((AtkResNode*)CD, (AtkResNode*)BigText);
+                UIHelper.Link((AtkResNode*)BigText, (AtkResNode*)Text);
                 UIHelper.Link((AtkResNode*)Text, macroIcon);
 
                 Component->Component->UldManager.UpdateDrawNodeList();
 
-                UIHelper.Hide(OriginalOverlay);
+                if(hideOriginal) UIHelper.Hide(OriginalOverlay);
                 UIHelper.Hide(CD);
                 UIHelper.Hide(Text);
+                UIHelper.Hide(BigText);
             }
 
-            public void SetProgress(float current, float max) {
-                if (State == IconState.Done && current <= 0) return;
-                State = IconState.Running;
+            // ======== FOR DoT TIMERS ========
+
+            public void SetTimerProgress(float current, float max) {
+                if (State == IconState.TimerDone && current <= 0) return;
+                State = IconState.TimerRunning;
 
                 UIHelper.Show(CD);
                 UIHelper.Show(Text);
-                Border->PartId = 0;
+                Border->PartId = 0; // hide
 
                 CD->PartId = (ushort)(80 - (float)(current / max) * 80);
                 Text->SetText(((int)Math.Round(current)).ToString());
             }
 
-            public void SetDone() {
-                State = IconState.Done;
+            public void SetTimerDone() {
+                State = IconState.TimerDone;
                 UIHelper.Hide(CD);
                 UIHelper.Hide(Text);
             }
 
+            // ====== FOR BUFFS =============
+
+            public void SetBuffProgress(float current) {
+                if(State != IconState.BuffRunning) {
+                    State = IconState.BuffRunning;
+                    UIHelper.Hide(OriginalOverlay);
+                    UIHelper.Show(BigText);
+                }
+                BigText->SetText(((int)Math.Round(current)).ToString());
+            }
+
+            public void SetBuffDone() {
+                if (State == IconState.None) return;
+                State = IconState.None;
+                Border->PartId = 0;
+                UIHelper.Hide(BigText);
+                UIHelper.Show(OriginalOverlay);
+            }
+
+            // =====================
+
             public void Tick(float percent) {
-                if (State != IconState.Done) return;
+                if (State != IconState.TimerDone && State != IconState.BuffRunning) return;
                 Border->PartId = (ushort)(6 + percent * 7);
             }
 
@@ -157,6 +191,11 @@ namespace JobBars.UI {
                 if (Text != null) {
                     Text->AtkResNode.Destroy(true);
                     Text = null;
+                }
+
+                if (BigText != null) {
+                    BigText->AtkResNode.Destroy(true);
+                    BigText = null;
                 }
 
                 Component = null;
@@ -189,7 +228,7 @@ namespace JobBars.UI {
             Client = new ClientInterface();
         }
 
-        public void Setup(List<uint> triggers) {
+        public void Setup(List<uint> triggers, bool dotTypeIcon = true) {
             if (triggers == null) return;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
 
@@ -208,7 +247,7 @@ namespace JobBars.UI {
                     var icon = slot.Icon;
                     var action = slotStruct->CommandId;
                     if (triggers.Contains(action) && !AlreadySetup(icon)) {
-                        Icons.Add(new Icon(action, icon));
+                        Icons.Add(new Icon(action, icon, dotTypeIcon));
                     }
                 }
             }
@@ -233,31 +272,63 @@ namespace JobBars.UI {
             Icons.RemoveAll(x => toRemove.Contains(x));
         }
 
-        public void SetIconProgress(List<uint> triggers, float current, float max, bool check = true) {
+        // ======== FOR DoT TIMERS ========
+
+        public void SetTimerProgress(List<uint> triggers, float current, float max, bool check = true) {
             var found = false;
             foreach(var icon in Icons) {
                 if (!triggers.Contains(icon.Id)) continue;
-                icon.SetProgress(current, max);
+                icon.SetTimerProgress(current, max);
                 found = true;
             }
 
             if (found || !check) return;
             Setup(triggers);
-            SetIconProgress(triggers, current, max, false);
+            SetTimerProgress(triggers, current, max, false);
         }
 
-        public void SetIconDone(List<uint> triggers, bool check = true) {
+        public void SetTimerDone(List<uint> triggers, bool check = true) {
             var found = false;
             foreach (var icon in Icons) {
                 if (!triggers.Contains(icon.Id)) continue;
-                icon.SetDone();
+                icon.SetTimerDone();
                 found = true;
             }
 
             if (found || !check) return;
             Setup(triggers);
-            SetIconDone(triggers, false);
+            SetTimerDone(triggers, false);
         }
+
+        // ========== FOR BUFFS =========
+
+        public void SetBuffProgress(List<uint> triggers, float current, bool check = true) {
+            var found = false;
+            foreach (var icon in Icons) {
+                if (!triggers.Contains(icon.Id)) continue;
+                icon.SetBuffProgress(current);
+                found = true;
+            }
+
+            if (found || !check) return;
+            Setup(triggers, false);
+            SetBuffProgress(triggers, current, false);
+        }
+
+        public void SetBuffDone(List<uint> triggers, bool check = true) {
+            var found = false;
+            foreach (var icon in Icons) {
+                if (!triggers.Contains(icon.Id)) continue;
+                icon.SetBuffDone();
+                found = true;
+            }
+
+            if (found || !check) return;
+            Setup(triggers, false);
+            SetBuffDone(triggers, false);
+        }
+
+        // ========================
 
         public void Tick() {
             var time = DateTime.Now;

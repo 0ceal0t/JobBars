@@ -10,6 +10,7 @@
         BloodSpiller = 0x1CE0,
         Quietus = 0x1CDF,
         TheBlackestNight = 7393,
+        BloodWeapon = 3625,
 
         // WAR ==========
         InnerRelease = 7389,
@@ -57,6 +58,7 @@
         Asylum = 3569,
         Temperance = 16536,
         Benediction = 140,
+        PresenceOfMind = 136,
 
         // AST ===========
         Combust1 = 3599,
@@ -75,6 +77,7 @@
         EarthlyStar = 7439,
         CelestialOpposition = 16553,
         NeutralSect = 16559,
+        Lightspeed = 3606,
 
         // MNK ===========
         TrueNorth = 7546, // All melee

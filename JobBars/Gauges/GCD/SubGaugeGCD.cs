@@ -1,4 +1,5 @@
-﻿using JobBars.Helper;
+﻿using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,11 @@ namespace JobBars.Gauges {
 #nullable enable
         public string? SubName;
         public Item[]? Increment;
+        public ActionIds[]? Icons;
 #nullable disable
     }
 
-    public class SubGaugeGCD : SubGauge<GaugeGCD> {
+    public class SubGaugeGCD : IconSubGauge<GaugeGCD> {
         private SubGaugeGCDProps Props;
 
         private int Counter;
@@ -30,14 +32,14 @@ namespace JobBars.Gauges {
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
 
-        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge) {
+        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge, props.Icons, false) {
             Props = props;
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
         }
 
-        public void Reset() {
+        protected override void ResetSubGauge() {
             Counter = 0;
             State = GaugeState.Inactive;
         }
@@ -62,10 +64,15 @@ namespace JobBars.Gauges {
             if (State == GaugeState.Active) {
                 float timeLeft = UIHelper.TimeLeft(Props.MaxDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
+                    timeLeft = 0;
                     State = GaugeState.Finished;
                     StopTime = DateTime.Now;
                 }
+
                 SetValue(Props.Invert ? Props.MaxCounter - Counter : Counter);
+
+                if (timeLeft == 0) ResetIcon();
+                else SetIcon(timeLeft);
             }
             else if (State == GaugeState.Finished) {
                 if ((DateTime.Now - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
@@ -88,6 +95,7 @@ namespace JobBars.Gauges {
                 State = GaugeState.Active;
                 Counter = 0;
                 CheckInactive();
+
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
                     ApplySubGauge();
@@ -119,7 +127,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void DrawSubGauge(string _ID) {
+        public void Draw(string _ID, JobIds job) {
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
 
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
@@ -133,6 +141,10 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
+            }
+
+            if (DrawIconReplacement(_ID, job, suffix)) {
+                ParentGauge.RefreshIconEnabled();
             }
         }
     }

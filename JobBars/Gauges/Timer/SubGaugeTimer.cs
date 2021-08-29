@@ -13,6 +13,7 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
         public ElementColor Color;
         public bool Invert;
+        public bool BuffTypeIcon;
 #nullable enable
         public string? SubName;
         public float? DefaultDuration;
@@ -20,33 +21,31 @@ namespace JobBars.Gauges {
 #nullable disable
     }
 
-    public class SubGaugeTimer : SubGauge<GaugeTimer> {
+    public class SubGaugeTimer : IconSubGauge<GaugeTimer> {
         private SubGaugeTimerProps Props;
-        private bool IconEnabled;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
+
         private bool InDanger = false;
         private static float LOW_TIME_WARNING => JobBars.Config.GaugeLowTimerWarning;
 
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
-        private readonly List<uint> Icons;
 
-        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge) {
+        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge, props.Icons, true) {
             Props = props;
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.DefaultDuration = Props.DefaultDuration == null ? Props.MaxDuration : Props.DefaultDuration.Value;
-            Icons = Props.Icons == null ? null : new List<ActionIds>(Props.Icons).Select(x => (uint)x).ToList();
-            IconEnabled = JobBars.Config.GaugeIconEnabled.Get(Name);
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
+
+            if (Props.BuffTypeIcon) DoTTypeIcon = false; // 
         }
 
-        public void Reset() {
+        protected override void ResetSubGauge() {
             TimeLeft = 0;
             InDanger = false;
             State = GaugeState.Inactive;
-            if(!NoIcon()) JobBars.Icon.Setup(Icons);
         }
 
         public override void ApplySubGauge() {
@@ -56,20 +55,6 @@ namespace JobBars.Gauges {
                 gauge.SetTextColor(InDanger ? UIColor.Red : UIColor.NoColor);
             }
             SetValue(TimeLeft);
-        }
-
-        private void SetIcon(float current, float max) {
-            if (NoIcon()) return;
-            JobBars.Icon.SetIconProgress(Icons, current, max);
-        }
-
-        private void ResetIcon() {
-            if (NoIcon()) return;
-            JobBars.Icon.SetIconDone(Icons);
-        }
-
-        public bool NoIcon() {
-            return !IconEnabled || (Icons == null) || !JobBars.Config.GaugeIconReplacement;
         }
 
         public override void Tick() {
@@ -132,7 +117,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void DrawSubGauge(string _ID, JobIds job) {
+        public void Draw(string _ID, JobIds job) {
             var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
 
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
@@ -144,16 +129,8 @@ namespace JobBars.Gauges {
                 Props.Invert = newInvert;
             }
 
-            if (Props.Icons != null) {
-                if (JobBars.Config.GaugeIconEnabled.Draw($"Icon Replacement{suffix}{_ID}", Name, out var newIconEnabled)) {
-                    IconEnabled = newIconEnabled;
-
-                    if (JobBars.GaugeManager.CurrentJob == job && JobBars.Config.GaugeIconReplacement) {
-                        if (IconEnabled) JobBars.Icon.Setup(Icons);
-                        else JobBars.Icon.Remove(Icons);
-                    }
-                    ParentGauge.RefreshIconEnabled();
-                }
+            if(DrawIconReplacement(_ID, job, suffix)) {
+                ParentGauge.RefreshIconEnabled();
             }
         }
     }
