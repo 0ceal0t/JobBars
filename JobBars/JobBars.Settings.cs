@@ -19,6 +19,11 @@ namespace JobBars {
                     ImGui.EndTabItem();
                 }
 
+                if (ImGui.BeginTabItem("Icons" + _ID)) {
+                    IconManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
                 if (ImGui.BeginTabItem("Buffs" + _ID)) {
                     BuffManager?.Draw();
                     ImGui.EndTabItem();
@@ -31,11 +36,6 @@ namespace JobBars {
 
                 if (ImGui.BeginTabItem("Cursor" + _ID)) {
                     CursorManager?.Draw();
-                    ImGui.EndTabItem();
-                }
-
-                if (ImGui.BeginTabItem("Icons" + _ID)) {
-                    IconManager?.Draw();
                     ImGui.EndTabItem();
                 }
 

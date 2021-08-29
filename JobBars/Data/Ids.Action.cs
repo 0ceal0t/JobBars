@@ -96,6 +96,8 @@
         DragonSight = 7398,
         BattleLitany = 3557,
         LanceCharge = 85,
+        Disembowel = 87,
+        ChaosThrust = 88,
 
         // NIN ===========
         TrickAttack = 2258,
@@ -142,6 +144,8 @@
         Thunder2 = 7447,
         Thunder3 = 153,
         Thunder4 = 7420,
+        LeyLines = 3573,
+        Sharpcast = 3574,
 
         // SMN ===========
         ArcBio = 164,

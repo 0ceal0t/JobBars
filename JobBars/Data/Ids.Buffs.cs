@@ -20,6 +20,7 @@
         // SCH =========
         Biolysis = 1895,
         Excog = 1220,
+        ChainStratagem = 7436,
 
         // WHM =========
         Aero = 143,
@@ -95,6 +96,8 @@
         Thunder2 = 162,
         Thunder3 = 163,
         Thunder4 = 1210,
+        LeyLines = 737,
+        Sharpcast = 867,
 
         // SMN =========
         ArcBio = 179,

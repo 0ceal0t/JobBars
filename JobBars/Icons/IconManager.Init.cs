@@ -94,6 +94,12 @@ namespace JobBars.Icons {
             });
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new[] {
+                new IconReplacer("Chain Stratagem", new IconProps {
+                    Icons = new [] { ActionIds.ChainStratagem },
+                    Triggers = new[] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 15 }
+                    }
+                }),
                 new IconReplacer("Biolysis", new IconProps {
                     IsDoT = true,
                     Icons = new [] {
@@ -175,6 +181,19 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye), Duration = 20 },
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
                     }
+                }),
+                new IconReplacer("Disembowel", new IconProps {
+                    Icons = new [] { ActionIds.Disembowel },
+                    Triggers = new[] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.Disembowel), Duration = 24 }
+                    }
+                }),
+                new IconReplacer("Chaos Thrust", new IconProps {
+                    IsDoT = true,
+                    Icons = new [] { ActionIds.ChaosThrust },
+                    Triggers = new[] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 30 }
+                    }
                 })
             });
             // ============ SMN ==================
@@ -248,6 +267,18 @@ namespace JobBars.Icons {
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder2), Duration = 18 },
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
+                    }
+                }),
+                new IconReplacer("Ley Lines", new IconProps {
+                    Icons = new [] { ActionIds.LeyLines },
+                    Triggers = new[] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
+                    }
+                }),
+                new IconReplacer("Sharpcast", new IconProps {
+                    Icons = new [] { ActionIds.Sharpcast },
+                    Triggers = new[] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 15 }
                     }
                 })
             });
