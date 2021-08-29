@@ -10,8 +10,6 @@ namespace JobBars.Gauges {
         public SubGaugeGCD ActiveSubGauge;
         private readonly SubGaugeGCD[] SubGauges;
 
-        private bool IconEnabled = false;
-
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps props) : this(name, type, new[] { props }) { }
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps[] props) : base(name) {
             Type = JobBars.Config.GaugeType.Get(Name, type);
@@ -24,17 +22,6 @@ namespace JobBars.Gauges {
                 string id = string.IsNullOrEmpty(props[i].SubName) ? Name : Name + "/" + props[i].SubName;
                 SubGauges[i] = new SubGaugeGCD(id, this, props[i]);
             }
-            RefreshIconEnabled();
-        }
-
-        public void RefreshIconEnabled() {
-            foreach (var sg in SubGauges) {
-                if (!sg.NoIcon) {
-                    IconEnabled = true;
-                    return;
-                }
-            }
-            IconEnabled = false;
         }
 
         protected override void LoadUI_() {
@@ -53,8 +40,6 @@ namespace JobBars.Gauges {
         public override void ProcessAction(Item action) {
             foreach (var sg in SubGauges) sg.ProcessAction(action);
         }
-
-        public override bool CanProcessInput() => Enabled || IconEnabled;
 
         protected override int GetHeight() => UI.GetHeight(0);
         protected override int GetWidth() => UI.GetWidth(MaxWidth);

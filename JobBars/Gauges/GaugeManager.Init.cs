@@ -14,8 +14,7 @@ namespace JobBars.Gauges {
                     Color = UIColor.Orange,
                     Triggers = new []{
                         new Item(BuffIds.NoMercy)
-                    },
-                    Icons = new[] { ActionIds.NoMercy }
+                    }
                 })
             });
             // ============ PLD ==================
@@ -56,9 +55,6 @@ namespace JobBars.Gauges {
                     Color = UIColor.Orange,
                     Triggers = new []{
                         new Item(BuffIds.GoringBlade)
-                    },
-                    Icons = new []{
-                        ActionIds.GoringBlade
                     }
                 })
             });
@@ -74,8 +70,7 @@ namespace JobBars.Gauges {
                     },
                     Triggers = new []{
                         new Item(BuffIds.InnerRelease)
-                    },
-                    Icons = new[] { ActionIds.InnerRelease }
+                    }
                 }),
                 new GaugeTimer("Storm's Eye", new SubGaugeTimerProps {
                     MaxDuration = 60,
@@ -102,8 +97,7 @@ namespace JobBars.Gauges {
                     },
                     Triggers = new []{
                         new Item(BuffIds.Delirium)
-                    },
-                    Icons = new[] { ActionIds.Delirium }
+                    }
                 }),
                 new GaugeGCD("Blood Weapon", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
@@ -111,8 +105,7 @@ namespace JobBars.Gauges {
                     Color = UIColor.DarkBlue,
                     Triggers = new []{
                         new Item(BuffIds.BloodWeapon)
-                    },
-                    Icons = new[] { ActionIds.BloodWeapon }
+                    }
                 })
             });
             // ============ AST ==================
@@ -130,11 +123,6 @@ namespace JobBars.Gauges {
                         Triggers = new []{
                             new Item(BuffIds.Combust2),
                             new Item(BuffIds.Combust3)
-                        },
-                        Icons = new []{
-                            ActionIds.Combust1,
-                            ActionIds.Combust2,
-                            ActionIds.Combust3
                         }
                     },
                     new SubGaugeTimerProps {
@@ -143,23 +131,8 @@ namespace JobBars.Gauges {
                         SubName = "Combust 1",
                         Triggers = new []{
                             new Item(BuffIds.Combust)
-                        },
-                        Icons = new []{
-                            ActionIds.Combust1,
-                            ActionIds.Combust2,
-                            ActionIds.Combust3
                         }
                     },
-                }),
-                new GaugeTimer("Lightspeed", new SubGaugeTimerProps {
-                    MaxDuration = 15,
-                    Color = UIColor.Yellow,
-                    HideLowWarning = true,
-                    Triggers = new []{
-                        new Item(BuffIds.Lightspeed)
-                    },
-                    BuffTypeIcon = true,
-                    Icons = new[] { ActionIds.Lightspeed }
                 })
             });
             // ============ SCH ==================
@@ -177,11 +150,6 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
                         new Item(BuffIds.Biolysis)
-                    },
-                    Icons = new []{
-                        ActionIds.SchBio,
-                        ActionIds.SchBio2,
-                        ActionIds.Biolysis
                     }
                 })
             });
@@ -194,11 +162,6 @@ namespace JobBars.Gauges {
                         SubName = "Dia",
                         Triggers = new []{
                             new Item(BuffIds.Dia)
-                        },
-                        Icons = new []{
-                            ActionIds.Dia,
-                            ActionIds.Aero,
-                            ActionIds.Aero2
                         }
                     },
                     new SubGaugeTimerProps {
@@ -208,23 +171,8 @@ namespace JobBars.Gauges {
                         Triggers = new [] {
                             new Item(BuffIds.Aero),
                             new Item(BuffIds.Aero2)
-                        },
-                        Icons = new []{
-                            ActionIds.Dia,
-                            ActionIds.Aero,
-                            ActionIds.Aero2
                         }
                     }
-                }),
-                new GaugeTimer("Presence of Mind", new SubGaugeTimerProps {
-                    MaxDuration = 15,
-                    Color = UIColor.Red,
-                    HideLowWarning = true,
-                    Triggers = new []{
-                        new Item(BuffIds.PresenceOfMind)
-                    },
-                    BuffTypeIcon = true,
-                    Icons = new[] { ActionIds.PresenceOfMind }
                 })
             });
             // ============ BRD ==================
@@ -241,10 +189,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.CausticBite),
                         new Item(BuffIds.VenomousBite)
-                    },
-                    Icons = new []{
-                        ActionIds.CausticBite,
-                        ActionIds.VenomousBite
                     }
                 }),
                 new GaugeTimer("Stormbite", new SubGaugeTimerProps {
@@ -253,10 +197,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.Windbite),
                         new Item(BuffIds.Stormbite),
-                    },
-                    Icons = new []{
-                        ActionIds.Windbite,
-                        ActionIds.Stormbite
                     }
                 }),
                 new GaugeGCD("Raging Strikes", GaugeVisualType.Arrow, new SubGaugeGCDProps {
@@ -266,7 +206,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.RagingStrikes)
                     },
-                    Icons = new[] { ActionIds.RagingStrikes }
                 })
             });
             // ============ DRG ==================
@@ -278,7 +217,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.LanceCharge)
                     },
-                    Icons = new[] { ActionIds.LanceCharge }
                 }),
                 new GaugeGCD("Dragon Sight", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 8,
@@ -358,11 +296,6 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.ArcBio),
                         new Item(BuffIds.ArcBio2),
                         new Item(BuffIds.Bio3)
-                    },
-                    Icons = new []{
-                        ActionIds.ArcBio,
-                        ActionIds.ArcBio2,
-                        ActionIds.Bio3
                     }
                 }),
                 new GaugeTimer("Miasma", new SubGaugeTimerProps {
@@ -371,10 +304,6 @@ namespace JobBars.Gauges {
                     Triggers = new []{
                         new Item(BuffIds.Miasma),
                         new Item(BuffIds.Miasma3)
-                    },
-                    Icons = new []{
-                        ActionIds.Miasma,
-                        ActionIds.Miasma3
                     }
                 })
             });
@@ -443,10 +372,6 @@ namespace JobBars.Gauges {
                         Triggers = new []{
                             new Item(BuffIds.Thunder3),
                             new Item(BuffIds.Thunder)
-                        },
-                        Icons = new []{
-                            ActionIds.Thunder3,
-                            ActionIds.Thunder
                         }
                     },
                     new SubGaugeTimerProps
@@ -457,10 +382,6 @@ namespace JobBars.Gauges {
                         Triggers = new []{
                             new Item(BuffIds.Thunder4),
                             new Item(BuffIds.Thunder2)
-                        },
-                        Icons = new []{
-                            ActionIds.Thunder4,
-                            ActionIds.Thunder2
                         }
                     }
                 })
@@ -511,8 +432,7 @@ namespace JobBars.Gauges {
                     Color = UIColor.Red,
                     Triggers = new []{
                         new Item(BuffIds.Wildfire)
-                    },
-                    Icons = new[] { ActionIds.Wildfire }
+                    }
                 }),
                 new GaugeCharges("Gauss Round Charges", new GaugeChargesProps {
                     BarColor = UIColor.Red,
@@ -672,9 +592,6 @@ namespace JobBars.Gauges {
                     Color = UIColor.Red,
                     Triggers = new []{
                         new Item(BuffIds.BluBleed)
-                    },
-                    Icons = new []{
-                        ActionIds.SongOfTorment
                     }
                 }),
                 new GaugeTimer("Bad Breath", new SubGaugeTimerProps
@@ -683,9 +600,6 @@ namespace JobBars.Gauges {
                     Color = UIColor.HealthGreen,
                     Triggers = new []{
                         new Item(BuffIds.Poison)
-                    },
-                    Icons = new []{
-                        ActionIds.BadBreath
                     }
                 })
             });

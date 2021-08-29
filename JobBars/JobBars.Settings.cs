@@ -34,6 +34,11 @@ namespace JobBars {
                     ImGui.EndTabItem();
                 }
 
+                if (ImGui.BeginTabItem("Icons" + _ID)) {
+                    IconManager?.Draw();
+                    ImGui.EndTabItem();
+                }
+
                 ImGui.EndTabBar();
             }
             ImGui.End();

@@ -2,7 +2,6 @@
 using JobBars.Helper;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Gauges {
@@ -16,11 +15,10 @@ namespace JobBars.Gauges {
 #nullable enable
         public string? SubName;
         public Item[]? Increment;
-        public ActionIds[]? Icons;
 #nullable disable
     }
 
-    public class SubGaugeGCD : IconSubGauge<GaugeGCD> {
+    public class SubGaugeGCD : SubGauge<GaugeGCD> {
         private SubGaugeGCDProps Props;
 
         private int Counter;
@@ -32,14 +30,14 @@ namespace JobBars.Gauges {
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
 
-        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge, props.Icons, false) {
+        public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge) {
             Props = props;
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
         }
 
-        protected override void ResetSubGauge() {
+        public override void Reset() {
             Counter = 0;
             State = GaugeState.Inactive;
         }
@@ -70,9 +68,6 @@ namespace JobBars.Gauges {
                 }
 
                 SetValue(Props.Invert ? Props.MaxCounter - Counter : Counter);
-
-                if (timeLeft == 0) ResetIcon();
-                else SetIcon(timeLeft);
             }
             else if (State == GaugeState.Finished) {
                 if ((DateTime.Now - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
@@ -141,10 +136,6 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
-            }
-
-            if (DrawIconReplacement(_ID, job, suffix)) {
-                ParentGauge.RefreshIconEnabled();
             }
         }
     }

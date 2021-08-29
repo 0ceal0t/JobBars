@@ -22,6 +22,7 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Data;
+using JobBars.Icons;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -36,12 +37,13 @@ namespace JobBars {
 
         public static Configuration Config                      { get; private set; }
         public static UIBuilder Builder                         { get; private set; }
-        public static UIIconManager Icon                        { get; private set; }
+        public static UIIconManager IconBuilder                 { get; private set; }
 
         public static GaugeManager GaugeManager                 { get; private set; }
         public static BuffManager BuffManager                   { get; private set; }
         public static CooldownManager CooldownManager           { get; private set; }
         public static CursorManager CursorManager               { get; private set; }
+        public static IconManager IconManager                   { get; private set; }
 
         public string Name => "JobBars";
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
@@ -99,7 +101,7 @@ namespace JobBars {
             Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             if (Config.Version == 0) Config = new Configuration(); // remove outdated
 
-            Icon = new UIIconManager();
+            IconBuilder = new UIIconManager();
 
             InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
 
@@ -122,13 +124,14 @@ namespace JobBars {
         private void InitializeUI() { // this only ever gets run ONCE
             // these are created before the addons are even visible, so they aren't attached yet
             PluginLog.Log("==== INIT ====");
-            Icon.Reset();
+            IconBuilder.Reset();
 
             Builder = new UIBuilder();
             BuffManager = new BuffManager();
             CooldownManager = new CooldownManager();
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
+            IconManager = new IconManager();
         }
 
         public void Dispose() {
@@ -152,11 +155,12 @@ namespace JobBars {
             BuffManager = null;
             CooldownManager = null;
             CursorManager = null;
+            IconManager = null;
 
             Animation.Dispose();
-            Icon?.Dispose();
+            IconBuilder?.Dispose();
             Builder?.Dispose();
-            Icon = null;
+            IconBuilder = null;
             Builder = null;
 
             PluginInterface = null;
@@ -190,7 +194,7 @@ namespace JobBars {
 
         private void Logout() {
             PluginLog.Log("==== LOGOUT ===");
-            Icon.Reset();
+            IconBuilder.Reset();
             Animation.Dispose();
 
             LoggedOut = true;
@@ -206,6 +210,7 @@ namespace JobBars {
                 PluginLog.Log($"SWITCHED JOB TO {CurrentJob}");
                 GaugeManager.SetJob(CurrentJob);
                 CursorManager.SetJob(CurrentJob);
+                IconManager.SetJob(CurrentJob);
             }
         }
 
@@ -219,6 +224,7 @@ namespace JobBars {
             BuffManager.Tick(inCombat);
             CooldownManager.Tick(inCombat);
             CursorManager.Tick();
+            IconManager.Tick();
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

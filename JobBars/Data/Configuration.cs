@@ -190,14 +190,12 @@ namespace JobBars.Data {
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
-        public bool GaugeIconReplacement = true;
         public bool GaugeHideGCDInactive = false;
         public bool GaugeGCDTextVisible = true;
 
         public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200));
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
-        public BoolValueConfig GaugeIconEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
         public BoolValueConfig GaugeNoSoundOnFull = new(false);
         public BoolValueConfig GaugeInvert = new(false);
@@ -244,6 +242,11 @@ namespace JobBars.Data {
         public ComboValueConfig<CursorType> CursorType = new();
         public ComboValueConfig<Helper.StatusNameId> CursorStatus = new(true);
         public FloatValueConfig CursorStatusDuration = new(5f);
+
+        // ===== ICONS ===========
+
+        public bool IconsEnabled = true;
+        public BoolValueConfig IconEnabled = new(true);
 
         // =====================
 

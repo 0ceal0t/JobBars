@@ -31,11 +31,6 @@ namespace JobBars.Gauges {
 
             JobBars.Separator(); // =====================================
 
-            if (ImGui.Checkbox("DoT Icon Replacement (Global)", ref JobBars.Config.GaugeIconReplacement)) {
-                JobBars.Icon.Reset();
-                JobBars.Config.Save();
-            }
-
             if (ImGui.Checkbox("GCD Gauge Text Visible", ref JobBars.Config.GaugeGCDTextVisible)) {
                 JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeGCDTextVisible);
                 JobBars.Config.Save();

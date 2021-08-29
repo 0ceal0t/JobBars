@@ -7,17 +7,18 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace JobBars.Gauges {
-    public enum GaugeState {
-        Inactive,
-        Active,
-        Finished,
-    }
 
     public enum GaugeVisualType {
         Bar,
         Arrow,
         Diamond,
         BarDiamondCombo
+    }
+
+    public enum GaugeState {
+        Inactive,
+        Active,
+        Finished,
     }
 
     public abstract class Gauge {
@@ -56,7 +57,6 @@ namespace JobBars.Gauges {
             UI = null;
         }
 
-        public virtual bool CanProcessInput() => Enabled;
         public abstract void ProcessAction(Item action);
         public abstract GaugeVisualType GetVisualType();
         public abstract void Tick();

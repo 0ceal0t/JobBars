@@ -20,6 +20,7 @@
         Holmgang = 43,
         NascentFlash = 16464,
         RawIntuition = 3551,
+        StormsEye = 45,
 
         // PLD ===========
         Requiescat = 7383,
@@ -36,6 +37,7 @@
         HallowedGround = 30,
         DivineVeil = 3540,
         PassageOfArms = 7385,
+        FightOrFlight = 20,
 
         // GNB ===========
         NoMercy = 16138,

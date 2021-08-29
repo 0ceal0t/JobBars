@@ -25,7 +25,6 @@ namespace JobBars.Gauges {
             //===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) gauge.UnloadUI();
             JobBars.Builder.HideAllGauges();
-            JobBars.Icon.Reset();
 
             //====== SET UP NEW =======
             CurrentJob = job;
@@ -80,7 +79,7 @@ namespace JobBars.Gauges {
             if (!JobBars.Config.GaugesEnabled) return;
 
             foreach (var gauge in CurrentGauges) {
-                if (!gauge.CanProcessInput()) continue;
+                if (!gauge.Enabled) continue;
                 gauge.ProcessAction(action);
             }
         }
@@ -97,11 +96,9 @@ namespace JobBars.Gauges {
             }
 
             foreach (var gauge in CurrentGauges) {
-                if (!gauge.CanProcessInput()) continue;
+                if (!gauge.Enabled) continue;
                 gauge.Tick();
             }
-
-            JobBars.Icon.Tick();
         }
 
         private static UIGaugeElement GetUI(int idx, GaugeVisualType type) {

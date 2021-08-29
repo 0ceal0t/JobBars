@@ -13,15 +13,13 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
         public ElementColor Color;
         public bool Invert;
-        public bool BuffTypeIcon;
 #nullable enable
         public string? SubName;
         public float? DefaultDuration;
-        public ActionIds[]? Icons;
 #nullable disable
     }
 
-    public class SubGaugeTimer : IconSubGauge<GaugeTimer> {
+    public class SubGaugeTimer : SubGauge<GaugeTimer> {
         private SubGaugeTimerProps Props;
 
         private float TimeLeft;
@@ -33,16 +31,14 @@ namespace JobBars.Gauges {
         private Item LastActiveTrigger;
         private DateTime LastActiveTime;
 
-        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge, props.Icons, true) {
+        public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge) {
             Props = props;
             Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
             Props.DefaultDuration = Props.DefaultDuration == null ? Props.MaxDuration : Props.DefaultDuration.Value;
             Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
-
-            if (Props.BuffTypeIcon) DoTTypeIcon = false; // 
         }
 
-        protected override void ResetSubGauge() {
+        public override void Reset() {
             TimeLeft = 0;
             InDanger = false;
             State = GaugeState.Inactive;
@@ -85,11 +81,8 @@ namespace JobBars.Gauges {
                     : timeLeft
                 );
                 SetValue(barTimeLeft, timeLeft);
-                SetIcon(timeLeft, Props.MaxDuration);
                 InDanger = inDanger;
                 TimeLeft = timeLeft;
-
-                if(timeLeft <= 0) ResetIcon();
             }
         }
 
@@ -127,10 +120,6 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, out var newInvert)) {
                 Props.Invert = newInvert;
-            }
-
-            if(DrawIconReplacement(_ID, job, suffix)) {
-                ParentGauge.RefreshIconEnabled();
             }
         }
     }
