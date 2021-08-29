@@ -245,7 +245,7 @@ namespace JobBars.UI {
                     if (slotStruct->CommandType != HotbarSlotType.Action) continue;
 
                     var icon = slot.Icon;
-                    var action = slotStruct->CommandId;
+                    var action = UIHelper.GetAdjustedAction(slotStruct->CommandId);
                     if (triggers.Contains(action) && !AlreadySetup(icon)) {
                         Icons.Add(new Icon(action, icon, dotTypeIcon));
                     }

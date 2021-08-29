@@ -73,6 +73,11 @@ namespace JobBars.Helper {
             return timeElapsed > 0;
         }
 
+        public static uint GetAdjustedAction(uint actionId) {
+            var actionManager = ActionManager.Instance();
+            return actionManager->GetAdjustedActionId(actionId);
+        }
+
         public static bool GetRecastActiveAndTotal(uint actionId, out float timeElapsed, out float timeTotal, ActionType actionType = ActionType.Spell) {
             var actionManager = ActionManager.Instance();
             var adjustedId = actionManager->GetAdjustedActionId(actionId);
