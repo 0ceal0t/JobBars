@@ -89,7 +89,7 @@ namespace JobBars.Gauges {
                 ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }

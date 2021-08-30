@@ -521,6 +521,15 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.PerfectBalance)
                     }
                 }),
+                new GaugeGCD("Riddle of Fire", GaugeVisualType.Bar, new SubGaugeGCDProps {
+                    MaxCounter = 11,
+                    MaxDuration = 20,
+                    Color = UIColor.Red,
+                    NoSoundOnFull = true,
+                    Triggers = new []{
+                        new Item(BuffIds.RiddleOfFire)
+                    }
+                }),
                 new GaugeTimer("Twin Snakes", new SubGaugeTimerProps
                 {
                     MaxDuration = 15,
@@ -532,7 +541,7 @@ namespace JobBars.Gauges {
                 new GaugeTimer("Demolish", new SubGaugeTimerProps
                 {
                     MaxDuration = 18,
-                    Color = UIColor.Orange,
+                    Color = UIColor.Yellow,
                     Triggers = new [] {
                         new Item(BuffIds.Demolish)
                     }

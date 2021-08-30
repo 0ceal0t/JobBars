@@ -130,11 +130,11 @@ namespace JobBars.Gauges {
                 ParentGauge.ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, out var newInvert)) {
+            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, Props.Invert, out var newInvert)) {
                 Props.Invert = newInvert;
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }

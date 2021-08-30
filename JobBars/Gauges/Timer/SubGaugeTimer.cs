@@ -118,7 +118,7 @@ namespace JobBars.Gauges {
                 ParentGauge.ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, out var newInvert)) {
+            if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, Props.Invert, out var newInvert)) {
                 Props.Invert = newInvert;
             }
         }

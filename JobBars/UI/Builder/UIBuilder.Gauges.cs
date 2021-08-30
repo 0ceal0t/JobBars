@@ -6,7 +6,7 @@ using System.Numerics;
 namespace JobBars.UI {
     public unsafe partial class UIBuilder {
         public AtkResNode* GaugeRoot = null;
-        private static readonly int MAX_GAUGES = 4;
+        private static readonly int MAX_GAUGES = 5;
         public List<UIBar> Bars = new();
         public List<UIArrow> Arrows = new();
         public List<UIDiamond> Diamonds = new();

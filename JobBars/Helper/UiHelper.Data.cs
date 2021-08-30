@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
 
@@ -81,6 +82,7 @@ namespace JobBars.Helper {
                 var attackType = item.ActionCategory.Value.Name.ToString();
                 var actionId = item.ActionCategory.Value.RowId;
                 if (actionId == 2 || actionId == 3) { // spell or weaponskill
+                    if (item.CooldownGroup != 58 && item.AdditionalCooldownGroup != 58) continue; // not actually a gcd
                     GCDs.Add(item.RowId);
                 }
 

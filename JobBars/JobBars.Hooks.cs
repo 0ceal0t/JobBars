@@ -102,6 +102,7 @@ namespace JobBars {
 
             if (arg1 == 0x40000010) {
                 GaugeManager?.Reset();
+                IconManager?.Reset();
                 BuffManager?.ResetTrackers();
                 CooldownManager?.ResetTrackers();
                 UIHelper.ResetTicks();
@@ -110,6 +111,7 @@ namespace JobBars {
 
         private void ZoneChanged(object sender, ushort e) {
             GaugeManager?.Reset();
+            IconManager?.Reset();
             BuffManager?.ResetTrackers();
             // don't reset CDs on zone change
             UIHelper.ResetTicks();

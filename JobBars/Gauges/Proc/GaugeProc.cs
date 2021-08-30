@@ -96,7 +96,7 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, out var newSound)) {
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }
         }
