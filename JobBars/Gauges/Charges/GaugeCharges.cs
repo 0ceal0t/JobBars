@@ -105,6 +105,7 @@ namespace JobBars.Gauges {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
+
                         if (part.Bar && !barAssigned && buffExists) {
                             barAssigned = true;
                             SetGaugeValue(buff.RemainingTime / part.Duration, (int)Math.Round(buff.RemainingTime));

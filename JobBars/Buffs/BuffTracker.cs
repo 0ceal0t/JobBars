@@ -76,11 +76,10 @@ namespace JobBars.Buffs {
         }
 
         public void TickUI(UIBuff ui) {
-            if(UI != ui) {
+            if(UI != ui || UI?.Iconid != Props.Icon) {
                 UI = ui;
                 SetupUI();
             }
-            else if(UI.Iconid != Props.Icon) SetupUI();
 
             UI.Show();
 

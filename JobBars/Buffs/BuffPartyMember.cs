@@ -13,7 +13,7 @@ namespace JobBars.Buffs {
             IsPlayer = isPlayer;
         }
 
-        public void Tick(List<BuffTracker> trackers, CurrentPartyMember partyMember) {
+        public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember) {
             if(CurrentJob != partyMember.Job) {
                 CurrentJob = partyMember.Job;
                 SetupTrackers();

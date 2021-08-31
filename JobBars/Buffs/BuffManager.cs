@@ -54,7 +54,7 @@ namespace JobBars.Buffs {
             }
 
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
-            List<BuffTracker> activeBuffs = new();
+            HashSet<BuffTracker> activeBuffs = new();
 
             foreach (var partyMember in JobBars.PartyMembers) {
                 if (partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) continue;

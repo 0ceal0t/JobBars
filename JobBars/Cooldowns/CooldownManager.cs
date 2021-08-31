@@ -15,7 +15,9 @@ namespace JobBars.Cooldowns {
 
         public CooldownManager() : base("##JobBars_Cooldowns") {
             Init();
+
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+            if (!JobBars.Config.CooldownsEnabled) JobBars.Builder.HideCooldowns();
         }
 
         public CooldownProps[] GetCooldownProps(JobIds job) {

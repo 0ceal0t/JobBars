@@ -1,13 +1,10 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.Helper;
 using JobBars.UI;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace JobBars.Gauges {
-
     public enum GaugeVisualType {
         Bar,
         Arrow,
