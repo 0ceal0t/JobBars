@@ -6,6 +6,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
         public static Dictionary<Item, Status> PlayerStatus { get; private set; }
+        public static uint PreviousEnemyTargetId { get; private set; }
 
         public static void UpdatePlayerStatus() {
             Dictionary<Item, Status> buffDict = new();
@@ -15,6 +16,7 @@ namespace JobBars.Helper {
 
             var prevEnemy = PreviousEnemyTarget;
             if (prevEnemy != null) ActorToBuffItems(prevEnemy, ownerId, buffDict);
+            PreviousEnemyTargetId = prevEnemy == null ? 0 : prevEnemy.ObjectId;
 
             PlayerStatus = buffDict;
         }

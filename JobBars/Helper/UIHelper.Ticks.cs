@@ -7,7 +7,10 @@ namespace JobBars.Helper {
         private static uint LastMp = 0;
 
         private static bool ActorTickActive = false;
-        private static DateTime ActorTick;
+        private static DateTime ActorTickTime;
+
+        private static uint DoTTickObjectId = 0;
+        private static DateTime DoTTickTime;
 
         public static void UpdateMp(uint currentMp) {
             if (currentMp != 10000 && currentMp > LastMp && !MpTickActive) {
@@ -20,7 +23,7 @@ namespace JobBars.Helper {
         public static void UpdateActorTick() {
             if (!ActorTickActive) {
                 ActorTickActive = true;
-                ActorTick = DateTime.Now;
+                ActorTickTime = DateTime.Now;
             }
         }
 
@@ -29,18 +32,35 @@ namespace JobBars.Helper {
             ActorTickActive = false;
         }
 
+        public static void UpdateDoTTick(uint objectId) {
+            if (objectId == 0) return;
+            if (PreviousEnemyTargetId == 0) return;
+            if (objectId == PreviousEnemyTargetId && DoTTickObjectId != PreviousEnemyTargetId) {
+                DoTTickObjectId = PreviousEnemyTargetId;
+                DoTTickTime = DateTime.Now;
+            }
+        }
+
+        public static float GetDoTTick() {
+            if (PreviousEnemyTargetId == 0) return 0;
+            if (DoTTickObjectId != PreviousEnemyTargetId) return 0; // has not been updated yet
+            return GetTickFrom(DoTTickTime);
+        }
+
         public static float GetActorTick() {
             if (!ActorTickActive) return 0;
-            var currentTime = DateTime.Now;
-            var diff = (currentTime - ActorTick).TotalSeconds;
-            return (float)(diff % 3.0f / 3.0f);
+            return GetTickFrom(ActorTickTime);
         }
 
         public static float GetMpTick() {
             if (!MpTickActive) return 0;
             if (LastMp == 10000) return 0; // already max
+            return GetTickFrom(MpTime);
+        }
+
+        private static float GetTickFrom(DateTime time) {
             var currentTime = DateTime.Now;
-            var diff = (currentTime - MpTime).TotalSeconds;
+            var diff = (currentTime - time).TotalSeconds;
             return (float)(diff % 3.0f / 3.0f);
         }
     }

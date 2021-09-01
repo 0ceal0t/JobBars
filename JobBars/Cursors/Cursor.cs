@@ -10,6 +10,7 @@ namespace JobBars.Cursors {
         CastTime,
         MpTick,
         ActorTick,
+        DoT_Tick,
         StaticCircle,
         StaticRing,
         StatusTime
@@ -62,6 +63,7 @@ namespace JobBars.Cursors {
             CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
             CursorType.StaticRing => 1,
             CursorType.StatusTime => GetStatusTime(status, statusDuration),
+            CursorType.DoT_Tick => UIHelper.GetDoTTick(),
             _ => 0
         };
 

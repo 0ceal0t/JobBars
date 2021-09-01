@@ -98,7 +98,12 @@ namespace JobBars {
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
 
-            if (entityId > 0 && entityId == ClientState?.LocalPlayer?.ObjectId && id == 23) UIHelper.UpdateActorTick();
+            if (entityId > 0 && id == 23) {
+                if (entityId == ClientState?.LocalPlayer?.ObjectId)
+                    UIHelper.UpdateActorTick();
+                else
+                    UIHelper.UpdateDoTTick(entityId);
+            }
 
             if (arg1 == 0x40000010) {
                 GaugeManager?.Reset();
