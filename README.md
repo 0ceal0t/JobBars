@@ -11,6 +11,8 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - ~~Mitigation tracker~~ **COMING SOON**
 - ~~Cursor displays (cast time, GCD timer, MP tick)~~ **COMING SOON**
 
+Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
+
 https://user-images.githubusercontent.com/18051158/130377508-ee88e07f-b41f-4a39-83db-4b9cc79a47b0.mp4
 
 https://user-images.githubusercontent.com/18051158/130377516-5c299fb5-9a3a-4b47-bb5f-b03297c3ea6f.mp4
