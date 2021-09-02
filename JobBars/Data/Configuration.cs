@@ -197,6 +197,7 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
+        public IntValueConfig GaugeProcOrder = new(-1);
         public BoolValueConfig GaugeNoSoundOnFull = new(false);
         public BoolValueConfig GaugeInvert = new(false);
         public ColorConfig GaugeColor = new();

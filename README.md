@@ -150,6 +150,7 @@ The goal of this project is to augment the existing UI by displaying information
 - [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~Proc order changing~~
 - [x] ~~GCD timer~~ (cursor)
 - [x] ~~DoT tick timer / MP timer~~ (cursor)
 - [x] ~~Add invert counter option to GCDs~~

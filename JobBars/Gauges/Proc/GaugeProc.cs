@@ -2,6 +2,7 @@
 using JobBars.Helper;
 using JobBars.UI;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace JobBars.Gauges {
@@ -11,20 +12,23 @@ namespace JobBars.Gauges {
         public bool NoSoundOnFull;
     }
 
-    public struct Proc {
+    public class Proc {
+        public string Name;
         public Item Trigger;
         public ElementColor Color;
-        public int Idx;
 
-        public Proc(BuffIds buff, ElementColor color) {
-            Trigger = new Item(buff);
+        public int Idx = 0;
+        public int Order;
+
+        public Proc(string name, BuffIds buff, ElementColor color) : this(name, new Item(buff), color) { }
+
+        public Proc(string name, ActionIds action, ElementColor color) : this(name, new Item(action), color) { }
+
+        public Proc(string name, Item trigger, ElementColor color) {
+            Name = name;
+            Trigger = trigger;
             Color = color;
-            Idx = 0;
-        }
-        public Proc(ActionIds action, ElementColor color) {
-            Trigger = new Item(action);
-            Color = color;
-            Idx = 0;
+            Order = JobBars.Config.GaugeProcOrder.Get(Name);
         }
     }
 
@@ -38,15 +42,24 @@ namespace JobBars.Gauges {
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
 
             Size = Props.Procs.Length;
-            for (int idx = 0; idx < Props.Procs.Length; idx++)
-                Props.Procs[idx].Idx = idx;
+            RefreshIdx();
+        }
+
+        private void RefreshIdx() {
+            var idx = 0;
+            foreach(var proc in Props.Procs.OrderBy(x => x.Order)) {
+                proc.Idx = idx;
+                idx++;
+            }
         }
 
         protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size, showText: Props.ShowText);
             }
-            foreach (var proc in Props.Procs) SetValue(proc.Idx, false);
+            for(int idx = 0; idx < Size; idx++) {
+                SetValue(idx, false);
+            }
             ResetProcActive();
         }
 
@@ -62,8 +75,7 @@ namespace JobBars.Gauges {
         }
 
         public unsafe override void Tick() {
-            for(int idx = 0; idx < Size; idx++) {
-                var proc = Props.Procs[idx];
+            foreach(var proc in Props.Procs) {
                 bool procActive;
 
                 if (proc.Trigger.Type == ItemType.Buff) {
@@ -74,8 +86,8 @@ namespace JobBars.Gauges {
                     SetValue(proc.Idx, procActive = !recastActive);
                 }
 
-                if (procActive && !ProcsActive[idx] && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when any proc becomes active
-                ProcsActive[idx] = procActive;
+                if (procActive && !ProcsActive[proc.Idx] && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when any proc becomes active
+                ProcsActive[proc.Idx] = procActive;
             }
         }
 
@@ -98,6 +110,14 @@ namespace JobBars.Gauges {
         protected override void DrawGauge(string _ID, JobIds job) {
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
+            }
+
+            foreach(var proc in Props.Procs) {
+                if (JobBars.Config.GaugeProcOrder.Draw($"Order ({proc.Name})", proc.Name, proc.Order, out var newOrder)) {
+                    proc.Order = newOrder;
+                    RefreshIdx();
+                    JobBars.GaugeManager.ResetJob(job);
+                }
             }
         }
     }

@@ -110,9 +110,9 @@ namespace JobBars.Gauges {
             });
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new Gauge[] {
-                new GaugeProc("Earthly Star Primed", new GaugeProcProps{
+                new GaugeProc("AST Procs", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.GiantDominance, UIColor.LightBlue)
+                        new Proc("Earthly Star Primed", BuffIds.GiantDominance, UIColor.LightBlue)
                     }
                 }),
                 new GaugeTimer("Combust", new [] {
@@ -137,10 +137,10 @@ namespace JobBars.Gauges {
             });
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new Gauge[] {
-                new GaugeProc("Excog", new GaugeProcProps{
+                new GaugeProc("SCH Procs", new GaugeProcProps{
                     NoSoundOnFull = true,
                     Procs = new []{
-                        new Proc(BuffIds.Excog, UIColor.BrightGreen)
+                        new Proc("Excog", BuffIds.Excog, UIColor.BrightGreen)
                     }
                 }),
                 new GaugeTimer("Biolysis", new SubGaugeTimerProps {
@@ -177,10 +177,10 @@ namespace JobBars.Gauges {
             });
             // ============ BRD ==================
             JobToValue.Add(JobIds.BRD, new Gauge[] {
-                new GaugeProc("Straight Shot Ready/BloodLetter", new GaugeProcProps {
+                new GaugeProc("BRD Procs", new GaugeProcProps {
                     Procs = new []{
-                        new Proc(BuffIds.StraightShotReady, UIColor.Yellow),
-                        new Proc(ActionIds.BloodLetter, UIColor.Red)
+                        new Proc("Straight Shot Ready", BuffIds.StraightShotReady, UIColor.Yellow),
+                        new Proc("BloodLetter", ActionIds.BloodLetter, UIColor.Red)
                     }
                 }),
                 new GaugeTimer("Caustic Bite", new SubGaugeTimerProps {
@@ -356,11 +356,11 @@ namespace JobBars.Gauges {
             });
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new Gauge[] {
-                new GaugeProc("Firestarter/Thundercloud", new GaugeProcProps{
+                new GaugeProc("BLM Procs", new GaugeProcProps{
                     ShowText = true,
                     Procs = new []{
-                        new Proc(BuffIds.Firestarter, UIColor.Orange),
-                        new Proc(BuffIds.Thundercloud, UIColor.LightBlue)
+                        new Proc("Firestarter", BuffIds.Firestarter, UIColor.Orange),
+                        new Proc("Thundercloud", BuffIds.Thundercloud, UIColor.LightBlue)
                     }
                 }),
                 new GaugeTimer("Thunder", new []{
@@ -388,10 +388,10 @@ namespace JobBars.Gauges {
             });
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new Gauge[] {
-                new GaugeProc("Verfire/Verstone", new GaugeProcProps{
+                new GaugeProc("RDM Procs", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.VerstoneReady, UIColor.NoColor),
-                        new Proc(BuffIds.VerfireReady, UIColor.Red)
+                        new Proc("Verstone", BuffIds.VerstoneReady, UIColor.NoColor),
+                        new Proc("Verfire", BuffIds.VerfireReady, UIColor.Red)
                     }
                 }),
                 new GaugeGCD("Manafication", GaugeVisualType.Arrow, new SubGaugeGCDProps {
@@ -467,11 +467,11 @@ namespace JobBars.Gauges {
             JobToValue.Add(JobIds.DNC, new Gauge[] {
                 new GaugeProc("Dancer Procs", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.FlourishingCascade, UIColor.BrightGreen),
-                        new Proc(BuffIds.FlourishingFountain, UIColor.Yellow),
-                        new Proc(BuffIds.FlourishingWindmill, UIColor.DarkBlue),
-                        new Proc(BuffIds.FlourishingShower, UIColor.Red),
-                        new Proc(BuffIds.FlourishingFanDance, UIColor.HealthGreen)
+                        new Proc("Cascade", BuffIds.FlourishingCascade, UIColor.BrightGreen),
+                        new Proc("Fountain", BuffIds.FlourishingFountain, UIColor.Yellow),
+                        new Proc("Windmill", BuffIds.FlourishingWindmill, UIColor.DarkBlue),
+                        new Proc("Shower", BuffIds.FlourishingShower, UIColor.Red),
+                        new Proc("Fan Dance", BuffIds.FlourishingFanDance, UIColor.HealthGreen)
                     }
                 })
             });
@@ -588,11 +588,11 @@ namespace JobBars.Gauges {
             });
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new Gauge[] {
-                new GaugeProc("Condensed Libra", new GaugeProcProps{
+                new GaugeProc("BLU Procs", new GaugeProcProps{
                     Procs = new []{
-                        new Proc(BuffIds.AstralAttenuation, UIColor.NoColor),
-                        new Proc(BuffIds.UmbralAttenuation, UIColor.DarkBlue),
-                        new Proc(BuffIds.PhysicalAttenuation, UIColor.Orange)
+                        new Proc("Astral Libra", BuffIds.AstralAttenuation, UIColor.NoColor),
+                        new Proc("Umbral Libra", BuffIds.UmbralAttenuation, UIColor.DarkBlue),
+                        new Proc("Physical Libra", BuffIds.PhysicalAttenuation, UIColor.Orange)
                     }
                 }),
                 new GaugeTimer("Song of Torment/Nightbloom", new SubGaugeTimerProps
