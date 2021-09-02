@@ -9,7 +9,7 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - Icon replacement (time until DoT refresh, duration left on buffs)
 - Party buffs coming off of cooldown
 - ~~Mitigation tracker~~ **COMING SOON**
-- ~~Cursor displays (cast time, GCD timer, MP tick)~~ **COMING SOON**
+- ~~Cursor displays (cast time, GCD timer, MP tick, DoT tick)~~ **COMING SOON**
 
 Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
