@@ -98,8 +98,21 @@ namespace JobBars {
 
             UIHelper.Setup();
             UIColor.SetupColors();
-            Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            if (Config.Version == 0) Config = new Configuration(); // remove outdated
+
+            // Upgrade if config is too old
+            try {
+                Config = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            }
+            catch (Exception e) {
+                PluginLog.LogError("Error loading config", e);
+                Config = new Configuration();
+                Config.Save();
+            }
+            if (Config.Version == 0) {
+                PluginLog.Log("Old config version found");
+                Config = new Configuration();
+                Config.Save();
+            }
 
             IconBuilder = new UIIconManager();
 

@@ -51,7 +51,7 @@ namespace JobBars.Buffs {
                     TimeLeft = 0;
 
                     State = Props.CD <= 0 ? BuffState.None : // no CD, inactive
-                        Props.CD <= 30 ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
+                        Props.CD <= JobBars.Config.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
                 }
                 else { // Still running
                     Percent = 1.0f - (float)(TimeLeft / Props.Duration);
@@ -62,7 +62,7 @@ namespace JobBars.Buffs {
                 if(TimeLeft <= 0) { // Off CD
                     State = BuffState.OffCD;
                 }
-                else if(TimeLeft <= 30) { // Visible
+                else if(TimeLeft <= JobBars.Config.BuffDisplayTimer) { // Visible
                     State = BuffState.OnCD_Visible;
                     Percent = TimeLeft / Props.CD;
                 }

@@ -52,7 +52,7 @@ The goal of this project is to augment the existing UI by displaying information
 ### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> PLD
 + **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
 + **Mitigation**: Hallowed Ground, Reprisal, Divine Veil, Passage of Arms
-+ **Icon Display**: Requiescat, 
++ **Icon Display**: Requiescat, Goring Blade, Fight or Flight
 
 ### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> GNB
 + **Gauges**: GCDS used in No Mercy

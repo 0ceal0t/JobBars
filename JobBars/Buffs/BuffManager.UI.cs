@@ -28,6 +28,10 @@ namespace JobBars.Buffs {
 
             JobBars.Separator(); // =====================================
 
+            if(ImGui.InputFloat("Hide Buffs with Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
+                JobBars.Config.Save();
+            }
+
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
                 if (!JobBars.Config.BuffHideOutOfCombat && JobBars.Config.BuffBarEnabled) { // since they might be hidden
                     JobBars.Builder.ShowBuffs();

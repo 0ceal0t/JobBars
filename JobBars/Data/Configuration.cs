@@ -214,6 +214,7 @@ namespace JobBars.Data {
         public bool BuffBarEnabled = true;
         public bool BuffHideOutOfCombat = false;
         public bool BuffIncludeParty = true;
+        public float BuffDisplayTimer = 30f;
 
         public BoolValueConfig BuffEnabled = new(true);
 
