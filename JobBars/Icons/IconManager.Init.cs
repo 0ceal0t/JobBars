@@ -1,9 +1,5 @@
 ﻿using JobBars.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Icons {
     public partial class IconManager {
@@ -51,7 +47,7 @@ namespace JobBars.Icons {
                 new IconReplacer("Storm's Eye", new IconProps {
                     Icons = new [] { ActionIds.StormsEye },
                     Triggers = new[] {
-                        new IconTriggerStruct { Trigger = new Item(BuffIds.StormsEye), Duration = 21 }
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.StormsEye), Duration = 60 }
                     }
                 })
             });
@@ -89,6 +85,12 @@ namespace JobBars.Icons {
                     Icons = new [] { ActionIds.Lightspeed },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
+                    }
+                }),
+                new IconReplacer("Earthly Star", new IconProps {
+                    Icons = new [] { ActionIds.EarthlyStar },
+                    Triggers = new [] {
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
                     }
                 })
             });

@@ -28,7 +28,7 @@ https://user-images.githubusercontent.com/18051158/130377610-86fb7e17-9780-4827-
 https://user-images.githubusercontent.com/18051158/130377598-2398d33a-9c0c-4d0c-8fd7-4187451a7e56.mp4
 
 ## Usage
-To open the settings menu, use `/jobbars`
+To open the settings menu, use `/jobbars`. When changing icon positions on your hotbars, you may need to switch to a different job and then back to update the icon displays.
 
 ## Why?
 The goal of this project is to augment the existing UI by displaying information in a more convenient format. It is not meant to be a complete overhaul, or to replace existing job gauges. If you personally only find certain parts useful, every gauge/buff/mitigation/etc. can be enabled and disabled individually.
@@ -146,8 +146,6 @@ The goal of this project is to augment the existing UI by displaying information
 - [ ] Support crossbar for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
-- [ ] Glow around gauges
-- [ ] Replicate or attach to existing gauges
 - [ ] Split up party buffs and personal buffs
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
 - [x] ~~Proc order changing~~
