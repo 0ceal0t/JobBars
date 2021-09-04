@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using JobBars.Data;
+using JobBars.GameStructs;
 
 namespace JobBars.Helper {
     public struct StatusNameId {
@@ -125,6 +127,11 @@ namespace JobBars.Helper {
             currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
             totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
             return JobBars.ClientState.LocalPlayer.IsCasting;
+        }
+
+        public static AddonHotbarStruct* GetHotbarUI() {
+            var uiModule = Framework.Instance()->GetUiModule();
+            return (AddonHotbarStruct*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FFXIVClientInterface;
+﻿using Dalamud.Logging;
+using FFXIVClientInterface;
 using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -21,17 +22,26 @@ namespace JobBars.UI {
             public AtkComponentNode* Component;
 
             private AtkResNode* OriginalOverlay;
+            private AtkImageNode* OriginalCombo;
+
             private AtkImageNode* Border;
             private AtkImageNode* CD;
             private AtkTextNode* Text;
             private AtkTextNode* BigText;
             private IconState State = IconState.None;
 
-            public Icon(uint id, AtkComponentNode* component, bool hideOriginal = true) {
+            private readonly bool DoTMode;
+            private readonly bool UseCombo;
+
+            public Icon(uint id, AtkComponentNode* component, bool dotMode, bool useCombo) {
                 Id = id;
                 Component = component;
                 var nodeList = Component->Component->UldManager.NodeList;
                 OriginalOverlay = nodeList[1];
+                OriginalCombo = (AtkImageNode*)nodeList[9];
+
+                DoTMode = dotMode;
+                UseCombo = useCombo;
 
                 var originalBorder = (AtkImageNode*)nodeList[4];
                 var originalCD = (AtkImageNode*)nodeList[5];
@@ -110,35 +120,47 @@ namespace JobBars.UI {
                 CD->AtkResNode.ParentNode = rootNode;
                 Text->AtkResNode.ParentNode = rootNode;
 
-                UIHelper.Link(OriginalOverlay, (AtkResNode*)Border);
-                UIHelper.Link((AtkResNode*)Border, (AtkResNode*)CD);
-                UIHelper.Link((AtkResNode*)CD, (AtkResNode*)BigText);
+                UIHelper.Link(OriginalOverlay, (AtkResNode*)CD);
+                UIHelper.Link((AtkResNode*)CD, (AtkResNode*)Border);
+                UIHelper.Link((AtkResNode*)Border, (AtkResNode*)BigText);
                 UIHelper.Link((AtkResNode*)BigText, (AtkResNode*)Text);
                 UIHelper.Link((AtkResNode*)Text, macroIcon);
 
                 Component->Component->UldManager.UpdateDrawNodeList();
 
-                if(hideOriginal) UIHelper.Hide(OriginalOverlay);
+                if(dotMode) UIHelper.Hide(OriginalOverlay);
                 UIHelper.Hide(CD);
                 UIHelper.Hide(Text);
                 UIHelper.Hide(BigText);
             }
 
+            // ============================
+
+            public void SetProgress(float current, float max) {
+                if (DoTMode) SetTimerProgress(current, max);
+                else SetBuffProgress(current);
+            }
+
+            public void SetDone() {
+                if (DoTMode) SetTimerDone();
+                else SetBuffDone();
+            }
+
             // ======== FOR DoT TIMERS ========
 
-            public void SetTimerProgress(float current, float max) {
+            private void SetTimerProgress(float current, float max) {
                 if (State == IconState.TimerDone && current <= 0) return;
                 State = IconState.TimerRunning;
 
                 UIHelper.Show(CD);
                 UIHelper.Show(Text);
-                Border->PartId = 0; // hide
+                if(!UseCombo) Border->PartId = 0;
 
                 CD->PartId = (ushort)(80 - (float)(current / max) * 80);
                 Text->SetText(((int)Math.Round(current)).ToString());
             }
 
-            public void SetTimerDone() {
+            private void SetTimerDone() {
                 State = IconState.TimerDone;
                 UIHelper.Hide(CD);
                 UIHelper.Hide(Text);
@@ -146,7 +168,7 @@ namespace JobBars.UI {
 
             // ====== FOR BUFFS =============
 
-            public void SetBuffProgress(float current) {
+            private void SetBuffProgress(float current) {
                 if(State != IconState.BuffRunning) {
                     State = IconState.BuffRunning;
                     UIHelper.Hide(OriginalOverlay);
@@ -155,19 +177,26 @@ namespace JobBars.UI {
                 BigText->SetText(((int)Math.Round(current)).ToString());
             }
 
-            public void SetBuffDone() {
+            private void SetBuffDone() {
                 if (State == IconState.None) return;
                 State = IconState.None;
-                Border->PartId = 0;
+                if(!UseCombo) Border->PartId = 0;
                 UIHelper.Hide(BigText);
                 UIHelper.Show(OriginalOverlay);
             }
 
             // =====================
 
-            public void Tick(float percent) {
-                if (State != IconState.TimerDone && State != IconState.BuffRunning) return;
-                Border->PartId = (ushort)(6 + percent * 7);
+            public void Tick(float percent, HashSet<uint> yellowBorder) {
+                if (!UseCombo && State != IconState.TimerDone && State != IconState.BuffRunning) {
+                    Border->PartId = 0;
+                    return;
+                }
+                if (UseCombo && !yellowBorder.Contains(Id)) {
+                    Border->PartId = 0;
+                    return;
+                }
+                Border->PartId = (ushort) (6 + percent* 7);
             }
 
             public void Dispose() {
@@ -200,6 +229,7 @@ namespace JobBars.UI {
 
                 Component = null;
                 OriginalOverlay = null;
+                OriginalCombo = null;
             }
         }
 
@@ -228,7 +258,7 @@ namespace JobBars.UI {
             Client = new ClientInterface();
         }
 
-        public void Setup(List<uint> triggers, bool dotTypeIcon = true) {
+        public void Setup(List<uint> triggers, bool dotMode, bool useCombo) {
             if (triggers == null) return;
             var hotbarModule = Client.UiModule.RaptureHotbarModule;
 
@@ -247,7 +277,7 @@ namespace JobBars.UI {
                     var icon = slot.Icon;
                     var action = UIHelper.GetAdjustedAction(slotStruct->CommandId);
                     if (triggers.Contains(action) && !AlreadySetup(icon)) {
-                        Icons.Add(new Icon(action, icon, dotTypeIcon));
+                        Icons.Add(new Icon(action, icon, dotMode, useCombo));
                     }
                 }
             }
@@ -272,60 +302,30 @@ namespace JobBars.UI {
             Icons.RemoveAll(x => toRemove.Contains(x));
         }
 
-        // ======== FOR DoT TIMERS ========
-
-        public void SetTimerProgress(List<uint> triggers, float current, float max, bool check = true) {
-            var found = false;
-            foreach(var icon in Icons) {
-                if (!triggers.Contains(icon.Id)) continue;
-                icon.SetTimerProgress(current, max);
-                found = true;
-            }
-
-            if (found || !check) return;
-            Setup(triggers);
-            SetTimerProgress(triggers, current, max, false);
-        }
-
-        public void SetTimerDone(List<uint> triggers, bool check = true) {
+        public void SetProgress(List<uint> triggers, bool dotMode, bool useCombo, float current, float max, bool check = true) {
             var found = false;
             foreach (var icon in Icons) {
                 if (!triggers.Contains(icon.Id)) continue;
-                icon.SetTimerDone();
+                icon.SetProgress(current, max);
                 found = true;
             }
 
             if (found || !check) return;
-            Setup(triggers);
-            SetTimerDone(triggers, false);
+            Setup(triggers, dotMode, useCombo);
+            SetProgress(triggers, dotMode, useCombo, current, max, false);
         }
 
-        // ========== FOR BUFFS =========
-
-        public void SetBuffProgress(List<uint> triggers, float current, bool check = true) {
+        public void SetDone(List<uint> triggers, bool dotMode, bool useCombo, bool check = true) {
             var found = false;
             foreach (var icon in Icons) {
                 if (!triggers.Contains(icon.Id)) continue;
-                icon.SetBuffProgress(current);
+                icon.SetDone();
                 found = true;
             }
 
             if (found || !check) return;
-            Setup(triggers, false);
-            SetBuffProgress(triggers, current, false);
-        }
-
-        public void SetBuffDone(List<uint> triggers, bool check = true) {
-            var found = false;
-            foreach (var icon in Icons) {
-                if (!triggers.Contains(icon.Id)) continue;
-                icon.SetBuffDone();
-                found = true;
-            }
-
-            if (found || !check) return;
-            Setup(triggers, false);
-            SetBuffDone(triggers, false);
+            Setup(triggers, dotMode, useCombo);
+            SetDone(triggers, dotMode, useCombo, false);
         }
 
         // ========================
@@ -335,7 +335,16 @@ namespace JobBars.UI {
             int millis = time.Second * 1000 + time.Millisecond;
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
-            Icons.ForEach(x => x.Tick(percent));
+            HashSet<uint> yellowBorder = new();
+            var hotbarStruct = UIHelper.GetHotbarUI();
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 12; j++) {
+                    var item = hotbarStruct->Hotbars[i][j];
+                    if(item.YellowBorder && item.ActionId > 0) yellowBorder.Add(item.ActionId);
+                }
+            }
+
+            Icons.ForEach(x => x.Tick(percent, yellowBorder));
         }
 
         public void Reset() {

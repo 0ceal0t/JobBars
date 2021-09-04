@@ -1,7 +1,7 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Logging;
+using ImGuiNET;
 using JobBars.Data;
 using JobBars.Helper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -9,6 +9,8 @@ using System.Numerics;
 namespace JobBars.Icons {
     public struct IconProps {
         public bool IsDoT;
+        public bool UseCombo;
+        public bool AllowCombo;
         public ActionIds[] Icons;
         public IconTriggerStruct[] Triggers;
     }
@@ -26,20 +28,27 @@ namespace JobBars.Icons {
 
         public readonly string Name;
         public bool Enabled;
+
         private IconState State = IconState.Inactive;
         private IconProps Props;
         private readonly List<uint> Icons;
+
+        private readonly bool AllowCombo;
+        private bool UseCombo = false;
         
         public IconReplacer(string name, IconProps props) {
             Name = name;
-            Enabled = JobBars.Config.IconEnabled.Get(Name);
             Props = props;
+            Enabled = JobBars.Config.IconEnabled.Get(Name);
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
+
+            AllowCombo = Props.AllowCombo || Props.UseCombo;
+            UseCombo = JobBars.Config.IconUseCombo.Get(Name, Props.UseCombo);
         }
 
         public void Setup() {
             State = IconState.Inactive;
-            JobBars.IconBuilder.Setup(Icons, Props.IsDoT);
+            JobBars.IconBuilder.Setup(Icons, Props.IsDoT, UseCombo);
         }
 
         public void Tick() {
@@ -69,13 +78,11 @@ namespace JobBars.Icons {
         }
 
         private void SetIcon(float current, float duration) {
-            if (Props.IsDoT) JobBars.IconBuilder.SetTimerProgress(Icons, current, duration);
-            else JobBars.IconBuilder.SetBuffProgress(Icons, current);
+            JobBars.IconBuilder.SetProgress(Icons, Props.IsDoT, UseCombo, current, duration);
         }
 
         private void ResetIcon() {
-            if (Props.IsDoT) JobBars.IconBuilder.SetTimerDone(Icons);
-            else JobBars.IconBuilder.SetBuffDone(Icons);
+            JobBars.IconBuilder.SetDone(Icons, Props.IsDoT, UseCombo);
         }
 
         public void Draw(string id, JobIds job) {
@@ -91,6 +98,11 @@ namespace JobBars.Icons {
                     if (Enabled) Setup();
                     else JobBars.IconBuilder.Remove(Icons);
                 }
+            }
+
+            if (AllowCombo && JobBars.Config.IconUseCombo.Draw($"Use Original Dash Border{_ID}", Name, out var newCombo)) {
+                UseCombo = newCombo;
+                JobBars.IconBuilder.Reset();
             }
         }
     }

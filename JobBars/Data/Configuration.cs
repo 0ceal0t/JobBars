@@ -249,6 +249,7 @@ namespace JobBars.Data {
 
         public bool IconsEnabled = true;
         public BoolValueConfig IconEnabled = new(true);
+        public BoolValueConfig IconUseCombo = new(false);
 
         // =====================
 

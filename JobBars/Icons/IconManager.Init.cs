@@ -30,6 +30,7 @@ namespace JobBars.Icons {
                 }),
                 new IconReplacer("Goring Blade", new IconProps {
                     IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.GoringBlade },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.GoringBlade), Duration = 21 }
@@ -45,6 +46,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Storm's Eye", new IconProps {
+                    IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.StormsEye },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.StormsEye), Duration = 60 }
@@ -185,6 +188,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Disembowel", new IconProps {
+                    IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.Disembowel },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Disembowel), Duration = 24 }
@@ -192,6 +197,7 @@ namespace JobBars.Icons {
                 }),
                 new IconReplacer("Chaos Thrust", new IconProps {
                     IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.ChaosThrust },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 30 }
@@ -228,22 +234,19 @@ namespace JobBars.Icons {
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new[] {
                 new IconReplacer("Jinpu", new IconProps {
+                    IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.Jinpu },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Jinpu), Duration = 40 }
                     }
                 }),
                 new IconReplacer("Shifu", new IconProps {
+                    IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.Shifu },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Shifu), Duration = 40 }
-                    }
-                }),
-                new IconReplacer("Higanbana", new IconProps {
-                    IsDoT = true,
-                    Icons = new [] { ActionIds.Higanbana },
-                    Triggers = new[] {
-                        new IconTriggerStruct { Trigger = new Item(BuffIds.Higanbana), Duration = 60 }
                     }
                 })
             });
@@ -251,6 +254,7 @@ namespace JobBars.Icons {
             JobToValue.Add(JobIds.BLM, new[] {
                 new IconReplacer("Thunder", new IconProps {
                     IsDoT = true,
+                    AllowCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder,
                         ActionIds.Thunder3
@@ -262,6 +266,7 @@ namespace JobBars.Icons {
                 }),
                 new IconReplacer("AOE Thunder", new IconProps {
                     IsDoT = true,
+                    AllowCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder2,
                         ActionIds.Thunder4
@@ -329,6 +334,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Twin Snakes", new IconProps {
+                    IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.TwinSnakes },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.TwinSnakes), Duration = 15 }
@@ -336,6 +343,7 @@ namespace JobBars.Icons {
                 }),
                 new IconReplacer("Demolish", new IconProps {
                     IsDoT = true,
+                    UseCombo = true,
                     Icons = new [] { ActionIds.Demolish },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Demolish), Duration = 18 }

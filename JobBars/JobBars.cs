@@ -62,6 +62,9 @@ namespace JobBars {
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
+        private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
+        private bool LastCutscene = false;
+
         /*
          * SIG LIST:
          *      
@@ -201,6 +204,7 @@ namespace JobBars {
             }
 
             CheckForJobChange();
+            CheckForCutscene();
             Tick();
             CheckForHUDChange(addon);
         }
@@ -225,6 +229,25 @@ namespace JobBars {
                 CursorManager.SetJob(CurrentJob);
                 IconManager.SetJob(CurrentJob);
             }
+        }
+
+        private void CheckForCutscene() {
+            var currentCutscene = WatchingCutscene;
+            if (currentCutscene != LastCutscene) {
+                if (Config.GaugesEnabled) {
+                    if (currentCutscene) Builder.HideGauges();
+                    else Builder.ShowGauges();
+                }
+                if (Config.BuffBarEnabled) {
+                    if (currentCutscene) Builder.HideBuffs();
+                    else Builder.ShowBuffs();
+                }
+                if (Config.CursorsEnabled) {
+                    if (currentCutscene) Builder.HideCursor();
+                    else Builder.ShowCursor();
+                }
+            }
+            LastCutscene = currentCutscene;
         }
 
         private void Tick() {
