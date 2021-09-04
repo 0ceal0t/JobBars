@@ -129,9 +129,9 @@ namespace JobBars.Helper {
             return JobBars.ClientState.LocalPlayer.IsCasting;
         }
 
-        public static AddonHotbarStruct* GetHotbarUI() {
+        public static AddonHotbarNumberArray* GetHotbarUI() {
             var uiModule = Framework.Instance()->GetUiModule();
-            return (AddonHotbarStruct*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
+            return (AddonHotbarNumberArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
     }
 }
