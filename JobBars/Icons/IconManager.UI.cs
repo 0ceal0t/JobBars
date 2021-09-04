@@ -7,6 +7,10 @@ namespace JobBars.Icons {
                 JobBars.Config.Save();
                 JobBars.IconBuilder.Reset();
             }
+
+            if (ImGui.Button("RESET")) {
+                JobBars.IconBuilder.Reset();
+            }
         }
 
         protected override void DrawItem(IconReplacer[] item) {

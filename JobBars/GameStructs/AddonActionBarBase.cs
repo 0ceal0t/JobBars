@@ -3,6 +3,11 @@ using FFXIVClientStructs.Attributes;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.GameStructs {
+    [StructLayout(LayoutKind.Explicit, Size = 0x2B8)]
+    public unsafe struct AddonActionBarMain {
+        [FieldOffset(0x000)] public AddonActionBarBase ActionBarBase;
+    }
+
     [StructLayout(LayoutKind.Explicit, Size = 0x248)]
     [Addon("_ActionBar02", "_ActionBar03", "_ActionBar04", "_ActionBar05", "_ActionBar06", "_ActionBar07", "_ActionBar08", "_ActionBar09", "_ActionCross", "_ActionDoubleCross", "_ActionDoubleCrossR", "_ActionDoubleCrossL")]
     public unsafe struct AddonActionBarBase {

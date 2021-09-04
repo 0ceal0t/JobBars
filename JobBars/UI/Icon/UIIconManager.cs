@@ -1,6 +1,4 @@
 ﻿using Dalamud.Logging;
-using FFXIVClientInterface;
-using FFXIVClientInterface.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
@@ -252,30 +250,31 @@ namespace JobBars.UI {
         private static readonly int MILLIS_LOOP = 250;
 
         private readonly List<Icon> Icons = new();
-        private readonly ClientInterface Client;
 
         public UIIconManager() {
-            Client = new ClientInterface();
         }
 
         public void Setup(List<uint> triggers, bool dotMode, bool useCombo) {
             if (triggers == null) return;
-            var hotbarModule = Client.UiModule.RaptureHotbarModule;
+
+            var hotbarData = UIHelper.GetHotbarUI();
+            if (hotbarData == null) return;
 
             for (var abIndex = 0; abIndex < AllActionBars.Length; abIndex++) {
-                if (hotbarModule == null) return;
+                if (!hotbarData->IsLoaded(abIndex)) continue;
+                var hotbar = hotbarData->Hotbars[abIndex];
+
                 var actionBar = (AddonActionBarBase*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(AllActionBars[abIndex]);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
-                HotBar* bar = (abIndex < 10) ? hotbarModule.GetBar(abIndex, HotBarType.Normal) : hotbarModule.GetBar(abIndex - 10, HotBarType.Cross);
 
                 for (var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++) {
                     var slot = actionBar->ActionBarSlotsAction[slotIndex];
-                    var slotStruct = hotbarModule.GetBarSlot(bar, slotIndex);
-                    if (slotStruct == null) continue;
-                    if (slotStruct->CommandType != HotbarSlotType.Action) continue;
+
+                    var slotData = hotbar[slotIndex];
+                    if (slotData.Type != HotbarSlotStructType.Action) continue;
 
                     var icon = slot.Icon;
-                    var action = UIHelper.GetAdjustedAction(slotStruct->CommandId);
+                    var action = UIHelper.GetAdjustedAction(slotData.ActionId);
                     if (triggers.Contains(action) && !AlreadySetup(icon)) {
                         Icons.Add(new Icon(action, icon, dotMode, useCombo));
                     }
@@ -336,10 +335,12 @@ namespace JobBars.UI {
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
             HashSet<uint> yellowBorder = new();
-            var hotbarStruct = UIHelper.GetHotbarUI();
-            for(int i = 0; i < 10; i++) {
-                for(int j = 0; j < 12; j++) {
-                    var item = hotbarStruct->Hotbars[i][j];
+            var hotbarData = UIHelper.GetHotbarUI();
+            for(int i = 0; i < AllActionBars.Length; i++) {
+                if (!hotbarData->IsLoaded(i)) continue;
+
+                for(int j = 0; j < 16; j++) {
+                    var item = hotbarData->Hotbars[i][j];
                     if(item.YellowBorder && item.ActionId > 0) yellowBorder.Add(item.ActionId);
                 }
             }
@@ -354,7 +355,6 @@ namespace JobBars.UI {
 
         public void Dispose() {
             Reset();
-            Client.Dispose();
         }
     }
 }

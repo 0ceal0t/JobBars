@@ -5,7 +5,6 @@
     <ItemGroup>
         <InputAssemblies Include="../lib/FFXIVClientStructs.Common.dll" />
       <InputAssemblies Include="../lib/FFXIVClientStructs.dll" />
-        <InputAssemblies Include="$(OutputPath)FFXIVClientInterface.dll" />
         <InputAssemblies Include="$(OutputPath)JobBars.dll" />
     </ItemGroup>
 
