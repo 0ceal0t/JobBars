@@ -83,7 +83,7 @@ namespace JobBars.Helper {
         private static Dictionary<JobIds, string> JobToString;
         private static Dictionary<Item, string> ItemToString;
 
-        public static string GetJobString(JobIds job) {
+        public static string Localize(JobIds job) {
             if (JobToString.TryGetValue(job, out var jobString)) return jobString;
             else {
                 var convertedJob = ConvertJobToString(job);
@@ -92,7 +92,9 @@ namespace JobBars.Helper {
             }
         }
 
-        public static string GetItemString(Item item) {
+        public static string Localize(ActionIds action) => Localize(new Item(action));
+        public static string Localize(BuffIds buff) => Localize(new Item(buff));
+        public static string Localize(Item item) {
             if (ItemToString.TryGetValue(item, out var itemString)) return itemString;
             else {
                 var convertedItem = ConvertItemToString(item);
