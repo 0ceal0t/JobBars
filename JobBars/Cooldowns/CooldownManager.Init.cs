@@ -141,7 +141,7 @@ namespace JobBars.Cooldowns {
                 new CooldownProps {
                     Name = "Earthly Star",
                     Trigger = ActionIds.EarthlyStar,
-                    Duration = 10,
+                    Duration = 20,
                     CD = 60
                 }
             });
