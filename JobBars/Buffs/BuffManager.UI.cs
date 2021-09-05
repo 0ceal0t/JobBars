@@ -66,15 +66,16 @@ namespace JobBars.Buffs {
             }
         }
 
+        protected override void DrawItem(BuffProps[] item) {
+            foreach (var buff in item) {
+                DrawBuff(buff);
+            }
+        }
+
         private void DrawBuff(BuffProps buff) {
             ImGui.TextColored(buff.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{buff.Name}");
             if (JobBars.Config.BuffEnabled.Draw($"Enabled{_ID}{buff.Name}", buff.Name, buff.Enabled)) {
                 ResetUI();
-            }
-        }
-        protected override void DrawItem(BuffProps[] item) {
-            foreach (var buff in item) {
-                DrawBuff(buff);
             }
         }
 

@@ -19,22 +19,34 @@ namespace JobBars.Gauges {
     }
 
     public class SubGaugeGCD : SubGauge<GaugeGCD> {
+
         public SubGaugeGCDProps Props;
+        private readonly string SubName;
+        private readonly int MaxCounter;
+        private readonly float MaxDuration;
+        private readonly Item[] Triggers;
+        private readonly Item[] Increment;
+        private ElementColor Color;
+        private bool Invert;
+        private bool NoSoundOnFull;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
+        private Item LastActiveTrigger;
+        private DateTime LastActiveTime;
 
         private static readonly int RESET_DELAY = 3;
         private DateTime StopTime;
 
-        private Item LastActiveTrigger;
-        private DateTime LastActiveTime;
-
         public SubGaugeGCD(string name, GaugeGCD gauge, SubGaugeGCDProps props) : base(name, gauge) {
-            Props = props;
-            Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
-            Props.Invert = JobBars.Config.GaugeInvert.Get(Name, Props.Invert);
-            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
+            MaxCounter = props.MaxCounter;
+            MaxDuration = props.MaxDuration;
+            Triggers = props.Triggers;
+            Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
+            Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
+            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
+            Increment = props.Increment;
+            SubName = props.SubName;
         }
 
         public override void Reset() {
@@ -43,12 +55,12 @@ namespace JobBars.Gauges {
         }
 
         public override void ApplySubGauge() {
-            UI.SetColor(Props.Color);
+            UI.SetColor(Color);
             if (UI is UIArrow arrows) {
-                arrows.SetMaxValue(Props.MaxCounter);
+                arrows.SetMaxValue(MaxCounter);
             }
             else if (UI is UIDiamond diamond) {
-                diamond.SetMaxValue(Props.MaxCounter);
+                diamond.SetMaxValue(MaxCounter);
             }
             else if (UI is UIBar gauge) {
                 gauge.ClearSegments();
@@ -60,14 +72,13 @@ namespace JobBars.Gauges {
 
         public override void Tick() {
             if (State == GaugeState.Active) {
-                float timeLeft = UIHelper.TimeLeft(Props.MaxDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+                float timeLeft = UIHelper.TimeLeft(MaxDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
-                    timeLeft = 0;
                     State = GaugeState.Finished;
                     StopTime = DateTime.Now;
                 }
 
-                SetValue(Props.Invert ? Props.MaxCounter - Counter : Counter);
+                SetValue(Invert ? MaxCounter - Counter : Counter);
             }
             else if (State == GaugeState.Finished) {
                 if ((DateTime.Now - StopTime).TotalSeconds > RESET_DELAY) { // RESET TO ZERO AFTER A DELAY
@@ -84,7 +95,7 @@ namespace JobBars.Gauges {
         }
 
         public override void ProcessAction(Item action) {
-            if (Props.Triggers.Contains(action) && !(State == GaugeState.Active)) { // START
+            if (Triggers.Contains(action) && !(State == GaugeState.Active)) { // START
                 LastActiveTrigger = action;
                 LastActiveTime = DateTime.Now;
                 State = GaugeState.Active;
@@ -99,11 +110,11 @@ namespace JobBars.Gauges {
 
             if (
                 (State == GaugeState.Active) &&
-                ((Props.Increment == null && action.Type == ItemType.GCD) || // just take any gcd
-                    (Props.Increment != null && Props.Increment.Contains(action))) // take specific gcds
+                ((Increment == null && action.Type == ItemType.GCD) || // just take any gcd
+                    (Increment != null && Increment.Contains(action))) // take specific gcds
             ) {
-                if (Counter < Props.MaxCounter) Counter++;
-                if (Counter == Props.MaxCounter && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when reached max counter
+                if (Counter < MaxCounter) Counter++;
+                if (Counter == MaxCounter && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when reached max counter
             }
         }
 
@@ -117,25 +128,25 @@ namespace JobBars.Gauges {
                 diamond.SetValue(value);
             }
             else if (UI is UIBar gauge) {
-                gauge.SetPercent(((float)value) / Props.MaxCounter);
+                gauge.SetPercent(((float)value) / MaxCounter);
                 gauge.SetText(textValue.ToString());
             }
         }
 
-        public void Draw(string _ID, JobIds job) {
-            var suffix = (string.IsNullOrEmpty(Props.SubName) ? "" : $" ({Props.SubName})");
+        public void Draw(string _ID, JobIds _) {
+            var suffix = (string.IsNullOrEmpty(SubName) ? "" : $" ({SubName})");
 
-            if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Props.Color, out var newColor)) {
-                Props.Color = newColor;
+            if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Color, out var newColor)) {
+                Color = newColor;
                 ParentGauge.ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, Props.Invert, out var newInvert)) {
-                Props.Invert = newInvert;
+            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, Invert, out var newInvert)) {
+                Invert = newInvert;
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
-                Props.NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, NoSoundOnFull, out var newSound)) {
+                NoSoundOnFull = newSound;
             }
         }
     }

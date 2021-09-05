@@ -12,14 +12,21 @@ namespace JobBars.Cooldowns {
             OffCD
         }
 
-        public ActionIds Icon => Props.Trigger;
+        public ActionIds Icon => Trigger;
 
-        private CooldownProps Props;
+        private readonly ActionIds Trigger;
+        private readonly ActionIds[] AdditionalTriggers;
+        private readonly float Duration;
+        private readonly float CD;
+
         private TrackerState State = TrackerState.None;
         private DateTime LastActiveTime;
 
         public CooldownTracker(CooldownProps props) {
-            Props = props;
+            Trigger = props.Trigger;
+            AdditionalTriggers = props.AdditionalTriggers;
+            Duration = props.Duration;
+            CD = props.CD;
         }
 
         public void Tick(UICooldownItem ui, float percent) {
@@ -33,14 +40,14 @@ namespace JobBars.Cooldowns {
             else if(State == TrackerState.Running) {
                 ui.SetOffCD();
                 ui.SetDash(percent);
-                var timeLeft = Props.Duration - (currentTime - LastActiveTime).TotalSeconds;
+                var timeLeft = Duration - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OnCD;
             }
             else if(State == TrackerState.OnCD) {
                 ui.SetOnCD();
                 ui.SetNoDash();
-                var timeLeft = Props.CD - (currentTime - LastActiveTime).TotalSeconds;
+                var timeLeft = CD - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OffCD;
             }
@@ -53,14 +60,14 @@ namespace JobBars.Cooldowns {
 
         public void ProcessAction(Item action) {
             if(action.Type != ItemType.Buff && 
-                (action.Id == (uint) Props.Trigger ||
+                (action.Id == (uint) Trigger ||
                     (
-                        Props.AdditionalTriggers != null && Props.AdditionalTriggers.Contains((ActionIds)action.Id)
+                        AdditionalTriggers != null && AdditionalTriggers.Contains((ActionIds)action.Id)
                     )
                 )
              ){
                 LastActiveTime = DateTime.Now;
-                State = Props.Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
+                State = Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
             }
         }
 
