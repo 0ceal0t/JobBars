@@ -1,4 +1,5 @@
 ﻿using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 using System;
 
@@ -19,6 +20,15 @@ namespace JobBars.Gauges {
             });
             // ============ PLD ==================
             JobToValue.Add(JobIds.PLD, new Gauge[] {
+                new GaugeStacks(UIHelper.Localize(BuffIds.SwordOath), new GaugeStacksProps {
+                    MaxStacks = 3,
+                    NoSoundOnFull = true,
+                    Triggers = new []{
+                        new Item(BuffIds.SwordOath)
+                    },
+                    Type = GaugeVisualType.Diamond,
+                    Color = UIColor.BlueGreen
+                }),
                 new GaugeGCD("Requiescat", GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 12,

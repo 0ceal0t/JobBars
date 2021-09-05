@@ -13,6 +13,7 @@
         FightOrFlight = 0x4c,
         Requiescat = 0x558,
         GoringBlade = 725,
+        SwordOath = 1902,
 
         // GNB =========
         NoMercy = 0x727,
