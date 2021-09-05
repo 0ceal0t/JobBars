@@ -69,7 +69,7 @@ namespace JobBars.Gauges {
         public override void Tick() {
             bool anyTriggerMax = false;
             foreach (var trigger in Props.Triggers) {
-                var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
+                var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.Param : 0;
                 if (value == Props.MaxStacks) anyTriggerMax = true;
                 SetValue(value);
             }

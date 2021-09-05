@@ -113,15 +113,7 @@ namespace JobBars.Gauges {
         private void DrawGaugeOptions(string _ID) {
             var type = GetVisualType();
 
-            // Bar
-            //  text
             //  text above
-            //  text spacing?
-            // Arrow
-            // Diamond
-            //  show duration text (if allowed)
-            // BarDiamondCombo
-            //  text
             //  text spacing?
 
             if(type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
