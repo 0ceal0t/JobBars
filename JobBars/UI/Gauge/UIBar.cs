@@ -251,13 +251,13 @@ namespace JobBars.UI {
             }
 
             int size = text.Length * 17;
-            UIHelper.SetPosition(TextContainer, 129 - size, 6);
+            UIHelper.SetPosition(TextContainer, 129 - size, null);
             UIHelper.SetSize(TextContainer, 30 + size, 40);
 
-            UIHelper.SetPosition(TextBlurNode, 0, 0);
+            UIHelper.SetPosition(TextBlurNode, 0, null);
             UIHelper.SetSize(TextBlurNode, 30 + size, 40);
 
-            UIHelper.SetPosition(TextNode, 14, 5);
+            UIHelper.SetPosition(TextNode, 14, null);
             UIHelper.SetSize(TextNode, size, 30);
         }
 
@@ -266,6 +266,11 @@ namespace JobBars.UI {
         }
 
         public void SetTextVisible(bool visible) => UIHelper.SetVisibility(TextContainer, visible);
+
+        public void SetTextSwap(bool swap) {
+            UIHelper.SetPosition(GaugeContainer, null, swap ? 24 : 0);
+            UIHelper.SetPosition(TextContainer, null, swap ? -3 : 6);
+        }
 
         public void SetPercent(float value) {
             if (value > 1) value = 1;

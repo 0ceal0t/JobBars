@@ -81,6 +81,7 @@ namespace JobBars.Gauges {
             else if (UI is UIBar gauge) {
                 gauge.SetColor(BarColor);
                 gauge.SetTextVisible(ShowText);
+                gauge.SetTextSwap(SwapText);
             }
         }
 

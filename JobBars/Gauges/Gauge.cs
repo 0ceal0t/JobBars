@@ -28,6 +28,7 @@ namespace JobBars.Gauges {
         public float Scale => JobBars.Config.GaugeIndividualScale.Get(Name);
 
         protected bool ShowText => JobBars.Config.GaugeShowText.Get(Name);
+        protected bool SwapText => JobBars.Config.GaugeSwapText.Get(Name);
 
         public Gauge(string name) {
             Name = name;
@@ -113,11 +114,14 @@ namespace JobBars.Gauges {
         private void DrawGaugeOptions(string _ID) {
             var type = GetVisualType();
 
-            //  text above
-            //  text spacing?
-
             if(type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
                 if(JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name)) {
+                    ApplyUIConfig();
+                }
+            }
+
+            if(type == GaugeVisualType.Bar) {
+                if (JobBars.Config.GaugeSwapText.Draw($"Swap Text Position{_ID}", Name)) {
                     ApplyUIConfig();
                 }
             }

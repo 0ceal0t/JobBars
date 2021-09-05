@@ -35,6 +35,7 @@ namespace JobBars.Data {
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
         public BoolValueConfig GaugeShowText = new(true);
+        public BoolValueConfig GaugeSwapText = new(false);
 
         public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;

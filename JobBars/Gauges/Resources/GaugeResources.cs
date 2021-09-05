@@ -31,6 +31,7 @@ namespace JobBars.Gauges {
         protected override void ApplyUIConfig_() {
             if (UI is UIBar gauge) {
                 gauge.SetTextVisible(ShowText);
+                gauge.SetTextSwap(SwapText);
             }
             UI.SetColor(Color);
         }

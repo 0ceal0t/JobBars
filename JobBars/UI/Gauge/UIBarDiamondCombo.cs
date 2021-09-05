@@ -10,6 +10,8 @@ namespace JobBars.UI {
             Gauge = gauge;
             Diamond = diamond;
             RootRes = gauge.RootRes;
+
+            Gauge.SetTextSwap(false);
         }
 
         public override void Dispose() { }
