@@ -92,7 +92,7 @@ namespace JobBars.Icons {
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 
-            if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
+            if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
                 Enabled = newEnabled;
 
                 if (JobBars.IconManager.CurrentJob == job && JobBars.Config.IconsEnabled) {
@@ -101,7 +101,7 @@ namespace JobBars.Icons {
                 }
             }
 
-            if (AllowCombo && JobBars.Config.IconUseCombo.Draw($"Use Original Dash Border{_ID}", Name, out var newCombo)) {
+            if (AllowCombo && JobBars.Config.IconUseCombo.Draw($"Use Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
                 UseCombo = newCombo;
                 JobBars.IconBuilder.Reset();
             }
