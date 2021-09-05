@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using JobBars.Data;
 using JobBars.GameStructs;
+using Lumina.Excel.GeneratedSheets;
+using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
 
 namespace JobBars.Helper {
     public struct StatusNameId {
@@ -74,9 +75,38 @@ namespace JobBars.Helper {
             _ => JobIds.OTHER
         };
 
+        private static IEnumerable<ClassJob> JobSheet;
+        private static IEnumerable<Lumina.Excel.GeneratedSheets.Action> actionSheet;
+        private static IEnumerable<Lumina.Excel.GeneratedSheets.Status> statusSheet;
+
+        public static string JobToString(JobIds job)
+        {
+            foreach (var classJob in JobSheet)
+            {
+                if (classJob.RowId == (uint)job) return classJob.Name;
+            }
+
+            return "ERROR";
+        }
+
+        public static string ItemToString(Item item)
+        {
+            if (item.Type == ItemType.Action)
+            {
+                var action = actionSheet.Where(x => x.RowId == item.Id);
+                return action.First().Name;
+            }
+            else if (item.Type == ItemType.Buff)
+            {
+                var buff = statusSheet.Where(x => x.RowId == item.Id);
+                return buff.First().Name;
+            }
+            
+            return null;
+        }
 
         private static void SetupSheets() {
-            var actionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
+            actionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
             foreach (var item in actionSheet) {
@@ -92,7 +122,7 @@ namespace JobBars.Helper {
             }
 
             List<StatusNameId> statusList = new();
-            var statusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
+            statusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
             foreach(var item in statusSheet) {
                 statusList.Add(new StatusNameId {
                     Name = item.Name,
@@ -103,6 +133,8 @@ namespace JobBars.Helper {
                 });
             }
             StatusNames = statusList.ToArray();
+
+            JobSheet = JobBars.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
         }
 
         public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
