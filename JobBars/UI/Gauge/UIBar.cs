@@ -311,16 +311,8 @@ namespace JobBars.UI {
             UIColor.SetColor(BarMainNode, color);
         }
 
-        public override int GetHeight(int param) {
-            return 46;
-        }
-
-        public override int GetWidth(int param) {
-            return 160;
-        }
-
-        public override int GetHorizontalYOffset() {
-            return 0;
-        }
+        public override int GetHeight(int param) => 46;
+        public override int GetWidth(int param) => 160;
+        public override int GetHorizontalYOffset() => 0;
     }
 }

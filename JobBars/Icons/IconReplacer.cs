@@ -30,31 +30,32 @@ namespace JobBars.Icons {
         public bool Enabled;
 
         private IconState State = IconState.Inactive;
-        private IconProps Props;
-        private readonly List<uint> Icons;
 
+        private readonly bool IsDoT;
+        private readonly List<uint> Icons;
+        private readonly IconTriggerStruct[] Triggers;
         private readonly bool AllowCombo;
-        private bool UseCombo = false;
+        private bool UseCombo;
         
         public IconReplacer(string name, IconProps props) {
             Name = name;
-            Props = props;
             Enabled = JobBars.Config.IconEnabled.Get(Name);
+            IsDoT = props.IsDoT;
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
-
-            AllowCombo = Props.AllowCombo || Props.UseCombo;
-            UseCombo = JobBars.Config.IconUseCombo.Get(Name, Props.UseCombo);
+            Triggers = props.Triggers;
+            AllowCombo = props.AllowCombo || props.UseCombo;
+            UseCombo = JobBars.Config.IconUseCombo.Get(Name, props.UseCombo);
         }
 
         public void Setup() {
             State = IconState.Inactive;
-            JobBars.IconBuilder.Setup(Icons, Props.IsDoT, UseCombo);
+            JobBars.IconBuilder.Setup(Icons, IsDoT, UseCombo);
         }
 
         public void Tick() {
             var timeLeft = -1f;
             var maxDuration = 1f;
-            foreach(var trigger in Props.Triggers) {
+            foreach(var trigger in Triggers) {
                 if(UIHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
                     timeLeft = value.RemainingTime;
                     maxDuration = trigger.Duration;
@@ -78,16 +79,16 @@ namespace JobBars.Icons {
         }
 
         private void SetIcon(float current, float duration) {
-            JobBars.IconBuilder.SetProgress(Icons, Props.IsDoT, UseCombo, current, duration);
+            JobBars.IconBuilder.SetProgress(Icons, IsDoT, UseCombo, current, duration);
         }
 
         private void ResetIcon() {
-            JobBars.IconBuilder.SetDone(Icons, Props.IsDoT, UseCombo);
+            JobBars.IconBuilder.SetDone(Icons, IsDoT, UseCombo);
         }
 
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
-            var type = Props.IsDoT ? "DOT" : "BUFF";
+            var type = IsDoT ? "DOT" : "BUFF";
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 

@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
@@ -66,6 +65,12 @@ namespace JobBars.Helper {
             PlaySoundEffect(78, 0, 0);
         }
 
+        public static bool GetCurrentCast(out float currentTime, out float totalTime) {
+            currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
+            totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
+            return JobBars.ClientState.LocalPlayer.IsCasting;
+        }
+
         public static bool GetRecastActive(uint actionId, out float timeElapsed, ActionType actionType = ActionType.Spell) {
             var actionManager = ActionManager.Instance();
             var adjustedId = actionManager->GetAdjustedActionId(actionId);
@@ -94,8 +99,5 @@ namespace JobBars.Helper {
 
             return JobBars.Objects.CreateObjectReference(actorAddress);
         }
-
-        public static AtkUnitBase* ChatLogAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ChatLog");
-        public static AddonPartyList* PartyListAddon => (AddonPartyList*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_PartyList");
     }
 }

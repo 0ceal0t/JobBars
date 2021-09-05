@@ -117,6 +117,7 @@ namespace JobBars.Gauges {
             if (JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name, ProcsShowText, out var newProcsShowText)) {
                 ProcsShowText = newProcsShowText;
                 ApplyUIConfig();
+                JobBars.GaugeManager.UpdatePositionScale(job); // procs with text are taller than without, so update positions
             }
 
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, NoSoundOnFull, out var newSound)) {

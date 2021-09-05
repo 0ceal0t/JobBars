@@ -142,8 +142,11 @@ The goal of this project is to augment the existing UI by displaying information
 + **Icon Display**: Song of Torment, Bad Breath
 
 ## TODO
+- [ ] Vertical gauges
+- [ ] Custom text spacing
+- [ ] Text above/below gauges
 - [ ] Completely custom gauges/buffs/cds (requires big rework)
-- [ ] Support crossbar for icon replacement
+- [ ] Support crossbar better for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
 - [ ] Split up party buffs and personal buffs

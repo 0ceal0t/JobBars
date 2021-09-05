@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
 using Lumina.Excel.GeneratedSheets;
 using JobBars.Data;
-using JobBars.GameStructs;
 
 namespace JobBars.Helper {
     public struct StatusNameId {
@@ -176,17 +174,6 @@ namespace JobBars.Helper {
             else {
                 return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
             }
-        }
-
-        public static bool GetCurrentCast(out float currentTime, out float totalTime) {
-            currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
-            totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
-            return JobBars.ClientState.LocalPlayer.IsCasting;
-        }
-
-        public static AddonHotbarNumberArray* GetHotbarUI() {
-            var uiModule = Framework.Instance()->GetUiModule();
-            return (AddonHotbarNumberArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
     }
 }

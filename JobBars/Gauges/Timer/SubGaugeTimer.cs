@@ -121,7 +121,7 @@ namespace JobBars.Gauges {
         }
 
         public void Draw(string _ID, JobIds _) {
-            var suffix = (string.IsNullOrEmpty(SubName) ? "" : $" ({SubName})");
+            var suffix = string.IsNullOrEmpty(SubName) ? "" : $" ({SubName})";
 
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Color, out var newColor)) {
                 Color = newColor;

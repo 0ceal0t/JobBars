@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Icons {
     public unsafe partial class IconManager : JobConfigurationManager<IconReplacer[]> {
@@ -16,13 +14,10 @@ namespace JobBars.Icons {
 
         public void SetJob(JobIds job) {
             JobBars.IconBuilder.Reset();
-
             CurrentJob = job;
 
             if (!JobBars.Config.IconsEnabled) return;
-            foreach (var icon in CurrentIcons) {
-                icon.Setup();
-            }
+            foreach (var icon in CurrentIcons) icon.Setup();
         }
 
         public void Reset() => SetJob(CurrentJob);
@@ -33,8 +28,7 @@ namespace JobBars.Icons {
 
         public void Tick() {
             if (!JobBars.Config.IconsEnabled) return;
-            foreach(var icon in CurrentIcons) {
-                if (!icon.Enabled) continue;
+            foreach(var icon in CurrentIcons.Where(i => i.Enabled)) {
                 icon.Tick();
             }
             JobBars.IconBuilder.Tick();

@@ -225,16 +225,8 @@ namespace JobBars.UI {
             UIHelper.Hide(Ticks[idx].Text);
         }
 
-        public override int GetHeight(int param) {
-            return TextVisible ? 40 : 32;
-        }
-
-        public override int GetWidth(int param) {
-            return 32 + 20 * (param - 1);
-        }
-
-        public override int GetHorizontalYOffset() {
-            return -3;
-        }
+        public override int GetHeight(int param) => TextVisible ? 40 : 32;
+        public override int GetWidth(int param) => 32 + 20 * (param - 1);
+        public override int GetHorizontalYOffset() => -3;
     }
 }

@@ -25,7 +25,6 @@ namespace JobBars.Gauges {
                 gauge.SetSegments(Segments);
                 gauge.SetTextColor(UIColor.NoColor);
             }
-
             SetValue(0, "0");
         }
 

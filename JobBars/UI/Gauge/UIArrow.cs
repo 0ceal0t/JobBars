@@ -158,16 +158,8 @@ namespace JobBars.UI {
             LastValue = value;
         }
 
-        public override int GetHeight(int param) {
-            return 32;
-        }
-
-        public override int GetWidth(int param) {
-            return 32 + 18 * (param - 1);
-        }
-
-        public override int GetHorizontalYOffset() {
-            return -3;
-        }
+        public override int GetHeight(int param) => 32;
+        public override int GetWidth(int param) => 32 + 18 * (param - 1);
+        public override int GetHorizontalYOffset() => -3;
     }
 }
