@@ -31,11 +31,6 @@ namespace JobBars.Gauges {
 
             JobBars.Separator(); // =====================================
 
-            if (ImGui.Checkbox("GCD Gauge Text Visible", ref JobBars.Config.GaugeGCDTextVisible)) {
-                JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeGCDTextVisible);
-                JobBars.Config.Save();
-            }
-
             if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref JobBars.Config.GaugeHideGCDInactive)) {
                 Reset();
                 JobBars.Config.Save();

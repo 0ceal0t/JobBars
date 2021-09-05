@@ -175,13 +175,17 @@ namespace JobBars.UI {
             UIColor.SetColor(Ticks[idx].Selected, color);
         }
 
-        public void SetMaxValue(int value, bool showText = false) {
-            TextVisible = showText;
-            SetSpacing(showText ? 5 : 0);
-
+        public void SetMaxValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
                 UIHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
-                if (idx < value) UIHelper.SetVisibility(Ticks[idx].Text, showText);
+            }
+        }
+
+        public void SetTextVisible(bool showText) {
+            TextVisible = showText;
+            SetSpacing(showText ? 5 : 0);
+            for (int idx = 0; idx < MAX; idx++) {
+                UIHelper.SetVisibility(Ticks[idx].Text, showText);
             }
         }
 

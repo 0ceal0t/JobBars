@@ -67,12 +67,15 @@ namespace JobBars.Gauges {
             if (UI is UIBarDiamondCombo combo) {
                 SetupDiamondColors();
                 combo.SetGaugeColor(Props.BarColor);
+                combo.SetBarTextVisible(ShowText);
             }
-            else if (UI is UIDiamond) {
+            else if (UI is UIDiamond diamond) {
                 SetupDiamondColors();
+                diamond.SetTextVisible(false);
             }
             else if (UI is UIBar gauge) {
                 gauge.SetColor(Props.BarColor);
+                gauge.SetTextVisible(ShowText);
             }
         }
 

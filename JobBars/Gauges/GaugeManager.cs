@@ -17,7 +17,6 @@ namespace JobBars.Gauges {
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
             if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
-            JobBars.Builder.SetGaugeTextVisible(JobBars.Config.GaugeGCDTextVisible);
             JobBars.Builder.HideAllGauges();
         }
 

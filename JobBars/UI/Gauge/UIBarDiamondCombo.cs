@@ -26,11 +26,16 @@ namespace JobBars.UI {
 
         public void SetText(string text) => Gauge.SetText(text);
         public void SetTextColor(ElementColor color) => Gauge.SetTextColor(color);
+        public void SetBarTextVisible(bool visible) => Gauge.SetTextVisible(visible);
 
         public void SetSegments(float[] segments) => Gauge.SetSegments(segments);
         public void ClearSegments() => Gauge.ClearSegments();
+
         public void SetPercent(float value) => Gauge.SetPercent(value);
-        public void SetMaxValue(int value) => Diamond.SetMaxValue(value);
+        public void SetMaxValue(int value) {
+            Diamond.SetMaxValue(value);
+            Diamond.SetTextVisible(false);
+        }
 
         public void SetDiamondValue(int value, int start, int count) => Diamond.SetValue(value, start, count);
         public void SetDiamondValue(int value) => Diamond.SetValue(value);

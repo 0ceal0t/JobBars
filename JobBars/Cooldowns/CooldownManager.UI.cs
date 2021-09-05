@@ -23,6 +23,10 @@ namespace JobBars.Cooldowns {
                 }
                 JobBars.Config.Save();
             }
+
+            if (ImGui.Checkbox("Show Border When Active", ref JobBars.Config.CooldownsShowBorderWhenActive)) {
+                JobBars.Config.Save();
+            }
         }
 
         private void DrawCooldown(CooldownProps cooldown) {

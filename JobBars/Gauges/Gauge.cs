@@ -27,6 +27,8 @@ namespace JobBars.Gauges {
         public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
         public float Scale => JobBars.Config.GaugeIndividualScale.Get(Name);
 
+        protected bool ShowText => JobBars.Config.GaugeShowText.Get(Name);
+
         public Gauge(string name) {
             Name = name;
             Enabled = JobBars.Config.GaugeEnabled.Get(Name);
@@ -102,8 +104,31 @@ namespace JobBars.Gauges {
                 }
             }
 
+            DrawGaugeOptions(_ID);
+
             DrawGauge(_ID, job);
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+        }
+
+        private void DrawGaugeOptions(string _ID) {
+            var type = GetVisualType();
+
+            // Bar
+            //  text
+            //  text above
+            //  text spacing?
+            // Arrow
+            // Diamond
+            //  show duration text (if allowed)
+            // BarDiamondCombo
+            //  text
+            //  text spacing?
+
+            if(type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
+                if(JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name)) {
+                    ApplyUIConfig();
+                }
+            }
         }
 
         public void DrawPositionBox() {

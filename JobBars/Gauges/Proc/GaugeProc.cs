@@ -36,11 +36,12 @@ namespace JobBars.Gauges {
         private GaugeProcProps Props;
         private readonly int Size;
         private readonly List<bool> ProcsActive = new();
+        private bool ProcsShowText;
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Props = props;
             Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-
+            ProcsShowText = JobBars.Config.GaugeShowText.Get(Name, Props.ShowText);
             Size = Props.Procs.Length;
             RefreshIdx();
         }
@@ -55,7 +56,7 @@ namespace JobBars.Gauges {
 
         protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
-                diamond.SetMaxValue(Size, showText: Props.ShowText);
+                diamond.SetMaxValue(Size);
             }
             for(int idx = 0; idx < Size; idx++) {
                 SetValue(idx, false);
@@ -66,6 +67,7 @@ namespace JobBars.Gauges {
         protected override void ApplyUIConfig_() {
             if (UI is UIDiamond diamond) {
                 foreach (var proc in Props.Procs) diamond.SetColor(proc.Color, proc.Idx);
+                diamond.SetTextVisible(ProcsShowText);
             }
         }
 
@@ -91,11 +93,13 @@ namespace JobBars.Gauges {
             }
         }
 
-        private void SetValue(int idx, bool value, float duration = 0) {
+        private void SetValue(int idx, bool value, float duration = -1) {
             if (UI is UIDiamond diamond) {
                 if (value) {
                     diamond.SelectPart(idx);
-                    if (Props.ShowText) diamond.SetText(idx, ((int)Math.Round(duration)).ToString());
+                    if (ProcsShowText) {
+                        diamond.SetText(idx, duration >= 0 ? ((int)Math.Round(duration)).ToString() : "");
+                    }
                 }
                 else diamond.UnselectPart(idx);
             }
@@ -108,6 +112,11 @@ namespace JobBars.Gauges {
         public override GaugeVisualType GetVisualType() => GaugeVisualType.Diamond;
 
         protected override void DrawGauge(string _ID, JobIds job) {
+            if (JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name, ProcsShowText, out var newProcsShowText)) {
+                ProcsShowText = newProcsShowText;
+                ApplyUIConfig();
+            }
+
             if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
                 Props.NoSoundOnFull = newSound;
             }

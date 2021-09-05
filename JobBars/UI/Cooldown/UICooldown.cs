@@ -75,7 +75,7 @@ namespace JobBars.UI {
         }
 
         public void SetDash(float percent) {
-            Border->PartId = (ushort)(UIBuilder.CD_DASH_START + percent * 7);
+            Border->PartId = JobBars.Config.CooldownsShowBorderWhenActive ? (ushort)(UIBuilder.CD_DASH_START + percent * 7) : UIBuilder.CD_BORDER;
         }
 
         public void SetText(string text) {

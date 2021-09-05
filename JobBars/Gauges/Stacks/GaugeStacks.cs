@@ -44,6 +44,12 @@ namespace JobBars.Gauges {
         }
 
         protected override void ApplyUIConfig_() {
+            if (UI is UIDiamond diamond) {
+                diamond.SetTextVisible(false);
+            }
+            else if (UI is UIBar gauge) {
+                gauge.SetTextVisible(ShowText);
+            }
             UI.SetColor(Props.Color);
         }
 

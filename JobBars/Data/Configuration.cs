@@ -202,6 +202,7 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeInvert = new(false);
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
+        public BoolValueConfig GaugeShowText = new(true);
 
         public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;
@@ -228,6 +229,7 @@ namespace JobBars.Data {
 
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
+        public bool CooldownsShowBorderWhenActive = true;
 
         public BoolValueConfig CooldownEnabled = new(true);
         public IntValueConfig CooldownOrder = new(-1);

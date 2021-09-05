@@ -1,4 +1,5 @@
 ﻿using JobBars.Data;
+using JobBars.UI;
 
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
@@ -20,6 +21,9 @@ namespace JobBars.Gauges {
         }
 
         protected override void ApplyUIConfig_() {
+            if (UI is UIBar gauge) {
+                gauge.SetTextVisible(ShowText);
+            }
             ActiveSubGauge.ApplySubGauge();
         }
 
