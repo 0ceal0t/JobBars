@@ -4,7 +4,7 @@ using JobBars.UI;
 namespace JobBars.Gauges {
     public class GaugeTimer : Gauge {
         public SubGaugeTimer ActiveSubGauge;
-        private readonly SubGaugeTimer[] SubGauges;
+        public readonly SubGaugeTimer[] SubGauges;
 
         public GaugeTimer(string name, SubGaugeTimerProps props) : this(name, new[] { props }) { }
         public GaugeTimer(string name, SubGaugeTimerProps[] props) : base(name) {

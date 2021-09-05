@@ -3,6 +3,8 @@ using JobBars.Data;
 using JobBars.UI;
 using System;
 using System.Numerics;
+using Dalamud;
+using JobBars.Helper;
 
 namespace JobBars.Gauges {
     public enum GaugeVisualType {
@@ -22,6 +24,7 @@ namespace JobBars.Gauges {
         public readonly string Name;
         public UIGaugeElement UI;
         public bool Enabled;
+        private string LocalName;
 
         public int Order => JobBars.Config.GaugeOrder.Get(Name);
         public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
@@ -79,7 +82,55 @@ namespace JobBars.Gauges {
                 _ => ""
             };
 
-            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
+            if (LocalName == null)
+            {
+                var item = new Item();
+                switch (this)
+                {
+                    case GaugeGCD:
+                    {
+                        var gau = (GaugeGCD)this;
+                        item = gau.SubGauges[0].Props.Triggers[0];
+                        break;
+                    }
+                    case GaugeTimer:
+                    {
+                        var gau = (GaugeTimer)this;
+                        item = gau.SubGauges[0].Props.Triggers[0];
+                        break;
+                    }
+                    case GaugeCharges:
+                    {
+                        var gau = (GaugeCharges)this;
+                        item = gau.Props.Parts[0].Triggers[0];
+                        break;
+                    }
+                    case GaugeStacks:
+                    {
+                        var gau = (GaugeStacks)this;
+                        item = gau.Props.Triggers[0];
+                        break;
+                    }
+                    case GaugeProc:
+                    {
+                        var Prog = JobBars.ClientState.ClientLanguage > ClientLanguage.French ? " 触发" : " Proc";
+                        LocalName = UIHelper.JobToString(job)+Prog;
+                        item.Id = 0;
+                        break;
+                    }
+                    case GaugeResources:
+                    {
+                        LocalName = "MP ("+UIHelper.JobToString(job)+")";
+                        item.Id = 0;
+                        break;
+                    }
+                }
+
+                LocalName = item.Id != 0 ? UIHelper.ItemToString(item) : LocalName;
+            }
+            
+
+            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{LocalName} [{type}]");
 
             if(JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
                 Enabled = newEnabled;

@@ -9,7 +9,7 @@ namespace JobBars.Gauges {
         private GaugeVisualType Type;
 
         public SubGaugeGCD ActiveSubGauge;
-        private readonly SubGaugeGCD[] SubGauges;
+        public readonly SubGaugeGCD[] SubGauges;
 
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps props) : this(name, type, new[] { props }) { }
         public GaugeGCD(string name, GaugeVisualType type, SubGaugeGCDProps[] props) : base(name) {

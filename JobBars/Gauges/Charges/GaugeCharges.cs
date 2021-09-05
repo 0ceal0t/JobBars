@@ -25,7 +25,7 @@ namespace JobBars.Gauges {
     public class GaugeCharges : Gauge {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        private GaugeChargesProps Props;
+        public GaugeChargesProps Props;
         private readonly int TotalDiamonds = 0;
         private bool GaugeFull = true;
 

@@ -16,7 +16,7 @@ namespace JobBars.Gauges {
     public class GaugeStacks : Gauge {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        private GaugeStacksProps Props;
+        public GaugeStacksProps Props;
 
         private bool GaugeFull = true;
 

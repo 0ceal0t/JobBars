@@ -19,7 +19,7 @@ namespace JobBars.Gauges {
     }
 
     public class SubGaugeGCD : SubGauge<GaugeGCD> {
-        private SubGaugeGCDProps Props;
+        public SubGaugeGCDProps Props;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;

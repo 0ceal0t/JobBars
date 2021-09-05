@@ -20,7 +20,7 @@ namespace JobBars.Gauges {
     }
 
     public class SubGaugeTimer : SubGauge<GaugeTimer> {
-        private SubGaugeTimerProps Props;
+        public SubGaugeTimerProps Props;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
