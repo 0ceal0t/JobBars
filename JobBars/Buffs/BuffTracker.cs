@@ -1,5 +1,6 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
@@ -16,7 +17,12 @@ namespace JobBars.Buffs {
             OnCD_Visible // dark, show countdown
         }
 
-        public BuffProps Props;
+        private readonly float Duration;
+        private readonly float CD;
+        private readonly ActionIds Icon;
+        private readonly ElementColor Color;
+        private readonly Item[] Triggers;
+
         private BuffState State = BuffState.None;
         private DateTime LastActiveTime;
         private Item LastActiveTrigger;
@@ -29,42 +35,45 @@ namespace JobBars.Buffs {
         public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
 
         public BuffTracker(BuffProps props) {
-            Props = props;
+            Duration = props.Duration;
+            CD = props.CD;
+            Icon = props.Icon;
+            Color = props.Color;
+            Triggers = props.Triggers;
         }
 
         public void ProcessAction(Item action) {
-            if (Props.Triggers.Contains(action)) SetActive(action);
+            if (Triggers.Contains(action)) SetActive(action);
         }
 
         public void Tick(Dictionary<Item, Status> buffDict) {
             if (State != BuffState.Running) { // check for buff triggers
-                foreach (var trigger in Props.Triggers) {
-                    if (trigger.Type != ItemType.Buff) continue;
+                foreach (var trigger in Triggers.Where(t => t.Type == ItemType.Buff)) {
                     if (buffDict.ContainsKey(trigger) && buffDict[trigger].RemainingTime > 0) SetActive(trigger);
                 }
             }
 
             if(State == BuffState.Running) {
-                TimeLeft = UIHelper.TimeLeft(Props.Duration, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = UIHelper.TimeLeft(Duration, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;
 
-                    State = Props.CD <= 0 ? BuffState.None : // no CD, inactive
-                        Props.CD <= JobBars.Config.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
+                    State = CD <= 0 ? BuffState.None : // no CD, inactive
+                        CD <= JobBars.Config.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
                 }
                 else { // Still running
-                    Percent = 1.0f - (float)(TimeLeft / Props.Duration);
+                    Percent = 1.0f - (float)(TimeLeft / Duration);
                 }
             }
             else if(State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible) {
-                TimeLeft = (float)(Props.CD - (DateTime.Now - LastActiveTime).TotalSeconds);
+                TimeLeft = (float)(CD - (DateTime.Now - LastActiveTime).TotalSeconds);
                 if(TimeLeft <= 0) { // Off CD
                     State = BuffState.OffCD;
                 }
                 else if(TimeLeft <= JobBars.Config.BuffDisplayTimer) { // Visible
                     State = BuffState.OnCD_Visible;
-                    Percent = TimeLeft / Props.CD;
+                    Percent = TimeLeft / CD;
                 }
             }
         }
@@ -76,7 +85,7 @@ namespace JobBars.Buffs {
         }
 
         public void TickUI(UIBuff ui) {
-            if(UI != ui || UI?.Iconid != Props.Icon) {
+            if(UI != ui || UI?.Iconid != Icon) {
                 UI = ui;
                 SetupUI();
             }
@@ -101,8 +110,8 @@ namespace JobBars.Buffs {
         }
 
         private void SetupUI() {
-            UI.LoadIcon(Props.Icon);
-            UI.SetColor(Props.Color);
+            UI.LoadIcon(Icon);
+            UI.SetColor(Color);
         }
 
         public void Reset() {

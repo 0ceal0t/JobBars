@@ -29,6 +29,12 @@ namespace JobBars.Cooldowns {
             }
         }
 
+        protected override void DrawItem(CooldownProps[] item) {
+            foreach (var cdProp in item) {
+                DrawCooldown(cdProp);
+            }
+        }
+
         private void DrawCooldown(CooldownProps cooldown) {
             ImGui.TextColored(cooldown.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
 
@@ -41,12 +47,6 @@ namespace JobBars.Cooldowns {
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
-        }
-
-        protected override void DrawItem(CooldownProps[] item) {
-            foreach (var cdProp in item) {
-                DrawCooldown(cdProp);
-            }
         }
     }
 }

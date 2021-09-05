@@ -16,23 +16,28 @@ namespace JobBars.Gauges {
     public class GaugeStacks : Gauge {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Arrow, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        private GaugeStacksProps Props;
+        private readonly int MaxStacks;
+        private readonly Item[] Triggers;
+        private GaugeVisualType Type;
+        private ElementColor Color;
+        private bool NoSoundOnFull;
 
         private bool GaugeFull = true;
 
         public GaugeStacks(string name, GaugeStacksProps props) : base(name) {
-            Props = props;
-            Props.Type = JobBars.Config.GaugeType.Get(Name, Props.Type);
-            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-            Props.Color = JobBars.Config.GaugeColor.Get(Name, Props.Color);
+            MaxStacks = props.MaxStacks;
+            Triggers = props.Triggers;
+            Type = JobBars.Config.GaugeType.Get(Name, props.Type);
+            Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
+            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
         }
 
         protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
-                diamond.SetMaxValue(Props.MaxStacks);
+                diamond.SetMaxValue(MaxStacks);
             }
             else if (UI is UIArrow arrow) {
-                arrow.SetMaxValue(Props.MaxStacks);
+                arrow.SetMaxValue(MaxStacks);
             }
             else if (UI is UIBar gauge) {
                 gauge.ClearSegments();
@@ -50,7 +55,7 @@ namespace JobBars.Gauges {
             else if (UI is UIBar gauge) {
                 gauge.SetTextVisible(ShowText);
             }
-            UI.SetColor(Props.Color);
+            UI.SetColor(Color);
         }
 
         private void SetValue(int value) {
@@ -62,41 +67,41 @@ namespace JobBars.Gauges {
             }
             else if (UI is UIBar gauge) {
                 gauge.SetText(value.ToString());
-                gauge.SetPercent(((float)value) / Props.MaxStacks);
+                gauge.SetPercent(((float)value) / MaxStacks);
             }
         }
 
         public override void Tick() {
             bool anyTriggerMax = false;
-            foreach (var trigger in Props.Triggers) {
+            foreach (var trigger in Triggers) {
                 var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.Param : 0;
-                if (value == Props.MaxStacks) anyTriggerMax = true;
+                if (value == MaxStacks) anyTriggerMax = true;
                 SetValue(value);
             }
 
-            if(anyTriggerMax && !GaugeFull && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play when stacks become full
+            if(anyTriggerMax && !GaugeFull && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when stacks become full
             GaugeFull = anyTriggerMax;
         }
 
         public override void ProcessAction(Item action) { }
 
         protected override int GetHeight() => UI.GetHeight(0);
-        protected override int GetWidth() => UI.GetWidth(Props.MaxStacks);
-        public override GaugeVisualType GetVisualType() => Props.Type;
+        protected override int GetWidth() => UI.GetWidth(MaxStacks);
+        public override GaugeVisualType GetVisualType() => Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
-                Props.Type = newType;
+            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var newType)) {
+                Type = newType;
                 JobBars.GaugeManager.ResetJob(job);
             }
 
-            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.Color, out var newColor)) {
-                Props.Color = newColor;
+            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Color, out var newColor)) {
+                Color = newColor;
                 ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
-                Props.NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, NoSoundOnFull, out var newSound)) {
+                NoSoundOnFull = newSound;
             }
         }
     }

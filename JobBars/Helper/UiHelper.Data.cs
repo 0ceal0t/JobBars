@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Logging;
+using System.Globalization;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
+using Lumina.Excel.GeneratedSheets;
 using JobBars.Data;
 using JobBars.GameStructs;
-using Lumina.Excel.GeneratedSheets;
-using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
 
 namespace JobBars.Helper {
     public struct StatusNameId {
@@ -76,40 +76,61 @@ namespace JobBars.Helper {
         };
 
         private static IEnumerable<ClassJob> JobSheet;
-        private static IEnumerable<Lumina.Excel.GeneratedSheets.Action> actionSheet;
-        private static IEnumerable<Lumina.Excel.GeneratedSheets.Status> statusSheet;
+        private static IEnumerable<Lumina.Excel.GeneratedSheets.Action> ActionSheet;
+        private static IEnumerable<Lumina.Excel.GeneratedSheets.Status> StatusSheet;
 
-        public static string JobToString(JobIds job)
-        {
-            foreach (var classJob in JobSheet)
-            {
-                if (classJob.RowId == (uint)job) return classJob.Name;
+        // Cache converted strings
+        private static Dictionary<JobIds, string> JobToString;
+        private static Dictionary<Item, string> ItemToString;
+
+        public static string GetJobString(JobIds job) {
+            if (JobToString.TryGetValue(job, out var jobString)) return jobString;
+            else {
+                var convertedJob = ConvertJobToString(job);
+                JobToString[job] = convertedJob;
+                return convertedJob;
             }
+        }
 
+        public static string GetItemString(Item item) {
+            if (ItemToString.TryGetValue(item, out var itemString)) return itemString;
+            else {
+                var convertedItem = ConvertItemToString(item);
+                ItemToString[item] = convertedItem;
+                return convertedItem;
+            }
+        }
+
+        private static string ConvertJobToString(JobIds job) {
+            foreach (var classJob in JobSheet) {
+                if (classJob.RowId == (uint)job) return ToTitleCase(classJob.Name);
+            }
             return "ERROR";
         }
 
-        public static string ItemToString(Item item)
-        {
-            if (item.Type == ItemType.Action)
-            {
-                var action = actionSheet.Where(x => x.RowId == item.Id);
-                return action.First().Name;
+        private static string ConvertItemToString(Item item) {
+            if (item.Type == ItemType.Buff) {
+                var buff = StatusSheet.Where(x => x.RowId == item.Id);
+                return ToTitleCase(buff.First().Name);
             }
-            else if (item.Type == ItemType.Buff)
-            {
-                var buff = statusSheet.Where(x => x.RowId == item.Id);
-                return buff.First().Name;
+            else {
+                var action = ActionSheet.Where(x => x.RowId == item.Id);
+                return ToTitleCase(action.First().Name);
             }
-            
-            return null;
+        }
+
+        private static string ToTitleCase(this string title) {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower());
         }
 
         private static void SetupSheets() {
-            actionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
+            JobToString = new();
+            ItemToString = new();
+
+            ActionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
-            foreach (var item in actionSheet) {
+            foreach (var item in ActionSheet) {
                 var name = item.Name.ToString();
                 var attackType = item.ActionCategory.Value.Name.ToString();
                 var actionId = item.ActionCategory.Value.RowId;
@@ -122,8 +143,8 @@ namespace JobBars.Helper {
             }
 
             List<StatusNameId> statusList = new();
-            statusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
-            foreach(var item in statusSheet) {
+            StatusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
+            foreach(var item in StatusSheet) {
                 statusList.Add(new StatusNameId {
                     Name = item.Name,
                     Status = new Item {

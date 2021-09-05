@@ -2,6 +2,7 @@
 using JobBars.Helper;
 using JobBars.UI;
 using System;
+using System.Linq;
 
 namespace JobBars.Gauges {
     public struct GaugeChargesProps {
@@ -25,21 +26,25 @@ namespace JobBars.Gauges {
     public class GaugeCharges : Gauge {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
 
-        private GaugeChargesProps Props;
+        private readonly GaugesChargesPartProps[] Parts;
+        private readonly bool SameColor;
+        private GaugeVisualType Type;
+        private ElementColor BarColor;
+        private bool NoSoundOnFull;
+
         private readonly int TotalDiamonds = 0;
         private bool GaugeFull = true;
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
-            Props = props;
-            Props.Type = JobBars.Config.GaugeType.Get(Name, Props.Type);
-            Props.NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, Props.NoSoundOnFull);
-            Props.BarColor = JobBars.Config.GaugeColor.Get(Name, Props.BarColor);
+            Parts = props.Parts;
+            Type = JobBars.Config.GaugeType.Get(Name, props.Type);
+            BarColor = JobBars.Config.GaugeColor.Get(Name, props.BarColor);
+            SameColor = props.SameColor;
+            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
 
             RefreshSameColor();
-            foreach (var part in Props.Parts) {
-                if (part.Diamond) {
-                    TotalDiamonds += part.MaxCharges;
-                }
+            foreach (var part in Parts.Where(p => p.Diamond)) {
+                TotalDiamonds += part.MaxCharges;
             }
         }
 
@@ -65,46 +70,44 @@ namespace JobBars.Gauges {
         protected override void ApplyUIConfig_() {
             RefreshSameColor();
             if (UI is UIBarDiamondCombo combo) {
-                SetupDiamondColors();
-                combo.SetGaugeColor(Props.BarColor);
+                SetDiamondUIColors();
+                combo.SetGaugeColor(BarColor);
                 combo.SetBarTextVisible(ShowText);
             }
             else if (UI is UIDiamond diamond) {
-                SetupDiamondColors();
+                SetDiamondUIColors();
                 diamond.SetTextVisible(false);
             }
             else if (UI is UIBar gauge) {
-                gauge.SetColor(Props.BarColor);
+                gauge.SetColor(BarColor);
                 gauge.SetTextVisible(ShowText);
             }
         }
 
-        private void SetupDiamondColors() {
+        private void SetDiamondUIColors() {
             int diamondIdx = 0;
-            foreach (var part in Props.Parts) {
-                if (part.Diamond) {
-                    if (UI is UIBarDiamondCombo combo) {
-                        combo.SetDiamondColor(part.Color, diamondIdx, part.MaxCharges);
-                    }
-                    else if (UI is UIDiamond diamond) {
-                        diamond.SetColor(part.Color, diamondIdx, part.MaxCharges);
-                    }
-                    diamondIdx += part.MaxCharges;
+            foreach (var part in Parts.Where(p => p.Diamond)) {
+                if (UI is UIBarDiamondCombo combo) {
+                    combo.SetDiamondColor(part.Color, diamondIdx, part.MaxCharges);
                 }
+                else if (UI is UIDiamond diamond) {
+                    diamond.SetColor(part.Color, diamondIdx, part.MaxCharges);
+                }
+                diamondIdx += part.MaxCharges;
             }
         }
 
         private void RefreshSameColor() {
-            if (!Props.SameColor) return;
-            for (int i = 0; i < Props.Parts.Length; i++) {
-                Props.Parts[i].Color = Props.BarColor;
+            if (!SameColor) return;
+            for (int i = 0; i < Parts.Length; i++) {
+                Parts[i].Color = BarColor;
             }
         }
 
         public unsafe override void Tick() {
             bool barAssigned = false;
             int diamondIdx = 0;
-            foreach (var part in Props.Parts) {
+            foreach (var part in Parts) {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
@@ -138,7 +141,7 @@ namespace JobBars.Gauges {
             }
             if (!barAssigned) {
                 SetGaugeValue(0, 0);
-                if (!GaugeFull && !Props.NoSoundOnFull) UIHelper.PlaySeComplete(); // play the sound effect when full charges
+                if (!GaugeFull && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play the sound effect when full charges
             }
             GaugeFull = !barAssigned;
         }
@@ -167,21 +170,21 @@ namespace JobBars.Gauges {
 
         protected override int GetHeight() => UI.GetHeight(0);
         protected override int GetWidth() => UI.GetWidth(0);
-        public override GaugeVisualType GetVisualType() => Props.Type;
+        public override GaugeVisualType GetVisualType() => Type;
 
         protected override void DrawGauge(string _ID, JobIds job) {
-            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Props.Type, out var newType)) {
-                Props.Type = newType;
+            if (JobBars.Config.GaugeType.Draw($"Type{_ID}", Name, ValidGaugeVisualType, Type, out var newType)) {
+                Type = newType;
                 JobBars.GaugeManager.ResetJob(job);
             }
 
-            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Props.BarColor, out var newColor)) {
-                Props.BarColor = newColor;
+            if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, BarColor, out var newColor)) {
+                BarColor = newColor;
                 ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, Props.NoSoundOnFull, out var newSound)) {
-                Props.NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, NoSoundOnFull, out var newSound)) {
+                NoSoundOnFull = newSound;
             }
         }
     }

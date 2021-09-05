@@ -25,7 +25,7 @@ namespace JobBars.Data {
             ImGui.BeginChild(_ID + "Tree");
             foreach (var job in JobToValue.Keys) {
                 if (job == JobIds.OTHER) continue;
-                if (ImGui.Selectable(UIHelper.JobToString(job) + _ID + "/Job", SettingsJobSelected == job)) {
+                if (ImGui.Selectable(UIHelper.GetJobString(job) + _ID + "/Job", SettingsJobSelected == job)) {
                     SettingsJobSelected = job;
                 }
             }

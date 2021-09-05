@@ -1,6 +1,4 @@
 ﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
@@ -17,10 +15,7 @@ namespace JobBars.Buffs {
             Init();
 
             foreach (var jobEntry in JobToValue) {
-                foreach (var buff in jobEntry.Value) {
-                    if (!buff.IsPlayerOnly) continue;
-                    LocalPlayerBuffs.Add(buff);
-                }
+                LocalPlayerBuffs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
             }
 
             if (!JobBars.Config.BuffBarEnabled) JobBars.Builder.HideBuffs();
@@ -28,12 +23,12 @@ namespace JobBars.Buffs {
         }
 
         public BuffProps[] GetBuffProps(JobIds job, bool isLocalPlayer) {
-            var jobValue = JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
-            if (!isLocalPlayer) return jobValue;
+            var jobBuffs = JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
+            if (!isLocalPlayer) return jobBuffs;
 
             var combinedProps = new List<BuffProps>();
             combinedProps.AddRange(LocalPlayerBuffs);
-            combinedProps.AddRange(jobValue.Where(x => !x.IsPlayerOnly));
+            combinedProps.AddRange(jobBuffs.Where(x => !x.IsPlayerOnly));
             return combinedProps.ToArray();
         }
 
@@ -66,7 +61,7 @@ namespace JobBars.Buffs {
             }
 
             var idx = 0;
-            foreach(var buff in activeBuffs.OrderBy(x => x.CurrentState)) {
+            foreach(var buff in activeBuffs.OrderBy(b => b.CurrentState)) {
                 if (idx >= (UIBuilder.MAX_BUFFS - 1)) break;
 
                 buff.TickUI(JobBars.Builder.Buffs[idx]);
