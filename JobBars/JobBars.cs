@@ -56,6 +56,9 @@ namespace JobBars {
         private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
         private Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
+        private delegate IntPtr IconDimmedDelegate(IntPtr iconUnk, byte dimmed);
+        private Hook<IconDimmedDelegate> IconDimmedHook;
+
         private static bool PlayerExists => ClientState?.LocalPlayer != null;
         private bool LoggedOut = true;
 
@@ -76,6 +79,7 @@ namespace JobBars {
          *  JobBars
          *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
          *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
+         *      iconDimmedPtr (E8 ?? ?? ?? ?? 49 8D 4D 10 FF C6);
          */
 
         public JobBars(
@@ -129,6 +133,11 @@ namespace JobBars {
             ActorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             ActorControlSelfHook.Enable();
 
+            IntPtr iconDimmedPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 49 8D 4D 10 FF C6");
+            IconDimmedHook = new Hook<IconDimmedDelegate>(iconDimmedPtr, IconDimmedDetour);
+            IconDimmedHook.Enable();
+
+
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
             PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
@@ -153,13 +162,17 @@ namespace JobBars {
         public void Dispose() {
             ReceiveActionEffectHook?.Disable();
             ActorControlSelfHook?.Disable();
+            IconDimmedHook?.Disable();
 
             Thread.Sleep(500);
 
             ReceiveActionEffectHook?.Dispose();
             ActorControlSelfHook?.Dispose();
+            IconDimmedHook?.Dispose();
+
             ReceiveActionEffectHook = null;
             ActorControlSelfHook = null;
+            IconDimmedHook = null;
 
             PluginInterface.UiBuilder.Draw -= BuildSettingsUI;
             PluginInterface.UiBuilder.Draw -= Animate;

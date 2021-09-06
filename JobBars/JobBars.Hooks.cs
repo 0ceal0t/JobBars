@@ -114,6 +114,12 @@ namespace JobBars {
             }
         }
 
+        private IntPtr IconDimmedDetour(IntPtr iconUnk, byte dimmed) {
+            var icon = IconDimmedHook.Original(iconUnk, dimmed);
+            IconBuilder?.ProcessIconOverride(icon);
+            return icon;
+        }
+
         private void ZoneChanged(object sender, ushort e) {
             GaugeManager?.Reset();
             IconManager?.Reset();

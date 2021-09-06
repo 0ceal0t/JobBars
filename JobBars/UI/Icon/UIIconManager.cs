@@ -32,7 +32,6 @@ namespace JobBars.UI {
             private AtkResNode* OriginalOverlay;
             private AtkImageNode* OriginalImage;
 
-            private AtkImageNode* Image;
             private AtkImageNode* Border;
             private AtkImageNode* Circle;
             private AtkImageNode* Ring;
@@ -66,21 +65,6 @@ namespace JobBars.UI {
                 var originalCircle = (AtkImageNode*)nodeList[7];
 
                 uint nodeIdx = 200;
-
-                Image = UIHelper.CleanAlloc<AtkImageNode>();
-                Image->Ctor();
-                Image->AtkResNode.NodeID = nodeIdx++;
-                Image->AtkResNode.Type = NodeType.Image;
-                Image->AtkResNode.X = 2;
-                Image->AtkResNode.Y = 3;
-                Image->AtkResNode.Width = 40;
-                Image->AtkResNode.Height = 40;
-                Image->AtkResNode.Flags = 8243;
-                Image->AtkResNode.Flags_2 = 1;
-                Image->AtkResNode.Flags_2 |= 4;
-                Image->WrapMode = 1;
-                Image->PartId = 0;
-                Image->PartsList = OriginalImage->PartsList;
 
                 Border = UIHelper.CleanAlloc<AtkImageNode>();
                 Border->Ctor();
@@ -172,8 +156,7 @@ namespace JobBars.UI {
                 Ring->AtkResNode.ParentNode = rootNode;
                 Text->AtkResNode.ParentNode = rootNode;
 
-                UIHelper.Link(OriginalOverlay, (AtkResNode*)Image);
-                UIHelper.Link((AtkResNode*)Image, (AtkResNode*)Circle);
+                UIHelper.Link(OriginalOverlay, (AtkResNode*)Circle);
                 UIHelper.Link((AtkResNode*)Circle, (AtkResNode*)Ring);
                 UIHelper.Link((AtkResNode*)Ring, (AtkResNode*)Border);
                 UIHelper.Link((AtkResNode*)Border, (AtkResNode*)BigText);
@@ -183,7 +166,6 @@ namespace JobBars.UI {
                 Component->Component->UldManager.UpdateDrawNodeList();
 
                 if (IsTimer) UIHelper.Hide(OriginalOverlay);
-                if (!IsTimer) UIHelper.Hide(Image);
 
                 UIHelper.Hide(Circle);
                 UIHelper.Hide(Ring);
@@ -218,7 +200,10 @@ namespace JobBars.UI {
 
                 UIHelper.Show(IsGCD ? Ring : Circle);
                 (IsGCD ? Ring : Circle)->PartId = (ushort)(80 - (float)(current / max) * 80);
-                if(IsGCD) SetDimmed(true);
+                if (IsGCD) {
+                    JobBars.IconBuilder.AddIconOverride(new IntPtr(OriginalImage));
+                    SetDimmed(true);
+                }
             }
 
             private void SetTimerDone() {
@@ -226,7 +211,10 @@ namespace JobBars.UI {
                 UIHelper.Hide(Text);
 
                 UIHelper.Hide(IsGCD ? Ring : Circle);
-                if (IsGCD) SetDimmed(false);
+                if (IsGCD) {
+                    JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
+                    SetDimmed(false);
+                }
             }
 
             // ====== FOR BUFFS =============
@@ -250,15 +238,16 @@ namespace JobBars.UI {
             }
 
             // =====================
+            private void SetDimmed(bool dimmed) => SetDimmed(OriginalImage, dimmed);
 
-            private void SetDimmed(bool dimmed) {
-                var val = (byte)(dimmed || OriginalImage->AtkResNode.MultiplyRed == 50 ? 50 : 100);
-                Image->AtkResNode.MultiplyRed = val;
-                Image->AtkResNode.MultiplyRed_2 = val;
-                Image->AtkResNode.MultiplyGreen = val;
-                Image->AtkResNode.MultiplyGreen_2 = val;
-                Image->AtkResNode.MultiplyBlue = val;
-                Image->AtkResNode.MultiplyBlue_2 = val;
+            public static void SetDimmed(AtkImageNode* image, bool dimmed) {
+                var val = (byte)(dimmed ? 50 : 100);
+                image->AtkResNode.MultiplyRed = val;
+                image->AtkResNode.MultiplyRed_2 = val;
+                image->AtkResNode.MultiplyGreen = val;
+                image->AtkResNode.MultiplyGreen_2 = val;
+                image->AtkResNode.MultiplyBlue = val;
+                image->AtkResNode.MultiplyBlue_2 = val;
             }
 
             // =====================
@@ -283,12 +272,8 @@ namespace JobBars.UI {
                 Component->Component->UldManager.UpdateDrawNodeList();
 
                 UIHelper.Show(OriginalOverlay);
+                JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
                 SetDimmed(false);
-
-                if (Image != null) {
-                    Image->AtkResNode.Destroy(true);
-                    Image = null;
-                }
 
                 if (Border != null) {
                     Border->AtkResNode.Destroy(true);
@@ -340,6 +325,7 @@ namespace JobBars.UI {
         private static readonly int MILLIS_LOOP = 250;
 
         private readonly List<Icon> Icons = new();
+        private readonly HashSet<IntPtr> IconOverride = new();
 
         public UIIconManager() {
         }
@@ -444,12 +430,26 @@ namespace JobBars.UI {
             Icons.RemoveAll(x => toRemove.Contains(x));
         }
 
+        public void AddIconOverride(IntPtr icon) {
+            IconOverride.Add(icon);
+        }
+        public void RemoveIconOverride(IntPtr icon) {
+            IconOverride.Remove(icon);
+        }
+        public void ProcessIconOverride(IntPtr icon) {
+            if(IconOverride.Contains(icon)) {
+                var image = (AtkImageNode*)icon;
+                Icon.SetDimmed(image, true);
+            }
+        }
+
         public void Reset() {
             Icons.ForEach(x => x.Dispose());
             Icons.Clear();
         }
 
         public void Dispose() {
+            IconOverride.Clear();
             Reset();
         }
     }
