@@ -307,6 +307,7 @@ namespace JobBars.UI {
         }
 
         // ==================
+
         private readonly string[] AllActionBars = {
             "_ActionBar",
             "_ActionBar01",
@@ -433,10 +434,13 @@ namespace JobBars.UI {
         public void AddIconOverride(IntPtr icon) {
             IconOverride.Add(icon);
         }
+
         public void RemoveIconOverride(IntPtr icon) {
             IconOverride.Remove(icon);
         }
+
         public void ProcessIconOverride(IntPtr icon) {
+            if (icon == IntPtr.Zero) return;
             if(IconOverride.Contains(icon)) {
                 var image = (AtkImageNode*)icon;
                 Icon.SetDimmed(image, true);
