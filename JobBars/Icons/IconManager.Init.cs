@@ -29,7 +29,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Goring Blade", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.GoringBlade },
                     Triggers = new[] {
@@ -46,7 +47,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Storm's Eye", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.StormsEye },
                     Triggers = new[] {
@@ -72,7 +74,8 @@ namespace JobBars.Icons {
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new[] {
                 new IconReplacer("Combust", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.Combust1,
                         ActionIds.Combust2,
@@ -106,7 +109,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Biolysis", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.SchBio,
                         ActionIds.SchBio2,
@@ -122,7 +126,8 @@ namespace JobBars.Icons {
             // ============ WHM ==================
             JobToValue.Add(JobIds.WHM, new[] {
                 new IconReplacer("Dia", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.Aero,
                         ActionIds.Aero2,
@@ -150,7 +155,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Caustic Bite", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.CausticBite,
                         ActionIds.VenomousBite,
@@ -161,7 +167,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Stormbite", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.Windbite,
                         ActionIds.Stormbite,
@@ -188,7 +195,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Disembowel", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.Disembowel },
                     Triggers = new[] {
@@ -196,7 +204,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Chaos Thrust", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.ChaosThrust },
                     Triggers = new[] {
@@ -207,7 +216,8 @@ namespace JobBars.Icons {
             // ============ SMN ==================
             JobToValue.Add(JobIds.SMN, new[] {
                 new IconReplacer("Bio", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.ArcBio,
                         ActionIds.ArcBio2,
@@ -220,7 +230,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Miasma", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] {
                         ActionIds.Miasma,
                         ActionIds.Miasma3
@@ -234,7 +245,8 @@ namespace JobBars.Icons {
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new[] {
                 new IconReplacer("Jinpu", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.Jinpu },
                     Triggers = new[] {
@@ -242,7 +254,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Shifu", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.Shifu },
                     Triggers = new[] {
@@ -253,7 +266,8 @@ namespace JobBars.Icons {
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new[] {
                 new IconReplacer("Thunder", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     AllowCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder,
@@ -265,7 +279,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("AOE Thunder", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     AllowCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder2,
@@ -334,7 +349,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Twin Snakes", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.TwinSnakes },
                     Triggers = new[] {
@@ -342,7 +358,8 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer("Demolish", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     UseCombo = true,
                     Icons = new [] { ActionIds.Demolish },
                     Triggers = new[] {
@@ -353,14 +370,16 @@ namespace JobBars.Icons {
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new[] {
                 new IconReplacer("Song of Torment/Nightbloom", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] { ActionIds.SongOfTorment },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.BluBleed), Duration = 60 }
                     }
                 }),
                 new IconReplacer("Bad Breath", new IconProps {
-                    IsDoT = true,
+                    IsTimer = true,
+                    IsGCD = true,
                     Icons = new [] { ActionIds.BadBreath },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Poison), Duration = 15 }

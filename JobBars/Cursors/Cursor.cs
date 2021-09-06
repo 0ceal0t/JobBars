@@ -56,7 +56,7 @@ namespace JobBars.Cursors {
 
         private float GetValue(CursorType type, StatusNameId status, float statusDuration) => type switch {
             CursorType.None => 0,
-            CursorType.GCD => GetGCD(),
+            CursorType.GCD => UIHelper.GetGCD(),
             CursorType.CastTime => GetCastTime(),
             CursorType.MpTick => UIHelper.GetMpTick(),
             CursorType.ActorTick => UIHelper.GetActorTick(),
@@ -72,12 +72,6 @@ namespace JobBars.Cursors {
             if (status.Status.Id == 0) return 0;
             var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1) : 0) / statusDuration;
             return Math.Min(ret, 1f);
-        }
-        
-        private static float GetGCD() {
-            var recast = UIHelper.GetRecastActiveAndTotal((uint)ActionIds.GoringBlade, out var timeElapsed, out var total);
-            if (!recast || total == 0) return 0;
-            return timeElapsed / total;
         }
 
         private static float GetCastTime() {

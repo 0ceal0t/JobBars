@@ -8,7 +8,8 @@ using System.Numerics;
 
 namespace JobBars.Icons {
     public struct IconProps {
-        public bool IsDoT;
+        public bool IsTimer;
+        public bool IsGCD;
         public bool UseCombo;
         public bool AllowCombo;
         public ActionIds[] Icons;
@@ -31,25 +32,41 @@ namespace JobBars.Icons {
 
         private IconState State = IconState.Inactive;
 
-        private readonly bool IsDoT;
+        private readonly bool IsTimer;
+        private readonly bool IsGCD;
         private readonly List<uint> Icons;
         private readonly IconTriggerStruct[] Triggers;
         private readonly bool AllowCombo;
         private bool UseCombo;
+        private bool UseBorder;
+
+        private UI.UIIconProps IconProps;
         
         public IconReplacer(string name, IconProps props) {
             Name = name;
             Enabled = JobBars.Config.IconEnabled.Get(Name);
-            IsDoT = props.IsDoT;
+            IsTimer = props.IsTimer;
+            IsGCD = props.IsGCD;
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
             Triggers = props.Triggers;
             AllowCombo = props.AllowCombo || props.UseCombo;
-            UseCombo = JobBars.Config.IconUseCombo.Get(Name, props.UseCombo);
+            UseCombo = JobBars.Config.IconUseCombo.Get(Name, props.UseCombo) && AllowCombo;
+            UseBorder = JobBars.Config.IconUseBorder.Get(Name);
+            CreateIconProps();
+        }
+
+        private void CreateIconProps() {
+            IconProps = new UI.UIIconProps {
+                IsGCD = IsGCD,
+                IsTimer = IsTimer,
+                UseCombo = UseCombo,
+                UseBorder = UseBorder
+            };
         }
 
         public void Setup() {
             State = IconState.Inactive;
-            JobBars.IconBuilder.Setup(Icons, IsDoT, UseCombo);
+            JobBars.IconBuilder.Setup(Icons, IconProps);
         }
 
         public void Tick() {
@@ -79,16 +96,16 @@ namespace JobBars.Icons {
         }
 
         private void SetIcon(float current, float duration) {
-            JobBars.IconBuilder.SetProgress(Icons, IsDoT, UseCombo, current, duration);
+            JobBars.IconBuilder.SetProgress(Icons, IconProps, current, duration);
         }
 
         private void ResetIcon() {
-            JobBars.IconBuilder.SetDone(Icons, IsDoT, UseCombo);
+            JobBars.IconBuilder.SetDone(Icons, IconProps);
         }
 
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
-            var type = IsDoT ? "DOT" : "BUFF";
+            var type = IsTimer ? "DOT" : "BUFF";
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 
@@ -103,6 +120,13 @@ namespace JobBars.Icons {
 
             if (AllowCombo && JobBars.Config.IconUseCombo.Draw($"Use Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
                 UseCombo = newCombo;
+                CreateIconProps();
+                JobBars.IconBuilder.Reset();
+            }
+
+            if (!UseCombo && JobBars.Config.IconUseBorder.Draw($"Dash Border When Done/Active{_ID}", Name, UseBorder, out var newBorder)) {
+                UseBorder = newBorder;
+                CreateIconProps();
                 JobBars.IconBuilder.Reset();
             }
         }
