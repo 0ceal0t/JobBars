@@ -44,6 +44,8 @@ namespace JobBars.UI {
             private readonly bool IsGCD;
             private readonly bool UseBorder;
 
+            private bool Dimmed = false;
+
             public Icon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
                 AdjustedId = adjustedId;
                 SlotId = slotId;
@@ -171,8 +173,6 @@ namespace JobBars.UI {
                 UIHelper.Hide(Ring);
                 UIHelper.Hide(Text);
                 UIHelper.Hide(BigText);
-
-                SetDimmed(false);
             }
 
             // ============================
@@ -195,8 +195,6 @@ namespace JobBars.UI {
 
                 UIHelper.Show(Text);
                 Text->SetText(((int)Math.Round(current)).ToString());
-
-                if (!UseCombo) Border->PartId = 0;
 
                 UIHelper.Show(IsGCD ? Ring : Circle);
                 (IsGCD ? Ring : Circle)->PartId = (ushort)(80 - (float)(current / max) * 80);
@@ -231,14 +229,16 @@ namespace JobBars.UI {
             private void SetBuffDone() {
                 if (State == IconState.None) return;
                 State = IconState.None;
-                if (!UseCombo) Border->PartId = 0;
 
                 UIHelper.Hide(BigText);
                 UIHelper.Show(OriginalOverlay);
             }
 
             // =====================
-            private void SetDimmed(bool dimmed) => SetDimmed(OriginalImage, dimmed);
+            private void SetDimmed(bool dimmed) {
+                Dimmed = dimmed;
+                SetDimmed(OriginalImage, dimmed);
+            }
 
             public static void SetDimmed(AtkImageNode* image, bool dimmed) {
                 var val = (byte)(dimmed ? 50 : 100);
@@ -253,9 +253,7 @@ namespace JobBars.UI {
             // =====================
 
             public void Tick(float dashPercent, float gcdPercent, bool border) {
-                var useBorder = UseCombo ?
-                    border :
-                    UseBorder && (State == IconState.TimerDone || State == IconState.BuffRunning);
+                var useBorder = (UseCombo && border) || (UseBorder && (State == IconState.TimerDone || State == IconState.BuffRunning));
 
                 Border->PartId = !useBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
 
@@ -273,7 +271,7 @@ namespace JobBars.UI {
 
                 UIHelper.Show(OriginalOverlay);
                 JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
-                SetDimmed(false);
+                if(Dimmed) SetDimmed(false);
 
                 if (Border != null) {
                     Border->AtkResNode.Destroy(true);

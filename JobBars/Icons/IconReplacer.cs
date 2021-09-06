@@ -10,8 +10,6 @@ namespace JobBars.Icons {
     public struct IconProps {
         public bool IsTimer;
         public bool IsGCD;
-        public bool UseCombo;
-        public bool AllowCombo;
         public ActionIds[] Icons;
         public IconTriggerStruct[] Triggers;
     }
@@ -36,7 +34,6 @@ namespace JobBars.Icons {
         private readonly bool IsGCD;
         private readonly List<uint> Icons;
         private readonly IconTriggerStruct[] Triggers;
-        private readonly bool AllowCombo;
         private bool UseCombo;
         private bool UseBorder;
 
@@ -49,8 +46,7 @@ namespace JobBars.Icons {
             IsGCD = props.IsGCD;
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
             Triggers = props.Triggers;
-            AllowCombo = props.AllowCombo || props.UseCombo;
-            UseCombo = JobBars.Config.IconUseCombo.Get(Name, props.UseCombo) && AllowCombo;
+            UseCombo = JobBars.Config.IconUseCombo.Get(Name);
             UseBorder = JobBars.Config.IconUseBorder.Get(Name);
             CreateIconProps();
         }
@@ -105,7 +101,7 @@ namespace JobBars.Icons {
 
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
-            var type = IsTimer ? "DOT" : "BUFF";
+            var type = IsTimer ? "TIMER" : "BUFF";
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 
@@ -118,13 +114,13 @@ namespace JobBars.Icons {
                 }
             }
 
-            if (AllowCombo && JobBars.Config.IconUseCombo.Draw($"Use Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
+            if (JobBars.Config.IconUseCombo.Draw($"Show Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
                 UseCombo = newCombo;
                 CreateIconProps();
                 JobBars.IconBuilder.Reset();
             }
 
-            if (!UseCombo && JobBars.Config.IconUseBorder.Draw($"Dash Border When Done/Active{_ID}", Name, UseBorder, out var newBorder)) {
+            if (JobBars.Config.IconUseBorder.Draw($"Show Dash Border When Done/Active{_ID}", Name, UseBorder, out var newBorder)) {
                 UseBorder = newBorder;
                 CreateIconProps();
                 JobBars.IconBuilder.Reset();
