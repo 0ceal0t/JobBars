@@ -268,7 +268,7 @@ namespace JobBars.Icons {
                 new IconReplacer("Thunder", new IconProps {
                     IsTimer = true,
                     IsGCD = true,
-                    AllowCombo = true,
+                    UseCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder,
                         ActionIds.Thunder3
@@ -281,7 +281,7 @@ namespace JobBars.Icons {
                 new IconReplacer("AOE Thunder", new IconProps {
                     IsTimer = true,
                     IsGCD = true,
-                    AllowCombo = true,
+                    UseCombo = true,
                     Icons = new [] {
                         ActionIds.Thunder2,
                         ActionIds.Thunder4
