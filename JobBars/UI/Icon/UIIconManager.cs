@@ -30,6 +30,7 @@ namespace JobBars.UI {
             public AtkComponentNode* Component;
 
             private AtkResNode* OriginalOverlay;
+            private AtkImageNode* OriginalImage;
 
             private AtkImageNode* Image;
             private AtkImageNode* Border;
@@ -59,7 +60,7 @@ namespace JobBars.UI {
                 IsGCD = props.IsGCD;
                 UseBorder = props.UseBorder;
 
-                var originalImage = (AtkImageNode*)nodeList[0];
+                OriginalImage = (AtkImageNode*)nodeList[0];
                 var originalBorder = (AtkImageNode*)nodeList[4];
                 var originalCD = (AtkImageNode*)nodeList[5];
                 var originalCircle = (AtkImageNode*)nodeList[7];
@@ -79,7 +80,7 @@ namespace JobBars.UI {
                 Image->AtkResNode.Flags_2 |= 4;
                 Image->WrapMode = 1;
                 Image->PartId = 0;
-                Image->PartsList = originalImage->PartsList;
+                Image->PartsList = OriginalImage->PartsList;
 
                 Border = UIHelper.CleanAlloc<AtkImageNode>();
                 Border->Ctor();
@@ -183,6 +184,7 @@ namespace JobBars.UI {
 
                 if (IsTimer) UIHelper.Hide(OriginalOverlay);
                 if (!IsTimer) UIHelper.Hide(Image);
+
                 UIHelper.Hide(Circle);
                 UIHelper.Hide(Ring);
                 UIHelper.Hide(Text);
@@ -250,7 +252,7 @@ namespace JobBars.UI {
             // =====================
 
             private void SetDimmed(bool dimmed) {
-                var val = (byte)(dimmed ? 50 : 100);
+                var val = (byte)(dimmed || OriginalImage->AtkResNode.MultiplyRed == 50 ? 50 : 100);
                 Image->AtkResNode.MultiplyRed = val;
                 Image->AtkResNode.MultiplyRed_2 = val;
                 Image->AtkResNode.MultiplyGreen = val;
@@ -315,6 +317,7 @@ namespace JobBars.UI {
 
                 Component = null;
                 OriginalOverlay = null;
+                OriginalImage = null;
             }
         }
 
