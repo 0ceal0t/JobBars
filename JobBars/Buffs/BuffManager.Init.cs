@@ -1,5 +1,6 @@
 ﻿using System;
 using JobBars.Data;
+using JobBars.Helper;
 using JobBars.UI;
 
 namespace JobBars.Buffs {
@@ -26,7 +27,7 @@ namespace JobBars.Buffs {
             // ======= WAR ==========
             JobToValue.Add(JobIds.WAR, new [] {
                 new BuffProps {
-                    Name = "Inner Release",
+                    Name = UIHelper.Localize(BuffIds.InnerRelease),
                     Duration = 10,
                     CD = 90,
                     Icon = ActionIds.InnerRelease,
@@ -37,7 +38,7 @@ namespace JobBars.Buffs {
             // ======= DRK =========
             JobToValue.Add(JobIds.DRK, new [] {
                 new BuffProps {
-                    Name = "Delirium",
+                    Name = UIHelper.Localize(BuffIds.Delirium),
                     CD = 90,
                     Duration = 10,
                     Icon = ActionIds.Delirium,
@@ -45,7 +46,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(BuffIds.Delirium) }
                 },
                 new BuffProps {
-                    Name = "Living Shadow",
+                    Name = UIHelper.Localize(ActionIds.LivingShadow),
                     CD = 120,
                     Duration = 24,
                     Icon = ActionIds.LivingShadow,
@@ -56,7 +57,7 @@ namespace JobBars.Buffs {
             // ======= AST ==========
             JobToValue.Add(JobIds.AST, new [] {
                 new BuffProps {
-                    Name = "The Balance",
+                    Name = UIHelper.Localize(BuffIds.TheBalance),
                     Duration = 15,
                     Icon = ActionIds.TheBalance,
                     Color = UIColor.Orange,
@@ -64,7 +65,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "The Bole",
+                    Name = UIHelper.Localize(BuffIds.TheBole),
                     Duration = 15,
                     Icon = ActionIds.TheBole,
                     Color = UIColor.BrightGreen,
@@ -72,7 +73,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "The Spear",
+                    Name = UIHelper.Localize(BuffIds.TheSpear),
                     Duration = 15,
                     Icon = ActionIds.TheSpear,
                     Color = UIColor.DarkBlue,
@@ -80,7 +81,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "The Spire",
+                    Name = UIHelper.Localize(BuffIds.TheSpire),
                     Duration = 15,
                     Icon = ActionIds.TheSpire,
                     Color = UIColor.Yellow,
@@ -88,7 +89,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "The Arrow",
+                    Name = UIHelper.Localize(BuffIds.TheArrow),
                     Duration = 15,
                     Icon = ActionIds.TheArrow,
                     Color = UIColor.LightBlue,
@@ -96,7 +97,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "The Ewer",
+                    Name = UIHelper.Localize(BuffIds.TheEwer),
                     Duration = 15,
                     Icon = ActionIds.TheEwer,
                     Color = UIColor.LightBlue,
@@ -104,7 +105,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "Lady of Crowns",
+                    Name = UIHelper.Localize(BuffIds.LadyOfCrowns),
                     Duration = 15,
                     Icon = ActionIds.LadyOfCrowns,
                     Color = UIColor.Purple,
@@ -112,7 +113,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "Lord of Crowns",
+                    Name = UIHelper.Localize(BuffIds.LordOfCrowns),
                     Duration = 15,
                     Icon = ActionIds.LordOfCrowns,
                     Color = UIColor.Red,
@@ -120,7 +121,7 @@ namespace JobBars.Buffs {
                     IsPlayerOnly = true
                 },
                 new BuffProps {
-                    Name = "Divination",
+                    Name = UIHelper.Localize(ActionIds.Divination),
                     CD = 120,
                     Duration = 15,
                     Icon = ActionIds.Divination,
@@ -131,7 +132,7 @@ namespace JobBars.Buffs {
             // ======= SCH ==========
             JobToValue.Add(JobIds.SCH, new [] {
                 new BuffProps {
-                    Name = "Chain Stratagem",
+                    Name = UIHelper.Localize(ActionIds.ChainStratagem),
                     CD = 120,
                     Duration = 15,
                     Icon = ActionIds.ChainStratagem,
@@ -144,7 +145,7 @@ namespace JobBars.Buffs {
             // ======= BRD ==========
             JobToValue.Add(JobIds.BRD, new [] {
                 new BuffProps {
-                    Name = "Battle Voice",
+                    Name = UIHelper.Localize(ActionIds.BattleVoice),
                     CD = 180,
                     Duration = 20,
                     Icon = ActionIds.BattleVoice,
@@ -152,7 +153,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.BattleVoice) }
                 },
                 new BuffProps {
-                    Name = "Barrage",
+                    Name = UIHelper.Localize(BuffIds.Barrage),
                     CD = 80,
                     Duration = 10,
                     Icon = ActionIds.Barrage,
@@ -160,7 +161,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(BuffIds.Barrage) }
                 },
                 new BuffProps {
-                    Name = "Raging Strikes",
+                    Name = UIHelper.Localize(ActionIds.RagingStrikes),
                     CD = 80,
                     Duration = 20,
                     Icon = ActionIds.RagingStrikes,
@@ -171,7 +172,7 @@ namespace JobBars.Buffs {
             // ======= DRG ==========
             JobToValue.Add(JobIds.DRG, new [] {
                 new BuffProps {
-                    Name = "Dragon Sight",
+                    Name = UIHelper.Localize(ActionIds.DragonSight),
                     CD = 120,
                     Duration = 20,
                     Icon = ActionIds.DragonSight,
@@ -179,7 +180,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.DragonSight) }
                 },
                 new BuffProps {
-                    Name = "Battle Litany",
+                    Name = UIHelper.Localize(ActionIds.BattleLitany),
                     CD = 180,
                     Duration = 20,
                     Icon = ActionIds.BattleLitany,
@@ -187,7 +188,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.BattleLitany) }
                 },
                 new BuffProps {
-                    Name = "Lance Charge",
+                    Name = UIHelper.Localize(ActionIds.LanceCharge),
                     CD = 90,
                     Duration = 20,
                     Icon = ActionIds.LanceCharge,
@@ -198,7 +199,7 @@ namespace JobBars.Buffs {
             // ======= SMN ==========
             JobToValue.Add(JobIds.SMN, new [] {
                 new BuffProps {
-                    Name = "Devotion",
+                    Name = UIHelper.Localize(ActionIds.Devotion),
                     CD = 180,
                     Duration = 15,
                     Icon = ActionIds.Devotion,
@@ -206,7 +207,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.Devotion) }
                 },
                 new BuffProps {
-                    Name = "Summon Bahamut",
+                    Name = UIHelper.Localize(ActionIds.SummonBahamut),
                     CD = 120,
                     Duration = 20,
                     Icon = ActionIds.SummonBahamut,
@@ -214,7 +215,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.SummonBahamut) }
                 },
                 new BuffProps {
-                    Name = "Firebird Trance",
+                    Name = UIHelper.Localize(ActionIds.FirebirdTrance),
                     CD = 120,
                     Duration = 20,
                     Icon = ActionIds.FirebirdTrance,
@@ -225,7 +226,7 @@ namespace JobBars.Buffs {
             // ======= SAM ==========
             JobToValue.Add(JobIds.SAM, new [] {
                 new BuffProps {
-                    Name = "Double Midare",
+                    Name = UIHelper.Localize(ActionIds.DoubleMidare),
                     CD = 60,
                     Duration = 5,
                     Icon = ActionIds.DoubleMidare,
@@ -238,7 +239,7 @@ namespace JobBars.Buffs {
             // ======= RDM ==========
             JobToValue.Add(JobIds.RDM, new [] {
                 new BuffProps {
-                    Name = "Manafication",
+                    Name = UIHelper.Localize(ActionIds.Manafication),
                     CD = 110,
                     Duration = 10,
                     Icon = ActionIds.Manafication,
@@ -246,7 +247,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.Manafication) }
                 },
                 new BuffProps {
-                    Name = "Embolden",
+                    Name = UIHelper.Localize(ActionIds.Embolden),
                     CD = 120,
                     Duration = 20,
                     Icon = ActionIds.Embolden,
@@ -257,7 +258,7 @@ namespace JobBars.Buffs {
             // ======= MCH ==========
             JobToValue.Add(JobIds.MCH, new [] {
                 new BuffProps {
-                    Name = "Wildfire",
+                    Name = UIHelper.Localize(ActionIds.Wildfire),
                     CD = 120,
                     Duration = 10,
                     Icon = ActionIds.Wildfire,
@@ -265,7 +266,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.Wildfire) }
                 },
                 new BuffProps {
-                    Name = "Reassemble",
+                    Name = UIHelper.Localize(BuffIds.Reassemble),
                     CD = 55,
                     Duration = 5,
                     Icon = ActionIds.Reassemble,
@@ -276,7 +277,7 @@ namespace JobBars.Buffs {
             // ======= DNC ==========
             JobToValue.Add(JobIds.DNC, new [] {
                 new BuffProps {
-                    Name = "Technical Finish",
+                    Name = UIHelper.Localize(ActionIds.QuadTechFinish),
                     CD = 115, // -5 seconds for the dance to actually be cast
                     Duration = 20,
                     Icon = ActionIds.QuadTechFinish,
@@ -284,7 +285,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.QuadTechFinish) }
                 },
                 new BuffProps {
-                    Name = "Devilment",
+                    Name = UIHelper.Localize(ActionIds.Devilment),
                     CD = 120,
                     Duration = 20,
                     Icon = ActionIds.Devilment,
@@ -295,7 +296,7 @@ namespace JobBars.Buffs {
             // ======= NIN ==========
             JobToValue.Add(JobIds.NIN, new [] {
                 new BuffProps {
-                    Name = "Trick Attack",
+                    Name = UIHelper.Localize(ActionIds.TrickAttack),
                     CD = 60,
                     Duration = 15,
                     Icon = ActionIds.TrickAttack,
@@ -303,7 +304,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.TrickAttack) }
                 },
                 new BuffProps {
-                    Name = "Bunshin",
+                    Name = UIHelper.Localize(BuffIds.Bunshin),
                     CD = 90,
                     Duration = 30,
                     Icon = ActionIds.Bunshin,
@@ -314,7 +315,7 @@ namespace JobBars.Buffs {
             // ======= MNK ==========
             JobToValue.Add(JobIds.MNK, new [] {
                 new BuffProps {
-                    Name = "Brotherhood",
+                    Name = UIHelper.Localize(ActionIds.Brotherhood),
                     CD = 90,
                     Duration = 15,
                     Icon = ActionIds.Brotherhood,
@@ -322,7 +323,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.Brotherhood) }
                 },
                 new BuffProps {
-                    Name = "Riddle of Fire",
+                    Name = UIHelper.Localize(ActionIds.RiddleOfFire),
                     CD = 90,
                     Duration = 20,
                     Icon = ActionIds.RiddleOfFire,
@@ -330,7 +331,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.RiddleOfFire) }
                 },
                 new BuffProps {
-                    Name = "Perfect Balance",
+                    Name = UIHelper.Localize(BuffIds.PerfectBalance),
                     CD = 90,
                     Duration = 15,
                     Icon = ActionIds.PerfectBalance,
@@ -341,7 +342,7 @@ namespace JobBars.Buffs {
             // ======= BLU ==========
             JobToValue.Add(JobIds.BLU, new [] {
                 new BuffProps {
-                    Name = "Off-Guard",
+                    Name = UIHelper.Localize(ActionIds.OffGuard),
                     CD = 60,
                     Duration = 15,
                     Icon = ActionIds.OffGuard,
@@ -349,7 +350,7 @@ namespace JobBars.Buffs {
                     Triggers = new []{ new Item(ActionIds.OffGuard) }
                 },
                 new BuffProps {
-                    Name = "Peculiar Light",
+                    Name = UIHelper.Localize(ActionIds.PeculiarLight),
                     CD = 60,
                     Duration = 15,
                     Icon = ActionIds.PeculiarLight,

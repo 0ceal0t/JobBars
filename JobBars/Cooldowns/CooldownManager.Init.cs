@@ -1,5 +1,6 @@
 ﻿using JobBars.Data;
 using System;
+using JobBars.Helper;
 
 namespace JobBars.Cooldowns {
     public struct CooldownProps {
@@ -19,19 +20,19 @@ namespace JobBars.Cooldowns {
             // ============ GNB ==================
             JobToValue.Add(JobIds.GNB, new [] {
                 new CooldownProps {
-                    Name = "Superbolide",
+                    Name = UIHelper.Localize(ActionIds.Superbolide),
                     Trigger = ActionIds.Superbolide,
                     Duration = 8,
                     CD = 360
                 },
                 new CooldownProps {
-                    Name = "Reprisal (GNB)",
+                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.GNB),
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Heart of Light",
+                    Name = UIHelper.Localize(ActionIds.HeartOfLight),
                     Trigger = ActionIds.HeartOfLight,
                     Duration = 15,
                     CD = 90
@@ -40,25 +41,25 @@ namespace JobBars.Cooldowns {
             // ============ PLD ==================
             JobToValue.Add(JobIds.PLD, new [] {
                 new CooldownProps {
-                    Name = "Hallowed Ground",
+                    Name = UIHelper.Localize(ActionIds.HallowedGround),
                     Trigger = ActionIds.HallowedGround,
                     Duration = 10,
                     CD = 420
                 },
                 new CooldownProps {
-                    Name = "Reprisal (PLD)",
+                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.PLD),
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Divine Veil",
+                    Name = UIHelper.Localize(ActionIds.DivineVeil),
                     Trigger = ActionIds.DivineVeil,
                     Duration = 5,
                     CD = 90
                 },
                 new CooldownProps {
-                    Name = "Passage of Arms",
+                    Name = UIHelper.Localize(ActionIds.PassageOfArms),
                     Trigger = ActionIds.PassageOfArms,
                     Duration = 5,
                     CD = 120
@@ -67,25 +68,25 @@ namespace JobBars.Cooldowns {
             // ============ WAR ==================
             JobToValue.Add(JobIds.WAR, new [] {
                 new CooldownProps {
-                    Name = "Holmgang",
+                    Name = UIHelper.Localize(ActionIds.Holmgang),
                     Trigger = ActionIds.Holmgang,
                     Duration = 8,
                     CD = 240
                 },
                 new CooldownProps {
-                    Name = "Reprisal (WAR)",
+                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.WAR),
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Shake it Off",
+                    Name = UIHelper.Localize(ActionIds.ShakeItOff),
                     Trigger = ActionIds.ShakeItOff,
                     Duration = 15,
                     CD = 90
                 },
                 new CooldownProps {
-                    Name = "Nascent Flash",
+                    Name = UIHelper.Localize(ActionIds.NascentFlash),
                     Trigger = ActionIds.NascentFlash,
                     AdditionalTriggers = new[] {ActionIds.RawIntuition },
                     Duration = 6,
@@ -95,25 +96,25 @@ namespace JobBars.Cooldowns {
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new []{
                 new CooldownProps {
-                    Name = "Living Dead",
+                    Name = UIHelper.Localize(ActionIds.LivingDead),
                     Trigger = ActionIds.LivingDead,
                     Duration = 10,
                     CD = 300
                 },
                 new CooldownProps {
-                    Name = "Reprisal (DRK)",
+                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.DRK),
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Dark Missionary",
+                    Name = UIHelper.Localize(ActionIds.DarkMissionary),
                     Trigger = ActionIds.DarkMissionary,
                     Duration = 15,
                     CD = 90
                 },
                 new CooldownProps {
-                    Name = "The Blackest Night",
+                    Name = UIHelper.Localize(ActionIds.TheBlackestNight),
                     Trigger = ActionIds.TheBlackestNight,
                     Duration = 7,
                     CD = 15
@@ -122,24 +123,24 @@ namespace JobBars.Cooldowns {
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new [] {
                 new CooldownProps {
-                    Name = "Neutral Sect",
+                    Name = UIHelper.Localize(ActionIds.NeutralSect),
                     Trigger = ActionIds.NeutralSect,
                     Duration = 20,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Celestial Opposition",
+                    Name = UIHelper.Localize(ActionIds.CelestialOpposition),
                     Trigger = ActionIds.CelestialOpposition,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Collective Unconscious",
+                    Name = UIHelper.Localize(ActionIds.CollectiveUnconscious),
                     Trigger = ActionIds.CollectiveUnconscious,
                     Duration = 15,
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = "Earthly Star",
+                    Name = UIHelper.Localize(ActionIds.EarthlyStar),
                     Trigger = ActionIds.EarthlyStar,
                     Duration = 20,
                     CD = 60
@@ -148,18 +149,18 @@ namespace JobBars.Cooldowns {
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new [] {
                 new CooldownProps {
-                    Name = "Seraph",
+                    Name = UIHelper.Localize(ActionIds.SummonSeraph),
                     Trigger = ActionIds.SummonSeraph,
                     Duration = 22,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Deployment Tactics",
+                    Name = UIHelper.Localize(ActionIds.DeploymentTactics),
                     Trigger = ActionIds.DeploymentTactics,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Recitation",
+                    Name = UIHelper.Localize(ActionIds.Recitation),
                     Trigger = ActionIds.Recitation,
                     CD = 90
                 }
@@ -167,18 +168,18 @@ namespace JobBars.Cooldowns {
             // ============ WHM ==================
             JobToValue.Add(JobIds.WHM, new [] {
                 new CooldownProps {
-                    Name = "Temperance",
+                    Name = UIHelper.Localize(ActionIds.Temperance),
                     Trigger = ActionIds.Temperance,
                     Duration = 20,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Benediction",
+                    Name = UIHelper.Localize(ActionIds.Benediction),
                     Trigger = ActionIds.Benediction,
                     CD = 180
                 },
                 new CooldownProps {
-                    Name = "Asylum",
+                    Name = UIHelper.Localize(ActionIds.Asylum),
                     Trigger = ActionIds.Asylum,
                     Duration = 24,
                     CD = 90
@@ -187,13 +188,13 @@ namespace JobBars.Cooldowns {
             // ============ BRD ==================
             JobToValue.Add(JobIds.BRD, new [] {
                 new CooldownProps {
-                    Name = "Troubadour",
+                    Name = UIHelper.Localize(ActionIds.Troubadour),
                     Trigger = ActionIds.Troubadour,
                     Duration = 15,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Nature's Minne",
+                    Name = UIHelper.Localize(ActionIds.NaturesMinne),
                     Trigger = ActionIds.NaturesMinne,
                     Duration = 15,
                     CD = 90
@@ -202,7 +203,7 @@ namespace JobBars.Cooldowns {
             // ============ DRG ==================
             JobToValue.Add(JobIds.DRG, new [] {
                 new CooldownProps {
-                    Name = "Feint (DRG)",
+                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.DRG),
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -211,7 +212,7 @@ namespace JobBars.Cooldowns {
             // ============ SMN ==================
             JobToValue.Add(JobIds.SMN, new [] {
                 new CooldownProps {
-                    Name = "Addle (SMN)",
+                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.SMN),
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -220,7 +221,7 @@ namespace JobBars.Cooldowns {
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new [] {
                 new CooldownProps {
-                    Name = "Feint (SAM)",
+                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.SAM),
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -229,7 +230,7 @@ namespace JobBars.Cooldowns {
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new [] {
                 new CooldownProps {
-                    Name = "Addle (BLM)",
+                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.BLM),
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -238,7 +239,7 @@ namespace JobBars.Cooldowns {
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new [] {
                 new CooldownProps {
-                    Name = "Addle (RDM)",
+                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.RDM),
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -247,7 +248,7 @@ namespace JobBars.Cooldowns {
             // ============ MCH ==================
             JobToValue.Add(JobIds.MCH, new [] {
                 new CooldownProps {
-                    Name = "Tactician",
+                    Name = UIHelper.Localize(ActionIds.Tactician),
                     Trigger = ActionIds.Tactician,
                     Duration = 15,
                     CD = 120
@@ -256,13 +257,13 @@ namespace JobBars.Cooldowns {
             // ============ DNC ==================
             JobToValue.Add(JobIds.DNC, new [] {
                 new CooldownProps {
-                    Name = "Shield Samba",
+                    Name = UIHelper.Localize(ActionIds.ShieldSamba),
                     Trigger = ActionIds.ShieldSamba,
                     Duration = 15,
                     CD = 120
                 },
                 new CooldownProps {
-                    Name = "Improvisation",
+                    Name = UIHelper.Localize(ActionIds.Improvisation),
                     Trigger = ActionIds.Improvisation,
                     Duration = 15,
                     CD = 120
@@ -271,7 +272,7 @@ namespace JobBars.Cooldowns {
             // ============ NIN ==================
             JobToValue.Add(JobIds.NIN, new [] {
                 new CooldownProps {
-                    Name = "Feint (NIN)",
+                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.NIN),
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -280,13 +281,13 @@ namespace JobBars.Cooldowns {
             // ============ MNK ==================
             JobToValue.Add(JobIds.MNK, new [] {
                 new CooldownProps {
-                    Name = "Feint (MNK)",
+                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.MNK),
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
                 },
                 new CooldownProps {
-                    Name = "Mantra",
+                    Name = UIHelper.Localize(ActionIds.Mantra),
                     Trigger = ActionIds.Mantra,
                     Duration = 15,
                     CD = 90
@@ -295,13 +296,13 @@ namespace JobBars.Cooldowns {
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new CooldownProps[] {
                 new CooldownProps {
-                    Name = "Addle (BLU)",
+                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.BLU),
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
                 },
                 new CooldownProps {
-                    Name = "Angel Whisper",
+                    Name = UIHelper.Localize(ActionIds.AngelWhisper),
                     Trigger = ActionIds.AngelWhisper,
                     CD = 300
                 },
