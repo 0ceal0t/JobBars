@@ -26,7 +26,7 @@ namespace JobBars.Cooldowns {
                     CD = 360
                 },
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.GNB),
+                    Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.GNB)})",
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
@@ -47,7 +47,7 @@ namespace JobBars.Cooldowns {
                     CD = 420
                 },
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.PLD),
+                    Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.PLD)})",
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
@@ -74,7 +74,7 @@ namespace JobBars.Cooldowns {
                     CD = 240
                 },
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.WAR),
+                    Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.WAR)})",
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
@@ -102,7 +102,7 @@ namespace JobBars.Cooldowns {
                     CD = 300
                 },
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Reprisal)+" "+UIHelper.Localize(JobIds.DRK),
+                    Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.DRK)})",
                     Trigger = ActionIds.Reprisal,
                     Duration = 10,
                     CD = 60
@@ -203,7 +203,7 @@ namespace JobBars.Cooldowns {
             // ============ DRG ==================
             JobToValue.Add(JobIds.DRG, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.DRG),
+                    Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.DRG)})",
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -212,7 +212,7 @@ namespace JobBars.Cooldowns {
             // ============ SMN ==================
             JobToValue.Add(JobIds.SMN, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.SMN),
+                    Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.SMN)})",
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -221,7 +221,7 @@ namespace JobBars.Cooldowns {
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.SAM),
+                    Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.SAM)})",
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -230,7 +230,7 @@ namespace JobBars.Cooldowns {
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.BLM),
+                    Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.BLM)})",
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -239,7 +239,7 @@ namespace JobBars.Cooldowns {
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.RDM),
+                    Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.RDM)})",
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
@@ -272,7 +272,7 @@ namespace JobBars.Cooldowns {
             // ============ NIN ==================
             JobToValue.Add(JobIds.NIN, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.NIN),
+                    Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.NIN)})",
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90
@@ -281,7 +281,7 @@ namespace JobBars.Cooldowns {
             // ============ MNK ==================
             JobToValue.Add(JobIds.MNK, new [] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Feint)+" "+UIHelper.Localize(JobIds.MNK),
+                    Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.MNK)})",
                     Trigger = ActionIds.Feint,
                     Duration = 10,
                     CD = 90

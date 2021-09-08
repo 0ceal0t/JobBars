@@ -120,7 +120,7 @@ namespace JobBars.Helper {
         }
 
         private static string ToTitleCase(this string title) {
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower());
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title);
         }
 
         private static void SetupSheets() {

@@ -9,36 +9,13 @@ namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
         private void Init()
         {
-            string proc;
-            
-            switch (JobBars.ClientState.ClientLanguage)
-            {
-                case ClientLanguage.Japanese:
-                {
-                    proc = " Procs";
-                    break;
-                }
-                case ClientLanguage.English:
-                {
-                    proc = " Procs";
-                    break;
-                }
-                case ClientLanguage.German:
-                {
-                    proc = " Procs";
-                    break;
-                }
-                case ClientLanguage.French:
-                {
-                    proc = " Procs";
-                    break;
-                }
-                default:
-                {
-                    proc = "触发";
-                    break;
-                }
-            }
+            string procText = JobBars.ClientState.ClientLanguage switch {
+                ClientLanguage.Japanese => "Procs",
+                ClientLanguage.English => "Procs",
+                ClientLanguage.German => "Procs",
+                ClientLanguage.French => "Procs",
+                _ => "触发"
+            };
 
             JobToValue.Add(JobIds.OTHER, Array.Empty<Gauge>());
             // ============ GNB ==================
@@ -127,7 +104,7 @@ namespace JobBars.Gauges {
             });
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new Gauge[] {
-                new GaugeResources("MP "+UIHelper.Localize(JobIds.DRK), GaugeResources.DrkMp, new GaugeResourcesProps {
+                new GaugeResources($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeResources.DrkMp, new GaugeResourcesProps {
                     Color = UIColor.Purple,
                     Segments = new[] { 0.3f, 0.6f, 0.9f, 1f}
                 }),
@@ -154,7 +131,7 @@ namespace JobBars.Gauges {
             });
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.AST)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.AST)} {procText}", new GaugeProcProps{
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.GiantDominance), BuffIds.GiantDominance, UIColor.LightBlue)
                     }
@@ -181,7 +158,7 @@ namespace JobBars.Gauges {
             });
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.SCH)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.SCH)} {procText}", new GaugeProcProps{
                     NoSoundOnFull = true,
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
@@ -221,7 +198,7 @@ namespace JobBars.Gauges {
             });
             // ============ BRD ==================
             JobToValue.Add(JobIds.BRD, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.BRD)+proc, new GaugeProcProps {
+                new GaugeProc($"{UIHelper.Localize(JobIds.BRD)} {procText}", new GaugeProcProps {
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, UIColor.Yellow),
                         new Proc(UIHelper.Localize(ActionIds.BloodLetter), ActionIds.BloodLetter, UIColor.Red)
@@ -271,7 +248,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.RightEye2)
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.TrueNorth)+" "+ UIHelper.Localize(JobIds.DRG), new GaugeChargesProps {
+                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.DRG)})", new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
@@ -374,7 +351,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Higanbana)
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.TrueNorth)+" "+UIHelper.Localize(JobIds.SAM), new GaugeChargesProps {
+                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.SAM)})", new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
@@ -400,7 +377,7 @@ namespace JobBars.Gauges {
             });
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.BLM)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.BLM)} {procText}", new GaugeProcProps{
                     ShowText = true,
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, UIColor.Orange),
@@ -432,7 +409,7 @@ namespace JobBars.Gauges {
             });
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.RDM)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.RDM)} {procText}", new GaugeProcProps{
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.VerstoneReady), BuffIds.VerstoneReady, UIColor.NoColor),
                         new Proc(UIHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, UIColor.Red)
@@ -509,7 +486,7 @@ namespace JobBars.Gauges {
             });
             // ============ DNC ==================
             JobToValue.Add(JobIds.DNC, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.DNC)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.DNC)} {procText}", new GaugeProcProps{
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.FlourishingCascade), BuffIds.FlourishingCascade, UIColor.BrightGreen),
                         new Proc(UIHelper.Localize(BuffIds.FlourishingFountain), BuffIds.FlourishingFountain, UIColor.Yellow),
@@ -530,7 +507,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Bunshin)
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.TrueNorth)+" "+UIHelper.Localize(JobIds.NIN), new GaugeChargesProps {
+                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.NIN)})", new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
@@ -590,7 +567,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Demolish)
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.TrueNorth)+ "/" +UIHelper.Localize(ActionIds.RiddleOfEarth), new GaugeChargesProps {
+                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)}/{UIHelper.Localize(ActionIds.RiddleOfEarth)}", new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
                     NoSoundOnFull = true,
@@ -632,7 +609,7 @@ namespace JobBars.Gauges {
             });
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new Gauge[] {
-                new GaugeProc(UIHelper.Localize(JobIds.BLM)+proc, new GaugeProcProps{
+                new GaugeProc($"{UIHelper.Localize(JobIds.BLU)} {procText}", new GaugeProcProps{
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.AstralAttenuation), BuffIds.AstralAttenuation, UIColor.NoColor),
                         new Proc(UIHelper.Localize(BuffIds.UmbralAttenuation), BuffIds.UmbralAttenuation, UIColor.DarkBlue),

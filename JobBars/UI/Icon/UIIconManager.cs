@@ -9,8 +9,8 @@ using System.Collections.Generic;
 namespace JobBars.UI {
     public struct UIIconProps {
         public bool IsTimer;
-        public bool UseCombo;
         public bool IsGCD; // only matters with Timer
+        public bool UseCombo;
         public bool UseBorder;
     }
 
@@ -40,8 +40,8 @@ namespace JobBars.UI {
             private IconState State = IconState.None;
 
             private readonly bool IsTimer;
-            private readonly bool UseCombo;
             private readonly bool IsGCD;
+            private readonly bool UseCombo;
             private readonly bool UseBorder;
 
             private bool Dimmed = false;
