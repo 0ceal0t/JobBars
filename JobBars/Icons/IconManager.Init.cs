@@ -1,5 +1,6 @@
 ﻿using JobBars.Data;
 using System;
+using JobBars.Helper;
 
 namespace JobBars.Icons {
     public partial class IconManager {
@@ -7,7 +8,7 @@ namespace JobBars.Icons {
             JobToValue.Add(JobIds.OTHER, Array.Empty<IconReplacer>());
             // ============ GNB ==================
             JobToValue.Add(JobIds.GNB, new[] {
-                new IconReplacer("No Mercy", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.NoMercy), new IconProps {
                     Icons = new [] { ActionIds.NoMercy },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
@@ -16,19 +17,19 @@ namespace JobBars.Icons {
             });
             // ============ PLD ==================
             JobToValue.Add(JobIds.PLD, new[] {
-                new IconReplacer("Requiescat", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Requiescat), new IconProps {
                     Icons = new [] { ActionIds.Requiescat },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Requiescat), Duration = 12 }
                     }
                 }),
-                new IconReplacer("Fight or Flight", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.FightOrFlight), new IconProps {
                     Icons = new [] { ActionIds.FightOrFlight },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 25 }
                     }
                 }),
-                new IconReplacer("Goring Blade", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.GoringBlade), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.GoringBlade },
@@ -39,13 +40,13 @@ namespace JobBars.Icons {
             });
             // ============ WAR ==================
             JobToValue.Add(JobIds.WAR, new[] {
-                new IconReplacer("Inner Release", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.InnerRelease), new IconProps {
                     Icons = new [] { ActionIds.InnerRelease },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.InnerRelease), Duration = 10 }
                     }
                 }),
-                new IconReplacer("Storm's Eye", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.StormsEye), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.StormsEye },
@@ -56,13 +57,13 @@ namespace JobBars.Icons {
             });
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new[] {
-                new IconReplacer("Delirium", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Delirium), new IconProps {
                     Icons = new [] { ActionIds.Delirium },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Delirium), Duration = 10 }
                     }
                 }),
-                new IconReplacer("Blood Weapon", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.BloodWeapon), new IconProps {
                     Icons = new [] { ActionIds.BloodWeapon },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.BloodWeapon), Duration = 10 }
@@ -71,7 +72,7 @@ namespace JobBars.Icons {
             });
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new[] {
-                new IconReplacer("Combust", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Combust3), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -85,13 +86,13 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Combust3), Duration = 30 }
                     }
                 }),
-                new IconReplacer("Lightspeed", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Lightspeed), new IconProps {
                     Icons = new [] { ActionIds.Lightspeed },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
                     }
                 }),
-                new IconReplacer("Earthly Star", new IconProps {
+                new IconReplacer(UIHelper.Localize(ActionIds.EarthlyStar), new IconProps {
                     Icons = new [] { ActionIds.EarthlyStar },
                     Triggers = new [] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
@@ -100,13 +101,13 @@ namespace JobBars.Icons {
             });
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new[] {
-                new IconReplacer("Chain Stratagem", new IconProps {
+                new IconReplacer(UIHelper.Localize(ActionIds.ChainStratagem), new IconProps {
                     Icons = new [] { ActionIds.ChainStratagem },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 15 }
                     }
                 }),
-                new IconReplacer("Biolysis", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Biolysis), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -123,7 +124,7 @@ namespace JobBars.Icons {
             });
             // ============ WHM ==================
             JobToValue.Add(JobIds.WHM, new[] {
-                new IconReplacer("Dia", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Dia), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -137,7 +138,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Dia), Duration = 30 }
                     }
                 }),
-                new IconReplacer("Presence of Mind", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.PresenceOfMind), new IconProps {
                     Icons = new [] { ActionIds.PresenceOfMind },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.PresenceOfMind), Duration = 15 }
@@ -146,13 +147,13 @@ namespace JobBars.Icons {
             });
             // ============ BRD ==================
             JobToValue.Add(JobIds.BRD, new[] {
-                new IconReplacer("Raging Strikes", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.RagingStrikes), new IconProps {
                     Icons = new [] { ActionIds.RagingStrikes },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 20 }
                     }
                 }),
-                new IconReplacer("Caustic Bite", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.VenomousBite), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -164,7 +165,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.VenomousBite), Duration = 30 },
                     }
                 }),
-                new IconReplacer("Stormbite", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Stormbite), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -179,20 +180,20 @@ namespace JobBars.Icons {
             });
             // ============ DRG ==================
             JobToValue.Add(JobIds.DRG, new[] {
-                new IconReplacer("Lance Charge", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.LanceCharge), new IconProps {
                     Icons = new [] { ActionIds.LanceCharge },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
                     }
                 }),
-                new IconReplacer("Dragon Sight", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.RightEye), new IconProps {
                     Icons = new [] { ActionIds.DragonSight },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye), Duration = 20 },
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
                     }
                 }),
-                new IconReplacer("Disembowel", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Disembowel), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.Disembowel },
@@ -200,7 +201,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Disembowel), Duration = 24 }
                     }
                 }),
-                new IconReplacer("Chaos Thrust", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.ChaosThrust), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.ChaosThrust },
@@ -211,7 +212,7 @@ namespace JobBars.Icons {
             });
             // ============ SMN ==================
             JobToValue.Add(JobIds.SMN, new[] {
-                new IconReplacer("Bio", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Bio3), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -225,7 +226,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Bio3), Duration = 30 }
                     }
                 }),
-                new IconReplacer("Miasma", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Miasma), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -240,7 +241,7 @@ namespace JobBars.Icons {
             });
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new[] {
-                new IconReplacer("Jinpu", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Jinpu), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.Jinpu },
@@ -248,7 +249,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Jinpu), Duration = 40 }
                     }
                 }),
-                new IconReplacer("Shifu", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Shifu), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.Shifu },
@@ -259,7 +260,7 @@ namespace JobBars.Icons {
             });
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new[] {
-                new IconReplacer("Thunder", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Thunder3), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -271,7 +272,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 24 }
                     }
                 }),
-                new IconReplacer("AOE Thunder", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Thunder4), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] {
@@ -283,13 +284,13 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
                     }
                 }),
-                new IconReplacer("Ley Lines", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.LeyLines), new IconProps {
                     Icons = new [] { ActionIds.LeyLines },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
                     }
                 }),
-                new IconReplacer("Sharpcast", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Sharpcast), new IconProps {
                     Icons = new [] { ActionIds.Sharpcast },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 15 }
@@ -298,7 +299,7 @@ namespace JobBars.Icons {
             });
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new[] {
-                new IconReplacer("Manafication", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Manafication), new IconProps {
                     Icons = new [] { ActionIds.Manafication },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Manafication), Duration = 10 }
@@ -307,7 +308,7 @@ namespace JobBars.Icons {
             });
             // ============ MCH ==================
             JobToValue.Add(JobIds.MCH, new[] {
-                new IconReplacer("Wildfire", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Wildfire), new IconProps {
                     Icons = new [] { ActionIds.Wildfire },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Wildfire), Duration = 10 }
@@ -316,7 +317,7 @@ namespace JobBars.Icons {
             });
             // ============ DNC ==================
             JobToValue.Add(JobIds.DNC, new[] {
-                new IconReplacer("Devilment", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Devilment), new IconProps {
                     Icons = new [] { ActionIds.Devilment },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.Devilment), Duration = 20 }
@@ -325,7 +326,7 @@ namespace JobBars.Icons {
             });
             // ============ NIN ==================
             JobToValue.Add(JobIds.NIN, new[] {
-                new IconReplacer("Trick Attack", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.TrickAttack), new IconProps {
                     Icons = new [] { ActionIds.TrickAttack },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.TrickAttack), Duration = 15 }
@@ -334,13 +335,13 @@ namespace JobBars.Icons {
             });
             // ============ MNK ==================
             JobToValue.Add(JobIds.MNK, new[] {
-                new IconReplacer("Riddle of Fire", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.RiddleOfFire), new IconProps {
                     Icons = new [] { ActionIds.RiddleOfFire },
                     Triggers = new[] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.RiddleOfFire), Duration = 20 }
                     }
                 }),
-                new IconReplacer("Twin Snakes", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.TwinSnakes), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.TwinSnakes },
@@ -348,7 +349,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.TwinSnakes), Duration = 15 }
                     }
                 }),
-                new IconReplacer("Demolish", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Demolish), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.Demolish },
@@ -359,7 +360,7 @@ namespace JobBars.Icons {
             });
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new[] {
-                new IconReplacer("Song of Torment/Nightbloom", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.BluBleed), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.SongOfTorment },
@@ -367,7 +368,7 @@ namespace JobBars.Icons {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.BluBleed), Duration = 60 }
                     }
                 }),
-                new IconReplacer("Bad Breath", new IconProps {
+                new IconReplacer(UIHelper.Localize(BuffIds.Poison), new IconProps {
                     IsTimer = true,
                     IsGCD = true,
                     Icons = new [] { ActionIds.BadBreath },
