@@ -93,7 +93,10 @@ namespace JobBars.Icons {
                     }
                 }),
                 new IconReplacer(UIHelper.Localize(ActionIds.EarthlyStar), new IconProps {
-                    Icons = new [] { ActionIds.EarthlyStar },
+                    Icons = new [] {
+                        ActionIds.EarthlyStar,
+                        ActionIds.StellarDetonation
+                    },
                     Triggers = new [] {
                         new IconTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
                     }

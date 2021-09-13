@@ -80,6 +80,7 @@
         CelestialOpposition = 16553,
         NeutralSect = 16559,
         Lightspeed = 3606,
+        StellarDetonation = 8324,
 
         // MNK ===========
         TrueNorth = 7546, // All melee

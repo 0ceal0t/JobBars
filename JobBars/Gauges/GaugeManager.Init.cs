@@ -2,13 +2,11 @@
 using JobBars.Helper;
 using JobBars.UI;
 using System;
-using System.Diagnostics;
 using Dalamud;
 
 namespace JobBars.Gauges {
     public unsafe partial class GaugeManager {
-        private void Init()
-        {
+        private void Init() {
             string procText = JobBars.ClientState.ClientLanguage switch {
                 ClientLanguage.Japanese => "Procs",
                 ClientLanguage.English => "Procs",
@@ -106,7 +104,7 @@ namespace JobBars.Gauges {
             JobToValue.Add(JobIds.DRK, new Gauge[] {
                 new GaugeResources($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeResources.DrkMp, new GaugeResourcesProps {
                     Color = UIColor.Purple,
-                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f}
+                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f }
                 }),
                 new GaugeGCD(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new SubGaugeGCDProps {
                     MaxCounter = 5,

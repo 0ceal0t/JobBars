@@ -92,11 +92,11 @@ namespace JobBars.Icons {
         }
 
         private void SetIcon(float current, float duration) {
-            JobBars.IconBuilder.SetProgress(Icons, IconProps, current, duration);
+            JobBars.IconBuilder.SetProgress(Icons, current, duration);
         }
 
         private void ResetIcon() {
-            JobBars.IconBuilder.SetDone(Icons, IconProps);
+            JobBars.IconBuilder.SetDone(Icons);
         }
 
         public void Draw(string id, JobIds job) {
@@ -107,23 +107,19 @@ namespace JobBars.Icons {
 
             if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
                 Enabled = newEnabled;
-
-                if (JobBars.IconManager.CurrentJob == job && JobBars.Config.IconsEnabled) {
-                    if (Enabled) Setup();
-                    else JobBars.IconBuilder.Remove(Icons);
-                }
+                JobBars.IconManager.Reset();
             }
 
             if (JobBars.Config.IconUseCombo.Draw($"Show Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
                 UseCombo = newCombo;
                 CreateIconProps();
-                JobBars.IconBuilder.Reset();
+                JobBars.IconManager.Reset();
             }
 
             if (JobBars.Config.IconUseBorder.Draw($"Show Dash Border When Done/Active{_ID}", Name, UseBorder, out var newBorder)) {
                 UseBorder = newBorder;
                 CreateIconProps();
-                JobBars.IconBuilder.Reset();
+                JobBars.IconManager.Reset();
             }
         }
     }

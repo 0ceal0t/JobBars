@@ -5,6 +5,7 @@ using JobBars.GameStructs;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.UI {
     public struct UIIconProps {
@@ -175,8 +176,6 @@ namespace JobBars.UI {
                 UIHelper.Hide(BigText);
             }
 
-            // ============================
-
             public void SetProgress(float current, float max) {
                 if (IsTimer) SetTimerProgress(current, max);
                 else SetBuffProgress(current);
@@ -234,7 +233,8 @@ namespace JobBars.UI {
                 UIHelper.Show(OriginalOverlay);
             }
 
-            // =====================
+            // ======================
+
             private void SetDimmed(bool dimmed) {
                 Dimmed = dimmed;
                 SetDimmed(OriginalImage, dimmed);
@@ -249,8 +249,6 @@ namespace JobBars.UI {
                 image->AtkResNode.MultiplyBlue = val;
                 image->AtkResNode.MultiplyBlue_2 = val;
             }
-
-            // =====================
 
             public void Tick(float dashPercent, float gcdPercent, bool border) {
                 var useBorder = (UseCombo && border) || (UseBorder && (State == IconState.TimerDone || State == IconState.BuffRunning));
@@ -318,11 +316,12 @@ namespace JobBars.UI {
             "_ActionBar08",
             "_ActionBar09",
             "_ActionCross",
-            //"_ActionDoubleCrossL",
-            //"_ActionDoubleCrossR",
+            "_ActionDoubleCrossL",
+            "_ActionDoubleCrossR",
         };
         private static readonly int MILLIS_LOOP = 250;
 
+        private readonly Dictionary<uint, UIIconProps> IconConfigs = new();
         private readonly List<Icon> Icons = new();
         private readonly HashSet<IntPtr> IconOverride = new();
 
@@ -332,101 +331,72 @@ namespace JobBars.UI {
         public void Setup(List<uint> triggers, UIIconProps props) {
             if (triggers == null) return;
 
+            foreach(var trigger in triggers) {
+                IconConfigs[trigger] = props;
+            }
+        }
+
+        public void SetProgress(List<uint> triggers, float current, float max) {
+            foreach (var icon in Icons) {
+                if (!triggers.Contains(icon.AdjustedId)) continue;
+                icon.SetProgress(current, max);
+            }
+        }
+
+        public void SetDone(List<uint> triggers) {
+            foreach (var icon in Icons) {
+                if (!triggers.Contains(icon.AdjustedId)) continue;
+                icon.SetDone();
+            }
+        }
+
+        public void Tick() {
+            var time = DateTime.Now;
+            var millis = time.Second * 1000 + time.Millisecond;
+            var percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
+            var gcdPercent = UIHelper.GetGCD();
+
             var hotbarData = UIHelper.GetHotbarUI();
             if (hotbarData == null) return;
 
+            HashSet<Icon> FoundIcons = new();
+
             for (var hotbarIndex = 0; hotbarIndex < AllActionBars.Length; hotbarIndex++) {
-                if (!hotbarData->IsLoaded(hotbarIndex)) continue;
                 var hotbar = hotbarData->Hotbars[hotbarIndex];
 
                 var actionBar = (AddonActionBarBase*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(AllActionBars[hotbarIndex]);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
 
                 for (var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++) {
-                    var slot = actionBar->ActionBarSlotsAction[slotIndex];
-
                     var slotData = hotbar[slotIndex];
                     if (slotData.Type != HotbarSlotStructType.Action) continue;
 
-                    var icon = slot.Icon;
                     var action = UIHelper.GetAdjustedAction(slotData.ActionId);
-                    if (triggers.Contains(action) && !AlreadySetup(icon)) {
-                        Icons.Add(new Icon(action, slotData.ActionId, hotbarIndex, slotIndex, icon, props));
+
+                    if (!IconConfigs.TryGetValue(action, out var props)) continue; // not looking for this action id
+
+                    var found = false;
+                    foreach (var icon in Icons) {
+                        if (icon.HotbarIdx != hotbarIndex || icon.SlotIdx != slotIndex) continue;
+                        if (slotData.ActionId != icon.SlotId) break; // action changed, just ignore it
+
+                        // found existing icon which matches
+                        found = true;
+                        FoundIcons.Add(icon);
+                        icon.Tick(percent, gcdPercent, slotData.YellowBorder);
+                        break;
                     }
-                }
-            }
-        }
+                    if (found) continue; // already found an icon, don't need to create a new one
 
-        private bool AlreadySetup(AtkComponentNode* node) {
-            foreach (var icon in Icons) {
-                if (icon.Component == node) return true;
-            }
-            return false;
-        }
-
-        public void Remove(List<uint> triggers) {
-            if (triggers == null) return;
-            List<Icon> toRemove = new();
-            foreach(var icon in Icons) {
-                if(triggers.Contains(icon.AdjustedId)) {
-                    icon.Dispose();
-                    toRemove.Add(icon);
-                }
-            }
-            Icons.RemoveAll(x => toRemove.Contains(x));
-        }
-
-        public void SetProgress(List<uint> triggers, UIIconProps props, float current, float max, bool check = true) {
-            var found = false;
-            foreach (var icon in Icons) {
-                if (!triggers.Contains(icon.AdjustedId)) continue;
-                icon.SetProgress(current, max);
-                found = true;
-            }
-
-            if (found || !check) return;
-            Setup(triggers, props);
-            SetProgress(triggers, props, current, max, false);
-        }
-
-        public void SetDone(List<uint> triggers, UIIconProps props, bool check = true) {
-            var found = false;
-            foreach (var icon in Icons) {
-                if (!triggers.Contains(icon.AdjustedId)) continue;
-                icon.SetDone();
-                found = true;
-            }
-
-            if (found || !check) return;
-            Setup(triggers, props);
-            SetDone(triggers, props, false);
-        }
-
-        // ========================
-
-        public void Tick() {
-            var time = DateTime.Now;
-            int millis = time.Second * 1000 + time.Millisecond;
-            float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
-
-            var gcdPercent = UIHelper.GetGCD();
-
-            var hotbarData = UIHelper.GetHotbarUI();
-            if (hotbarData == null) return;
-
-            List<Icon> toRemove = new();
-            foreach(var icon in Icons) {
-                var slot = hotbarData->Hotbars[icon.HotbarIdx][icon.SlotIdx];
-                if (slot.ActionId != icon.SlotId) { // Icon has been moved
-                    toRemove.Add(icon);
-                    icon.Dispose();
-                }
-                else {
-                    icon.Tick(percent, gcdPercent, slot.YellowBorder);
+                    var slot = actionBar->ActionBarSlotsAction[slotIndex];
+                    var newIcon = new Icon(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props);
+                    FoundIcons.Add(newIcon);
+                    Icons.Add(newIcon);
                 }
             }
 
-            Icons.RemoveAll(x => toRemove.Contains(x));
+            foreach (var icon in Icons.Where(x => !FoundIcons.Contains(x))) icon.Dispose();
+            Icons.RemoveAll(x => !FoundIcons.Contains(x));
         }
 
         public void AddIconOverride(IntPtr icon) {
@@ -445,9 +415,14 @@ namespace JobBars.UI {
             }
         }
 
-        public void Reset() {
+        public void ResetUI() {
             Icons.ForEach(x => x.Dispose());
             Icons.Clear();
+        }
+
+        public void Reset() {
+            IconConfigs.Clear();
+            ResetUI();
         }
 
         public void Dispose() {
