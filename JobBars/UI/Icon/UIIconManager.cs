@@ -415,14 +415,10 @@ namespace JobBars.UI {
             }
         }
 
-        public void ResetUI() {
-            Icons.ForEach(x => x.Dispose());
-            Icons.Clear();
-        }
-
         public void Reset() {
             IconConfigs.Clear();
-            ResetUI();
+            Icons.ForEach(x => x.Dispose());
+            Icons.Clear();
         }
 
         public void Dispose() {

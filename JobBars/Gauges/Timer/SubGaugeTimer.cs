@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using Dalamud.Logging;
+using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
@@ -64,35 +65,30 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            var timeLeft = UIHelper.TimeLeft(DefaultDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
-            if (timeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
+            var currentTimeLeft = UIHelper.TimeLeft(DefaultDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+            if (currentTimeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
             }
 
             if (State == GaugeState.Active) {
-                if (timeLeft <= 0) {
-                    timeLeft = 0; // prevent "-1" or something
+                if (currentTimeLeft <= 0) {
+                    currentTimeLeft = 0; // prevent "-1" or something
                     State = GaugeState.Inactive;
                 }
 
-                bool inDanger = timeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !HideLowWarning && timeLeft > 0;
+                bool currentDanger = currentTimeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !HideLowWarning && currentTimeLeft > 0;
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
-                if (inDanger && beforeOk) {
-                    if (JobBars.Config.GaugeSoundEffect > 0) {
-                        UIHelper.PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
-                    }
+                if (currentDanger && beforeOk && JobBars.Config.GaugeSoundEffect > 0) {
+                    UIHelper.PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
                 }
                 if (UI is UIBar gauge) {
-                    gauge.SetTextColor(inDanger ? UIColor.Red : UIColor.NoColor);
+                    gauge.SetTextColor(currentDanger ? UIColor.Red : UIColor.NoColor);
                 }
 
-                var barTimeLeft = (Invert ?
-                    (timeLeft == 0 ? 0 : MaxDuration - timeLeft)
-                    : timeLeft
-                );
-                SetValue(barTimeLeft, timeLeft);
-                InDanger = inDanger;
-                TimeLeft = timeLeft;
+                var barTimeLeft = Invert ? (currentTimeLeft == 0 ? 0 : MaxDuration - currentTimeLeft) : currentTimeLeft;
+                SetValue(barTimeLeft, currentTimeLeft);
+                InDanger = currentDanger;
+                TimeLeft = currentTimeLeft;
             }
         }
 
@@ -101,8 +97,6 @@ namespace JobBars.Gauges {
                 LastActiveTrigger = action;
                 LastActiveTime = DateTime.Now;
                 State = GaugeState.Active;
-                TimeLeft = DefaultDuration;
-                InDanger = false;
 
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
