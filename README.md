@@ -33,105 +33,105 @@ The goal of this project is to augment the existing UI by displaying information
 
 **Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
 
-### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> DRK
+### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> Dark Knight
 + **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon, MP
 + **Buffs**: Delirium, Living Shadow
 + **Mitigation**: Living Dead, Reprisal, Dark Missionary, The Blackest Night
 + **Icon Display**: Delerium, Blood Weapon
 
-### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> WAR
+### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> Warrior
 + **Gauges**: GCDS used in Inner Release, Storm's Eye
 + **Buffs**: Inner Release
 + **Mitigation**: Holmgang, Reprisal, Shake it Off, Nascent Flash
 + **Icon Display**: Inner Release, Storm's Eye
 
-### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> PLD
+### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> Paladin
 + **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
 + **Mitigation**: Hallowed Ground, Reprisal, Divine Veil, Passage of Arms
 + **Icon Display**: Requiescat, Goring Blade, Fight or Flight
 
-### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> GNB
+### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> Gunbreaker
 + **Gauges**: GCDS used in No Mercy
 + **Mitigation**: Superbolide, Reprisal, Heart of Light
 + **Icon Display**: No Mercy
 
-### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> SCH
+### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> Scholar
 + **Gauges**: Excog, Biolysis
 + **Buffs**: Chain Stratagem
 + **Mitigation**: Seraph, Deployment Tactics, Recitation
 + **Icon Display**: Biolysis, Chain Stratagem
 
-### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> WHM
+### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> White Mage
 + **Gauges**: Dia
 + **Mitigation**: Temperance, Benediction, Asylum
 + **Icon Display**: Dia, Presence of Mind
 
-### <img src="assets/job_icons/AST.png" height="20px" width="20px"> AST
+### <img src="assets/job_icons/AST.png" height="20px" width="20px"> Astrologian
 + **Gauges**: Combust, Upgraded Earthly Star
 + **Buffs**: Cards, Divination
 + **Mitigation**: Neutral Sect, Celestial Opposition, Collective Unconscious, Earthly Star
 + **Icon Display**: Combust, Lightspeed
 
-### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> MNK
+### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> Monk
 + **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
 + **Buffs**: Brotherhood, Riddle of Fire
 + **Mitigation**: Feint, Mantra,
 + **Icon Display**: Twin Snakes, Demolish, Riddle of Fire
 
-### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> DRG
+### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> Dragoon
 + **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight, Charges + time left on True North
 + **Buffs**: Battle Litany, Dragonsight, Lance Charge
 + **Mitigation**: Feint
 + **Icon Display**: Dragonsight, Lance Charge, Disembowel, Chaos Thrust
 
-### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> NIN
+### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> Ninja
 + **Gauges**: GCDS used in Bunshin, Charges + time left on True North
 + **Buffs**: Trick Attack, Bunshin
 + **Mitigation**: Feint
 + **Icon Display**: Trick Attack
 
-### <img src="assets/job_icons/SAM.png" height="20px" width="20px"> SAM
+### <img src="assets/job_icons/SAM.png" height="20px" width="20px"> Samurai
 + **Gauges**: Jinpu, Shifu, Higanbana, Charges + time left on True North
 + **Buffs**: Double Midare
 + **Mitigation**: Feint
 + **Icon Display**: Jinpu, Shifu, Higanbana
 
-### <img src="assets/job_icons/BRD.png" height="20px" width="20px"> BRD
+### <img src="assets/job_icons/BRD.png" height="20px" width="20px"> Bard
 + **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
 + **Buffs**: Battle Voice, Raging Strikes, Barrage
 + **Mitigation**: Troubadour, Nature's Minne
 + **Icon Display**: Caustic Bite, Stormbite, Raging Strikes
 
-### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> MCH
+### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> Machinist
 + **Gauges**: GCDS used in Hypercharge, GCDS used in Wildfire, Charges of Ricochet, Charges of Gauss Round
 + **Buffs**: Wildfire, Reassemble
 + **Mitigation**: Tactician
 + **Icon Display**: Wildfire
 
-### <img src="assets/job_icons/DNC.png" height="20px" width="20px"> DNC
+### <img src="assets/job_icons/DNC.png" height="20px" width="20px"> Dancer
 + **Gauges**: Procs
 + **Buffs**: Technical Step, Devilment
 + **Mitigation**: Shield Samba, Improvisation
 + **Icon Display**: Devilment
 
-### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> BLM
+### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> Black Mage
 + **Gauges**: Thunder 3+4, Fire and Thunder procs
 + **Mitigation**: Addle
 + **Icon Display**: Thunder 3+4, Leylines, Sharpcast
 
-### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> SMN
+### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> Summoner
 + **Gauges**: Ruin 4, Bio, Miasma, Wyrmwave and Scarlet Flame
 + **Buffs**: Devotion, Summon Bahamut, Firebird Trance
 + **Mitigation**: Addle
 + **Icon Display**: Bio, Miasma
 
-### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> RDM
+### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> Red Mage
 + **Gauges**: GCDS used in Manification, Fire and Stone procs, Acceleration stacks
 + **Buffs**: Embolden, Manafication
 + **Mitigation**: Addle
 + **Icon Display**: Manafication
 
-### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> BLU
+### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> Blue Mage
 + **Gauges**: Song of Torment, Bad Breath, Condensed Libra
 + **Buffs**: Off-guard, Peculiar Light
 + **Mitigation**: Addle, Angel Whisper

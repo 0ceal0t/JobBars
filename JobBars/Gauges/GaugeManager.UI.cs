@@ -14,10 +14,6 @@ namespace JobBars.Gauges {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Use 4K Texture (Requires Restart)" + _ID, ref JobBars.Config.Use4K)) {
-                JobBars.Config.Save();
-            }
-
             if (ImGui.Checkbox("Split Gauges" + _ID, ref JobBars.Config.GaugeSplit)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();

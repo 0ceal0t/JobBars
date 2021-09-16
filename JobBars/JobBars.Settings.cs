@@ -13,6 +13,10 @@ namespace JobBars {
             string _ID = "##JobBars_Settings";
             ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
+                if (ImGui.Checkbox("Use 4K Textures (Requires Restart)" + _ID, ref Config.Use4K)) {
+                    Config.Save();
+                }
+
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {
                     GaugeManager?.Draw();

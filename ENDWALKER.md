@@ -1,9 +1,51 @@
 # Endwalker
 
-## WIP
+## Sigs
 
-- [ ] previous enemy offset
-- [ ] Sage + Reaper icons
+## Data Structures
+- [ ] Previous enemy offset
 - [ ] Check existing icons
-- [ ] Check party member detection
-- [ ] Check combo detection
+- [ ] Party member detection
+- [ ] Combo detection
+
+## Jobs
+
+### Sage
+
+### Reaper
+
+### Dark Knight
+
+### Warrior
+
+### Paladin
+
+### Gunbreaker
+
+### Scholar
+
+### White Mage
+
+### Astrologian
+
+### Monk
+
+### Dragoon
+
+### Ninja
+
+### Samurai
+
+### Bard
+
+### Machinist
+
+### Dancer
+
+### Black Mage
+
+### Summoner
+
+### Red Mage
+
+### Blue Mage
