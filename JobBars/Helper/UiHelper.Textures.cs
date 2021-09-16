@@ -92,7 +92,8 @@ namespace JobBars.Helper {
         public unsafe static AtkUldAsset* CreateAssets(List<string> paths) {
             var ret = CreateAssets((uint)paths.Count);
             for (int i = 0; i < paths.Count; i++) {
-                TextureLoadPath((AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8), paths[i], 1);
+                var arg3 = JobBars.Config.Use4K ? 2u : 1u;
+                TextureLoadPath((AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8), paths[i], arg3);
             }
             return ret;
         }

@@ -11,6 +11,8 @@ namespace JobBars.Data {
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;
 
+        public bool Use4K = false;
+
         // ====== GAUGES ======
 
         public float GaugeScale = 1.0f;

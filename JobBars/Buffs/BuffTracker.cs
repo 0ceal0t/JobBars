@@ -54,7 +54,7 @@ namespace JobBars.Buffs {
             }
 
             if(State == BuffState.Running) {
-                TimeLeft = UIHelper.TimeLeft(Duration, DateTime.Now, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = UIHelper.TimeLeft(Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;

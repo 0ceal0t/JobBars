@@ -8,8 +8,8 @@ A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) 
 - Number of stacks (Ruin IV)
 - Icon replacement (time until DoT refresh, duration left on buffs)
 - Party buffs coming off of cooldown
-- ~~Mitigation tracker~~ **COMING SOON**
-- ~~Cursor displays (cast time, GCD timer, MP tick, DoT tick)~~ **COMING SOON**
+- Mitigation tracker
+- Cursor displays (cast time, GCD timer, MP tick, DoT tick)
 
 Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
@@ -19,11 +19,7 @@ https://user-images.githubusercontent.com/18051158/130377516-5c299fb5-9a3a-4b47-
 
 https://user-images.githubusercontent.com/18051158/130377606-2490ab26-1c2b-43fa-93f3-80e6c95e9fff.mp4
 
-**COMING SOON**
-
 https://user-images.githubusercontent.com/18051158/130377610-86fb7e17-9780-4827-81df-0739908bd709.mp4
-
-**COMING SOON**
 
 https://user-images.githubusercontent.com/18051158/130377598-2398d33a-9c0c-4d0c-8fd7-4187451a7e56.mp4
 
@@ -151,6 +147,7 @@ The goal of this project is to augment the existing UI by displaying information
 - [ ] How many people got hit by buffs
 - [ ] Split up party buffs and personal buffs
 - [ ] SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)
+- [x] ~~Support crossbar better for icon replacement~~
 - [x] ~~Proc order changing~~
 - [x] ~~GCD timer~~ (cursor)
 - [x] ~~DoT tick timer / MP timer~~ (cursor)

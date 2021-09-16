@@ -158,13 +158,13 @@ namespace JobBars.Helper {
             JobSheet = JobBars.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
         }
 
-        public static float TimeLeft(float defaultDuration, DateTime time, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
+        public static float TimeLeft(float defaultDuration, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
             if (lastActiveTrigger.Type == ItemType.Buff) {
                 if (buffDict.TryGetValue(lastActiveTrigger, out var elem)) { // duration exists, use that
                     return elem.RemainingTime;
                 }
                 else { // time isn't there, are we just waiting on it?
-                    var timeSinceActive = (time - lastActiveTime).TotalSeconds;
+                    var timeSinceActive = (DateTime.Now - lastActiveTime).TotalSeconds;
                     if (timeSinceActive <= 2) { // hasn't been enough time for it to show up in the buff list
                         return defaultDuration;
                     }
@@ -172,7 +172,7 @@ namespace JobBars.Helper {
                 }
             }
             else {
-                return (float)(defaultDuration - (time - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
+                return (float)(defaultDuration - (DateTime.Now - lastActiveTime).TotalSeconds); // triggered by an action, just calculate the time
             }
         }
     }

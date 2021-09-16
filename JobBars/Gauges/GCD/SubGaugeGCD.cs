@@ -70,7 +70,7 @@ namespace JobBars.Gauges {
 
         public override void Tick() {
             if (State == GaugeState.Active) {
-                float timeLeft = UIHelper.TimeLeft(MaxDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+                float timeLeft = UIHelper.TimeLeft(MaxDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
                 if (timeLeft < 0) {
                     State = GaugeState.Finished;
                     StopTime = DateTime.Now;

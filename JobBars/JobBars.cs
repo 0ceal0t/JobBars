@@ -137,7 +137,6 @@ namespace JobBars {
             IconDimmedHook = new Hook<IconDimmedDelegate>(iconDimmedPtr, IconDimmedDetour);
             IconDimmedHook.Enable();
 
-
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
             PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;

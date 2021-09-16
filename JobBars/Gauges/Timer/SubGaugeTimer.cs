@@ -65,7 +65,7 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            var currentTimeLeft = UIHelper.TimeLeft(DefaultDuration, DateTime.Now, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+            var currentTimeLeft = UIHelper.TimeLeft(DefaultDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
             if (currentTimeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
             }
