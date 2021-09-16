@@ -11,7 +11,7 @@ namespace JobBars.UI {
         private AtkTextNode* TextNode;
         private AtkImageNode* Overlay;
         private AtkImageNode* Icon;
-        private AtkImageNode* Border;
+        private AtkNineGridNode* Border;
 
         private ActionIds LastIconId = 0;
         public ActionIds Iconid => LastIconId;
@@ -61,16 +61,18 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
 
-            Border = UIBuilder.CreateImageNode();
-            Border->AtkResNode.Width = 47;
-            Border->AtkResNode.Height = 47;
+            Border = UIBuilder.CreateNineNode();
+            Border->AtkResNode.Width = (ushort)(WIDTH + 4);
+            Border->AtkResNode.Height = (ushort)(HEIGHT + 4);
             Border->AtkResNode.X = -2;
             Border->AtkResNode.Y = -2;
-            Border->PartId = UIBuilder.BUFF_BORDER;
+            Border->PartID = UIBuilder.BUFF_BORDER;
             Border->PartsList = partsList;
-            Border->Flags = 0;
-            Border->WrapMode = 1;
-            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
+
+            Border->TopOffset = 5;
+            Border->BottomOffset = 5;
+            Border->LeftOffset = 5;
+            Border->RightOffset = 5;
 
             Icon->AtkResNode.ParentNode = RootRes;
             Overlay->AtkResNode.ParentNode = RootRes;
@@ -104,7 +106,7 @@ namespace JobBars.UI {
             }
 
             if (Border != null) {
-                Border->UnloadTexture();
+                // TODO
                 Border->AtkResNode.Destroy(true);
                 Border = null;
             }
