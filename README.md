@@ -35,130 +35,191 @@ The goal of this project is to augment the existing UI by displaying information
 
 ### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> Dark Knight
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| GCDs in Delirium                   | Delirium                          | Living Dead                            | Delirium                                 |
-| GCDs in Blood Weapon               | Living Shadow                     | Reprisal                               | Blood Weapon                             |
-| MP                                 |                                   | Dark Missionary                        |                                          |
-|                                    |                                   | The Blackest Night                     |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Delirium          </td><td> Delirium            </td><td> Living Dead          </td><td> Delirium           </td></tr>
+  <tr><td> GCDs in Blood Weapon      </td><td> Living Shadow       </td><td> Reprisal             </td><td> Blood Weapon       </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td> Dark Missionary      </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> The Blackest Night   </td><td>                    </td></tr>
+</table>
 
 
 ### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> Warrior
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| GCDs in Inner Release              | Inner Release                     | Holmgang                               | Inner Release                            |
-| Storm's Eye                        |                                   | Reprisal                               | Storm's Eye                              |
-|                                    |                                   | Shake it Off                           |                                          |
-|                                    |                                   | Nascent Flash                          |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Inner Release     </td><td> Inner Release       </td><td> Holmgang             </td><td> Inner Release      </td></tr>
+  <tr><td> Storm's Eye               </td><td>                     </td><td> Reprisal             </td><td> Storm's Eye        </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Shake it Off         </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Nascent Flash        </td><td>                    </td></tr>
+</table>
 
 
 ### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> Paladin
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| GCDs in Requiescat                 |                                   | Hallowed Ground                        | Requiescat                               |
-| GCDs in Fight or Flight            |                                   | Reprisal                               | Goring Blade                             |
-| Goring Blade                       |                                   | Divine Veil                            | Fight or Flight                          |
-|                                    |                                   | Passage of Arms                        |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Requiescat        </td><td>                     </td><td> Hallowed Ground      </td><td> Requiescat         </td></tr>
+  <tr><td> GCDs in Fight or Flight   </td><td>                     </td><td> Reprisal             </td><td> Goring Blade       </td></tr>
+  <tr><td> Goring Blade              </td><td>                     </td><td> Divine Veil          </td><td> Fight or Flight    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Passage of Arms      </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> Gunbreaker
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| GCDs in No Mercy                   |                                   | Superbolide                            | No Mercy                                 |
-|                                    |                                   | Reprisal                               |                                          |
-|                                    |                                   | Heart  of Light                        |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in No Mercy          </td><td>                     </td><td> Superbolide          </td><td> No Mercy           </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Reprisal             </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Heart of Light       </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> Scholar
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| Excog                              | Chain Stratagem                   | Seraph                                 | Biolysis                                 |
-| Biolysis                           |                                   | Deployment Tactics                     | Chain Stratagem                          |
-|                                    |                                   | Recitation                             |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Excog                     </td><td> Chain Stratagem     </td><td> Seraph               </td><td> Biolysis           </td></tr>
+  <tr><td> Biolysis                  </td><td>                     </td><td> Deployment Tactics   </td><td> Chain Stratagem    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Recitation           </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> White Mage
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| Dia                                |                                   | Temperance                             | Dia                                      |
-|                                    |                                   | Benediction                            | Presence of Mind                         |
-|                                    |                                   | Asylum                                 |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Dia                       </td><td> Cards               </td><td> Temperance           </td><td> Dia                </td></tr>
+  <tr><td>                           </td><td> Divination          </td><td> Benedictiob          </td><td> Presence of Mind   </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Asylum               </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/AST.png" height="20px" width="20px"> Astrologian
 
-| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
-|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
-| Combust                            | Cards                             | Netural Sect                           | Combust                                  |
-| Upgraded Earthly Star              | Divination                        | Celestial Opposition                   | Lightspeed                               |
-| Goring Blade                       |                                   | Collective Unconscious                 |                                          |
-|                                    |                                   | Earthly Star                           |                                          |
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Combust                   </td><td> Cards               </td><td> Netural Sect            </td><td> Combust            </td></tr>
+  <tr><td> Upgraded Earthly Star     </td><td> Divination          </td><td> Celestial Opposition    </td><td> Lightspeed         </td></tr>
+  <tr><td> Lightspeed                </td><td>                     </td><td> Collective Unconscious  </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Earthly Star            </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> Monk
-+ **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
-+ **Buffs**: Brotherhood, Riddle of Fire
-+ **Mitigation**: Feint, Mantra,
-+ **Icon Display**: Twin Snakes, Demolish, Riddle of Fire
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Twin Snakes                  </td><td> Brotherhood         </td><td> Feint                </td><td> Twin Snakes        </td></tr>
+  <tr><td> Demolish                     </td><td> Riddle of Fire      </td><td> Mantra               </td><td> Demolish           </td></tr>
+  <tr><td> Riddle of Earth / True North </td><td>                     </td><td>                      </td><td> Riddle of Fire     </td></tr>
+</table>
 
 ### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> Dragoon
-+ **Gauges**: GCDS used in Lance Charge, GCDS used in Dragonsight, Charges + time left on True North
-+ **Buffs**: Battle Litany, Dragonsight, Lance Charge
-+ **Mitigation**: Feint
-+ **Icon Display**: Dragonsight, Lance Charge, Disembowel, Chaos Thrust
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Lance Charge      </td><td> Battle Litany       </td><td> Feint                </td><td> Dragonsigh         </td></tr>
+  <tr><td> GCDs in Dragonsight       </td><td> Dragonsight         </td><td>                      </td><td> Lance Charge       </td></tr>
+  <tr><td> True North                </td><td> Lance Charge        </td><td>                      </td><td> Disembowel         </td></tr>
+  <tr><td>                           </td><td>                     </td><td>                      </td><td> Chaos Thrust       </td></tr>
+</table>
 
 ### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> Ninja
-+ **Gauges**: GCDS used in Bunshin, Charges + time left on True North
-+ **Buffs**: Trick Attack, Bunshin
-+ **Mitigation**: Feint
-+ **Icon Display**: Trick Attack
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Bunshin           </td><td> Trick Attack        </td><td> Feint                </td><td> Trick Attack        </td></tr>
+  <tr><td> True North                </td><td> Bunshin             </td><td>                      </td><td>                     </td></tr>
+</table>
 
 ### <img src="assets/job_icons/SAM.png" height="20px" width="20px"> Samurai
-+ **Gauges**: Jinpu, Shifu, Higanbana, Charges + time left on True North
-+ **Buffs**: Double Midare
-+ **Mitigation**: Feint
-+ **Icon Display**: Jinpu, Shifu, Higanbana
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Jinpu                     </td><td> Double Midare       </td><td> Feint                </td><td> Jinpu              </td></tr>
+  <tr><td> Shifu                     </td><td>                     </td><td>                      </td><td> Shifu              </td></tr>
+  <tr><td> Higanbana                 </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> True North                </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/BRD.png" height="20px" width="20px"> Bard
-+ **Gauges**: GCDS used in Raging Strikes, Caustic Bite, Stormbite
-+ **Buffs**: Battle Voice, Raging Strikes, Barrage
-+ **Mitigation**: Troubadour, Nature's Minne
-+ **Icon Display**: Caustic Bite, Stormbite, Raging Strikes
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Raging Strikes    </td><td> Battle Voice        </td><td> Troubadour           </td><td> Caustic Bite       </td></tr>
+  <tr><td> Caustic Bite              </td><td> Raging Strikes      </td><td> Nature's Minne       </td><td> Stormbite          </td></tr>
+  <tr><td> Stormbite                 </td><td> Barrage             </td><td>                      </td><td> Raging Strikes     </td></tr>
+</table>
 
 ### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> Machinist
-+ **Gauges**: GCDS used in Hypercharge, GCDS used in Wildfire, Charges of Ricochet, Charges of Gauss Round
-+ **Buffs**: Wildfire, Reassemble
-+ **Mitigation**: Tactician
-+ **Icon Display**: Wildfire
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Hypercharge       </td><td> Wildfire            </td><td> Tactician            </td><td> Wildfire           </td></tr>
+  <tr><td> GCDs in Wildfire          </td><td> Reassemble          </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Charges of Ricochet       </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Charges of Gauss Round    </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/DNC.png" height="20px" width="20px"> Dancer
-+ **Gauges**: Procs
-+ **Buffs**: Technical Step, Devilment
-+ **Mitigation**: Shield Samba, Improvisation
-+ **Icon Display**: Devilment
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Procs                     </td><td> Technical Step      </td><td> Shield Samba         </td><td> Devilment          </td></tr>
+  <tr><td>                           </td><td> Devilment           </td><td> Improvisation        </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> Black Mage
-+ **Gauges**: Thunder 3+4, Fire and Thunder procs
-+ **Mitigation**: Addle
-+ **Icon Display**: Thunder 3+4, Leylines, Sharpcast
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Thunder                   </td><td>                     </td><td> Addle                </td><td> Thunder            </td></tr>
+  <tr><td> Fire and Thunder Procs    </td><td>                     </td><td>                      </td><td> Leylines           </td></tr>
+  <tr><td>                           </td><td>                     </td><td>                      </td><td> Sharpcast          </td></tr>
+</table>
 
 ### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> Summoner
-+ **Gauges**: Ruin 4, Bio, Miasma, Wyrmwave and Scarlet Flame
-+ **Buffs**: Devotion, Summon Bahamut, Firebird Trance
-+ **Mitigation**: Addle
-+ **Icon Display**: Bio, Miasma
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Ruin 4 Stacks             </td><td> Devotion            </td><td> Addle                </td><td> Bio                </td></tr>
+  <tr><td> Bio                       </td><td> Summon Bahamut      </td><td>                      </td><td> Miasma             </td></tr>
+  <tr><td> Miasma                    </td><td> Firebird Trance     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Wyrmwave/Scarlet Flame    </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> Red Mage
-+ **Gauges**: GCDS used in Manification, Fire and Stone procs, Acceleration stacks
-+ **Buffs**: Embolden, Manafication
-+ **Mitigation**: Addle
-+ **Icon Display**: Manafication
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> GCDs in Manafication      </td><td> Embolden            </td><td> Addle                </td><td> Manafication       </td></tr>
+  <tr><td> Fire and Stone Procs      </td><td> Manafication        </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Acceleration Stacks       </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
 
 ### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> Blue Mage
-+ **Gauges**: Song of Torment, Bad Breath, Condensed Libra
-+ **Buffs**: Off-guard, Peculiar Light
-+ **Mitigation**: Addle, Angel Whisper
-+ **Icon Display**: Song of Torment, Bad Breath
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Song of Torment           </td><td> Off-Guard           </td><td> Addle                </td><td> Song of Torment    </td></tr>
+  <tr><td> Bad Breath                </td><td> Peculiar Light      </td><td> Angel Whisper        </td><td> Bad Breath         </td></tr>
+  <tr><td> Condensed Libra           </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
 
 ## TODO
 - [ ] Vertical gauges
