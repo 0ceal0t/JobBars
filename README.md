@@ -31,7 +31,7 @@ The goal of this project is to augment the existing UI by displaying information
 
 ## Jobs
 
-**Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
+Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)
 
 ### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> Dark Knight
 
