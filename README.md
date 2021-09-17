@@ -68,24 +68,32 @@ The goal of this project is to augment the existing UI by displaying information
 |------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
 | GCDs in No Mercy                   |                                   | Superbolide                            | No Mercy                                 |
 |                                    |                                   | Reprisal                               |                                          |
-|                                    |                                   | Height of Light                        |                                          |
+|                                    |                                   | Heart  of Light                        |                                          |
 
 ### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> Scholar
-+ **Gauges**: Excog, Biolysis
-+ **Buffs**: Chain Stratagem
-+ **Mitigation**: Seraph, Deployment Tactics, Recitation
-+ **Icon Display**: Biolysis, Chain Stratagem
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| Excog                              | Chain Stratagem                   | Seraph                                 | Biolysis                                 |
+| Biolysis                           |                                   | Deployment Tactics                     | Chain Stratagem                          |
+|                                    |                                   | Recitation                             |                                          |
 
 ### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> White Mage
-+ **Gauges**: Dia
-+ **Mitigation**: Temperance, Benediction, Asylum
-+ **Icon Display**: Dia, Presence of Mind
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| Dia                                |                                   | Temperance                             | Dia                                      |
+|                                    |                                   | Benediction                            | Presence of Mind                         |
+|                                    |                                   | Asylum                                 |                                          |
 
 ### <img src="assets/job_icons/AST.png" height="20px" width="20px"> Astrologian
-+ **Gauges**: Combust, Upgraded Earthly Star
-+ **Buffs**: Cards, Divination
-+ **Mitigation**: Neutral Sect, Celestial Opposition, Collective Unconscious, Earthly Star
-+ **Icon Display**: Combust, Lightspeed
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| Combust                            | Cards                             | Netural Sect                           | Combust                                  |
+| Upgraded Earthly Star              | Divination                        | Celestial Opposition                   | Lightspeed                               |
+| Goring Blade                       |                                   | Collective Unconscious                 |                                          |
+|                                    |                                   | Earthly Star                           |                                          |
 
 ### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> Monk
 + **Gauges**: Twin Snakes, Demolish, Charges + time left on Riddle of Earth / True North
