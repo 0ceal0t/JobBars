@@ -34,26 +34,41 @@ The goal of this project is to augment the existing UI by displaying information
 **Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBars/issues)**
 
 ### <img src="assets/job_icons/DRK.png" height="20px" width="20px"> Dark Knight
-+ **Gauges**: GCDS used in Delirium, GCDS used in Blood Weapon, MP
-+ **Buffs**: Delirium, Living Shadow
-+ **Mitigation**: Living Dead, Reprisal, Dark Missionary, The Blackest Night
-+ **Icon Display**: Delerium, Blood Weapon
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| GCDs in Delirium                   | Delirium                          | Living Dead                            | Delirium                                 |
+| GCDs in Blood Weapon               | Living Shadow                     | Reprisal                               | Blood Weapon                             |
+| MP                                 |                                   | Dark Missionary                        |                                          |
+|                                    |                                   | The Blackest Night                     |                                          |
+
 
 ### <img src="assets/job_icons/WAR.png" height="20px" width="20px"> Warrior
-+ **Gauges**: GCDS used in Inner Release, Storm's Eye
-+ **Buffs**: Inner Release
-+ **Mitigation**: Holmgang, Reprisal, Shake it Off, Nascent Flash
-+ **Icon Display**: Inner Release, Storm's Eye
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| GCDs in Inner Release              | Inner Release                     | Holmgang                               | Inner Release                            |
+| Storm's Eye                        |                                   | Reprisal                               | Storm's Eye                              |
+|                                    |                                   | Shake it Off                           |                                          |
+|                                    |                                   | Nascent Flash                          |                                          |
+
 
 ### <img src="assets/job_icons/PLD.png" height="20px" width="20px"> Paladin
-+ **Gauges**: GCDS used in Requiescat, GCDS used in Fight or Flight, Goring Blade
-+ **Mitigation**: Hallowed Ground, Reprisal, Divine Veil, Passage of Arms
-+ **Icon Display**: Requiescat, Goring Blade, Fight or Flight
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| GCDs in Requiescat                 |                                   | Hallowed Ground                        | Requiescat                               |
+| GCDs in Fight or Flight            |                                   | Reprisal                               | Goring Blade                             |
+| Goring Blade                       |                                   | Divine Veil                            | Fight or Flight                          |
+|                                    |                                   | Passage of Arms                        |                                          |
 
 ### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> Gunbreaker
-+ **Gauges**: GCDS used in No Mercy
-+ **Mitigation**: Superbolide, Reprisal, Heart of Light
-+ **Icon Display**: No Mercy
+
+| Gauges<img width="150" height="0"> | Buffs<img width="150" height="0"> | Migitation<img width="150" height="0"> | Icon Display<img width="150" height="0"> |
+|------------------------------------|-----------------------------------|----------------------------------------|------------------------------------------|
+| GCDs in No Mercy                   |                                   | Superbolide                            | No Mercy                                 |
+|                                    |                                   | Reprisal                               |                                          |
+|                                    |                                   | Height of Light                        |                                          |
 
 ### <img src="assets/job_icons/SCH.png" height="20px" width="20px"> Scholar
 + **Gauges**: Excog, Biolysis
