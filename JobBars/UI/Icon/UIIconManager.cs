@@ -46,6 +46,7 @@ namespace JobBars.UI {
             private readonly bool UseBorder;
 
             private bool Dimmed = false;
+            private bool Disposed = false;
 
             public Icon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
                 AdjustedId = adjustedId;
@@ -262,6 +263,11 @@ namespace JobBars.UI {
             }
 
             public void Dispose() {
+                if(Disposed) {
+                    return;
+                }
+                Disposed = true;
+
                 var rootNode = (AtkResNode*)Component;
 
                 UIHelper.Link(OriginalOverlay, Text->AtkResNode.PrevSiblingNode);

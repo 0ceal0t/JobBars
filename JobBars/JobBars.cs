@@ -60,6 +60,7 @@ namespace JobBars {
         private Hook<IconDimmedDelegate> IconDimmedHook;
 
         private static bool PlayerExists => ClientState?.LocalPlayer != null;
+        private static bool RecreateUI => Condition[ConditionFlag.CreatingCharacter]; // getting haircut, etc.
         private bool LoggedOut = true;
 
         private Vector2 LastPosition;
@@ -202,12 +203,17 @@ namespace JobBars {
         private void FrameworkOnUpdate(Framework framework) {
             var addon = UIHelper.ChatLogAddon;
 
-            if (!PlayerExists) {
-                if (!LoggedOut && addon == null) Logout();
+            if (!LoggedOut && RecreateUI) {
+                Logout();
                 return;
             }
 
-            if (addon == null || addon->RootNode == null) return;
+            if (!PlayerExists) {
+                if (!LoggedOut && (addon == null)) Logout();
+                return;
+            }
+
+            if (addon == null || addon->RootNode == null || RecreateUI) return;
 
             if(LoggedOut) {
                 Builder.Attach(); // re-attach after addons have been created
