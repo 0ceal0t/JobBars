@@ -123,6 +123,12 @@ namespace JobBars.Cooldowns {
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new [] {
                 new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.AST)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
+                },
+                new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NeutralSect),
                     Trigger = ActionIds.NeutralSect,
                     Duration = 20,
@@ -149,6 +155,12 @@ namespace JobBars.Cooldowns {
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new [] {
                 new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
+                },
+                new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.SummonSeraph),
                     Trigger = ActionIds.SummonSeraph,
                     Duration = 22,
@@ -167,6 +179,12 @@ namespace JobBars.Cooldowns {
             });
             // ============ WHM ==================
             JobToValue.Add(JobIds.WHM, new [] {
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
+                },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Temperance),
                     Trigger = ActionIds.Temperance,
@@ -216,6 +234,12 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SMN)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
                 }
             });
             // ============ SAM ==================
@@ -234,6 +258,12 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.BLM)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
                 }
             });
             // ============ RDM ==================
@@ -243,6 +273,12 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.RDM)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
                 }
             });
             // ============ MCH ==================
@@ -302,10 +338,16 @@ namespace JobBars.Cooldowns {
                     CD = 90
                 },
                 new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.BLU)})",
+                    Trigger = ActionIds.Swiftcast,
+                    Duration = 10,
+                    CD= 60
+                },
+                new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.AngelWhisper),
                     Trigger = ActionIds.AngelWhisper,
                     CD = 300
-                },
+                }
             });
         }
     }
