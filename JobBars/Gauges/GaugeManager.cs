@@ -35,17 +35,19 @@ namespace JobBars.Gauges {
             UpdatePositionScale();
         }
 
+        private Vector2 GetPerJobPosition() => JobBars.Config.GaugePerJobPosition.Get($"{CurrentJob}");
+
         public void UpdatePositionScale(JobIds job) {
             if (job == CurrentJob) UpdatePositionScale();
         }
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetGaugePosition(JobBars.Config.GaugePosition);
+            JobBars.Builder.SetGaugePosition(JobBars.Config.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Config.GaugePositionGlobal);
             JobBars.Builder.SetGaugeScale(JobBars.Config.GaugeScale);
 
             int totalPosition = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
-                if (JobBars.Config.GaugeSplit) { // SPLIT
+                if (JobBars.Config.GaugePositionType == GaugePositionType.Split) { // SPLIT
                     gauge.UI.SetSplitPosition(gauge.Position);
                 }
                 else {

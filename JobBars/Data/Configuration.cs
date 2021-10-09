@@ -7,6 +7,12 @@ using JobBars.UI;
 using JobBars.Cursors;
 
 namespace JobBars.Data {
+    public enum GaugePositionType {
+        Global,
+        PerJob,
+        Split
+    }
+
     [Serializable]
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;
@@ -19,15 +25,17 @@ namespace JobBars.Data {
         public bool GaugeHorizontal = false;
         public bool GaugeAlignRight = false;
         public bool GaugeBottomToTop = false;
-        public bool GaugeSplit = false;
-        public Vector2 GaugePosition = new(200, 200);
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
         public bool GaugeHideGCDInactive = false;
         public bool GaugeGCDTextVisible = true;
 
-        public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200));
+        public GaugePositionType GaugePositionType = GaugePositionType.Global;
+        public Vector2 GaugePositionGlobal = new(200, 200); // global
+        public VectorValueConfig GaugePerJobPosition = new(new Vector2(200, 200)); // per job
+        public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200)); // split
+
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
@@ -66,13 +74,16 @@ namespace JobBars.Data {
         public bool CooldownsHideOutOfCombat = false;
         public bool CooldownsShowBorderWhenActive = true;
 
+        public bool CooldownsLeftAligned = false;
+
         public BoolValueConfig CooldownEnabled = new(true);
         public IntValueConfig CooldownOrder = new(-1);
 
         // ===== CURSOR =======
 
-        public bool CursorsEnabled = true;
+        public bool CursorsEnabled = false;
         public bool CursorHideWhenHeld = false;
+        public bool CursorHideOutOfCombat = false;
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
         public string CursorInnerColor = UIColor.MpPink.Name;

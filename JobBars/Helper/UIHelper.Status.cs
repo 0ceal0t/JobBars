@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using JobBars.Data;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
         public static Dictionary<Item, Status> PlayerStatus { get; private set; }
         public static uint PreviousEnemyTargetId { get; private set; }
+
+        private static readonly List<uint> StatusIgnoreSource = new(new[] { // count these buffs even though they're not coming from us
+            (uint)BuffIds.PhysicalAttenuation,
+            (uint)BuffIds.AstralAttenuation,
+            (uint)BuffIds.UmbralAttenuation
+        });
 
         public static void UpdatePlayerStatus() {
             Dictionary<Item, Status> buffDict = new();
@@ -49,7 +56,7 @@ namespace JobBars.Helper {
             if (actor == null) return;
             if (actor is BattleChara charaActor) {
                 foreach (var status in charaActor.StatusList) {
-                    if (status.SourceID != ownerId) continue;
+                    if (status.SourceID != ownerId && !StatusIgnoreSource.Contains(status.StatusId)) continue;
                     StatusToBuffItem(buffDict, status);
                 }
             }

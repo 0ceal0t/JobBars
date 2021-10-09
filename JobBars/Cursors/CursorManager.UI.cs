@@ -14,6 +14,14 @@ namespace JobBars.Cursors {
                 JobBars.Config.Save();
             }
 
+            ImGui.SameLine(250);
+            if (ImGui.Checkbox("Hide Cursor When Out Of Combat", ref JobBars.Config.CursorHideOutOfCombat)) {
+                if (!JobBars.Config.CursorHideOutOfCombat && JobBars.Config.CursorsEnabled) { // since they might be hidden
+                    JobBars.Builder.HideCursor();
+                }
+                JobBars.Config.Save();
+            }
+
             if (ImGui.InputFloat("Inner Scale" + _ID, ref JobBars.Config.CursorInnerScale)) {
                 JobBars.Config.Save();
             }

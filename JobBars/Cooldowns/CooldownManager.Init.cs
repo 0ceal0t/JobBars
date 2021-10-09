@@ -55,7 +55,7 @@ namespace JobBars.Cooldowns {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.DivineVeil),
                     Trigger = ActionIds.DivineVeil,
-                    Duration = 5,
+                    Duration = 30,
                     CD = 90
                 },
                 new CooldownProps {
@@ -88,7 +88,7 @@ namespace JobBars.Cooldowns {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NascentFlash),
                     Trigger = ActionIds.NascentFlash,
-                    AdditionalTriggers = new[] {ActionIds.RawIntuition },
+                    AdditionalTriggers = new[] { ActionIds.RawIntuition },
                     Duration = 6,
                     CD = 25
                 }
@@ -134,15 +134,14 @@ namespace JobBars.Cooldowns {
                     CD = 60
                 },
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.CollectiveUnconscious),
-                    Trigger = ActionIds.CollectiveUnconscious,
-                    Duration = 15,
-                    CD = 60
-                },
-                new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.EarthlyStar),
                     Trigger = ActionIds.EarthlyStar,
                     Duration = 20,
+                    CD = 60
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.AST)})",
+                    Trigger = ActionIds.Swiftcast,
                     CD = 60
                 }
             });
@@ -163,6 +162,11 @@ namespace JobBars.Cooldowns {
                     Name = UIHelper.Localize(ActionIds.Recitation),
                     Trigger = ActionIds.Recitation,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})",
+                    Trigger = ActionIds.Swiftcast,
+                    CD = 60
                 }
             });
             // ============ WHM ==================
@@ -183,6 +187,11 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.Asylum,
                     Duration = 24,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})",
+                    Trigger = ActionIds.Swiftcast,
+                    CD = 60
                 }
             });
             // ============ BRD ==================
@@ -216,6 +225,11 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.Addle,
                     Duration = 10,
                     CD = 90
+                },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SMN)})",
+                    Trigger = ActionIds.Swiftcast,
+                    CD= 60
                 }
             });
             // ============ SAM ==================
@@ -306,6 +320,11 @@ namespace JobBars.Cooldowns {
                     Trigger = ActionIds.AngelWhisper,
                     CD = 300
                 },
+                new CooldownProps {
+                    Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.BLU)})",
+                    Trigger = ActionIds.Swiftcast,
+                    CD = 60
+                }
             });
         }
     }

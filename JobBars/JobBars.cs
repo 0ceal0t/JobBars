@@ -277,7 +277,7 @@ namespace JobBars {
             GaugeManager.Tick(inCombat);
             BuffManager.Tick(inCombat);
             CooldownManager.Tick(inCombat);
-            CursorManager.Tick();
+            CursorManager.Tick(inCombat);
             IconManager.Tick();
         }
 

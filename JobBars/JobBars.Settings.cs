@@ -11,7 +11,7 @@ namespace JobBars {
             if (!Visible) return;
 
             string _ID = "##JobBars_Settings";
-            ImGui.SetNextWindowSize(new Vector2(500, 800), ImGuiCond.FirstUseEver);
+            ImGui.SetNextWindowSize(new Vector2(600, 1000), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
                 if (ImGui.Checkbox("Use 4K Textures (Requires Restart)" + _ID, ref Config.Use4K)) {
                     Config.Save();

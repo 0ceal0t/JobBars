@@ -45,6 +45,7 @@
         Superbolide = 16152,
 
         // SCH ===========
+        Swiftcast = 7561, // all healers and casters
         Biolysis = 16540,
         SchBio = 17864,
         SchBio2 = 17865,

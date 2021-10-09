@@ -28,10 +28,17 @@ namespace JobBars.Cursors {
             CurrentCursor = JobToValue.TryGetValue(job, out var cursor) ? cursor : null;
         }
 
-        public void Tick() {
+        public void Tick(bool inCombat) {
             if (!JobBars.Config.CursorsEnabled) return;
+            if (JobBars.Config.CursorHideOutOfCombat) {
+                if (inCombat) JobBars.Builder.ShowCursor();
+                else {
+                    JobBars.Builder.HideCursor();
+                    return;
+                }
+            }
 
-            if(CurrentCursor == null) {
+            if (CurrentCursor == null) {
                 JobBars.Builder.SetCursorInnerPercent(0, 1f);
                 JobBars.Builder.SetCursorOuterPercent(0, 1f);
                 return;

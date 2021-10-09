@@ -293,6 +293,7 @@ namespace JobBars.UI {
         public void SetPercentInternal(float value) {
             if (Segments == null) {
                 UIHelper.SetSize(BarMainNode, (int)(148 * value), 20);
+                UIHelper.SetSize(BarSecondaryNode, 0, 20);
             }
             else {
                 var fullValue = 0f;

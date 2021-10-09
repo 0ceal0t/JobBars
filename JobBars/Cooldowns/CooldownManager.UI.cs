@@ -17,15 +17,20 @@ namespace JobBars.Cooldowns {
                 JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
             }
 
-            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat", ref JobBars.Config.CooldownsHideOutOfCombat)) {
+            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) {
                 if (!JobBars.Config.CooldownsHideOutOfCombat && JobBars.Config.CooldownsEnabled) { // since they might be hidden
                     JobBars.Builder.ShowCooldowns();
                 }
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Show Border When Active", ref JobBars.Config.CooldownsShowBorderWhenActive)) {
+            if (ImGui.Checkbox("Show Border When Active" + _ID, ref JobBars.Config.CooldownsShowBorderWhenActive)) {
                 JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Left-Aligned" + _ID, ref JobBars.Config.CooldownsLeftAligned)) {
+                JobBars.Config.Save();
+                ResetUI();
             }
         }
 

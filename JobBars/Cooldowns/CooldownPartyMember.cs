@@ -26,8 +26,10 @@ namespace JobBars.Cooldowns {
                 SetupUI();
             }
 
-            for (int idx = 0; idx < Trackers.Count; idx++) {
-                Trackers[idx].Tick(UI.Items[idx], percent);
+            for (int i = 0; i < Trackers.Count; i++) {
+                var tracker = Trackers[i];
+                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
+                tracker.Tick(UI.Items[uiIdx], percent);
             }
         }
 
@@ -53,11 +55,11 @@ namespace JobBars.Cooldowns {
         public void SetupUI() {
             UI.HideAllItems();
 
-            var idx = 0;
-            foreach(var tracker in Trackers) {
-                UI.LoadIcon(idx, tracker.Icon);
-                UI.SetVisibility(idx, true);
-                idx++;
+            for (int i = 0; i < Trackers.Count; i++) {
+                var tracker = Trackers[i];
+                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
+                UI.LoadIcon(uiIdx, tracker.Icon);
+                UI.SetVisibility(uiIdx, true);
             }
         }
     }

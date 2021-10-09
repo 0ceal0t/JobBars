@@ -46,7 +46,7 @@ namespace JobBars.Gauges {
             if (UI == null) return;
             UI.SetVisible(Enabled);
             UI.SetScale(Scale);
-            if(JobBars.Config.GaugeSplit) UI.SetSplitPosition(Position);
+            if(JobBars.Config.GaugePositionType == GaugePositionType.Split) UI.SetSplitPosition(Position);
 
             ApplyUIConfig_();
         }
@@ -94,7 +94,7 @@ namespace JobBars.Gauges {
                 JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
-            if(JobBars.Config.GaugeSplit) {
+            if(JobBars.Config.GaugePositionType == GaugePositionType.Split) {
                 if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var pos)) {
                     SetSplitPosition(pos);
                 }
