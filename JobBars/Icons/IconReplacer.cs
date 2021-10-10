@@ -9,7 +9,6 @@ using System.Numerics;
 namespace JobBars.Icons {
     public struct IconProps {
         public bool IsTimer;
-        public bool IsGCD;
         public ActionIds[] Icons;
         public IconTriggerStruct[] Triggers;
     }
@@ -31,7 +30,6 @@ namespace JobBars.Icons {
         private IconState State = IconState.Inactive;
 
         private readonly bool IsTimer;
-        private readonly bool IsGCD;
         private readonly List<uint> Icons;
         private readonly IconTriggerStruct[] Triggers;
         private bool UseCombo;
@@ -43,7 +41,6 @@ namespace JobBars.Icons {
             Name = name;
             Enabled = JobBars.Config.IconEnabled.Get(Name);
             IsTimer = props.IsTimer;
-            IsGCD = props.IsGCD;
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
             Triggers = props.Triggers;
             UseCombo = JobBars.Config.IconUseCombo.Get(Name);
@@ -53,7 +50,6 @@ namespace JobBars.Icons {
 
         private void CreateIconProps() {
             IconProps = new UI.UIIconProps {
-                IsGCD = IsGCD,
                 IsTimer = IsTimer,
                 UseCombo = UseCombo,
                 UseBorder = UseBorder

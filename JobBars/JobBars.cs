@@ -66,7 +66,7 @@ namespace JobBars {
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
-        private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
+        private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78] || Condition[ConditionFlag.BetweenAreas] || Condition[ConditionFlag.BetweenAreas51];
         private bool LastCutscene = false;
 
         /*
