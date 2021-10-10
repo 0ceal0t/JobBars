@@ -46,6 +46,7 @@ namespace JobBars.Data {
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
         public BoolValueConfig GaugeShowText = new(true);
         public BoolValueConfig GaugeSwapText = new(false);
+        public FloatValueConfig GaugeTimerOffset = new(0f);
 
         public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;
@@ -97,8 +98,8 @@ namespace JobBars.Data {
 
         public bool IconsEnabled = true;
         public BoolValueConfig IconEnabled = new(true);
-        public BoolValueConfig IconUseCombo = new(true);
-        public BoolValueConfig IconUseBorder = new(true);
+        public ComboValueConfig<UIIconComboType> IconComboType = new();
+        public FloatValueConfig IconTimerOffset = new(0f);
 
         // =====================
 

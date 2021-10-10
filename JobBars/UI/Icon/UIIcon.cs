@@ -4,10 +4,17 @@ using JobBars.Helper;
 using System;
 
 namespace JobBars.UI {
+    public enum UIIconComboType {
+        Combo_Or_Active,
+        Combo_And_Active,
+        Only_When_Combo,
+        Only_When_Active,
+        Never
+    }
+
     public struct UIIconProps {
         public bool IsTimer;
-        public bool UseCombo;
-        public bool UseBorder;
+        public UIIconComboType ComboType;
     }
 
     public unsafe abstract class UIIcon {
@@ -25,8 +32,7 @@ namespace JobBars.UI {
         public AtkComponentNode* Component;
         public AtkComponentIcon* IconComponent;
 
-        protected readonly bool UseCombo;
-        protected readonly bool UseBorder;
+        protected readonly UIIconComboType ComboType;
 
         protected IconState State = IconState.None;
 
@@ -35,8 +41,7 @@ namespace JobBars.UI {
         protected uint NodeIdx = 200;
 
         public UIIcon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
-            UseCombo = props.UseCombo;
-            UseBorder = props.UseBorder;
+            ComboType = props.ComboType;
 
             AdjustedId = adjustedId;
             SlotId = slotId;
@@ -47,11 +52,21 @@ namespace JobBars.UI {
         }
 
         public abstract void SetProgress(float current, float max);
+
         public abstract void SetDone();
 
         public abstract void Tick(float dashPercent, bool border);
 
         public abstract void OnDispose();
+
+        protected bool CalcShowBorder(bool active, bool border) => ComboType switch {
+            UIIconComboType.Only_When_Combo => border,
+            UIIconComboType.Only_When_Active => active,
+            UIIconComboType.Combo_Or_Active => border || active,
+            UIIconComboType.Combo_And_Active => border && active,
+            UIIconComboType.Never => false,
+            _ => false
+        };
 
         public void Dispose() {
             if (Disposed) {

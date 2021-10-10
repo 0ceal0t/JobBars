@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
@@ -36,6 +37,7 @@ namespace JobBars.UI {
             IconComponent->UnknownImageNode = null;
             Text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
             Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+            Text->AtkResNode.Alpha_2 = 0xFF;
             Text->SetText("");
 
             Ring = UIHelper.CleanAlloc<AtkImageNode>(); // for timer
@@ -102,7 +104,7 @@ namespace JobBars.UI {
         }
 
         public override void Tick(float dashPercent, bool border) {
-            var showBorder = (UseCombo && border) || (UseBorder && State == IconState.TimerDone);
+            var showBorder = CalcShowBorder(State == IconState.TimerDone, border);
             Combo->PartId = !showBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
         }
 

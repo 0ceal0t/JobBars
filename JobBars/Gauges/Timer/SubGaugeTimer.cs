@@ -29,6 +29,7 @@ namespace JobBars.Gauges {
         private readonly bool HideLowWarning;
         private ElementColor Color;
         private bool Invert;
+        private float Offset;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
@@ -37,6 +38,8 @@ namespace JobBars.Gauges {
 
         private bool InDanger = false;
         private static float LOW_TIME_WARNING => JobBars.Config.GaugeLowTimerWarning;
+
+        private float OffsetMaxDuration => Offset == MaxDuration ? 1f : MaxDuration - Offset;
 
         public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge) {
             SubName = props.SubName;
@@ -47,6 +50,7 @@ namespace JobBars.Gauges {
             HideLowWarning = props.HideLowWarning;
             Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
             Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
+            Offset = JobBars.Config.GaugeTimerOffset.Get(Name);
         }
 
         public override void Reset() {
@@ -65,7 +69,7 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            var currentTimeLeft = UIHelper.TimeLeft(DefaultDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+            var currentTimeLeft = UIHelper.TimeLeft(DefaultDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime) - Offset;
             if (currentTimeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                 State = GaugeState.Active;
             }
@@ -85,7 +89,7 @@ namespace JobBars.Gauges {
                     gauge.SetTextColor(currentDanger ? UIColor.Red : UIColor.NoColor);
                 }
 
-                var barTimeLeft = Invert ? (currentTimeLeft == 0 ? 0 : MaxDuration - currentTimeLeft) : currentTimeLeft;
+                var barTimeLeft = Invert ? (currentTimeLeft == 0 ? 0 : OffsetMaxDuration - currentTimeLeft) : currentTimeLeft;
                 SetValue(barTimeLeft, currentTimeLeft);
                 InDanger = currentDanger;
                 TimeLeft = currentTimeLeft;
@@ -109,7 +113,7 @@ namespace JobBars.Gauges {
         private void SetValue(float value, float textValue) {
             if (ParentGauge.ActiveSubGauge != this) return;
             if (UI is UIBar gauge) {
-                gauge.SetPercent((float)value / MaxDuration);
+                gauge.SetPercent((float)value / OffsetMaxDuration);
                 gauge.SetText(((int)Math.Round(textValue)).ToString());
             }
         }
@@ -120,6 +124,10 @@ namespace JobBars.Gauges {
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Color, out var newColor)) {
                 Color = newColor;
                 ParentGauge.ApplyUIConfig();
+            }
+
+            if (JobBars.Config.GaugeTimerOffset.Draw($"Time Offset{suffix}{_ID}", Name, Offset, out var newOffset)) {
+                Offset = newOffset;
             }
 
             if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, Invert, out var newInvert)) {

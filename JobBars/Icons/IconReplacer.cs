@@ -2,9 +2,12 @@
 using ImGuiNET;
 using JobBars.Data;
 using JobBars.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using UIIconComboType = JobBars.UI.UIIconComboType;
+using UIIconProps = JobBars.UI.UIIconProps;
 
 namespace JobBars.Icons {
     public struct IconProps {
@@ -19,40 +22,40 @@ namespace JobBars.Icons {
     }
 
     public class IconReplacer {
+        public static readonly UIIconComboType[] ValidComboTypes = (UIIconComboType[])Enum.GetValues(typeof(UIIconComboType));
+
         public enum IconState {
             Inactive,
             Active
         }
 
-        public readonly string Name;
         public bool Enabled;
 
-        private IconState State = IconState.Inactive;
-
+        public readonly string Name;
         private readonly bool IsTimer;
         private readonly List<uint> Icons;
         private readonly IconTriggerStruct[] Triggers;
-        private bool UseCombo;
-        private bool UseBorder;
 
-        private UI.UIIconProps IconProps;
-        
+        private IconState State = IconState.Inactive;
+        private UIIconComboType ComboType;
+        private UIIconProps IconProps;
+        private float Offset;
+
         public IconReplacer(string name, IconProps props) {
             Name = name;
-            Enabled = JobBars.Config.IconEnabled.Get(Name);
+            Triggers = props.Triggers;
             IsTimer = props.IsTimer;
             Icons = new List<ActionIds>(props.Icons).Select(x => (uint)x).ToList();
-            Triggers = props.Triggers;
-            UseCombo = JobBars.Config.IconUseCombo.Get(Name);
-            UseBorder = JobBars.Config.IconUseBorder.Get(Name);
+            Enabled = JobBars.Config.IconEnabled.Get(Name);
+            ComboType = JobBars.Config.IconComboType.Get(Name);
+            Offset = JobBars.Config.IconTimerOffset.Get(Name);
             CreateIconProps();
         }
 
         private void CreateIconProps() {
-            IconProps = new UI.UIIconProps {
+            IconProps = new UIIconProps {
                 IsTimer = IsTimer,
-                UseCombo = UseCombo,
-                UseBorder = UseBorder
+                ComboType = ComboType
             };
         }
 
@@ -66,8 +69,8 @@ namespace JobBars.Icons {
             var maxDuration = 1f;
             foreach(var trigger in Triggers) {
                 if(UIHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
-                    timeLeft = value.RemainingTime;
-                    maxDuration = trigger.Duration;
+                    timeLeft = value.RemainingTime - Offset;
+                    maxDuration = trigger.Duration - Offset;
                     break;
                 }
             }
@@ -95,7 +98,7 @@ namespace JobBars.Icons {
             JobBars.IconBuilder.SetDone(Icons);
         }
 
-        public void Draw(string id, JobIds job) {
+        public void Draw(string id, JobIds _) {
             var _ID = id + Name;
             var type = IsTimer ? "TIMER" : "BUFF";
 
@@ -106,16 +109,16 @@ namespace JobBars.Icons {
                 JobBars.IconManager.Reset();
             }
 
-            if (JobBars.Config.IconUseCombo.Draw($"Show Original Dash Border{_ID}", Name, UseCombo, out var newCombo)) {
-                UseCombo = newCombo;
+            if (JobBars.Config.IconComboType.Draw($"Dash Border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
+                ComboType = newComboType;
                 CreateIconProps();
                 JobBars.IconManager.Reset();
             }
 
-            if (JobBars.Config.IconUseBorder.Draw($"Show Dash Border When Done/Active{_ID}", Name, UseBorder, out var newBorder)) {
-                UseBorder = newBorder;
-                CreateIconProps();
-                JobBars.IconManager.Reset();
+            if(IsTimer) {
+                if (JobBars.Config.IconTimerOffset.Draw($"Time Offset{_ID}", Name, Offset, out var newOffset)) {
+                    Offset = newOffset;
+                }
             }
         }
     }

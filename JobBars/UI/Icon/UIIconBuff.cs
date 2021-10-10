@@ -82,8 +82,8 @@ namespace JobBars.UI {
         }
 
         public override void Tick(float dashPercent, bool border) {
-            var useBorder = UseBorder && State == IconState.BuffRunning;
-            Combo->PartId = !useBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
+            var showBorder = CalcShowBorder(State == IconState.BuffRunning, border);
+            Combo->PartId = !showBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
         }
 
         public override void OnDispose() {
