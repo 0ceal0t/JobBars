@@ -15,13 +15,13 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick(UICooldown ui, JobIds job, float percent) {
-            if(CurrentJob != job) {
+            if (CurrentJob != job) {
                 CurrentJob = job;
                 UI = ui;
                 SetupTrackers();
                 SetupUI();
             }
-            else if(UI != ui) { // same job, different UI element for some reason
+            else if (UI != ui) { // same job, different UI element for some reason
                 UI = ui;
                 SetupUI();
             }
@@ -35,14 +35,14 @@ namespace JobBars.Cooldowns {
 
         public void ProcessAction(Item action, uint objectId) {
             if (ObjectId != objectId) return;
-            foreach(var tracker in Trackers) tracker.ProcessAction(action);
+            foreach (var tracker in Trackers) tracker.ProcessAction(action);
         }
 
         public void SetupTrackers() {
             Trackers.Clear();
 
             var trackerProps = JobBars.CooldownManager.GetCooldownProps(CurrentJob);
-            foreach(var prop in trackerProps.OrderBy(x => x.Order)) {
+            foreach (var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new CooldownTracker(prop));
             }

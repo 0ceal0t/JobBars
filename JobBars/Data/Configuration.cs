@@ -28,7 +28,6 @@ namespace JobBars.Data {
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
-        public bool GaugesHideWhenInactive = false;
         public bool GaugeGCDTextVisible = true;
 
         public GaugePositionType GaugePositionType = GaugePositionType.Global;
@@ -41,6 +40,7 @@ namespace JobBars.Data {
         public IntValueConfig GaugeOrder = new(-1);
         public IntValueConfig GaugeProcOrder = new(-1);
         public BoolValueConfig GaugeNoSoundOnFull = new(false);
+        public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();

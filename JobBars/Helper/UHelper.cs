@@ -86,7 +86,7 @@ namespace JobBars.Helper {
         public LayoutNode(AtkResNode* node, AtkResNode*[] children) {
             Node = node;
             Childen = new LayoutNode[children.Length];
-            for(int i = 0; i < Childen.Length; i++) {
+            for (int i = 0; i < Childen.Length; i++) {
                 Childen[i] = new LayoutNode(children[i]);
             }
         }
@@ -95,7 +95,7 @@ namespace JobBars.Helper {
             if (Childen == null || Childen.Length == 0) return 0; // just the node
 
             var count = Childen.Length;
-            for(int i = 0; i < Childen.Length; i++) {
+            for (int i = 0; i < Childen.Length; i++) {
                 Childen[i].Node->ParentNode = Node;
                 count += Childen[i].Setup();
                 if (i < Childen.Length - 1) UIHelper.Link(Childen[i].Node, Childen[i + 1].Node);

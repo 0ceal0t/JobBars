@@ -18,6 +18,8 @@ namespace JobBars.Data {
         public void Draw() {
             DrawHeader();
 
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+
             ImGui.BeginChild(_ID + "/Child", ImGui.GetContentRegionAvail(), true);
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 200);

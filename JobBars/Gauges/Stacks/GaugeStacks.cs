@@ -81,7 +81,7 @@ namespace JobBars.Gauges {
             SetValue(maxValue);
 
             var gaugeFull = maxValue == MaxStacks;
-            if(gaugeFull && State != GaugeState.Finished && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when just became full
+            if (gaugeFull && State != GaugeState.Finished && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when just became full
 
             State = gaugeFull ? GaugeState.Finished : (maxValue == 0 ? GaugeState.Inactive : GaugeState.Active);
         }

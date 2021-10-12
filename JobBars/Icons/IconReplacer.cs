@@ -67,20 +67,20 @@ namespace JobBars.Icons {
         public void Tick() {
             var timeLeft = -1f;
             var maxDuration = 1f;
-            foreach(var trigger in Triggers) {
-                if(UIHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
+            foreach (var trigger in Triggers) {
+                if (UIHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
                     timeLeft = value.RemainingTime - Offset;
                     maxDuration = trigger.Duration - Offset;
                     break;
                 }
             }
 
-            if(timeLeft > 0 && State == IconState.Inactive) {
+            if (timeLeft > 0 && State == IconState.Inactive) {
                 State = IconState.Active;
             }
 
-            if(State == IconState.Active) {
-                if(timeLeft <= 0) {
+            if (State == IconState.Active) {
+                if (timeLeft <= 0) {
                     timeLeft = 0;
                     State = IconState.Inactive;
                 }
@@ -115,7 +115,7 @@ namespace JobBars.Icons {
                 JobBars.IconManager.Reset();
             }
 
-            if(IsTimer) {
+            if (IsTimer) {
                 if (JobBars.Config.IconTimerOffset.Draw($"Time Offset{_ID}", Name, Offset, out var newOffset)) {
                     Offset = newOffset;
                 }

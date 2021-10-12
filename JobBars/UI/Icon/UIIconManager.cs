@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.UI {
-    public unsafe class UIIconManager { 
+    public unsafe class UIIconManager {
         private readonly string[] AllActionBars = {
             "_ActionBar",
             "_ActionBar01",
@@ -36,7 +36,7 @@ namespace JobBars.UI {
         public void Setup(List<uint> triggers, UIIconProps props) {
             if (triggers == null) return;
 
-            foreach(var trigger in triggers) {
+            foreach (var trigger in triggers) {
                 IconConfigs[trigger] = props;
             }
         }
@@ -94,7 +94,7 @@ namespace JobBars.UI {
 
                     var slot = actionBar->ActionBarSlotsAction[slotIndex];
                     UIIcon newIcon = props.IsTimer ?
-                        new UIIconTimer(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props):
+                        new UIIconTimer(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props) :
                         new UIIconBuff(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props);
                     FoundIcons.Add(newIcon);
                     Icons.Add(newIcon);
@@ -115,7 +115,7 @@ namespace JobBars.UI {
 
         public void ProcessIconOverride(IntPtr icon) {
             if (icon == IntPtr.Zero) return;
-            if(IconOverride.Contains(icon)) {
+            if (IconOverride.Contains(icon)) {
                 var image = (AtkImageNode*)icon;
                 UIIconTimer.SetDimmed(image, true);
             }

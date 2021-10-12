@@ -36,7 +36,7 @@ namespace JobBars {
                 GaugeManager?.PerformAction(actionItem);
             }
             if (!isPet) {
-                BuffManager?.PerformAction(actionItem, (uint) sourceId);
+                BuffManager?.PerformAction(actionItem, (uint)sourceId);
                 CooldownManager?.PerformAction(actionItem, (uint)sourceId);
             }
 

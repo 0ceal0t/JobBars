@@ -143,7 +143,7 @@ namespace JobBars.UI {
             List<LayoutNode> barNodes = new();
             barNodes.Add(new LayoutNode(BarSecondaryNode));
             barNodes.Add(new LayoutNode(BarMainNode));
-            foreach(var sep in Separators) {
+            foreach (var sep in Separators) {
                 barNodes.Add(new LayoutNode(sep));
             }
 
@@ -159,7 +159,7 @@ namespace JobBars.UI {
                     new LayoutNode(TextNode),
                     new LayoutNode(TextBlurNode)
                 })
-            });;
+            }); ;
             layout.Setup();
             layout.Cleanup();
         }
@@ -230,7 +230,7 @@ namespace JobBars.UI {
         public void SetSegments(float[] segments) { // [0.5f, 1.0f]
             Segments = segments;
 
-            for(int i = 0; i < segments.Length - 1; i++) {
+            for (int i = 0; i < segments.Length - 1; i++) {
                 UIHelper.Show(Separators[i]);
                 Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
             }
@@ -299,7 +299,7 @@ namespace JobBars.UI {
                 var fullValue = 0f;
                 var partialValue = value;
 
-                for(int i = 0; i < Segments.Length; i++) {
+                for (int i = 0; i < Segments.Length; i++) {
                     if (Segments[i] <= value) fullValue = Segments[i];
                     else break;
                 }

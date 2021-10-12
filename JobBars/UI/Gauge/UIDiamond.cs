@@ -13,7 +13,7 @@ namespace JobBars.UI {
             public AtkTextNode* Text;
 
             public void Dispose() {
-                if(Text != null) {
+                if (Text != null) {
                     Text->AtkResNode.Destroy(true);
                     Text = null;
                 }

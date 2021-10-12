@@ -25,7 +25,7 @@ namespace JobBars.Buffs {
             // ======= PLD ==========
             JobToValue.Add(JobIds.PLD, Array.Empty<BuffProps>());
             // ======= WAR ==========
-            JobToValue.Add(JobIds.WAR, new [] {
+            JobToValue.Add(JobIds.WAR, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(BuffIds.InnerRelease),
                     Duration = 10,
@@ -36,7 +36,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= DRK =========
-            JobToValue.Add(JobIds.DRK, new [] {
+            JobToValue.Add(JobIds.DRK, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(BuffIds.Delirium),
                     CD = 90,
@@ -55,7 +55,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= AST ==========
-            JobToValue.Add(JobIds.AST, new [] {
+            JobToValue.Add(JobIds.AST, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(BuffIds.TheBalance),
                     Duration = 15,
@@ -130,7 +130,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= SCH ==========
-            JobToValue.Add(JobIds.SCH, new [] {
+            JobToValue.Add(JobIds.SCH, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.ChainStratagem),
                     CD = 120,
@@ -143,7 +143,7 @@ namespace JobBars.Buffs {
             // ======= WHM ==========
             JobToValue.Add(JobIds.WHM, Array.Empty<BuffProps>());
             // ======= BRD ==========
-            JobToValue.Add(JobIds.BRD, new [] {
+            JobToValue.Add(JobIds.BRD, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.BattleVoice),
                     CD = 180,
@@ -170,7 +170,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= DRG ==========
-            JobToValue.Add(JobIds.DRG, new [] {
+            JobToValue.Add(JobIds.DRG, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.DragonSight),
                     CD = 120,
@@ -197,7 +197,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= SMN ==========
-            JobToValue.Add(JobIds.SMN, new [] {
+            JobToValue.Add(JobIds.SMN, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.Devotion),
                     CD = 180,
@@ -224,7 +224,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= SAM ==========
-            JobToValue.Add(JobIds.SAM, new [] {
+            JobToValue.Add(JobIds.SAM, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.DoubleMidare),
                     CD = 60,
@@ -237,7 +237,7 @@ namespace JobBars.Buffs {
             // ======= BLM ==========
             JobToValue.Add(JobIds.BLM, Array.Empty<BuffProps>());
             // ======= RDM ==========
-            JobToValue.Add(JobIds.RDM, new [] {
+            JobToValue.Add(JobIds.RDM, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.Manafication),
                     CD = 110,
@@ -256,7 +256,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= MCH ==========
-            JobToValue.Add(JobIds.MCH, new [] {
+            JobToValue.Add(JobIds.MCH, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.Wildfire),
                     CD = 120,
@@ -275,7 +275,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= DNC ==========
-            JobToValue.Add(JobIds.DNC, new [] {
+            JobToValue.Add(JobIds.DNC, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.QuadTechFinish),
                     CD = 115, // -5 seconds for the dance to actually be cast
@@ -294,7 +294,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= NIN ==========
-            JobToValue.Add(JobIds.NIN, new [] {
+            JobToValue.Add(JobIds.NIN, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.TrickAttack),
                     CD = 60,
@@ -313,7 +313,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= MNK ==========
-            JobToValue.Add(JobIds.MNK, new [] {
+            JobToValue.Add(JobIds.MNK, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.Brotherhood),
                     CD = 90,
@@ -340,7 +340,7 @@ namespace JobBars.Buffs {
                 }
             });
             // ======= BLU ==========
-            JobToValue.Add(JobIds.BLU, new [] {
+            JobToValue.Add(JobIds.BLU, new[] {
                 new BuffProps {
                     Name = UIHelper.Localize(ActionIds.OffGuard),
                     CD = 60,

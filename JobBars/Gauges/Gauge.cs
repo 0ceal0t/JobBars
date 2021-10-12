@@ -23,16 +23,23 @@ namespace JobBars.Gauges {
         public UIGauge UI;
         public bool Enabled;
 
-        public int Order => JobBars.Config.GaugeOrder.Get(Name);
         public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
-        public float Scale => JobBars.Config.GaugeIndividualScale.Get(Name);
 
-        protected bool ShowText => JobBars.Config.GaugeShowText.Get(Name);
-        protected bool SwapText => JobBars.Config.GaugeSwapText.Get(Name);
+        public int Order { get; private set; }
+        public float Scale { get; private set; }
+
+        protected bool ShowText;
+        protected bool SwapText;
+        protected bool HideWhenInactive;
 
         public Gauge(string name) {
             Name = name;
             Enabled = JobBars.Config.GaugeEnabled.Get(Name);
+            Order = JobBars.Config.GaugeOrder.Get(Name);
+            Scale = JobBars.Config.GaugeIndividualScale.Get(Name);
+            ShowText = JobBars.Config.GaugeShowText.Get(Name);
+            SwapText = JobBars.Config.GaugeSwapText.Get(Name);
+            HideWhenInactive = JobBars.Config.GaugeHideInactive.Get(Name);
         }
 
         public void LoadUI(UIGauge ui) {
@@ -46,7 +53,7 @@ namespace JobBars.Gauges {
             if (UI == null) return;
             UI.SetVisible(Enabled);
             UI.SetScale(Scale);
-            if(JobBars.Config.GaugePositionType == GaugePositionType.Split) UI.SetSplitPosition(Position);
+            if (JobBars.Config.GaugePositionType == GaugePositionType.Split) UI.SetSplitPosition(Position);
 
             ApplyUIConfigImpl();
         }
@@ -61,9 +68,7 @@ namespace JobBars.Gauges {
 
         public abstract void Tick();
 
-        public void TickActive() {
-            UI?.SetVisible(!JobBars.Config.GaugesHideWhenInactive || GetActive());
-        }
+        public void TickActive() => UI?.SetVisible(!HideWhenInactive || GetActive());
 
         protected abstract bool GetActive();
 
@@ -89,31 +94,40 @@ namespace JobBars.Gauges {
 
             ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
 
-            if(JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
+            if (JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
                 Enabled = newEnabled;
                 ApplyUIConfig();
                 JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
-            if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var scale)) {
-                JobBars.Config.GaugeIndividualScale.Set(Name, Math.Max(scale, 0.1f));
+            if (this is not GaugeCharges &&
+                this is not GaugeResources &&
+                JobBars.Config.GaugeHideInactive.Draw($"Hide When Inactive{_ID}", Name, HideWhenInactive, out var newHideWhenInactive)
+            ) {
+                HideWhenInactive = newHideWhenInactive;
+            }
+
+            if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var newScale)) {
+                Scale = Math.Max(0.1f, newScale);
                 ApplyUIConfig();
                 JobBars.GaugeManager.UpdatePositionScale(job);
             }
 
-            if(JobBars.Config.GaugePositionType == GaugePositionType.Split) {
-                if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var pos)) {
-                    SetSplitPosition(pos);
+            if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
+                if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var newPos)) {
+                    SetSplitPosition(newPos);
                 }
             }
             else {
-                if (JobBars.Config.GaugeOrder.Draw($"Order{_ID}", Name)) {
+                if (JobBars.Config.GaugeOrder.Draw($"Order{_ID}", Name, Order, out var newOrder)) {
+                    Order = newOrder;
                     JobBars.GaugeManager.UpdatePositionScale(job);
                 }
             }
 
             DrawGaugeOptions(_ID);
             DrawGauge(_ID, job);
+
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
         }
 
@@ -122,14 +136,16 @@ namespace JobBars.Gauges {
         private void DrawGaugeOptions(string _ID) {
             var type = GetVisualType();
 
-            if(type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
-                if(JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name)) {
+            if (type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
+                if (JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name, ShowText, out var newShowText)) {
+                    ShowText = newShowText;
                     ApplyUIConfig();
                 }
             }
 
-            if(type == GaugeVisualType.Bar) {
-                if (JobBars.Config.GaugeSwapText.Draw($"Swap Text Position{_ID}", Name)) {
+            if (type == GaugeVisualType.Bar) {
+                if (JobBars.Config.GaugeSwapText.Draw($"Swap Text Position{_ID}", Name, SwapText, out var newSwapText)) {
+                    SwapText = newSwapText;
                     ApplyUIConfig();
                 }
             }

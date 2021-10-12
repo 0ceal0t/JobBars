@@ -93,7 +93,7 @@ namespace JobBars.UI {
                 TextNode = null;
             }
 
-            if(Icon != null) {
+            if (Icon != null) {
                 UIHelper.UnloadIcon(Icon);
                 Icon->AtkResNode.Destroy(true);
                 Icon = null;

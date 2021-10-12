@@ -144,7 +144,7 @@ namespace JobBars.Helper {
 
             List<StatusNameId> statusList = new();
             StatusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
-            foreach(var item in StatusSheet) {
+            foreach (var item in StatusSheet) {
                 statusList.Add(new StatusNameId {
                     Name = item.Name,
                     Status = new Item {

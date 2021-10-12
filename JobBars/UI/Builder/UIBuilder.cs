@@ -21,7 +21,7 @@ namespace JobBars.UI {
         }
 
         public void Dispose() {
-            if(GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
+            if (GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
                 GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
             }
             DisposeCooldowns();
@@ -61,7 +61,7 @@ namespace JobBars.UI {
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
             var addon = UIHelper.ChatLogAddon;
-            if(addon == null) return;
+            if (addon == null) return;
             var p = UIHelper.GetNodePosition(addon->RootNode);
             var pScale = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);

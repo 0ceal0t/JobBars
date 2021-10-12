@@ -78,7 +78,7 @@ namespace JobBars.UI {
 
             List<PartStruct> cursorParts = new();
             var cursorLayout = new Dictionary<string, PartStruct[]>();
-            for(int idx = 0; idx < 80; idx++) {
+            for (int idx = 0; idx < 80; idx++) {
                 var row = idx % 9;
                 var column = (idx - row) / 9;
 

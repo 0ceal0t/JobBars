@@ -18,7 +18,7 @@ namespace JobBars.Cooldowns {
         private void Init() {
             JobToValue.Add(JobIds.OTHER, Array.Empty<CooldownProps>());
             // ============ GNB ==================
-            JobToValue.Add(JobIds.GNB, new [] {
+            JobToValue.Add(JobIds.GNB, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Superbolide),
                     Trigger = ActionIds.Superbolide,
@@ -39,7 +39,7 @@ namespace JobBars.Cooldowns {
                 },
             });
             // ============ PLD ==================
-            JobToValue.Add(JobIds.PLD, new [] {
+            JobToValue.Add(JobIds.PLD, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.HallowedGround),
                     Trigger = ActionIds.HallowedGround,
@@ -66,7 +66,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ WAR ==================
-            JobToValue.Add(JobIds.WAR, new [] {
+            JobToValue.Add(JobIds.WAR, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Holmgang),
                     Trigger = ActionIds.Holmgang,
@@ -94,7 +94,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ DRK ==================
-            JobToValue.Add(JobIds.DRK, new []{
+            JobToValue.Add(JobIds.DRK, new[]{
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.LivingDead),
                     Trigger = ActionIds.LivingDead,
@@ -121,7 +121,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ AST ==================
-            JobToValue.Add(JobIds.AST, new [] {
+            JobToValue.Add(JobIds.AST, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NeutralSect),
                     Trigger = ActionIds.NeutralSect,
@@ -146,7 +146,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ SCH ==================
-            JobToValue.Add(JobIds.SCH, new [] {
+            JobToValue.Add(JobIds.SCH, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.SummonSeraph),
                     Trigger = ActionIds.SummonSeraph,
@@ -170,7 +170,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ WHM ==================
-            JobToValue.Add(JobIds.WHM, new [] {
+            JobToValue.Add(JobIds.WHM, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Temperance),
                     Trigger = ActionIds.Temperance,
@@ -195,7 +195,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ BRD ==================
-            JobToValue.Add(JobIds.BRD, new [] {
+            JobToValue.Add(JobIds.BRD, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Troubadour),
                     Trigger = ActionIds.Troubadour,
@@ -210,7 +210,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ DRG ==================
-            JobToValue.Add(JobIds.DRG, new [] {
+            JobToValue.Add(JobIds.DRG, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.DRG)})",
                     Trigger = ActionIds.Feint,
@@ -219,7 +219,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ SMN ==================
-            JobToValue.Add(JobIds.SMN, new [] {
+            JobToValue.Add(JobIds.SMN, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.SMN)})",
                     Trigger = ActionIds.Addle,
@@ -233,7 +233,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ SAM ==================
-            JobToValue.Add(JobIds.SAM, new [] {
+            JobToValue.Add(JobIds.SAM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.SAM)})",
                     Trigger = ActionIds.Feint,
@@ -242,7 +242,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ BLM ==================
-            JobToValue.Add(JobIds.BLM, new [] {
+            JobToValue.Add(JobIds.BLM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.BLM)})",
                     Trigger = ActionIds.Addle,
@@ -251,7 +251,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ RDM ==================
-            JobToValue.Add(JobIds.RDM, new [] {
+            JobToValue.Add(JobIds.RDM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.RDM)})",
                     Trigger = ActionIds.Addle,
@@ -260,7 +260,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ MCH ==================
-            JobToValue.Add(JobIds.MCH, new [] {
+            JobToValue.Add(JobIds.MCH, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Tactician),
                     Trigger = ActionIds.Tactician,
@@ -269,7 +269,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ DNC ==================
-            JobToValue.Add(JobIds.DNC, new [] {
+            JobToValue.Add(JobIds.DNC, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.ShieldSamba),
                     Trigger = ActionIds.ShieldSamba,
@@ -284,7 +284,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ NIN ==================
-            JobToValue.Add(JobIds.NIN, new [] {
+            JobToValue.Add(JobIds.NIN, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.NIN)})",
                     Trigger = ActionIds.Feint,
@@ -293,7 +293,7 @@ namespace JobBars.Cooldowns {
                 }
             });
             // ============ MNK ==================
-            JobToValue.Add(JobIds.MNK, new [] {
+            JobToValue.Add(JobIds.MNK, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.MNK)})",
                     Trigger = ActionIds.Feint,

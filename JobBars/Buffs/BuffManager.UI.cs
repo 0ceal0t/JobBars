@@ -6,28 +6,22 @@ namespace JobBars.Buffs {
         private bool LOCKED = true;
 
         protected override void DrawHeader() {
-            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
-
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref JobBars.Config.BuffBarEnabled)) {
                 JobBars.Config.Save();
                 if (JobBars.Config.BuffBarEnabled) JobBars.Builder.ShowBuffs();
                 else JobBars.Builder.HideBuffs();
-
                 ResetUI();
             }
 
-            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
-                if (!JobBars.Config.BuffHideOutOfCombat && JobBars.Config.BuffBarEnabled) { // since they might be hidden
-                    JobBars.Builder.ShowBuffs();
-                }
-                JobBars.Config.Save();
-            }
+            if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
 
-            if (ImGui.Checkbox("Show Party Members' CDs And Buffs", ref JobBars.Config.BuffIncludeParty)) {
-                JobBars.Config.Save();
+            if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
+        }
 
-                ResetUI();
-            }
+        private void DrawPositionRow() {
+            ImGui.Indent();
+
+            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
 
             ImGui.SetNextItemWidth(25f);
             if (ImGui.InputInt("Buffs Per Line" + _ID, ref JobBars.Config.BuffHorizontal, 0)) {
@@ -35,13 +29,11 @@ namespace JobBars.Buffs {
                 JobBars.Builder.RefreshBuffLayout();
             }
 
-            ImGui.SameLine(250);
             if (ImGui.Checkbox("Right-to-Left" + _ID, ref JobBars.Config.BuffRightToLeft)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
             }
 
-            ImGui.SameLine(500);
             if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
@@ -57,10 +49,32 @@ namespace JobBars.Buffs {
                 SetBuffPosition(pos);
             }
 
+            ImGui.Unindent();
+        }
+
+        private void DrawSettingsRow() {
+            ImGui.Indent();
+
             if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
                 JobBars.Config.Save();
             }
+
+            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
+                if (!JobBars.Config.BuffHideOutOfCombat && JobBars.Config.BuffBarEnabled) { // since they might be hidden
+                    JobBars.Builder.ShowBuffs();
+                }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Show Party Members' CDs And Buffs", ref JobBars.Config.BuffIncludeParty)) {
+                JobBars.Config.Save();
+                ResetUI();
+            }
+
+            ImGui.Unindent();
         }
+
+        // ==========================================
 
         protected override void DrawItem(BuffProps[] item) {
             foreach (var buff in item) {

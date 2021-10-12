@@ -53,9 +53,9 @@ namespace JobBars.Buffs {
                 }
             }
 
-            if(State == BuffState.Running) {
+            if (State == BuffState.Running) {
                 TimeLeft = UIHelper.TimeLeft(Duration, buffDict, LastActiveTrigger, LastActiveTime);
-                if(TimeLeft <= 0) { // Buff over
+                if (TimeLeft <= 0) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;
 
@@ -66,12 +66,12 @@ namespace JobBars.Buffs {
                     Percent = 1.0f - (float)(TimeLeft / Duration);
                 }
             }
-            else if(State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible) {
+            else if (State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible) {
                 TimeLeft = (float)(CD - (DateTime.Now - LastActiveTime).TotalSeconds);
-                if(TimeLeft <= 0) { // Off CD
+                if (TimeLeft <= 0) { // Off CD
                     State = BuffState.OffCD;
                 }
-                else if(TimeLeft <= JobBars.Config.BuffDisplayTimer) { // Visible
+                else if (TimeLeft <= JobBars.Config.BuffDisplayTimer) { // Visible
                     State = BuffState.OnCD_Visible;
                     Percent = TimeLeft / CD;
                 }
@@ -85,24 +85,24 @@ namespace JobBars.Buffs {
         }
 
         public void TickUI(UIBuff ui) {
-            if(UI != ui || UI?.Iconid != Icon) {
+            if (UI != ui || UI?.Iconid != Icon) {
                 UI = ui;
                 SetupUI();
             }
 
             UI.Show();
 
-            if(State == BuffState.Running) {
+            if (State == BuffState.Running) {
                 UI.SetOffCD();
                 UI.SetPercent(Percent);
                 UI.SetText(((int)Math.Round(TimeLeft)).ToString());
             }
-            else if(State == BuffState.OffCD) {
+            else if (State == BuffState.OffCD) {
                 UI.SetOffCD();
                 UI.SetPercent(0);
                 UI.SetText("");
             }
-            else if(State == BuffState.OnCD_Visible) {
+            else if (State == BuffState.OnCD_Visible) {
                 UI.SetOnCD();
                 UI.SetPercent(Percent);
                 UI.SetText(((int)Math.Round(TimeLeft)).ToString());

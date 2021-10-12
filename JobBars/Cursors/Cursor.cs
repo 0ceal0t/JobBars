@@ -81,15 +81,15 @@ namespace JobBars.Cursors {
         }
 
         public void Draw(string _ID) {
-            if(JobBars.Config.CursorType.Draw($"Inner Type{_ID}", InnerName, ValidCursorType, InnerType, out var newInnerValue)){
+            if (JobBars.Config.CursorType.Draw($"Inner Type{_ID}", InnerName, ValidCursorType, InnerType, out var newInnerValue)) {
                 InnerType = newInnerValue;
             }
 
-            if(InnerType == CursorType.StatusTime) {
-                if(JobBars.Config.CursorStatus.Draw($"Inner Status{_ID}", InnerName, UIHelper.StatusNames, InnerStatus, out var newInnerStatus)) {
+            if (InnerType == CursorType.StatusTime) {
+                if (JobBars.Config.CursorStatus.Draw($"Inner Status{_ID}", InnerName, UIHelper.StatusNames, InnerStatus, out var newInnerStatus)) {
                     InnerStatus = newInnerStatus;
                 }
-                if(JobBars.Config.CursorStatusDuration.Draw($"Inner Status Duration{_ID}", InnerName, InnerStatusDuration, out var newInnerStatusDuration)) {
+                if (JobBars.Config.CursorStatusDuration.Draw($"Inner Status Duration{_ID}", InnerName, InnerStatusDuration, out var newInnerStatusDuration)) {
                     InnerStatusDuration = newInnerStatusDuration;
                 }
             }

@@ -14,12 +14,12 @@ namespace JobBars.Buffs {
         }
 
         public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember) {
-            if(CurrentJob != partyMember.Job) {
+            if (CurrentJob != partyMember.Job) {
                 CurrentJob = partyMember.Job;
                 SetupTrackers();
             }
 
-            foreach(var tracker in Trackers) {
+            foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
                 if (tracker.Enabled) trackers.Add(tracker);
             }
@@ -34,7 +34,7 @@ namespace JobBars.Buffs {
             Trackers.Clear();
 
             var trackerProps = JobBars.BuffManager.GetBuffProps(CurrentJob, IsPlayer);
-            foreach(var prop in trackerProps) {
+            foreach (var prop in trackerProps) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new BuffTracker(prop));
             }

@@ -5,7 +5,7 @@ namespace JobBars.Cursors {
         private void Init() {
             JobToValue.Add(JobIds.OTHER, null);
             // ============ GNB ==================
-            JobToValue.Add(JobIds.GNB, new Cursor(JobIds.GNB, CursorType.None,  CursorType.GCD));
+            JobToValue.Add(JobIds.GNB, new Cursor(JobIds.GNB, CursorType.None, CursorType.GCD));
             // ============ PLD ==================
             JobToValue.Add(JobIds.PLD, new Cursor(JobIds.PLD, CursorType.None, CursorType.GCD));
             // ============ WAR ==================

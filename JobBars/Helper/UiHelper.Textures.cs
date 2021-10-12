@@ -52,14 +52,14 @@ namespace JobBars.Helper {
                 paths.Add(entry.Key);
                 partCount += entry.Value.Length;
             }
-            ret.AssetCount = (uint) paths.Count;
+            ret.AssetCount = (uint)paths.Count;
             ret.Asset = CreateAssets(paths);
 
             ret.PartsList = CreatePartsList((uint)partCount);
             var partIdx = 0;
             var assetIdx = 0;
-            foreach(var entry in layout) {
-                foreach(var part in entry.Value) {
+            foreach (var entry in layout) {
+                foreach (var part in entry.Value) {
                     UpdatePart(ret.PartsList, partIdx, ret.Asset, assetIdx, part.U, part.V, part.Width, part.Height);
                     partIdx++;
                 }
@@ -70,7 +70,7 @@ namespace JobBars.Helper {
         }
 
         public static void DisposeLayout(Asset_PartList layout) {
-            for (var i = 0; i < layout.AssetCount; i++){
+            for (var i = 0; i < layout.AssetCount; i++) {
                 layout.Asset[i].AtkTexture.ReleaseTexture();
             }
             DisposeAsset(layout.Asset, layout.AssetCount);

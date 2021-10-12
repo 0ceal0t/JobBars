@@ -11,39 +11,21 @@ namespace JobBars.Gauges {
         public static readonly GaugePositionType[] ValidGaugePositionType = (GaugePositionType[])Enum.GetValues(typeof(GaugePositionType));
 
         protected override void DrawHeader() {
-            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
-
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref JobBars.Config.GaugesEnabled)) {
                 if (JobBars.Config.GaugesEnabled) JobBars.Builder.ShowGauges();
                 else JobBars.Builder.HideGauges();
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Hide Gauges When Inactive", ref JobBars.Config.GaugesHideWhenInactive)) {
-                Reset();
-                JobBars.Config.Save();
-            }
+            if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
 
-            ImGui.SameLine(250);
-            if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref JobBars.Config.GaugesHideOutOfCombat)) {
-                if (!JobBars.Config.GaugesHideOutOfCombat && JobBars.Config.GaugesEnabled) { // since they might be hidden
-                    JobBars.Builder.ShowGauges();
-                }
-                JobBars.Config.Save();
-            }
+            if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
+        }
 
-            ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Sound # When DoTs Low (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
-                if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
-                if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
-                JobBars.Config.Save();
-            }
+        private void DrawPositionRow() {
+            ImGui.Indent();
 
-            ImGui.SameLine(250);
-            ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
-                JobBars.Config.Save();
-            }
+            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
 
             if (JobBars.Config.GaugePositionType != GaugePositionType.Split) {
                 if (ImGui.Checkbox("Horizontal Gauges", ref JobBars.Config.GaugeHorizontal)) {
@@ -51,13 +33,11 @@ namespace JobBars.Gauges {
                     JobBars.Config.Save();
                 }
 
-                ImGui.SameLine(250);
                 if (ImGui.Checkbox("Bottom-to-Top", ref JobBars.Config.GaugeBottomToTop)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
                 }
 
-                ImGui.SameLine(500);
                 if (ImGui.Checkbox("Align Right", ref JobBars.Config.GaugeAlignRight)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
@@ -93,22 +73,47 @@ namespace JobBars.Gauges {
                 UpdatePositionScale();
                 JobBars.Config.Save();
             }
+
+            ImGui.Unindent();
         }
 
-        protected override void DrawItem(Gauge item) {
-            item.Draw(_ID, SelectedJob);
+        private void DrawSettingsRow() {
+            ImGui.Indent();
+
+            if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref JobBars.Config.GaugesHideOutOfCombat)) {
+                if (!JobBars.Config.GaugesHideOutOfCombat && JobBars.Config.GaugesEnabled) { // since they might be hidden
+                    JobBars.Builder.ShowGauges();
+                }
+                JobBars.Config.Save();
+            }
+
+            ImGui.SetNextItemWidth(25f);
+            if (ImGui.InputInt("Sound # When DoTs Low (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
+                if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
+                if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
+                JobBars.Config.Save();
+            }
+
+            ImGui.SetNextItemWidth(50f);
+            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
+                JobBars.Config.Save();
+            }
+
+            ImGui.Unindent();
         }
 
-        protected override string ItemToString(Gauge item) {
-            return item.Name;
-        }
+        // ==========================================
+
+        protected override void DrawItem(Gauge item) => item.Draw(_ID, SelectedJob);
+
+        protected override string ItemToString(Gauge item) => item.Name;
 
         public void DrawPositionBox() {
             if (!LOCKED) {
                 if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
                     foreach (var gauge in CurrentGauges) gauge.DrawPositionBox();
                 }
-                else if(JobBars.Config.GaugePositionType == GaugePositionType.PerJob) {
+                else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) {
                     var currentPos = GetPerJobPosition();
                     if (JobBars.DrawPositionView($"Gauge Bar ({CurrentJob})##GaugePosition", currentPos, out var pos)) {
                         SetGaugePositionPerJob(CurrentJob, pos);

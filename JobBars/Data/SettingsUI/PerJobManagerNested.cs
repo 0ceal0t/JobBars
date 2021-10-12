@@ -8,7 +8,7 @@ namespace JobBars.Data {
         public PerJobManagerNested(string id) : base(id) { }
 
         protected override void DrawLeftColumn() {
-            foreach(var entry in JobToValue) {
+            foreach (var entry in JobToValue) {
                 if (entry.Key == JobIds.OTHER) continue;
 
                 var rowId = UIHelper.Localize(entry.Key) + _ID;
@@ -16,9 +16,9 @@ namespace JobBars.Data {
                     SelectedJob = entry.Key;
                     ImGui.Indent();
 
-                    foreach(var item in entry.Value) {
+                    foreach (var item in entry.Value) {
                         var itemId = ItemToString(item) + _ID;
-                        if(ImGui.Selectable(itemId, item == SettingsItemSelected)) {
+                        if (ImGui.Selectable(itemId, item == SettingsItemSelected)) {
                             SettingsItemSelected = item;
                         }
                     }

@@ -79,7 +79,7 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            SetTextSize(text.Length > 2 ? (byte) 9 : (byte) 13);
+            SetTextSize(text.Length > 2 ? (byte)9 : (byte)13);
             TextNode->SetText(text);
         }
 
@@ -112,7 +112,7 @@ namespace JobBars.UI {
                 Icon = null;
             }
 
-            if(Border != null) {
+            if (Border != null) {
                 Border->UnloadTexture();
                 Border->AtkResNode.Destroy(true);
                 Border = null;
@@ -124,7 +124,7 @@ namespace JobBars.UI {
             }
         }
     }
-    
+
     public unsafe class UICooldown : UIElement {
         public static readonly int MAX_ITEMS = 5;
 

@@ -49,7 +49,7 @@ namespace JobBars.Cursors {
             var atkStage = AtkStage.GetSingleton();
 
             var dragging = *((byte*)new IntPtr(atkStage) + 0x137);
-            if(JobBars.Config.CursorHideWhenHeld && dragging != 1) {
+            if (JobBars.Config.CursorHideWhenHeld && dragging != 1) {
                 JobBars.Builder.HideCursor();
                 return;
             }

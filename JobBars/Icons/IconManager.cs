@@ -27,7 +27,7 @@ namespace JobBars.Icons {
 
         public void Tick() {
             if (!JobBars.Config.IconsEnabled) return;
-            foreach(var icon in CurrentIcons.Where(i => i.Enabled)) {
+            foreach (var icon in CurrentIcons.Where(i => i.Enabled)) {
                 icon.Tick();
             }
             JobBars.IconBuilder.Tick();

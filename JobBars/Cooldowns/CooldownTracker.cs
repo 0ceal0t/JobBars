@@ -32,26 +32,26 @@ namespace JobBars.Cooldowns {
         public void Tick(UICooldownItem ui, float percent) {
             var currentTime = DateTime.Now;
 
-            if(State == TrackerState.None) {
+            if (State == TrackerState.None) {
                 ui.SetOffCD();
                 ui.SetNoDash();
                 ui.SetText("");
             }
-            else if(State == TrackerState.Running) {
+            else if (State == TrackerState.Running) {
                 ui.SetOffCD();
                 ui.SetDash(percent);
                 var timeLeft = Duration - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OnCD;
             }
-            else if(State == TrackerState.OnCD) {
+            else if (State == TrackerState.OnCD) {
                 ui.SetOnCD();
                 ui.SetNoDash();
                 var timeLeft = CD - (currentTime - LastActiveTime).TotalSeconds;
                 ui.SetText(((int)Math.Round(timeLeft)).ToString());
                 if (timeLeft <= 0) State = TrackerState.OffCD;
             }
-            else if(State == TrackerState.OffCD) {
+            else if (State == TrackerState.OffCD) {
                 ui.SetOffCD();
                 ui.SetNoDash();
                 ui.SetText("");
@@ -59,13 +59,13 @@ namespace JobBars.Cooldowns {
         }
 
         public void ProcessAction(Item action) {
-            if(action.Type != ItemType.Buff && 
-                (action.Id == (uint) Trigger ||
+            if (action.Type != ItemType.Buff &&
+                (action.Id == (uint)Trigger ||
                     (
                         AdditionalTriggers != null && AdditionalTriggers.Contains((ActionIds)action.Id)
                     )
                 )
-             ){
+             ) {
                 LastActiveTime = DateTime.Now;
                 State = Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
             }

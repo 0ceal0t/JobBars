@@ -28,7 +28,7 @@ namespace JobBars.Cooldowns {
             var ret = new List<CooldownPartyMemberStruct>();
 
             var partyUI = UIHelper.GetPartyUI();
-            if(partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
+            if (partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
                 var localPlayer = JobBars.ClientState.LocalPlayer;
                 var self = new CooldownPartyMemberStruct {
                     ObjectId = localPlayer.ObjectId,
@@ -38,7 +38,7 @@ namespace JobBars.Cooldowns {
                 return ret;
             }
 
-            for(int i = 0; i < partyUI->PartyMemberCount; i++) {
+            for (int i = 0; i < partyUI->PartyMemberCount; i++) {
                 var member = partyUI->PartyMember[i];
                 var objectId = (uint)member.ObjectID;
                 ret.Add(new CooldownPartyMemberStruct {
@@ -72,9 +72,9 @@ namespace JobBars.Cooldowns {
             var partyMembers = GetPartyMembers();
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
-            for(int idx = 0; idx < partyMembers.Count; idx++) {
+            for (int idx = 0; idx < partyMembers.Count; idx++) {
                 var partyMember = partyMembers[idx];
-                if(partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) { // skip it
+                if (partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) { // skip it
                     JobBars.Builder.SetCooldownRowVisible(idx, false);
                     continue;
                 }
@@ -85,7 +85,7 @@ namespace JobBars.Cooldowns {
 
                 JobBars.Builder.SetCooldownRowVisible(idx, true);
             }
-            for(int idx = partyMembers.Count; idx < 8; idx++) { // hide remaining slots
+            for (int idx = partyMembers.Count; idx < 8; idx++) { // hide remaining slots
                 JobBars.Builder.SetCooldownRowVisible(idx, false);
             }
 

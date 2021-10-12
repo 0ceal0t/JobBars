@@ -60,16 +60,16 @@ namespace JobBars.GameStructs {
 
     [StructLayout(LayoutKind.Explicit, Size = 0x400)]
     public unsafe struct HotbarStruct {
-        [FieldOffset(0x40 * 0 )] public HotbarSlotStruct Slot_1;
-        [FieldOffset(0x40 * 1 )] public HotbarSlotStruct Slot_2;
-        [FieldOffset(0x40 * 2 )] public HotbarSlotStruct Slot_3;
-        [FieldOffset(0x40 * 3 )] public HotbarSlotStruct Slot_4;
-        [FieldOffset(0x40 * 4 )] public HotbarSlotStruct Slot_5;
-        [FieldOffset(0x40 * 5 )] public HotbarSlotStruct Slot_6;
-        [FieldOffset(0x40 * 6 )] public HotbarSlotStruct Slot_7;
-        [FieldOffset(0x40 * 7 )] public HotbarSlotStruct Slot_8;
-        [FieldOffset(0x40 * 8 )] public HotbarSlotStruct Slot_9;
-        [FieldOffset(0x40 * 9 )] public HotbarSlotStruct Slot_10;
+        [FieldOffset(0x40 * 0)] public HotbarSlotStruct Slot_1;
+        [FieldOffset(0x40 * 1)] public HotbarSlotStruct Slot_2;
+        [FieldOffset(0x40 * 2)] public HotbarSlotStruct Slot_3;
+        [FieldOffset(0x40 * 3)] public HotbarSlotStruct Slot_4;
+        [FieldOffset(0x40 * 4)] public HotbarSlotStruct Slot_5;
+        [FieldOffset(0x40 * 5)] public HotbarSlotStruct Slot_6;
+        [FieldOffset(0x40 * 6)] public HotbarSlotStruct Slot_7;
+        [FieldOffset(0x40 * 7)] public HotbarSlotStruct Slot_8;
+        [FieldOffset(0x40 * 8)] public HotbarSlotStruct Slot_9;
+        [FieldOffset(0x40 * 9)] public HotbarSlotStruct Slot_10;
         [FieldOffset(0x40 * 10)] public HotbarSlotStruct Slot_11;
         [FieldOffset(0x40 * 11)] public HotbarSlotStruct Slot_12;
         [FieldOffset(0x40 * 12)] public HotbarSlotStruct Slot_13;
@@ -78,16 +78,16 @@ namespace JobBars.GameStructs {
         [FieldOffset(0x40 * 15)] public HotbarSlotStruct Slot_16;
 
         public HotbarSlotStruct this[int i] => i switch {
-            0  => Slot_1,
-            1  => Slot_2,
-            2  => Slot_3,
-            3  => Slot_4,
-            4  => Slot_5,
-            5  => Slot_6,
-            6  => Slot_7,
-            7  => Slot_8,
-            8  => Slot_9,
-            9  => Slot_10,
+            0 => Slot_1,
+            1 => Slot_2,
+            2 => Slot_3,
+            3 => Slot_4,
+            4 => Slot_5,
+            5 => Slot_6,
+            6 => Slot_7,
+            7 => Slot_8,
+            8 => Slot_9,
+            9 => Slot_10,
             10 => Slot_11,
             11 => Slot_12,
             12 => Slot_13,

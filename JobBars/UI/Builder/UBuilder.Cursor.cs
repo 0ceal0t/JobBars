@@ -71,7 +71,7 @@ namespace JobBars.UI {
         public void SetCursorOuterPercent(float percent, float scale) => SetCursorPercent(CursorOuter, percent, scale);
 
         private void SetCursorPercent(AtkImageNode* node, float percent, float scale) {
-            if(percent == 2) { // whatever, just use this for the solid circle
+            if (percent == 2) { // whatever, just use this for the solid circle
                 node->AtkResNode.Width = 128;
                 node->AtkResNode.Height = 128;
                 node->AtkResNode.X = -(128f * scale) / 2f;

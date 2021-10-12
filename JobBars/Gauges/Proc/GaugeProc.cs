@@ -51,7 +51,7 @@ namespace JobBars.Gauges {
 
         private void RefreshIdx() {
             var idx = 0;
-            foreach(var proc in Procs.OrderBy(x => x.Order)) {
+            foreach (var proc in Procs.OrderBy(x => x.Order)) {
                 proc.Idx = idx++;
             }
         }
@@ -60,7 +60,7 @@ namespace JobBars.Gauges {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size);
             }
-            for(int idx = 0; idx < Size; idx++) {
+            for (int idx = 0; idx < Size; idx++) {
                 SetValue(idx, false);
             }
 
@@ -83,7 +83,7 @@ namespace JobBars.Gauges {
         public unsafe override void Tick() {
             var playSound = false;
             var procActiveCount = 0;
-            foreach(var proc in Procs) {
+            foreach (var proc in Procs) {
                 bool procActive;
 
                 if (proc.Trigger.Type == ItemType.Buff) {
@@ -99,7 +99,7 @@ namespace JobBars.Gauges {
                 ProcsActive[proc.Idx] = procActive;
             }
 
-            if(playSound) UIHelper.PlaySeComplete();
+            if (playSound) UIHelper.PlaySeComplete();
             State = procActiveCount == 0 ? GaugeState.Inactive : GaugeState.Active;
         }
 
@@ -134,7 +134,7 @@ namespace JobBars.Gauges {
                 NoSoundOnFull = newSound;
             }
 
-            foreach(var proc in Procs) {
+            foreach (var proc in Procs) {
                 if (JobBars.Config.GaugeProcOrder.Draw($"Order ({proc.Name})", proc.Name, proc.Order, out var newOrder)) {
                     proc.Order = newOrder;
                     RefreshIdx();

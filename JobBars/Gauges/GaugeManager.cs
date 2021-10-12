@@ -12,7 +12,7 @@ namespace JobBars.Gauges {
         public JobIds CurrentJob = JobIds.OTHER;
         private Gauge[] CurrentGauges => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
-        private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new( new[] { BuffIds.Excog }); // which buffs on party members do we care about?
+        private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new(new[] { BuffIds.Excog }); // which buffs on party members do we care about?
 
         public GaugeManager() : base("##JobBars_Gauges") {
             Init();
@@ -57,7 +57,7 @@ namespace JobBars.Gauges {
                     }
                     else { // VERTICAL
                         int xPosition = JobBars.Config.GaugeAlignRight ? 160 - gauge.Width : 0;
-                        if(JobBars.Config.GaugeBottomToTop) { // BOTTOM TO TOP
+                        if (JobBars.Config.GaugeBottomToTop) { // BOTTOM TO TOP
                             gauge.UI.SetPosition(new Vector2(xPosition, totalPosition - gauge.Height));
                             totalPosition -= gauge.Height;
                         }
