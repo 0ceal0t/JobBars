@@ -65,7 +65,6 @@ namespace JobBars.Gauges {
                 gauge.SetTextColor(UIColor.NoColor);
             }
             SetValue(Counter);
-            CheckInactive();
         }
 
         public override void Tick() {
@@ -83,14 +82,11 @@ namespace JobBars.Gauges {
                     State = GaugeState.Inactive;
                     Counter = 0;
                     SetValue(0);
-                    CheckInactive();
                 }
             }
         }
 
-        private void CheckInactive() {
-            if (JobBars.Config.GaugeHideGCDInactive) UI.SetVisible(State != GaugeState.Inactive);
-        }
+        public bool GetActive() => State != GaugeState.Inactive;
 
         public override void ProcessAction(Item action) {
             if (Triggers.Contains(action) && !(State == GaugeState.Active)) { // START
@@ -98,7 +94,6 @@ namespace JobBars.Gauges {
                 LastActiveTime = DateTime.Now;
                 State = GaugeState.Active;
                 Counter = 0;
-                CheckInactive();
 
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
@@ -139,7 +134,7 @@ namespace JobBars.Gauges {
                 ParentGauge.ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeInvert.Draw($"Invert Counter{suffix}{_ID}", Name, Invert, out var newInvert)) {
+            if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, Invert, out var newInvert)) {
                 Invert = newInvert;
             }
 

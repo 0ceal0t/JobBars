@@ -16,22 +16,6 @@ namespace JobBars.Buffs {
                 ResetUI();
             }
 
-            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.BuffScale)) {
-                UpdatePositionScale();
-                JobBars.Config.Save();
-            }
-
-            var pos = JobBars.Config.BuffPosition;
-            if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
-                SetBuffPosition(pos);
-            }
-
-            JobBars.Separator(); // =====================================
-
-            if(ImGui.InputFloat("Hide Buffs with Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
-                JobBars.Config.Save();
-            }
-
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
                 if (!JobBars.Config.BuffHideOutOfCombat && JobBars.Config.BuffBarEnabled) { // since they might be hidden
                     JobBars.Builder.ShowBuffs();
@@ -39,13 +23,11 @@ namespace JobBars.Buffs {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Show Party Members' CDs and Buffs", ref JobBars.Config.BuffIncludeParty)) {
+            if (ImGui.Checkbox("Show Party Members' CDs And Buffs", ref JobBars.Config.BuffIncludeParty)) {
                 JobBars.Config.Save();
 
                 ResetUI();
             }
-
-            JobBars.Separator(); // =====================================
 
             ImGui.SetNextItemWidth(25f);
             if (ImGui.InputInt("Buffs Per Line" + _ID, ref JobBars.Config.BuffHorizontal, 0)) {
@@ -63,6 +45,20 @@ namespace JobBars.Buffs {
             if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
+            }
+
+            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.BuffScale)) {
+                UpdatePositionScale();
+                JobBars.Config.Save();
+            }
+
+            var pos = JobBars.Config.BuffPosition;
+            if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+                SetBuffPosition(pos);
+            }
+
+            if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
+                JobBars.Config.Save();
             }
         }
 

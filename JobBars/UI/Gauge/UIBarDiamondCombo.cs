@@ -2,7 +2,7 @@
 using System.Numerics;
 
 namespace JobBars.UI {
-    public unsafe class UIBarDiamondCombo : UIGaugeElement {
+    public unsafe class UIBarDiamondCombo : UIGauge {
         private readonly UIBar Gauge;
         private readonly UIDiamond Diamond;
 

@@ -4,8 +4,7 @@ using JobBars.Helper;
 using System.Collections.Generic;
 
 namespace JobBars.UI {
-    public unsafe class UIArrow : UIGaugeElement {
-
+    public unsafe class UIArrow : UIGauge {
         private class TickStruct {
             public AtkResNode* MainTick;
             public AtkImageNode* Background;

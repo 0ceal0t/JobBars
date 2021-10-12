@@ -12,11 +12,6 @@ namespace JobBars.Cooldowns {
                 ResetUI();
             }
 
-            if (ImGui.InputFloat2("Position" + _ID, ref JobBars.Config.CooldownPosition)) {
-                JobBars.Config.Save();
-                JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
-            }
-
             if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) {
                 if (!JobBars.Config.CooldownsHideOutOfCombat && JobBars.Config.CooldownsEnabled) { // since they might be hidden
                     JobBars.Builder.ShowCooldowns();
@@ -31,6 +26,11 @@ namespace JobBars.Cooldowns {
             if (ImGui.Checkbox("Left-Aligned" + _ID, ref JobBars.Config.CooldownsLeftAligned)) {
                 JobBars.Config.Save();
                 ResetUI();
+            }
+
+            if (ImGui.InputFloat2("Position" + _ID, ref JobBars.Config.CooldownPosition)) {
+                JobBars.Config.Save();
+                JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
             }
         }
 

@@ -25,12 +25,12 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUI_() {
+        protected override void LoadUIImpl() {
             foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
         }
 
-        protected override void ApplyUIConfig_() {
+        protected override void ApplyUIConfigImpl() {
             if (UI is UIBar gauge) {
                 gauge.SetTextVisible(ShowText);
                 gauge.SetTextSwap(SwapText);
@@ -41,6 +41,8 @@ namespace JobBars.Gauges {
         public override void Tick() {
             foreach (var sg in SubGauges) sg.Tick();
         }
+
+        protected override bool GetActive() => ActiveSubGauge.GetActive();
 
         public override void ProcessAction(Item action) {
             foreach (var sg in SubGauges) sg.ProcessAction(action);

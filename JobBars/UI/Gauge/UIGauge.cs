@@ -1,8 +1,9 @@
-﻿using JobBars.Helper;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Helper;
 using System.Numerics;
 
 namespace JobBars.UI {
-    public abstract unsafe class UIGaugeElement : UIElement {
+    public abstract unsafe class UIGauge : UIElement {
         public virtual void SetSplitPosition(Vector2 pos) {
             var p = UIHelper.GetNodePosition(JobBars.Builder.GaugeRoot);
             var pScale = UIHelper.GetNodeScale(JobBars.Builder.GaugeRoot);

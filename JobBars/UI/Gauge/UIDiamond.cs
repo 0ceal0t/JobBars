@@ -3,7 +3,7 @@ using JobBars.Helper;
 using System.Collections.Generic;
 
 namespace JobBars.UI {
-    public unsafe class UIDiamond : UIGaugeElement {
+    public unsafe class UIDiamond : UIGauge {
 
         private class TickStruct {
             public AtkResNode* MainTick;

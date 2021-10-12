@@ -8,7 +8,7 @@ using JobBars.Helper;
 using System.Collections.Generic;
 
 namespace JobBars.Cursors {
-    public unsafe partial class CursorManager : JobConfigurationManager<Cursor> {
+    public unsafe partial class CursorManager : PerJobManager<Cursor> {
         private Cursor CurrentCursor = null;
         private ElementColor InnerColor;
         private ElementColor OuterColor;

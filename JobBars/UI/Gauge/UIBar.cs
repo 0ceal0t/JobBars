@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 
 namespace JobBars.UI {
-    public unsafe class UIBar : UIGaugeElement {
+    public unsafe class UIBar : UIGauge {
         private static readonly int MAX_SEGMENTS = 5;
 
         private AtkResNode* GaugeContainer;

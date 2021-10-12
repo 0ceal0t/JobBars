@@ -39,6 +39,7 @@ namespace JobBars.Gauges {
 
         private readonly int Size;
         private readonly List<bool> ProcsActive = new();
+        private GaugeState State = GaugeState.Inactive;
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Procs = props.Procs;
@@ -51,22 +52,23 @@ namespace JobBars.Gauges {
         private void RefreshIdx() {
             var idx = 0;
             foreach(var proc in Procs.OrderBy(x => x.Order)) {
-                proc.Idx = idx;
-                idx++;
+                proc.Idx = idx++;
             }
         }
 
-        protected override void LoadUI_() {
+        protected override void LoadUIImpl() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size);
             }
             for(int idx = 0; idx < Size; idx++) {
                 SetValue(idx, false);
             }
+
+            State = GaugeState.Inactive;
             ResetProcActive();
         }
 
-        protected override void ApplyUIConfig_() {
+        protected override void ApplyUIConfigImpl() {
             if (UI is UIDiamond diamond) {
                 foreach (var proc in Procs) diamond.SetColor(proc.Color, proc.Idx);
                 diamond.SetTextVisible(ProcsShowText);
@@ -79,6 +81,8 @@ namespace JobBars.Gauges {
         }
 
         public unsafe override void Tick() {
+            var playSound = false;
+            var procActiveCount = 0;
             foreach(var proc in Procs) {
                 bool procActive;
 
@@ -90,10 +94,16 @@ namespace JobBars.Gauges {
                     SetValue(proc.Idx, procActive = !recastActive);
                 }
 
-                if (procActive && !ProcsActive[proc.Idx] && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when any proc becomes active
+                if (procActive && !ProcsActive[proc.Idx] && !NoSoundOnFull) playSound = true;
+                if (procActive) procActiveCount++;
                 ProcsActive[proc.Idx] = procActive;
             }
+
+            if(playSound) UIHelper.PlaySeComplete();
+            State = procActiveCount == 0 ? GaugeState.Inactive : GaugeState.Active;
         }
+
+        protected override bool GetActive() => State != GaugeState.Inactive;
 
         private void SetValue(int idx, bool value, float duration = -1) {
             if (UI is UIDiamond diamond) {

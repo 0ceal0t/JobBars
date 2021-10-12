@@ -96,6 +96,8 @@ namespace JobBars.Gauges {
             }
         }
 
+        public bool GetActive() => State != GaugeState.Inactive;
+
         public override void ProcessAction(Item action) {
             if (Triggers.Contains(action) && (!(State == GaugeState.Active) || !NoRefresh)) { // START
                 LastActiveTrigger = action;

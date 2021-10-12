@@ -15,12 +15,12 @@ namespace JobBars.Gauges {
     public enum GaugeState {
         Inactive,
         Active,
-        Finished,
+        Finished
     }
 
     public abstract class Gauge {
         public readonly string Name;
-        public UIGaugeElement UI;
+        public UIGauge UI;
         public bool Enabled;
 
         public int Order => JobBars.Config.GaugeOrder.Get(Name);
@@ -35,12 +35,12 @@ namespace JobBars.Gauges {
             Enabled = JobBars.Config.GaugeEnabled.Get(Name);
         }
 
-        public void LoadUI(UIGaugeElement ui) {
+        public void LoadUI(UIGauge ui) {
             UI = ui;
-            LoadUI_();
+            LoadUIImpl();
             ApplyUIConfig();
         }
-        protected abstract void LoadUI_();
+        protected abstract void LoadUIImpl();
 
         public void ApplyUIConfig() {
             if (UI == null) return;
@@ -48,9 +48,9 @@ namespace JobBars.Gauges {
             UI.SetScale(Scale);
             if(JobBars.Config.GaugePositionType == GaugePositionType.Split) UI.SetSplitPosition(Position);
 
-            ApplyUIConfig_();
+            ApplyUIConfigImpl();
         }
-        protected abstract void ApplyUIConfig_();
+        protected abstract void ApplyUIConfigImpl();
 
         public void UnloadUI() {
             UI.Cleanup();
@@ -58,15 +58,22 @@ namespace JobBars.Gauges {
         }
 
         public abstract void ProcessAction(Item action);
-        public abstract GaugeVisualType GetVisualType();
+
         public abstract void Tick();
+
+        public void TickActive() {
+            UI?.SetVisible(!JobBars.Config.GaugesHideWhenInactive || GetActive());
+        }
+
+        protected abstract bool GetActive();
 
         public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
         public int Width => UI == null ? 0 : (int)(Scale * GetWidth());
         protected abstract int GetHeight();
         protected abstract int GetWidth();
+        public abstract GaugeVisualType GetVisualType();
 
-        protected abstract void DrawGauge(string _ID, JobIds job);
+        // ========= DRAW =============
 
         public void Draw(string id, JobIds job) {
             var _ID = id + Name;
@@ -106,10 +113,11 @@ namespace JobBars.Gauges {
             }
 
             DrawGaugeOptions(_ID);
-
             DrawGauge(_ID, job);
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
         }
+
+        protected abstract void DrawGauge(string _ID, JobIds job);
 
         private void DrawGaugeOptions(string _ID) {
             var type = GetVisualType();
@@ -134,7 +142,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        public void SetSplitPosition(Vector2 pos) {
+        private void SetSplitPosition(Vector2 pos) {
             ApplyUIConfig();
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
         }

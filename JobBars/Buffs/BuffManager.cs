@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Buffs {
-    public unsafe partial class BuffManager : JobConfigurationManager<BuffProps[]> {
+    public unsafe partial class BuffManager : PerJobManager<BuffProps[]> {
         private readonly List<BuffProps> LocalPlayerBuffs = new();
         private Dictionary<uint, BuffPartyMember> ObjectIdToMember = new();
 

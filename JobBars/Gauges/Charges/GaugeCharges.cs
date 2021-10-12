@@ -48,7 +48,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUI_() {
+        protected override void LoadUIImpl() {
             if (UI is UIBarDiamondCombo combo) {
                 combo.ClearSegments();
                 combo.SetTextColor(UIColor.NoColor);
@@ -67,7 +67,7 @@ namespace JobBars.Gauges {
             SetDiamondValue(0, 0, TotalDiamonds);
         }
 
-        protected override void ApplyUIConfig_() {
+        protected override void ApplyUIConfigImpl() {
             RefreshSameColor();
             if (UI is UIBarDiamondCombo combo) {
                 SetDiamondUIColors();
@@ -146,6 +146,8 @@ namespace JobBars.Gauges {
             }
             GaugeFull = !barAssigned;
         }
+
+        protected override bool GetActive() => true;
 
         public override void ProcessAction(Item action) { }
 

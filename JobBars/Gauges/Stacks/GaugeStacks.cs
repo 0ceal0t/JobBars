@@ -22,7 +22,7 @@ namespace JobBars.Gauges {
         private ElementColor Color;
         private bool NoSoundOnFull;
 
-        private bool GaugeFull = true;
+        private GaugeState State = GaugeState.Inactive;
 
         public GaugeStacks(string name, GaugeStacksProps props) : base(name) {
             MaxStacks = props.MaxStacks;
@@ -32,7 +32,7 @@ namespace JobBars.Gauges {
             NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
         }
 
-        protected override void LoadUI_() {
+        protected override void LoadUIImpl() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(MaxStacks);
             }
@@ -44,11 +44,11 @@ namespace JobBars.Gauges {
                 gauge.SetTextColor(UIColor.NoColor);
             }
 
-            GaugeFull = true;
+            State = GaugeState.Inactive;
             SetValue(0);
         }
 
-        protected override void ApplyUIConfig_() {
+        protected override void ApplyUIConfigImpl() {
             if (UI is UIDiamond diamond) {
                 diamond.SetTextVisible(false);
             }
@@ -73,16 +73,20 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            bool anyTriggerMax = false;
+            int maxValue = 0;
             foreach (var trigger in Triggers) {
                 var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
-                if (value == MaxStacks) anyTriggerMax = true;
-                SetValue(value);
+                maxValue = value > maxValue ? value : maxValue;
             }
+            SetValue(maxValue);
 
-            if(anyTriggerMax && !GaugeFull && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when stacks become full
-            GaugeFull = anyTriggerMax;
+            var gaugeFull = maxValue == MaxStacks;
+            if(gaugeFull && State != GaugeState.Finished && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when just became full
+
+            State = gaugeFull ? GaugeState.Finished : (maxValue == 0 ? GaugeState.Inactive : GaugeState.Active);
         }
+
+        protected override bool GetActive() => State != GaugeState.Inactive;
 
         public override void ProcessAction(Item action) { }
 

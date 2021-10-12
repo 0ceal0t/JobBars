@@ -8,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 
 namespace JobBars.Gauges {
-    public unsafe partial class GaugeManager : JobConfigurationManager<Gauge[]> {
+    public unsafe partial class GaugeManager : PerJobManagerNested<Gauge> {
         public JobIds CurrentJob = JobIds.OTHER;
         private Gauge[] CurrentGauges => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
@@ -87,6 +87,7 @@ namespace JobBars.Gauges {
 
         public void Tick(bool inCombat) {
             if (!JobBars.Config.GaugesEnabled) return;
+
             if (JobBars.Config.GaugesHideOutOfCombat) {
                 if (inCombat) JobBars.Builder.ShowGauges();
                 else JobBars.Builder.HideGauges();
@@ -99,10 +100,11 @@ namespace JobBars.Gauges {
             foreach (var gauge in CurrentGauges) {
                 if (!gauge.Enabled) continue;
                 gauge.Tick();
+                gauge.TickActive();
             }
         }
 
-        private static UIGaugeElement GetUI(int idx, GaugeVisualType type) {
+        private static UIGauge GetUI(int idx, GaugeVisualType type) {
             return type switch {
                 GaugeVisualType.Arrow => JobBars.Builder.Arrows[idx],
                 GaugeVisualType.Bar => JobBars.Builder.Bars[idx],

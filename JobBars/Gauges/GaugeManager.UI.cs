@@ -19,39 +19,7 @@ namespace JobBars.Gauges {
                 JobBars.Config.Save();
             }
 
-            if(ImGui.BeginCombo("Gauge Positioning" + _ID, $"{JobBars.Config.GaugePositionType}")) {
-                foreach(var positionType in  ValidGaugePositionType) {
-                    if(ImGui.Selectable($"{positionType}" + _ID, positionType == JobBars.Config.GaugePositionType)) {
-                        JobBars.Config.GaugePositionType = positionType;
-                        JobBars.Config.Save();
-
-                        UpdatePositionScale();
-                    }
-                }
-                ImGui.EndCombo();
-            }
-
-            if(JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING
-                var pos = JobBars.Config.GaugePositionGlobal;
-                if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
-                    SetGaugePositionGlobal(pos);
-                }
-            }
-            else if(JobBars.Config.GaugePositionType == GaugePositionType.PerJob) { // PER-JOB POSITIONING
-                var pos = GetPerJobPosition();
-                if (ImGui.InputFloat2($"Position ({CurrentJob})" + _ID, ref pos)) {
-                    SetGaugePositionPerJob(CurrentJob, pos);
-                }
-            }
-
-            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.GaugeScale)) {
-                UpdatePositionScale();
-                JobBars.Config.Save();
-            }
-
-            JobBars.Separator(); // =====================================
-
-            if (ImGui.Checkbox("Hide GCD Gauges When Inactive", ref JobBars.Config.GaugeHideGCDInactive)) {
+            if (ImGui.Checkbox("Hide Gauges When Inactive", ref JobBars.Config.GaugesHideWhenInactive)) {
                 Reset();
                 JobBars.Config.Save();
             }
@@ -78,8 +46,6 @@ namespace JobBars.Gauges {
             }
 
             if (JobBars.Config.GaugePositionType != GaugePositionType.Split) {
-                JobBars.Separator(); // =====================================
-
                 if (ImGui.Checkbox("Horizontal Gauges", ref JobBars.Config.GaugeHorizontal)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
@@ -97,12 +63,44 @@ namespace JobBars.Gauges {
                     JobBars.Config.Save();
                 }
             }
+
+            if (ImGui.BeginCombo("Gauge Positioning" + _ID, $"{JobBars.Config.GaugePositionType}")) {
+                foreach (var positionType in ValidGaugePositionType) {
+                    if (ImGui.Selectable($"{positionType}" + _ID, positionType == JobBars.Config.GaugePositionType)) {
+                        JobBars.Config.GaugePositionType = positionType;
+                        JobBars.Config.Save();
+
+                        UpdatePositionScale();
+                    }
+                }
+                ImGui.EndCombo();
+            }
+
+            if (JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING
+                var pos = JobBars.Config.GaugePositionGlobal;
+                if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+                    SetGaugePositionGlobal(pos);
+                }
+            }
+            else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) { // PER-JOB POSITIONING
+                var pos = GetPerJobPosition();
+                if (ImGui.InputFloat2($"Position ({CurrentJob})" + _ID, ref pos)) {
+                    SetGaugePositionPerJob(CurrentJob, pos);
+                }
+            }
+
+            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.GaugeScale)) {
+                UpdatePositionScale();
+                JobBars.Config.Save();
+            }
         }
 
-        protected override void DrawItem(Gauge[] item) {
-            foreach (var gauge in item) {
-                gauge.Draw(_ID, SettingsJobSelected);
-            }
+        protected override void DrawItem(Gauge item) {
+            item.Draw(_ID, SelectedJob);
+        }
+
+        protected override string ItemToString(Gauge item) {
+            return item.Name;
         }
 
         public void DrawPositionBox() {

@@ -8,7 +8,7 @@ namespace JobBars.Gauges {
         public readonly string Name;
 
         protected readonly T ParentGauge;
-        protected UIGaugeElement UI => ParentGauge.UI;
+        protected UIGauge UI => ParentGauge.UI;
 
         public SubGauge(string name, T parentGauge) {
             Name = name;

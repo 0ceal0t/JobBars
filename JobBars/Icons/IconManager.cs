@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 
 namespace JobBars.Icons {
-    public unsafe partial class IconManager : JobConfigurationManager<IconReplacer[]> {
+    public unsafe partial class IconManager : PerJobManager<IconReplacer[]> {
         public JobIds CurrentJob = JobIds.OTHER;
         private IconReplacer[] CurrentIcons => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 

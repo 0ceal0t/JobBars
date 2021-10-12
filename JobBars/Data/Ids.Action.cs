@@ -27,6 +27,8 @@
         FastBlade = 0x09,
         RiotBlade = 0x0F,
         GoringBlade = 0xDD2,
+        RageOfHalone = 21,
+        ShieldLob = 24,
         RoyalAuthority = 0xDD3,
         Atonement = 0x404C,
         TotalEclipse = 0x1CD5,

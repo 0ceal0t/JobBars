@@ -57,6 +57,8 @@ namespace JobBars.Gauges {
                     Color = UIColor.Red,
                     NoSoundOnFull = true,
                     Increment = new []{
+                        new Item(ActionIds.ShieldLob),
+                        new Item(ActionIds.RageOfHalone),
                         new Item(ActionIds.FastBlade),
                         new Item(ActionIds.RiotBlade),
                         new Item(ActionIds.RoyalAuthority),

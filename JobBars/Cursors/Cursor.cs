@@ -94,8 +94,6 @@ namespace JobBars.Cursors {
                 }
             }
 
-            JobBars.Separator();
-
             if (JobBars.Config.CursorType.Draw($"Outer Type{_ID}", OuterName, ValidCursorType, OuterType, out var newOuterValue)) {
                 OuterType = newOuterValue;
             }

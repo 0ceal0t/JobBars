@@ -119,7 +119,7 @@ namespace JobBars.UI {
 
         public void SetPosition(int idx) {
             var position_x = idx % BUFFS_HORIZONTAL;
-            var position_y = (idx - position_x) / BUFFS_HORIZONTAL;
+            var position_y = BUFFS_HORIZONTAL == 0 ? 0 : (idx - position_x) / BUFFS_HORIZONTAL;
 
             int xMod = JobBars.Config.BuffRightToLeft ? -1 : 1;
             int yMod = JobBars.Config.BuffBottomToTop ? -1 : 1;

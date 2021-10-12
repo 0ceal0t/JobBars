@@ -28,7 +28,7 @@ namespace JobBars.Data {
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
-        public bool GaugeHideGCDInactive = false;
+        public bool GaugesHideWhenInactive = false;
         public bool GaugeGCDTextVisible = true;
 
         public GaugePositionType GaugePositionType = GaugePositionType.Global;

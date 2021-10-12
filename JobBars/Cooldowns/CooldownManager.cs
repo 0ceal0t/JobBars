@@ -9,7 +9,7 @@ namespace JobBars.Cooldowns {
         public JobIds Job;
     }
 
-    public unsafe partial class CooldownManager : JobConfigurationManager<CooldownProps[]> {
+    public unsafe partial class CooldownManager : PerJobManager<CooldownProps[]> {
         private static readonly int MILLIS_LOOP = 250;
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
 
