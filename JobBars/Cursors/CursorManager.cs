@@ -45,17 +45,25 @@ namespace JobBars.Cursors {
             }
 
             var viewport = ImGuiHelpers.MainViewport;
-            var pos = ImGui.GetMousePos() - viewport.Pos;
-            var atkStage = AtkStage.GetSingleton();
 
-            var dragging = *((byte*)new IntPtr(atkStage) + 0x137);
-            if (JobBars.Config.CursorHideWhenHeld && dragging != 1) {
-                JobBars.Builder.HideCursor();
-                return;
+            if (!JobBars.Config.CursorKeepInMiddle) {
+                var pos = ImGui.GetMousePos() - viewport.Pos;
+                var atkStage = AtkStage.GetSingleton();
+
+                var dragging = *((byte*)new IntPtr(atkStage) + 0x137);
+                if (JobBars.Config.CursorHideWhenHeld && dragging != 1) {
+                    JobBars.Builder.HideCursor();
+                    return;
+                }
+                JobBars.Builder.ShowCursor();
+
+                if (pos.X > 0 && pos.Y > 0 && pos.X < viewport.Size.X && pos.Y < viewport.Size.Y && dragging == 1) {
+                    JobBars.Builder.SetCursorPosition(pos);
+                }
             }
-            JobBars.Builder.ShowCursor();
-
-            if (pos.X > 0 && pos.Y > 0 && pos.X < viewport.Size.X && pos.Y < viewport.Size.Y && dragging == 1) {
+            else {
+                JobBars.Builder.ShowCursor();
+                var pos = viewport.Size / 2;
                 JobBars.Builder.SetCursorPosition(pos);
             }
 

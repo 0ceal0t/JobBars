@@ -93,8 +93,8 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> Dia                       </td><td> Cards               </td><td> Temperance           </td><td> Dia                </td></tr>
-  <tr><td>                           </td><td> Divination          </td><td> Benedictiob          </td><td> Presence of Mind   </td></tr>
+  <tr><td> Dia                       </td><td>                     </td><td> Temperance           </td><td> Dia                </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Benedictiob          </td><td> Presence of Mind   </td></tr>
   <tr><td>                           </td><td>                     </td><td> Asylum               </td><td>                    </td></tr>
 </table>
 
@@ -124,7 +124,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Lance Charge      </td><td> Battle Litany       </td><td> Feint                </td><td> Dragonsigh         </td></tr>
+  <tr><td> GCDs in Lance Charge      </td><td> Battle Litany       </td><td> Feint                </td><td> Dragonsight        </td></tr>
   <tr><td> GCDs in Dragonsight       </td><td> Dragonsight         </td><td>                      </td><td> Lance Charge       </td></tr>
   <tr><td> True North                </td><td> Lance Charge        </td><td>                      </td><td> Disembowel         </td></tr>
   <tr><td>                           </td><td>                     </td><td>                      </td><td> Chaos Thrust       </td></tr>

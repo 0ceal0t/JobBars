@@ -15,10 +15,10 @@ namespace JobBars.Gauges {
     public class Proc {
         public readonly string Name;
         public readonly Item Trigger;
-        public readonly ElementColor Color;
 
         public int Idx = 0;
         public int Order;
+        public ElementColor Color;
 
         public Proc(string name, BuffIds buff, ElementColor color) : this(name, new Item(buff), color) { }
 
@@ -27,7 +27,7 @@ namespace JobBars.Gauges {
         public Proc(string name, Item trigger, ElementColor color) {
             Name = name;
             Trigger = trigger;
-            Color = color;
+            Color = JobBars.Config.GaugeProcColor.Get(Name, color);
             Order = JobBars.Config.GaugeProcOrder.Get(Name);
         }
     }
@@ -138,6 +138,11 @@ namespace JobBars.Gauges {
                 if (JobBars.Config.GaugeProcOrder.Draw($"Order ({proc.Name})", proc.Name, proc.Order, out var newOrder)) {
                     proc.Order = newOrder;
                     RefreshIdx();
+                    JobBars.GaugeManager.ResetJob(job);
+                }
+
+                if (JobBars.Config.GaugeProcColor.Draw($"Color ({proc.Name})", proc.Name, proc.Color, out var newColor)) {
+                    proc.Color = newColor;
                     JobBars.GaugeManager.ResetJob(job);
                 }
             }

@@ -13,7 +13,8 @@ namespace JobBars.Cursors {
         DoT_Tick,
         StaticCircle,
         StaticRing,
-        StatusTime
+        StatusTime,
+        Slidecast
     }
 
     public class Cursor {
@@ -64,6 +65,7 @@ namespace JobBars.Cursors {
             CursorType.StaticRing => 1,
             CursorType.StatusTime => GetStatusTime(status, statusDuration),
             CursorType.DoT_Tick => UIHelper.GetDoTTick(),
+            CursorType.Slidecast => GetSlidecastTime(),
             _ => 0
         };
 
@@ -72,6 +74,14 @@ namespace JobBars.Cursors {
             if (status.Status.Id == 0) return 0;
             var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1) : 0) / statusDuration;
             return Math.Min(ret, 1f);
+        }
+
+        private static float GetSlidecastTime() {
+            var isCasting = UIHelper.GetCurrentCast(out var currentTime, out var totalTime);
+            if (!isCasting || totalTime == 0) return 0;
+            var slidecastTime = totalTime - 0.5f;
+            if (currentTime > slidecastTime) return 0;
+            return currentTime / slidecastTime;
         }
 
         private static float GetCastTime() {

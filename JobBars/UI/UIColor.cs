@@ -79,6 +79,7 @@ namespace JobBars.UI {
 
         public static void SetupColors() {
             AllColors = new();
+            AllColors.Add(NoColor.Name, NoColor);
             AllColors.Add(MpPink.Name, MpPink);
             AllColors.Add(HealthGreen.Name, HealthGreen);
             AllColors.Add(Purple.Name, Purple);

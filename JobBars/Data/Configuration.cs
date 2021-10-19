@@ -39,6 +39,7 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
         public IntValueConfig GaugeProcOrder = new(-1);
+        public ColorConfig GaugeProcColor = new();
         public BoolValueConfig GaugeNoSoundOnFull = new(false);
         public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
@@ -85,6 +86,7 @@ namespace JobBars.Data {
         public bool CursorsEnabled = false;
         public bool CursorHideWhenHeld = false;
         public bool CursorHideOutOfCombat = false;
+        public bool CursorKeepInMiddle = false;
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
         public string CursorInnerColor = UIColor.MpPink.Name;

@@ -22,6 +22,10 @@ namespace JobBars.Cursors {
                 JobBars.Config.Save();
             }
 
+            if (ImGui.Checkbox("Keep Cursor in Center", ref JobBars.Config.CursorKeepInMiddle)) {
+                JobBars.Config.Save();
+            }
+
             if (ImGui.InputFloat("Inner Scale" + _ID, ref JobBars.Config.CursorInnerScale)) {
                 JobBars.Config.Save();
             }
