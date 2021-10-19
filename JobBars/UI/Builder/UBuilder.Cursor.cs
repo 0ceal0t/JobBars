@@ -75,15 +75,15 @@ namespace JobBars.UI {
                 node->AtkResNode.Width = 128;
                 node->AtkResNode.Height = 128;
                 node->AtkResNode.X = -(128f * scale) / 2f;
-                node->AtkResNode.Y = -(128f * scale) / 2f;
+                node->AtkResNode.Y = -(128f * scale) / 2f + 2;
                 node->PartId = 80;
                 UIHelper.SetScale((AtkResNode*)node, scale, scale);
             }
             else {
                 node->AtkResNode.Width = 44;
                 node->AtkResNode.Height = 46;
-                node->AtkResNode.X = -(44f * scale) / 2f;
-                node->AtkResNode.Y = -(46f * scale) / 2f;
+                node->AtkResNode.X = -22f * scale;
+                node->AtkResNode.Y = -20f * scale;
                 node->PartId = (ushort)(percent * 79);
                 UIHelper.SetScale((AtkResNode*)node, scale, scale);
             }
