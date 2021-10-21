@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
@@ -26,6 +27,17 @@ namespace JobBars.Helper {
             PreviousEnemyTargetId = prevEnemy == null ? 0 : prevEnemy.ObjectId;
 
             PlayerStatus = buffDict;
+        }
+
+        public static bool CheckForTriggers(Dictionary<Item, Status> buffDict, Item[] triggers, out Item newTrigger) {
+            newTrigger = default;
+            foreach (var trigger in triggers.Where(t => t.Type == ItemType.Buff)) {
+                if (buffDict.ContainsKey(trigger) && buffDict[trigger].RemainingTime > 0) {
+                    newTrigger = trigger;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void StatusToBuffItem(Dictionary<Item, Status> buffDict, Status* status) {

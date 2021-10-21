@@ -4,6 +4,8 @@
         // DRK =========
         Delirium = 0x7b4,
         BloodWeapon = 0x2e6,
+        LivingDead = 810,
+        WalkingDead = 811,
 
         // WAR =========
         InnerRelease = 0x499,
@@ -14,6 +16,8 @@
         Requiescat = 0x558,
         GoringBlade = 725,
         SwordOath = 1902,
+        DivineVeil = 726,
+        PassageOfArms = 1175,
 
         // GNB =========
         NoMercy = 0x727,
@@ -89,6 +93,7 @@
         FlourishingWindmill = 1816,
         FlourishingShower = 1817,
         FlourishingFanDance = 1820,
+        Improvisation = 1827,
 
         // BLM =========
         Firestarter = 165,

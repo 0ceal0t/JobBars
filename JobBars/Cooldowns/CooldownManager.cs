@@ -24,27 +24,19 @@ namespace JobBars.Cooldowns {
             return JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
         }
 
-        private List<CooldownPartyMemberStruct> GetPartyMembers() {
-            var ret = new List<CooldownPartyMemberStruct>();
+        private List<uint> GetPartyMemberOrder() {
+            var ret = new List<uint>();
 
             var partyUI = UIHelper.GetPartyUI();
             if (partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
-                var localPlayer = JobBars.ClientState.LocalPlayer;
-                var self = new CooldownPartyMemberStruct {
-                    ObjectId = localPlayer.ObjectId,
-                    Job = UIHelper.IdToJob(localPlayer.ClassJob.Id)
-                };
-                ret.Add(self);
+                ret.Add(JobBars.ClientState.LocalPlayer.ObjectId);
                 return ret;
             }
 
             for (int i = 0; i < partyUI->PartyMemberCount; i++) {
                 var member = partyUI->PartyMember[i];
                 var objectId = (uint)member.ObjectID;
-                ret.Add(new CooldownPartyMemberStruct {
-                    ObjectId = (objectId == 0xE0000000 || objectId == 0xFFFFFFFF) ? 0 : objectId,
-                    Job = UIHelper.IconToJob((uint)member.ClassJobIcon)
-                }); ;
+                ret.Add((objectId == 0xE0000000 || objectId == 0xFFFFFFFF) ? 0 : objectId);
             }
 
             return ret;
@@ -69,23 +61,29 @@ namespace JobBars.Cooldowns {
             int millis = time.Second * 1000 + time.Millisecond;
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
-            var partyMembers = GetPartyMembers();
+            var partyMemberOrder = GetPartyMemberOrder();
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
-            for (int idx = 0; idx < partyMembers.Count; idx++) {
-                var partyMember = partyMembers[idx];
-                if (partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) { // skip it
+            for (int idx = 0; idx < partyMemberOrder.Count; idx++) {
+                var objectId = partyMemberOrder[idx];
+                if (objectId == 0) {
+                    JobBars.Builder.SetCooldownRowVisible(idx, false);
+                    continue;
+                }
+
+                var partyMember = JobBars.PartyMembers.Find(member => member.ObjectId == objectId);
+                if (partyMember == null || partyMember?.ObjectId == 0 || partyMember?.Job == JobIds.OTHER) {
                     JobBars.Builder.SetCooldownRowVisible(idx, false);
                     continue;
                 }
 
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new CooldownPartyMember(partyMember.ObjectId);
-                member.Tick(JobBars.Builder.Cooldowns[idx], partyMember.Job, percent);
+                member.Tick(JobBars.Builder.Cooldowns[idx], partyMember, percent);
                 newObjectIdToMember[partyMember.ObjectId] = member;
 
                 JobBars.Builder.SetCooldownRowVisible(idx, true);
             }
-            for (int idx = partyMembers.Count; idx < 8; idx++) { // hide remaining slots
+            for (int idx = partyMemberOrder.Count; idx < 8; idx++) { // hide remaining slots
                 JobBars.Builder.SetCooldownRowVisible(idx, false);
             }
 

@@ -5,8 +5,8 @@ using JobBars.Helper;
 namespace JobBars.Cooldowns {
     public struct CooldownProps {
         public string Name;
-        public ActionIds Trigger;
-        public ActionIds[] AdditionalTriggers;
+        public ActionIds Icon;
+        public Item[] Triggers;
         public float Duration;
         public float CD;
 
@@ -21,309 +21,355 @@ namespace JobBars.Cooldowns {
             JobToValue.Add(JobIds.GNB, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Superbolide),
-                    Trigger = ActionIds.Superbolide,
+                    Icon = ActionIds.Superbolide,
                     Duration = 8,
-                    CD = 360
+                    CD = 360,
+                    Triggers = new []{ new Item(ActionIds.Superbolide) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.GNB)})",
-                    Trigger = ActionIds.Reprisal,
+                    Icon = ActionIds.Reprisal,
                     Duration = 10,
-                    CD = 60
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Reprisal) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.HeartOfLight),
-                    Trigger = ActionIds.HeartOfLight,
+                    Icon = ActionIds.HeartOfLight,
                     Duration = 15,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.HeartOfLight) }
                 },
             });
             // ============ PLD ==================
             JobToValue.Add(JobIds.PLD, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.HallowedGround),
-                    Trigger = ActionIds.HallowedGround,
+                    Icon = ActionIds.HallowedGround,
                     Duration = 10,
-                    CD = 420
+                    CD = 420,
+                    Triggers = new []{ new Item(ActionIds.HallowedGround) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.PLD)})",
-                    Trigger = ActionIds.Reprisal,
+                    Icon = ActionIds.Reprisal,
                     Duration = 10,
-                    CD = 60
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Reprisal) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.DivineVeil),
-                    Trigger = ActionIds.DivineVeil,
+                    Icon = ActionIds.DivineVeil,
                     Duration = 30,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(BuffIds.DivineVeil) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.PassageOfArms),
-                    Trigger = ActionIds.PassageOfArms,
-                    Duration = 5,
-                    CD = 120
+                    Icon = ActionIds.PassageOfArms,
+                    Duration = 18,
+                    CD = 120,
+                    Triggers = new []{ new Item(BuffIds.PassageOfArms) }
                 }
             });
             // ============ WAR ==================
             JobToValue.Add(JobIds.WAR, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Holmgang),
-                    Trigger = ActionIds.Holmgang,
+                    Icon = ActionIds.Holmgang,
                     Duration = 8,
-                    CD = 240
+                    CD = 240,
+                    Triggers = new []{ new Item(ActionIds.Holmgang) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.WAR)})",
-                    Trigger = ActionIds.Reprisal,
+                    Icon = ActionIds.Reprisal,
                     Duration = 10,
-                    CD = 60
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Reprisal) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.ShakeItOff),
-                    Trigger = ActionIds.ShakeItOff,
+                    Icon = ActionIds.ShakeItOff,
                     Duration = 15,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.ShakeItOff) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NascentFlash),
-                    Trigger = ActionIds.NascentFlash,
-                    AdditionalTriggers = new[] { ActionIds.RawIntuition },
+                    Icon = ActionIds.NascentFlash,
                     Duration = 6,
-                    CD = 25
+                    CD = 25,
+                    Triggers = new []{
+                        new Item(ActionIds.NascentFlash),
+                        new Item(ActionIds.RawIntuition)
+                    }
                 }
             });
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new[]{
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.LivingDead),
-                    Trigger = ActionIds.LivingDead,
+                    Icon = ActionIds.LivingDead,
                     Duration = 10,
-                    CD = 300
+                    CD = 300,
+                    Triggers = new []{ new Item(BuffIds.LivingDead) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.DRK)})",
-                    Trigger = ActionIds.Reprisal,
+                    Icon = ActionIds.Reprisal,
                     Duration = 10,
-                    CD = 60
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Reprisal) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.DarkMissionary),
-                    Trigger = ActionIds.DarkMissionary,
+                    Icon = ActionIds.DarkMissionary,
                     Duration = 15,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.DarkMissionary) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.TheBlackestNight),
-                    Trigger = ActionIds.TheBlackestNight,
+                    Icon = ActionIds.TheBlackestNight,
                     Duration = 7,
-                    CD = 15
+                    CD = 15,
+                    Triggers = new []{ new Item(ActionIds.TheBlackestNight) }
                 }
             });
             // ============ AST ==================
             JobToValue.Add(JobIds.AST, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NeutralSect),
-                    Trigger = ActionIds.NeutralSect,
+                    Icon = ActionIds.NeutralSect,
                     Duration = 20,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.NeutralSect) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.CelestialOpposition),
-                    Trigger = ActionIds.CelestialOpposition,
-                    CD = 60
+                    Icon = ActionIds.CelestialOpposition,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.CelestialOpposition) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.EarthlyStar),
-                    Trigger = ActionIds.EarthlyStar,
+                    Icon = ActionIds.EarthlyStar,
                     Duration = 20,
-                    CD = 60
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.EarthlyStar) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.AST)})",
-                    Trigger = ActionIds.Swiftcast,
-                    CD = 60
+                    Icon = ActionIds.Swiftcast,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Swiftcast) }
                 }
             });
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.SummonSeraph),
-                    Trigger = ActionIds.SummonSeraph,
+                    Icon = ActionIds.SummonSeraph,
                     Duration = 22,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.SummonSeraph) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.DeploymentTactics),
-                    Trigger = ActionIds.DeploymentTactics,
-                    CD = 120
+                    Icon = ActionIds.DeploymentTactics,
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.DeploymentTactics) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Recitation),
-                    Trigger = ActionIds.Recitation,
-                    CD = 90
+                    Icon = ActionIds.Recitation,
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Recitation) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})",
-                    Trigger = ActionIds.Swiftcast,
-                    CD = 60
+                    Icon = ActionIds.Swiftcast,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Swiftcast) }
                 }
             });
             // ============ WHM ==================
             JobToValue.Add(JobIds.WHM, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Temperance),
-                    Trigger = ActionIds.Temperance,
+                    Icon = ActionIds.Temperance,
                     Duration = 20,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.Temperance) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Benediction),
-                    Trigger = ActionIds.Benediction,
-                    CD = 180
+                    Icon = ActionIds.Benediction,
+                    CD = 180,
+                    Triggers = new []{ new Item(ActionIds.Benediction) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Asylum),
-                    Trigger = ActionIds.Asylum,
+                    Icon = ActionIds.Asylum,
                     Duration = 24,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Asylum) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})",
-                    Trigger = ActionIds.Swiftcast,
-                    CD = 60
+                    Icon = ActionIds.Swiftcast,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Swiftcast) }
                 }
             });
             // ============ BRD ==================
             JobToValue.Add(JobIds.BRD, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Troubadour),
-                    Trigger = ActionIds.Troubadour,
+                    Icon = ActionIds.Troubadour,
                     Duration = 15,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.Troubadour) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.NaturesMinne),
-                    Trigger = ActionIds.NaturesMinne,
+                    Icon = ActionIds.NaturesMinne,
                     Duration = 15,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.NaturesMinne) }
                 }
             });
             // ============ DRG ==================
             JobToValue.Add(JobIds.DRG, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.DRG)})",
-                    Trigger = ActionIds.Feint,
+                    Icon = ActionIds.Feint,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Feint) }
                 }
             });
             // ============ SMN ==================
             JobToValue.Add(JobIds.SMN, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.SMN)})",
-                    Trigger = ActionIds.Addle,
+                    Icon = ActionIds.Addle,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Addle) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SMN)})",
-                    Trigger = ActionIds.Swiftcast,
-                    CD= 60
+                    Icon = ActionIds.Swiftcast,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Swiftcast) }
                 }
             });
             // ============ SAM ==================
             JobToValue.Add(JobIds.SAM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.SAM)})",
-                    Trigger = ActionIds.Feint,
+                    Icon = ActionIds.Feint,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Feint) }
                 }
             });
             // ============ BLM ==================
             JobToValue.Add(JobIds.BLM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.BLM)})",
-                    Trigger = ActionIds.Addle,
+                    Icon = ActionIds.Addle,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Addle) }
                 }
             });
             // ============ RDM ==================
             JobToValue.Add(JobIds.RDM, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.RDM)})",
-                    Trigger = ActionIds.Addle,
+                    Icon = ActionIds.Addle,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Addle) }
                 }
             });
             // ============ MCH ==================
             JobToValue.Add(JobIds.MCH, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Tactician),
-                    Trigger = ActionIds.Tactician,
+                    Icon = ActionIds.Tactician,
                     Duration = 15,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.Tactician) }
                 }
             });
             // ============ DNC ==================
             JobToValue.Add(JobIds.DNC, new[] {
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.ShieldSamba),
-                    Trigger = ActionIds.ShieldSamba,
+                    Icon = ActionIds.ShieldSamba,
                     Duration = 15,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(ActionIds.ShieldSamba) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Improvisation),
-                    Trigger = ActionIds.Improvisation,
+                    Icon = ActionIds.Improvisation,
                     Duration = 15,
-                    CD = 120
+                    CD = 120,
+                    Triggers = new []{ new Item(BuffIds.Improvisation) }
                 }
             });
             // ============ NIN ==================
             JobToValue.Add(JobIds.NIN, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.NIN)})",
-                    Trigger = ActionIds.Feint,
+                    Icon = ActionIds.Feint,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Feint) }
                 }
             });
             // ============ MNK ==================
             JobToValue.Add(JobIds.MNK, new[] {
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.MNK)})",
-                    Trigger = ActionIds.Feint,
+                    Icon = ActionIds.Feint,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Feint) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.Mantra),
-                    Trigger = ActionIds.Mantra,
+                    Icon = ActionIds.Mantra,
                     Duration = 15,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Mantra) }
                 }
             });
             // ============ BLU ==================
             JobToValue.Add(JobIds.BLU, new CooldownProps[] {
                 new CooldownProps {
-                    Name = UIHelper.Localize(ActionIds.Addle)+" "+UIHelper.Localize(JobIds.BLU),
-                    Trigger = ActionIds.Addle,
+                    Name = $"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.BLU)})",
+                    Icon = ActionIds.Addle,
                     Duration = 10,
-                    CD = 90
+                    CD = 90,
+                    Triggers = new []{ new Item(ActionIds.Addle) }
                 },
                 new CooldownProps {
                     Name = UIHelper.Localize(ActionIds.AngelWhisper),
-                    Trigger = ActionIds.AngelWhisper,
-                    CD = 300
+                    Icon = ActionIds.AngelWhisper,
+                    CD = 300,
+                    Triggers = new []{ new Item(ActionIds.AngelWhisper) }
                 },
                 new CooldownProps {
                     Name = $"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.BLU)})",
-                    Trigger = ActionIds.Swiftcast,
-                    CD = 60
+                    Icon = ActionIds.Swiftcast,
+                    CD = 60,
+                    Triggers = new []{ new Item(ActionIds.Swiftcast) }
                 }
             });
         }

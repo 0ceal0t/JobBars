@@ -30,40 +30,69 @@
 ## Jobs
 
 ### Dark Knight
-- Gauges: **Delirium Stacks**, GCDs in Blood Weapon, MP
-- Buffs: Delirium, Living Shadow
-- Mitigation: Living Dead, Reprisal, Dark Missionary, The Blackest Night
-- Icon Display: Blood Weapon
+- [ ] (**NEW**) Gauge - Delirium stacks
+- [ ] Gauge - GCDs in Blood Weapon
+- [ ] Gauge - MP
+- [ ] Buffs - Delirium
+- [ ] Buffs - Living Shadow
+- [ ] Mitigation - Living Dead
+- [ ] Mitigation - Reprisal
+- [ ] Mitigation - Dark Missionary
+- [ ] Mitigation - The Blackest Night
+- [ ] Icon - Blood Weapon
 
 ### Warrior
-- Gauges: **Inner Release Stacks**, **Storm's Eye (Surging Tempest)**
-- Buffs: Inner Release
-- Mitigation: Holmgang, Reprisal, Shake it Off, **Nascent Flash / Raw Inuition / Bloodwhetting**
-- Icon Display: Inner Release, **Storm's Eye (Surging Tempest)**
+- [ ] (**NEW**) Guage - IR Stacks
+- [ ] (**NEW**) Guage - Surging Tempest
+- [ ] (**NEW**) Buffs - IR (30 seconds)
+- [ ] (**NEW**) Mitigation - Holmgang (10 seconds)
+- [ ] Mitigation - Reprisal
+- [ ] Mitigation - Shake it Off
+- [ ] (**NEW**) Mitigation - Nascent Flash / Raw Intuition / Bloodwhetting
+- [ ] (**NEW**) Icon - IR (30 seconds max)
+- [ ] (**NEW**) Icon - Surging Tempest
 
 ### Paladin
-- Gauges: **Req stacks**, Atonement Stacks, GCDs in Fight or Fights, **Goring Blade / Blade of Valor**
-- Buffs: **Req**
-- Mitigation: Hallowed Ground, Reprisal, Divine Veil, Passage of Arms
-- Icons Display: **Goring Blade / Blade of Valor**, Fight or Flight
+- [ ] (**NEW**) Gauge - Req Stacks
+- [ ] Gauge - Atonement Stacks
+- [ ] Gauge - GCDs in Fight or Flight
+- [ ] (**NEW**) Guage - Goring Blade / Blade of Valor
+- [ ] (**NEW**) Buffs - Req
+- [ ] Mitigation - Hallowed Ground
+- [ ] Mitigation - Reprisal
+- [ ] Mitigation - Divine Veil
+- [ ] Mitigation - Passage or Arms
+- [ ] (**NEW**) Icon - Goring Blade / Blade of Valor (only display on Goring)
+- [ ] Icon - Fight or Flight
 
 ### Gunbreaker
-- Gauges: GCDs in No Mercy
-- Buffs:
-- Mitigation: Superbolide, Reprisal, Heart of Light
-- Icon Display: No Mercy
+- [ ] Gauge - GCDs in No Mercy
+- [ ] (**NEW**) Mitigation - Superbolide (10 seconds)
+- [ ] Mitigation - Reprisal
+- [ ] Mitigation - Heart of Light
+- [ ] Icon - No Mercy
 
 ### Scholar
-- Gauges: Excog, Biolysis
-- Buffs: Chain Stratagem
-- Migitation: Seraph, Recitation, **Expedient**, **Protraction**, Swiftcast
-- Icon Display: Biolysis, Chain Stratagem
+- [ ] Gauge - Excog
+- [ ] Gauge - Biolysis
+- [ ] Buffs - Chain
+- [ ] Mitigation - Seraph
+- [ ] Mitigation - Recitation
+- [ ] (**NEW**) Mitigation - Expedient
+- [ ] (**NEW**) Mitigation - Protraction
+- [ ] Mitigation - Swiftcast
+- [ ] Icon - Biolysis
+- [ ] Icon - Chain
 
 ### White Mage
-- Gauges: Dia, Prescence of Mind
-- Buffs: 
-- Migitation: Temperance, Benediction, **Lilybell**, Swiftcast
-- Icon Display: Biolysis, Chain Stratagem, **Prescence of Mind**
+- [ ] Gauge - Dia
+- [ ] Gauge - Prescence of Mind
+- [ ] Mitigation - Temperance
+- [ ] Mitigation - Benediction
+- [ ] (**NEW**) Mitigation - Lilybell
+- [ ] Mitigation - Swiftcast
+- [ ] Icon - Dia
+- [ ] Icon - Prescence of Mind
 
 ### Astrologian
 - Gauges: Combust, Upgraded Earthly Star, Lightspeed

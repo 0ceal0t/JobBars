@@ -51,27 +51,6 @@ namespace JobBars.Helper {
         public static int GetIcon(uint action) => (int)ActionToIcon[action];
 
         public static JobIds IdToJob(uint job) => job < 19 ? JobIds.OTHER : (JobIds)job;
-        public static JobIds IconToJob(uint icon) => icon switch {
-            062119 => JobIds.PLD,
-            062120 => JobIds.MNK,
-            062121 => JobIds.WAR,
-            062122 => JobIds.DRG,
-            062123 => JobIds.BRD,
-            062124 => JobIds.WHM,
-            062125 => JobIds.BLM,
-            062127 => JobIds.SMN,
-            062128 => JobIds.SCH,
-            062130 => JobIds.NIN,
-            062131 => JobIds.MCH,
-            062132 => JobIds.DRK,
-            062133 => JobIds.AST,
-            062134 => JobIds.SAM,
-            062135 => JobIds.RDM,
-            062136 => JobIds.BLU,
-            062137 => JobIds.GNB,
-            062138 => JobIds.DNC,
-            _ => JobIds.OTHER
-        };
 
         private static IEnumerable<ClassJob> JobSheet;
         private static IEnumerable<Lumina.Excel.GeneratedSheets.Action> ActionSheet;

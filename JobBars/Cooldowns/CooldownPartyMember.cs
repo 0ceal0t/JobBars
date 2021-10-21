@@ -14,9 +14,9 @@ namespace JobBars.Cooldowns {
             ObjectId = objectId;
         }
 
-        public void Tick(UICooldown ui, JobIds job, float percent) {
-            if (CurrentJob != job) {
-                CurrentJob = job;
+        public void Tick(UICooldown ui, CurrentPartyMember partyMember, float percent) {
+            if (CurrentJob != partyMember.Job) {
+                CurrentJob = partyMember.Job;
                 UI = ui;
                 SetupTrackers();
                 SetupUI();
@@ -29,7 +29,8 @@ namespace JobBars.Cooldowns {
             for (int i = 0; i < Trackers.Count; i++) {
                 var tracker = Trackers[i];
                 var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
-                tracker.Tick(UI.Items[uiIdx], percent);
+                tracker.Tick(partyMember.BuffDict);
+                tracker.TickUI(UI.Items[uiIdx], percent);
             }
         }
 

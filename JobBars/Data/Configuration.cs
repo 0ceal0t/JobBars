@@ -18,6 +18,7 @@ namespace JobBars.Data {
         public int Version { get; set; } = 1;
 
         public bool Use4K = false;
+        public bool AttachToParameterBar = false;
 
         // ====== GAUGES ======
 
@@ -60,6 +61,7 @@ namespace JobBars.Data {
         public bool BuffBarEnabled = true;
         public bool BuffHideOutOfCombat = false;
         public bool BuffIncludeParty = true;
+        public bool BuffOrderByActive = true;
         public float BuffDisplayTimer = 30f;
 
         public BoolValueConfig BuffEnabled = new(true);

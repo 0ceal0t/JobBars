@@ -32,6 +32,7 @@ namespace JobBars.Buffs {
         private UIBuff UI;
 
         public BuffState CurrentState => State;
+        public uint Id => (uint)Icon;
         public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
 
         public BuffTracker(BuffProps props) {
@@ -46,12 +47,14 @@ namespace JobBars.Buffs {
             if (Triggers.Contains(action)) SetActive(action);
         }
 
+        private void SetActive(Item trigger) {
+            State = BuffState.Running;
+            LastActiveTime = DateTime.Now;
+            LastActiveTrigger = trigger;
+        }
+
         public void Tick(Dictionary<Item, Status> buffDict) {
-            if (State != BuffState.Running) { // check for buff triggers
-                foreach (var trigger in Triggers.Where(t => t.Type == ItemType.Buff)) {
-                    if (buffDict.ContainsKey(trigger) && buffDict[trigger].RemainingTime > 0) SetActive(trigger);
-                }
-            }
+            if (State != BuffState.Running && UIHelper.CheckForTriggers(buffDict, Triggers, out var trigger)) SetActive(trigger);
 
             if (State == BuffState.Running) {
                 TimeLeft = UIHelper.TimeLeft(Duration, buffDict, LastActiveTrigger, LastActiveTime);
@@ -59,7 +62,7 @@ namespace JobBars.Buffs {
                     Percent = 1f;
                     TimeLeft = 0;
 
-                    State = CD <= 0 ? BuffState.None : // no CD, inactive
+                    State = CD <= 0 ? BuffState.None : // doesn't have a cooldown, just make it invisible
                         CD <= JobBars.Config.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
                 }
                 else { // Still running
@@ -68,20 +71,15 @@ namespace JobBars.Buffs {
             }
             else if (State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible) {
                 TimeLeft = (float)(CD - (DateTime.Now - LastActiveTime).TotalSeconds);
-                if (TimeLeft <= 0) { // Off CD
+
+                if (TimeLeft <= 0) {
                     State = BuffState.OffCD;
                 }
-                else if (TimeLeft <= JobBars.Config.BuffDisplayTimer) { // Visible
+                else if (TimeLeft <= JobBars.Config.BuffDisplayTimer) { // CD low enough to be visible
                     State = BuffState.OnCD_Visible;
                     Percent = TimeLeft / CD;
                 }
             }
-        }
-
-        private void SetActive(Item trigger) {
-            State = BuffState.Running;
-            LastActiveTime = DateTime.Now;
-            LastActiveTrigger = trigger;
         }
 
         public void TickUI(UIBuff ui) {

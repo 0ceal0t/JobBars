@@ -61,7 +61,10 @@ namespace JobBars.Buffs {
             }
 
             var idx = 0;
-            foreach (var buff in activeBuffs.OrderBy(b => b.CurrentState)) {
+            foreach (var buff in JobBars.Config.BuffOrderByActive ?
+                activeBuffs.OrderBy(b => b.CurrentState) :
+                activeBuffs.OrderBy(b => b.Id)
+            ) {
                 if (idx >= (UIBuilder.MAX_BUFFS - 1)) break;
                 buff.TickUI(JobBars.Builder.Buffs[idx]);
                 idx++;
