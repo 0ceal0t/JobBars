@@ -87,8 +87,8 @@ namespace JobBars.Gauges {
                 JobBars.Config.Save();
             }
 
-            ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Sound # When DoTs Low (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
+            ImGui.SetNextItemWidth(50f);
+            if (ImGui.InputInt("Sound Effect # (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
                 if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
                 if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
                 JobBars.Config.Save();

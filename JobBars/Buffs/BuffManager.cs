@@ -36,9 +36,7 @@ namespace JobBars.Buffs {
             if (!JobBars.Config.BuffBarEnabled) return;
             if (!JobBars.Config.BuffIncludeParty && objectId != JobBars.ClientState.LocalPlayer.ObjectId) return;
 
-            foreach (var member in ObjectIdToMember.Values) {
-                member.ProcessAction(action, objectId);
-            }
+            foreach (var member in ObjectIdToMember.Values) member.ProcessAction(action, objectId);
         }
 
         public void Tick(bool inCombat) {

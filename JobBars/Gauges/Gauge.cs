@@ -18,15 +18,22 @@ namespace JobBars.Gauges {
         Finished
     }
 
+    public enum GaugeCompleteSoundType {
+        When_Full,
+        When_Empty,
+        When_Empty_or_Full,
+        Never
+    }
+
     public abstract class Gauge {
+        public static readonly GaugeCompleteSoundType[] ValidSoundType = (GaugeCompleteSoundType[])Enum.GetValues(typeof(GaugeCompleteSoundType));
+
         public readonly string Name;
         public UIGauge UI;
         public bool Enabled;
-
-        public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
-
         public int Order { get; private set; }
         public float Scale { get; private set; }
+        public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
 
         protected bool ShowText;
         protected bool SwapText;

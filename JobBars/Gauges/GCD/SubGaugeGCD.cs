@@ -11,11 +11,10 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
         public ElementColor Color;
         public bool Invert;
-        public bool NoSoundOnFull;
-#nullable enable
-        public string? SubName;
-        public Item[]? Increment;
-#nullable disable
+        public string SubName;
+        public Item[] Increment;
+        public GaugeCompleteSoundType CompletionSound;
+        public bool ProgressSound;
     }
 
     public class SubGaugeGCD : SubGauge<GaugeGCD> {
@@ -26,7 +25,8 @@ namespace JobBars.Gauges {
         private readonly Item[] Increment;
         private ElementColor Color;
         private bool Invert;
-        private bool NoSoundOnFull;
+        private GaugeCompleteSoundType CompletionSound;
+        private bool ProgressSound;
 
         private int Counter;
         private GaugeState State = GaugeState.Inactive;
@@ -42,7 +42,8 @@ namespace JobBars.Gauges {
             Triggers = props.Triggers;
             Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
             Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
-            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
+            CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
+            ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
             Increment = props.Increment;
             SubName = props.SubName;
         }
@@ -95,19 +96,24 @@ namespace JobBars.Gauges {
                 State = GaugeState.Active;
                 Counter = 0;
 
+                if (CompletionSound == GaugeCompleteSoundType.When_Empty || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                    UIHelper.PlaySeComplete();
+
                 if (ParentGauge.ActiveSubGauge != this) {
                     ParentGauge.ActiveSubGauge = this;
                     ApplySubGauge();
                 }
             }
 
-            if (
-                (State == GaugeState.Active) &&
-                ((Increment == null && action.Type == ItemType.GCD) || // just take any gcd
-                    (Increment != null && Increment.Contains(action))) // take specific gcds
-            ) {
-                if (Counter < MaxCounter) Counter++;
-                if (Counter == MaxCounter && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when reached max counter
+            // active and (any gcd) or (looking for specific gcd)
+            if ((State == GaugeState.Active) && (Increment == null ? (action.Type == ItemType.GCD) : Increment.Contains(action))) {
+                if (Counter < MaxCounter) {
+                    Counter++;
+
+                    if (ProgressSound) UIHelper.PlaySeProgress();
+                    if (Counter == MaxCounter && (CompletionSound == GaugeCompleteSoundType.When_Full || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full))
+                        UIHelper.PlaySeComplete();
+                }
             }
         }
 
@@ -138,8 +144,12 @@ namespace JobBars.Gauges {
                 Invert = newInvert;
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{suffix}{_ID}", Name, NoSoundOnFull, out var newSound)) {
-                NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{suffix}{_ID}", Name, Gauge.ValidSoundType, CompletionSound, out var newCompletionSound)) {
+                CompletionSound = newCompletionSound;
+            }
+
+            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Progress{suffix}{_ID}", Name, ProgressSound, out var newProgressSound)) {
+                ProgressSound = newProgressSound;
             }
         }
     }

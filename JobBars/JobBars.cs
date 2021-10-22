@@ -69,20 +69,6 @@ namespace JobBars {
         private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78] || Condition[ConditionFlag.BetweenAreas] || Condition[ConditionFlag.BetweenAreas51];
         private bool LastCutscene = false;
 
-        /*
-         * SIG LIST:
-         *      
-         *  UiHelper
-         *      PlaySoundEffect (E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??)
-         *      TextureLoadPath (E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??)
-         *      TargetAddress (48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB)
-         *      
-         *  JobBars
-         *      receiveActionEffectFuncPtr (4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9)
-         *      actorControlSelfPtr (E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64)
-         *      iconDimmedPtr (E8 ?? ?? ?? ?? 49 8D 4D 10 FF C6);
-         */
-
         public JobBars(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,

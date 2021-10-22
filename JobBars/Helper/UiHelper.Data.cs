@@ -113,12 +113,12 @@ namespace JobBars.Helper {
                 var name = item.Name.ToString();
                 var attackType = item.ActionCategory.Value.Name.ToString();
                 var actionId = item.ActionCategory.Value.RowId;
+                if (item.Icon != 405 && item.Icon != 0) ActionToIcon[item.RowId] = item.Icon;
+
                 if (actionId == 2 || actionId == 3) { // spell or weaponskill
                     if (item.CooldownGroup != 58 && item.AdditionalCooldownGroup != 58) continue; // not actually a gcd
                     GCDs.Add(item.RowId);
                 }
-
-                if (item.Icon != 405 && item.Icon != 0) ActionToIcon[item.RowId] = item.Icon;
             }
 
             List<StatusNameId> statusList = new();

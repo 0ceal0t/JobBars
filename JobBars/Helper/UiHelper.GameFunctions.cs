@@ -65,6 +65,11 @@ namespace JobBars.Helper {
             PlaySoundEffect(78, 0, 0);
         }
 
+        public static void PlaySeProgress() {
+            if (JobBars.Config.GaugeSoundEffect <= 0) return;
+            PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
+        }
+
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {
             currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
             totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;

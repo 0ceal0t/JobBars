@@ -18,7 +18,6 @@ namespace JobBars.Data {
         public int Version { get; set; } = 1;
 
         public bool Use4K = false;
-        public bool AttachToParameterBar = false;
 
         // ====== GAUGES ======
 
@@ -41,7 +40,8 @@ namespace JobBars.Data {
         public IntValueConfig GaugeOrder = new(-1);
         public IntValueConfig GaugeProcOrder = new(-1);
         public ColorConfig GaugeProcColor = new();
-        public BoolValueConfig GaugeNoSoundOnFull = new(false);
+        public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges
+        public BoolValueConfig GaugeProgressSound = new(true); // Timer, GCD, proc, stacks, charges
         public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
         public ColorConfig GaugeColor = new();

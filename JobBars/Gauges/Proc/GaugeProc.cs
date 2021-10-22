@@ -9,7 +9,7 @@ namespace JobBars.Gauges {
     public struct GaugeProcProps {
         public bool ShowText;
         public Proc[] Procs;
-        public bool NoSoundOnFull;
+        public bool NoSoundOnProc;
     }
 
     public class Proc {
@@ -19,11 +19,10 @@ namespace JobBars.Gauges {
         public int Idx = 0;
         public int Order;
         public ElementColor Color;
+        public bool Active = true;
 
         public Proc(string name, BuffIds buff, ElementColor color) : this(name, new Item(buff), color) { }
-
         public Proc(string name, ActionIds action, ElementColor color) : this(name, new Item(action), color) { }
-
         public Proc(string name, Item trigger, ElementColor color) {
             Name = name;
             Trigger = trigger;
@@ -35,17 +34,16 @@ namespace JobBars.Gauges {
     public class GaugeProc : Gauge {
         private readonly Proc[] Procs;
         private bool ProcsShowText;
-        private bool NoSoundOnFull;
+        private bool ProcSound;
 
         private readonly int Size;
-        private readonly List<bool> ProcsActive = new();
         private GaugeState State = GaugeState.Inactive;
 
         public GaugeProc(string name, GaugeProcProps props) : base(name) {
             Procs = props.Procs;
-            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
-            ProcsShowText = JobBars.Config.GaugeShowText.Get(Name, props.ShowText);
             Size = Procs.Length;
+            ProcsShowText = JobBars.Config.GaugeShowText.Get(Name, props.ShowText);
+            ProcSound = JobBars.Config.GaugeProgressSound.Get(Name, !props.NoSoundOnProc);
             RefreshIdx();
         }
 
@@ -76,8 +74,7 @@ namespace JobBars.Gauges {
         }
 
         private void ResetProcActive() {
-            ProcsActive.Clear();
-            for (var i = 0; i < Size; i++) ProcsActive.Add(true);
+            foreach (var proc in Procs) proc.Active = true;
         }
 
         public unsafe override void Tick() {
@@ -94,12 +91,12 @@ namespace JobBars.Gauges {
                     SetValue(proc.Idx, procActive = !recastActive);
                 }
 
-                if (procActive && !ProcsActive[proc.Idx] && !NoSoundOnFull) playSound = true;
+                if (procActive && !proc.Active) playSound = true;
                 if (procActive) procActiveCount++;
-                ProcsActive[proc.Idx] = procActive;
+                proc.Active = procActive;
             }
 
-            if (playSound) UIHelper.PlaySeComplete();
+            if (playSound && ProcSound) UIHelper.PlaySeComplete();
             State = procActiveCount == 0 ? GaugeState.Inactive : GaugeState.Active;
         }
 
@@ -130,8 +127,8 @@ namespace JobBars.Gauges {
                 JobBars.GaugeManager.UpdatePositionScale(job); // procs with text are taller than without, so update positions
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound On Proc{_ID}", Name, NoSoundOnFull, out var newSound)) {
-                NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound on Proc{_ID}", Name, ProcSound, out var newProcSound)) {
+                ProcSound = newProcSound;
             }
 
             foreach (var proc in Procs) {

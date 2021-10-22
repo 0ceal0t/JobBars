@@ -10,7 +10,8 @@ namespace JobBars.Gauges {
         public GaugeVisualType Type;
         public ElementColor BarColor;
         public bool SameColor;
-        public bool NoSoundOnFull;
+        public GaugeCompleteSoundType CompletionSound;
+        public bool ProgressSound;
     }
 
     public struct GaugesChargesPartProps {
@@ -30,22 +31,25 @@ namespace JobBars.Gauges {
         private readonly bool SameColor;
         private GaugeVisualType Type;
         private ElementColor BarColor;
-        private bool NoSoundOnFull;
+        private GaugeCompleteSoundType CompletionSound;
+        private bool ProgressSound;
 
         private readonly int TotalDiamonds = 0;
-        private bool GaugeFull = true;
+        private int PrevChargesValue = 0;
 
         public GaugeCharges(string name, GaugeChargesProps props) : base(name) {
             Parts = props.Parts;
             Type = JobBars.Config.GaugeType.Get(Name, props.Type);
             BarColor = JobBars.Config.GaugeColor.Get(Name, props.BarColor);
             SameColor = props.SameColor;
-            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
+            CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
+            ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
 
             RefreshSameColor();
             foreach (var part in Parts.Where(p => p.Diamond)) {
                 TotalDiamonds += part.MaxCharges;
             }
+            PrevChargesValue = TotalDiamonds;
         }
 
         protected override void LoadUIImpl() {
@@ -62,7 +66,7 @@ namespace JobBars.Gauges {
                 gauge.SetTextColor(UIColor.NoColor);
             }
 
-            GaugeFull = true;
+            PrevChargesValue = TotalDiamonds;
             SetGaugeValue(0, 0);
             SetDiamondValue(0, 0, TotalDiamonds);
         }
@@ -107,24 +111,29 @@ namespace JobBars.Gauges {
 
         public unsafe override void Tick() {
             bool barAssigned = false;
+            int currentChargesValue = 0;
+
             int diamondIdx = 0;
             foreach (var part in Parts) {
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
+                        var buffValue = buffExists ? buff.StackCount : 0;
 
                         if (part.Bar && !barAssigned && buffExists) {
                             barAssigned = true;
                             SetGaugeValue(buff.RemainingTime / part.Duration, (int)Math.Round(buff.RemainingTime));
                         }
                         if (part.Diamond) {
-                            SetDiamondValue(buffExists ? buff.StackCount : 0, diamondIdx, part.MaxCharges);
+                            currentChargesValue += buffValue;
+                            SetDiamondValue(buffValue, diamondIdx, part.MaxCharges);
                             diamondIdx += part.MaxCharges;
                         }
                         if (buffExists) break;
                     }
                     else {
                         var recastActive = UIHelper.GetRecastActive(trigger.Id, out var timeElapsed);
+                        var actionValue = recastActive ? (int)Math.Floor(timeElapsed / part.CD) : part.MaxCharges;
 
                         if (part.Bar && !barAssigned && recastActive) {
                             barAssigned = true;
@@ -133,18 +142,30 @@ namespace JobBars.Gauges {
                             SetGaugeValue(currentTime / part.CD, (int)Math.Round(timeLeft));
                         }
                         if (part.Diamond) {
-                            SetDiamondValue(recastActive ? (int)Math.Floor(timeElapsed / part.CD) : part.MaxCharges, diamondIdx, part.MaxCharges);
+                            currentChargesValue += actionValue;
+                            SetDiamondValue(currentChargesValue, diamondIdx, part.MaxCharges);
                             diamondIdx += part.MaxCharges;
                         }
                         if (recastActive) break;
                     }
                 }
             }
-            if (!barAssigned) {
-                SetGaugeValue(0, 0);
-                if (!GaugeFull && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play the sound effect when full charges
+            if (!barAssigned) SetGaugeValue(0, 0);
+
+            if (currentChargesValue != PrevChargesValue) {
+                if (currentChargesValue == 0) {
+                    if (CompletionSound == GaugeCompleteSoundType.When_Empty || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                        UIHelper.PlaySeComplete();
+                }
+                else if (currentChargesValue == TotalDiamonds) {
+                    if (CompletionSound == GaugeCompleteSoundType.When_Full || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                        UIHelper.PlaySeComplete();
+                }
+                else {
+                    if (ProgressSound) UIHelper.PlaySeProgress();
+                }
             }
-            GaugeFull = !barAssigned;
+            PrevChargesValue = currentChargesValue;
         }
 
         protected override bool GetActive() => true;
@@ -186,8 +207,12 @@ namespace JobBars.Gauges {
                 ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, NoSoundOnFull, out var newSound)) {
-                NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{_ID}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
+                CompletionSound = newCompletionSound;
+            }
+
+            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Change{_ID}", Name, ProgressSound, out var newProgressSound)) {
+                ProgressSound = newProgressSound;
             }
         }
     }

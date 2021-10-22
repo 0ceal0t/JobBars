@@ -14,10 +14,9 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
         public ElementColor Color;
         public bool Invert;
-#nullable enable
-        public string? SubName;
-        public float? DefaultDuration;
-#nullable disable
+        public string SubName;
+        public float DefaultDuration;
+        public bool NoLowWarningSound;
     }
 
     public class SubGaugeTimer : SubGauge<GaugeTimer> {
@@ -30,6 +29,7 @@ namespace JobBars.Gauges {
         private ElementColor Color;
         private bool Invert;
         private float Offset;
+        private bool LowWarningSound;
 
         private float TimeLeft;
         private GaugeState State = GaugeState.Inactive;
@@ -44,13 +44,14 @@ namespace JobBars.Gauges {
         public SubGaugeTimer(string name, GaugeTimer gauge, SubGaugeTimerProps props) : base(name, gauge) {
             SubName = props.SubName;
             MaxDuration = props.MaxDuration;
-            DefaultDuration = props.DefaultDuration == null ? props.MaxDuration : props.DefaultDuration.Value;
+            DefaultDuration = props.DefaultDuration == 0 ? props.MaxDuration : props.DefaultDuration;
             NoRefresh = props.NoRefresh;
             Triggers = props.Triggers;
             HideLowWarning = props.HideLowWarning;
             Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
             Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
             Offset = JobBars.Config.GaugeTimerOffset.Get(Name);
+            LowWarningSound = JobBars.Config.GaugeProgressSound.Get(Name, !props.NoLowWarningSound);
         }
 
         public override void Reset() {
@@ -82,9 +83,7 @@ namespace JobBars.Gauges {
 
                 bool currentDanger = currentTimeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !HideLowWarning && currentTimeLeft > 0;
                 bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
-                if (currentDanger && beforeOk && JobBars.Config.GaugeSoundEffect > 0) {
-                    UIHelper.PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
-                }
+                if (currentDanger && beforeOk && LowWarningSound) UIHelper.PlaySeProgress();
                 if (UI is UIBar gauge) {
                     gauge.SetTextColor(currentDanger ? UIColor.Red : UIColor.NoColor);
                 }
@@ -134,6 +133,10 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{_ID}", Name, Invert, out var newInvert)) {
                 Invert = newInvert;
+            }
+
+            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound When Low{suffix}{_ID}", Name, LowWarningSound, out var newLowWarningSound)) {
+                LowWarningSound = newLowWarningSound;
             }
         }
     }

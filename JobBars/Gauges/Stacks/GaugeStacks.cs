@@ -10,7 +10,8 @@ namespace JobBars.Gauges {
         public Item[] Triggers;
         public GaugeVisualType Type;
         public ElementColor Color;
-        public bool NoSoundOnFull;
+        public GaugeCompleteSoundType CompletionSound;
+        public bool ProgressSound;
     }
 
     public class GaugeStacks : Gauge {
@@ -20,16 +21,18 @@ namespace JobBars.Gauges {
         private readonly Item[] Triggers;
         private GaugeVisualType Type;
         private ElementColor Color;
-        private bool NoSoundOnFull;
+        private GaugeCompleteSoundType CompletionSound;
+        private bool ProgressSound;
 
-        private GaugeState State = GaugeState.Inactive;
+        private int PrevValue = 0; // keep track of state
 
         public GaugeStacks(string name, GaugeStacksProps props) : base(name) {
             MaxStacks = props.MaxStacks;
             Triggers = props.Triggers;
             Type = JobBars.Config.GaugeType.Get(Name, props.Type);
             Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
-            NoSoundOnFull = JobBars.Config.GaugeNoSoundOnFull.Get(Name, props.NoSoundOnFull);
+            CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
+            ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
         }
 
         protected override void LoadUIImpl() {
@@ -44,7 +47,7 @@ namespace JobBars.Gauges {
                 gauge.SetTextColor(UIColor.NoColor);
             }
 
-            State = GaugeState.Inactive;
+            PrevValue = 0;
             SetValue(0);
         }
 
@@ -73,20 +76,30 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            int maxValue = 0;
+            int currentValue = 0;
             foreach (var trigger in Triggers) {
                 var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
-                maxValue = value > maxValue ? value : maxValue;
+                currentValue = value > currentValue ? value : currentValue;
             }
-            SetValue(maxValue);
+            SetValue(currentValue);
 
-            var gaugeFull = maxValue == MaxStacks;
-            if (gaugeFull && State != GaugeState.Finished && !NoSoundOnFull) UIHelper.PlaySeComplete(); // play when just became full
-
-            State = gaugeFull ? GaugeState.Finished : (maxValue == 0 ? GaugeState.Inactive : GaugeState.Active);
+            if (currentValue != PrevValue) {
+                if (currentValue == 0) {
+                    if (CompletionSound == GaugeCompleteSoundType.When_Empty || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                        UIHelper.PlaySeComplete();
+                }
+                else if (currentValue == MaxStacks) {
+                    if (CompletionSound == GaugeCompleteSoundType.When_Full || CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                        UIHelper.PlaySeComplete();
+                }
+                else {
+                    if (ProgressSound) UIHelper.PlaySeProgress();
+                }
+            }
+            PrevValue = currentValue;
         }
 
-        protected override bool GetActive() => State != GaugeState.Inactive;
+        protected override bool GetActive() => PrevValue > 0;
 
         public override void ProcessAction(Item action) { }
 
@@ -105,8 +118,12 @@ namespace JobBars.Gauges {
                 ApplyUIConfig();
             }
 
-            if (JobBars.Config.GaugeNoSoundOnFull.Draw($"Don't Play Sound When Full{_ID}", Name, NoSoundOnFull, out var newSound)) {
-                NoSoundOnFull = newSound;
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{_ID}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
+                CompletionSound = newCompletionSound;
+            }
+
+            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Change{_ID}", Name, ProgressSound, out var newProgressSound)) {
+                ProgressSound = newProgressSound;
             }
         }
     }

@@ -71,7 +71,7 @@ namespace JobBars {
         public unsafe static bool IsInParty(uint objectId) {
             if (objectId == 0 || objectId == 0xE0000000 || objectId == 0xFFFFFFFF) return false;
 
-            foreach (var member in JobBars.PartyMembers) {
+            foreach (var member in PartyMembers) {
                 if (member.ObjectId == objectId) return true;
             }
             return false;

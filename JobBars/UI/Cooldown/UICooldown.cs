@@ -45,15 +45,15 @@ namespace JobBars.UI {
             UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
 
             Border = UIBuilder.CreateImageNode();
-            Border->AtkResNode.Width = 47;
+            Border->AtkResNode.Width = 49;
             Border->AtkResNode.Height = 47;
-            Border->AtkResNode.X = -2;
+            Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
             Border->PartId = UIBuilder.CD_BORDER;
             Border->PartsList = partsList;
             Border->Flags = 0;
             Border->WrapMode = 1;
-            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 4) / 47.0f, ((float)HEIGHT + 4) / 47.0f);
+            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 4) / 47.0f);
 
             TextNode->AtkResNode.ParentNode = RootRes;
             Icon->AtkResNode.ParentNode = RootRes;

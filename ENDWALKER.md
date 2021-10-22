@@ -19,7 +19,6 @@
 - [ ] [Hotbar Data Struct](https://github.com/0ceal0t/JobBars/blob/main/JobBars/GameStructs/AddonHotbarNumberArray.cs)
 - [ ] [Party List Struct](https://github.com/0ceal0t/JobBars/blob/main/JobBars/GameStructs/AddonPartyListNumberArray.cs)
 - [ ] [Party List and Hotbar Data](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UIHelper.UIModule.cs#L9)
-- [ ] [Icon Ids](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UiHelper.Data.cs#L54)
 - [ ] [Spell or Weaponskill](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UiHelper.Data.cs#L137)
 - [ ] [Cooldown Group](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UiHelper.Data.cs#L138)
 - [ ] [Blank Icon Id](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UiHelper.Data.cs#L138)
@@ -70,6 +69,7 @@
 - [ ] (**NEW**) Mitigation - Superbolide (10 seconds)
 - [ ] Mitigation - Reprisal
 - [ ] Mitigation - Heart of Light
+- [ ] (**NEW**) Mitigation - Heart of Corundum / Hearth of Stone (25s)
 - [ ] Icon - No Mercy
 
 ### Scholar
@@ -78,102 +78,161 @@
 - [ ] Buffs - Chain
 - [ ] Mitigation - Seraph
 - [ ] Mitigation - Recitation
-- [ ] (**NEW**) Mitigation - Expedient
-- [ ] (**NEW**) Mitigation - Protraction
+- [ ] (**NEW**) Mitigation - Expedient (20s, 120s CD)
+- [ ] (**NEW**) Mitigation - Protraction (10s, 60s CD)
 - [ ] Mitigation - Swiftcast
 - [ ] Icon - Biolysis
 - [ ] Icon - Chain
 
 ### White Mage
 - [ ] Gauge - Dia
-- [ ] Gauge - Prescence of Mind
+- [ ] (**NEW**) Gauge - Stacks of Lilybell
 - [ ] Mitigation - Temperance
 - [ ] Mitigation - Benediction
-- [ ] (**NEW**) Mitigation - Lilybell
+- [ ] (**NEW**) Mitigation - Lilybell (15s duration, 180s CD) (**NOTE: this might change**)
 - [ ] Mitigation - Swiftcast
 - [ ] Icon - Dia
 - [ ] Icon - Prescence of Mind
 
 ### Astrologian
-- Gauges: Combust, Upgraded Earthly Star, Lightspeed
-- Buffs: **Cards (no Lord/Lady)**, Divination
-- Migitation: Neutral Sect, Earthly Star, **Macrocosmos**, Swiftcast
-- Icon Display: Combust, Lightspeed, Earthly Star, **Astrodyne / Harmony of Spirit**
+- [ ] Gauge - Combust
+- [ ] Gauge - Upgraded Earthly Star
+- [ ] (**NEW**) Gauge - Astrodyne / Harmony of Spirit time (15 second)
+- [ ] (**NEW**) Buffs - Cards (no Lord/Lady)
+- [ ] Buffs - Divination
+- [ ] Mitigation - Neutral Sect
+- [ ] Mitigation - Earthly Star
+- [ ] (**NEW**) Mitigation - Macrocosmos (15s duration, 120s CD)
+- [ ] Mitigation - Swiftcast
+- [ ] Icon - Combust
+- [ ] Icon - Lightspeed
+- [ ] Icon - Earthly Star
+- [ ] (**NEW**) Icon - Astrodyne / Harmony of Spriti (15 seconds)
 
 ### Sage
-- Gauges: **Eukrasian Dosis**
-- Buffs: 
-- Migitation: **Zoe**, **Panhaima**, **Pneuma**, **Swiftcast**
-- Icon Display: **Eukrasian Dosis**
+- [ ] (**NEW**) Gauge - Eukrasian Dosis I/II/III (30s)
+- [ ] (**NEW**) Mitigation - Zoe (30s, 90s CD)
+- [ ] (**NEW**) Mitigation - Panhaima (30s, 120s CD)
+- [ ] (**NEW**) Mitigation - Pneuma (20s, 120s CD)
+- [ ] (**NEW**) Mitigation - Swiftcast
+- [ ] (**NEW**) Icon - Eukrasian Dosis I/II/III (30s)
 
 ### Monk
-- Gauges: Twin Snakes, Demolish, Riddle of Earth / True North
-- Buffs: Brotherhood, Riddle of Fire
-- Migitation: Feint, Mantra
-- Icon Display: Twin Snakes, Demolish, Riddle of Fire, **Brotherhood**
+- [ ] Gauge - Twin Snakes
+- [ ] Gauge - Demolish
+- [ ] Gauge - Riddle of Earth / True North
+- [ ] (**NEW**) Buffs - Brotherhood (120s)
+- [ ] (**NEW**) Buffs - Riddle of Fire (60s)
+- [ ] Mitigation - Feint
+- [ ] Mitigation - Mantra
+- [ ] Icon - Twin Snakes
+- [ ] Icon - Demolish
+- [ ] Icon - Riddle of Fire
+- [ ] (**NEW**) Icon - Brotherhood
 
 ### Dragoon
-- Gauges: GCDs in Lance Charge, GCDs in Dragonsight, True North
-- Buffs: Battle Litany, Dragonsight, Lance Charge
-- Migitation: Feint
-- Icon Display: Dragonsight, Lance Charge, Disembowel, **Chaos Thrust / Chaotic Spring**
+- [ ] Gauge - GCDs in Lance Charge
+- [ ] Gauge - GCDs in Dragon Sight
+- [ ] (**NEW**) Buffs - Battle Litany (15s, 120s CD)
+- [ ] Buffs - Dragon Sight
+- [ ] Buffs - Lance Charge
+- [ ] Mitigation - Feint
+- [ ] Icon - Dragonsight
+- [ ] Icon - Lance Charge
+- [ ] (**NEW**) Icon - Chaos Thrust / Chaotic Spring
+- [ ] (**NEW**) Icon - Power Surge (Disembowel)
 
 ### Ninja
-- Gauges: **Bunshin Stacks**, True North
-- Buffs: Trick Attack, Bunshin
-- Migitation: Feint
-- Icon Display: Trick Attack
+- [ ] (**NEW**) Gauge - Bunshin Stacks
+- [ ] Gauge - True North
+- [ ] Buffs - Trick Attack
+- [ ] Buffs - Bunshin
+- [ ] Mitigation - Feint
+- [ ] Icon - Trick Attack
 
 ### Samurai
-- Gauges: **Mesui Stacks**, Jinpu, Shifu, Higanbana, True North
-- Buffs: **Ori Namikiri (120s)**
-- Migitation: Feint
-- Icon Display: Jinpu, Shifu
-
-### Bard
-- Gauges: **Straight Shot Proc**, GCDs in Raging Strikes, Caustic Bite, Stormbite
-- Buffs: Battle Voice, Raging Strikes, **Radiant Finale**
-- Migitation: Troubadour, Nature's Minne
-- Icon Display: Caustic Bite, Stormbite, Raging Strikes
-
-### Machinist
-- Gauges: GCDs in Hypercharge, GCDs in Wildfire, Charges of Ricochet, Charges of Gauss Round
-- Buffs: Wilfire
-- Migitation: Tactician
-- Icon Display: Wildfire
-
-### Dancer
-- Gauges: **Procs (Flourishing Symmetry, Flourishing Flow, Fan Dance 3 + 4)**
-- Buffs: Technical Step, Devilment
-- Migitation: Shield Samba, Improvisation
-- Icon Display: Devilment
-
-### Black Mage
-- Gauges: Thunder, Fire and Thunder Procs
-- Buffs: 
-- Migitation: Addle
-- Icon Display: Thunder, Leylines, Sharpcast
-
-### Summoner
-- Gauges: Ruin 4 (still has stacks?)
-- Buffs: **Searing Light**, Summon Bahamut, **Summon Pheonix**
-- Migitation: Addle
-- Icon Display: 
-
-### Red Mage
-- Gauges: **Manafication Stacks**, Fire and Stone Procs, Acceleration Stacks
-- Buffs: Embolden, Manafication
-- Migitation: Addle, **Magick Barrier**
-- Icon Display: 
-
-### Blue Mage
-- Gauges: Song of Torment, Bad Breath, Libra
-- Buffs: Off-Guard, Peculiar Light
-- Migitation: Addle, Angle Whisper, Swiftcast
-- Icon Display: Song of Torment, Bad Breath
+- [ ] (**NEW**) Gauge - Meikyo Stacks
+- [ ] Gauge - Jinpu
+- [ ] Gauge - Shifu
+- [ ] Gauge - Higanbana
+- [ ] Gauge - True North
+- [ ] (**NEW**) Ogi Namikiri Ready (30s, 120s CD)
+- [ ] Mitigation - Feint
+- [ ] Icon - Jinpu
+- [ ] Icon - Shifu
 
 ### Reaper
-- Gauges: **Death's Design**, **Enhanced Gibbet (Ehanced Cross Reaping) / Gallows (Enhanced Void Reaping) Procs**, **Soul Reaver Stacks**, **Immortal Sacrifice Stacks**
-- Buffs: **Arcane Circle**
-- Migitation: **Feint**
-- Icon Display: **Death's Design (Shadow of Death / Whorl of Death)**
+- [ ] (**NEW**) Gauge - Death's Design (30s default, make 60s)
+- [ ] (**NEW**) Gauge - Procs (Enhanced Gibbet / Ehanced Cross Reaping , Enhanced Gallows / Enhanced Void Reaping)
+- [ ] (**NEW**) Gauge - Soul Reaver stacks (2 max)
+- [ ] (**NEW**) Gauge - Immortal Sacrifice Stacks (8 max)
+- [ ] (**NEW**) Buffs - Arcane Circle (20s, 120s CD)
+- [ ] (**NEW**) Mitigation - Feint
+- [ ] (**NEW**) Icon - Death's Design (Shadow of Death / Whorl of Death)
+
+### Bard
+- [ ] (**NEW**) Gauge - Straight Shot Proc
+- [ ] (**NEW**) Gauge - Blootletter Charges (2 charges, 15s)
+- [ ] (**NEW**) Gauge - GCDs in Raging Strikes (20 seconds)
+- [ ] Gauge - Caustic Bite
+- [ ] Gauge - Stormbite
+- [ ] (**NEW**) Buffs - Battle Voice (15s, 120s CD)
+- [ ] (**NEW**) Buffs - Raging Strikes (20s, 60s CD)
+- [ ] (**NEW**) Buffs - Barrage (10s, 120s CD)
+- [ ] (**NEW**) Buffs - Radiant Finale (15s, 90s CD)
+- [ ] (**NEW**) Mitigation - Troubadour (15s, 90s CD)
+- [ ] Mitigation - Nature's Minne
+- [ ] (**NEW**) Icon - Raging Strikes (20s)
+- [ ] Icon - Caustic Bite
+- [ ] Icon - Stormbite
+
+### Machinist
+- [ ] Gauge - GCDs in Hypercharge
+- [ ] Gauge - GCDs in Wildfire
+- [ ] Gauge - Charges of Ricochet
+- [ ] Gauge - Charges of Gauss Round
+- [ ] Buffs - Wildfire
+- [ ] (**NEW**) Mitigation - Tactician (15s, 90s CD)
+- [ ] Icon - Wildfire
+
+### Dancer
+- [ ] (**NEW**) Gauge - Procs (Flourishing Symmetry, Flourishing Flow, Fan Dance 3)
+- [ ] Buffs - Technical Step
+- [ ] Buffs - Devilment
+- [ ] (**NEW**) Mitigation - Shield Samba (15s, 90s CD)
+- [ ] Mitigation - Improvisation
+- [ ] Icon - Devilment
+
+### Black Mage
+- [ ] (**NEW**) Gauge - Procs (Fire = 30s, Thunder = 21s)
+- [ ] Guage - Thunder 3 + 4
+- [ ] Mitigation - Addle
+- [ ] Icon - Thunder
+- [ ] Icon - Leylines
+
+### Summoner
+- [ ] (**NEW**) Buffs - Searing Light (30s, 120s CD)
+- [ ] Buffs - Summon Bahamut
+- [ ] (**NEW**) Buffs - Summon Pheonix (20s, 60s CD) / new ability + buff name
+- [ ] Mitigation - Addle
+
+### Red Mage
+- [ ] (**NEW**) Gauges - Manafication Stacks (6)
+- [ ] Gauges - Fire and Stone Procs
+- [ ] Gauges - Acceleration Stacks
+- [ ] Buffs - Embolden
+- [ ] Buffs - Manafication
+- [ ] Mitigation - Addle
+- [ ] (**NEW**) Mitigation - Magick Barrier (10s, 120s CD)
+
+### Blue Mage
+- [ ] Gauges - Song of Torment
+- [ ] Gauges - Bad Breath
+- [ ] Gauges - Libra
+- [ ] Buffs - Off-Guard
+- [ ] Buffs - Peculiar Light
+- [ ] Mitigation - Addle
+- [ ] Mitigation - Angel Whisper
+- [ ] Mitigation - Swiftcast
+- [ ] Icon - Song of Torment
+- [ ] Icon - Bad Breath

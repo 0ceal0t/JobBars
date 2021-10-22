@@ -31,7 +31,6 @@ namespace JobBars.Gauges {
             JobToValue.Add(JobIds.PLD, new Gauge[] {
                 new GaugeStacks(UIHelper.Localize(BuffIds.SwordOath), new GaugeStacksProps {
                     MaxStacks = 3,
-                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.SwordOath)
                     },
@@ -55,7 +54,6 @@ namespace JobBars.Gauges {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,
-                    NoSoundOnFull = true,
                     Increment = new []{
                         new Item(ActionIds.ShieldLob),
                         new Item(ActionIds.RageOfHalone),
@@ -159,10 +157,10 @@ namespace JobBars.Gauges {
             // ============ SCH ==================
             JobToValue.Add(JobIds.SCH, new Gauge[] {
                 new GaugeProc($"{UIHelper.Localize(JobIds.SCH)} {procText}", new GaugeProcProps{
-                    NoSoundOnFull = true,
                     Procs = new []{
                         new Proc(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
-                    }
+                    },
+                    NoSoundOnProc = true
                 }),
                 new GaugeTimer(UIHelper.Localize(BuffIds.Biolysis), new SubGaugeTimerProps {
                     MaxDuration = 30,
@@ -252,7 +250,6 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
-                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -269,7 +266,8 @@ namespace JobBars.Gauges {
                                 new Item(BuffIds.TrueNorth)
                             }
                         }
-                    }
+                    },
+                    CompletionSound = GaugeCompleteSoundType.Never
                 })
             });
             // ============ SMN ==================
@@ -355,7 +353,6 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
-                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -372,7 +369,8 @@ namespace JobBars.Gauges {
                                 new Item(BuffIds.TrueNorth)
                             }
                         }
-                    }
+                    },
+                    CompletionSound = GaugeCompleteSoundType.Never
                 })
             });
             // ============ BLM ==================
@@ -425,7 +423,6 @@ namespace JobBars.Gauges {
                 }),
                 new GaugeStacks(UIHelper.Localize(BuffIds.Acceleration), new GaugeStacksProps {
                     MaxStacks = 3,
-                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Acceleration)
                     },
@@ -502,7 +499,6 @@ namespace JobBars.Gauges {
                     MaxCounter = 5,
                     MaxDuration = 15,
                     Color = UIColor.Red,
-                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.Bunshin)
                     }
@@ -511,7 +507,6 @@ namespace JobBars.Gauges {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
                     Type = GaugeVisualType.BarDiamondCombo,
-                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -528,7 +523,8 @@ namespace JobBars.Gauges {
                                 new Item(BuffIds.TrueNorth)
                             }
                         }
-                    }
+                    },
+                    CompletionSound = GaugeCompleteSoundType.Never
                 })
             });
             // ============ MNK ==================
@@ -537,7 +533,6 @@ namespace JobBars.Gauges {
                     MaxCounter = 6,
                     MaxDuration = 15,
                     Color = UIColor.Orange,
-                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.PerfectBalance)
                     }
@@ -546,7 +541,6 @@ namespace JobBars.Gauges {
                     MaxCounter = 11,
                     MaxDuration = 20,
                     Color = UIColor.Red,
-                    NoSoundOnFull = true,
                     Triggers = new []{
                         new Item(BuffIds.RiddleOfFire)
                     }
@@ -570,7 +564,6 @@ namespace JobBars.Gauges {
                 new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)}/{UIHelper.Localize(ActionIds.RiddleOfEarth)}", new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
                     Type = GaugeVisualType.BarDiamondCombo,
-                    NoSoundOnFull = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -604,7 +597,8 @@ namespace JobBars.Gauges {
                                 new Item(BuffIds.TrueNorth)
                             }
                         }
-                    }
+                    },
+                    CompletionSound = GaugeCompleteSoundType.Never
                 }),
             });
             // ============ BLU ==================
