@@ -21,11 +21,11 @@ namespace JobBars.Gauges {
         }
 
         public void SetJob(JobIds job) {
-            //===== CLEANUP OLD =======
+            // ===== CLEANUP OLD =======
             foreach (var gauge in CurrentGauges) gauge.UnloadUI();
             JobBars.Builder.HideAllGauges();
 
-            //====== SET UP NEW =======
+            // ====== SET UP NEW =======
             CurrentJob = job;
             int idx = 0;
             foreach (var gauge in CurrentGauges) {

@@ -13,16 +13,21 @@ namespace JobBars.Buffs {
             IsPlayer = isPlayer;
         }
 
-        public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember) {
+        public bool Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember) {
             if (CurrentJob != partyMember.Job) {
                 CurrentJob = partyMember.Job;
                 SetupTrackers();
             }
 
+            var highlightMember = false;
             foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
-                if (tracker.Enabled) trackers.Add(tracker);
+                if (tracker.Enabled) {
+                    trackers.Add(tracker);
+                    highlightMember = true;
+                }
             }
+            return highlightMember;
         }
 
         public void ProcessAction(Item action, uint objectId) {

@@ -54,7 +54,7 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUIImpl() {
+        protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(Size);
             }
@@ -66,7 +66,7 @@ namespace JobBars.Gauges {
             ResetProcActive();
         }
 
-        protected override void ApplyUIConfigImpl() {
+        protected override void ApplyUIVisual_() {
             if (UI is UIDiamond diamond) {
                 foreach (var proc in Procs) diamond.SetColor(proc.Color, proc.Idx);
                 diamond.SetTextVisible(ProcsShowText);
@@ -123,7 +123,7 @@ namespace JobBars.Gauges {
         protected override void DrawGauge(string _ID, JobIds job) {
             if (JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name, ProcsShowText, out var newProcsShowText)) {
                 ProcsShowText = newProcsShowText;
-                ApplyUIConfig();
+                ApplyUIVisual();
                 JobBars.GaugeManager.UpdatePositionScale(job); // procs with text are taller than without, so update positions
             }
 

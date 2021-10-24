@@ -10,6 +10,8 @@ namespace JobBars.UI {
         public List<UIBuff> Buffs = new();
         public static int MAX_BUFFS = 20;
 
+        public List<UIBuffPartyList> PartyListBuffs = new();
+
         private void InitBuffs(AtkUldPartsList* partsList) {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
@@ -31,6 +33,10 @@ namespace JobBars.UI {
             BuffRoot->ChildNode = Buffs[0].RootRes;
 
             RefreshBuffLayout();
+
+            for (var i = 0; i < 8; i++) {
+                PartyListBuffs.Add(new UIBuffPartyList(partsList));
+            }
         }
 
         private void DisposeBuffs() {
@@ -39,6 +45,20 @@ namespace JobBars.UI {
 
             BuffRoot->Destroy(true);
             BuffRoot = null;
+
+            // ========= PARTYLIST =============
+
+            var partyListAddon = UIHelper.PartyListAddon;
+
+            for (var i = 0; i < PartyListBuffs.Count; i++) {
+                if (partyListAddon != null) {
+                    var partyMember = partyListAddon->PartyMember[i];
+                    PartyListBuffs[i].DetachFrom(partyMember.TargetGlowContainer);
+                    partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
+                }
+                PartyListBuffs[i].Dispose();
+            }
+            PartyListBuffs = null;
         }
 
         public void RefreshBuffLayout() {
@@ -47,6 +67,7 @@ namespace JobBars.UI {
             }
         }
 
+        public void SetBuffPartyListVisible(int idx, bool visible) => PartyListBuffs[idx].SetVisibility(visible);
         public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);
         public void SetBuffScale(float scale) => SetScale(BuffRoot, scale, scale);
         public void ShowBuffs() => UIHelper.Show(BuffRoot);

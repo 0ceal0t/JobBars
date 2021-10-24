@@ -14,9 +14,8 @@ namespace JobBars.Buffs {
         public BuffManager() : base("##JobBars_Buffs") {
             Init();
 
-            foreach (var jobEntry in JobToValue) {
+            foreach (var jobEntry in JobToValue)
                 LocalPlayerBuffs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
-            }
 
             if (!JobBars.Config.BuffBarEnabled) JobBars.Builder.HideBuffs();
             JobBars.Builder.HideAllBuffs();
@@ -49,25 +48,31 @@ namespace JobBars.Buffs {
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             HashSet<BuffTracker> activeBuffs = new();
 
-            foreach (var partyMember in JobBars.PartyMembers) {
-                if (partyMember.Job == JobIds.OTHER || partyMember.ObjectId == 0) continue;
+            for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
+                var partyMember = JobBars.PartyMembers[idx];
+
+                if (partyMember == null || partyMember?.Job == JobIds.OTHER || partyMember?.ObjectId == 0) continue;
                 if (!JobBars.Config.BuffIncludeParty && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) continue;
 
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new BuffPartyMember(partyMember.ObjectId, partyMember.IsPlayer);
-                member.Tick(activeBuffs, partyMember);
+                var highlightMember = member.Tick(activeBuffs, partyMember);
+                JobBars.Builder.SetBuffPartyListVisible(idx, JobBars.Config.BuffPartyListEnabled && highlightMember);
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
+            for (int idx = JobBars.PartyMembers.Count; idx < 8; idx++) {
+                JobBars.Builder.SetBuffPartyListVisible(idx, false);
+            }
 
-            var idx = 0;
+            var buffIdx = 0;
             foreach (var buff in JobBars.Config.BuffOrderByActive ?
                 activeBuffs.OrderBy(b => b.CurrentState) :
                 activeBuffs.OrderBy(b => b.Id)
             ) {
-                if (idx >= (UIBuilder.MAX_BUFFS - 1)) break;
-                buff.TickUI(JobBars.Builder.Buffs[idx]);
-                idx++;
+                if (buffIdx >= (UIBuilder.MAX_BUFFS - 1)) break;
+                buff.TickUI(JobBars.Builder.Buffs[buffIdx]);
+                buffIdx++;
             }
-            for (int i = idx; i < UIBuilder.MAX_BUFFS; i++) {
+            for (int i = buffIdx; i < UIBuilder.MAX_BUFFS; i++) {
                 JobBars.Builder.Buffs[i].Hide(); // hide unused
             }
 

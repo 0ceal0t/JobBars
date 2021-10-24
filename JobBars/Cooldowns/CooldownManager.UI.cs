@@ -52,9 +52,7 @@ namespace JobBars.Cooldowns {
         // ==========================================
 
         protected override void DrawItem(CooldownProps[] item) {
-            foreach (var cdProp in item) {
-                DrawCooldown(cdProp);
-            }
+            foreach (var cdProp in item) DrawCooldown(cdProp);
         }
 
         private void DrawCooldown(CooldownProps cooldown) {

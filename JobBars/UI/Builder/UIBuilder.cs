@@ -24,19 +24,25 @@ namespace JobBars.UI {
             if (GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
                 GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
             }
+
             DisposeCooldowns();
             DisposeGauges();
             DisposeBuffs();
             DisposeCursor();
             DisposeTextures(); // dispose last
 
-            var addon = UIHelper.ChatLogAddon;
-            if (addon == null) return;
-            addon->UldManager.UpdateDrawNodeList();
+            var chatAddon = UIHelper.ChatLogAddon;
+            if (chatAddon != null) chatAddon->UldManager.UpdateDrawNodeList();
+
+            var partyListAddon = UIHelper.PartyListAddon;
+            if (partyListAddon != null) partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
         public void Attach() {
             var chatAddon = UIHelper.ChatLogAddon;
+            var partyListAddon = UIHelper.PartyListAddon;
+
+            // ===== CONTAINERS =========
 
             GaugeRoot->ParentNode = chatAddon->RootNode;
             BuffRoot->ParentNode = chatAddon->RootNode;
@@ -46,14 +52,23 @@ namespace JobBars.UI {
             while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
 
             UIHelper.Link(lastNode, GaugeRoot);
-            chatAddon->UldManager.UpdateDrawNodeList();
+
+            // ===== BUFF PARTYLIST ======
+
+            for(var i = 0; i < PartyListBuffs.Count; i++) {
+                var partyMember = partyListAddon->PartyMember[i];
+                PartyListBuffs[i].AttachTo(partyMember.TargetGlowContainer);
+                partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
+            }
 
             // ===== COOLDOWNS =========
 
-            var partyListAddon = UIHelper.PartyListAddon;
-
             CooldownRoot->ParentNode = partyListAddon->AtkUnitBase.RootNode;
             partyListAddon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = CooldownRoot;
+
+            // ======================
+
+            chatAddon->UldManager.UpdateDrawNodeList();
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 

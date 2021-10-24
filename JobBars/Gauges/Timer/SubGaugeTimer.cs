@@ -124,7 +124,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{_ID}", Name, Color, out var newColor)) {
                 Color = newColor;
-                ParentGauge.ApplyUIConfig();
+                ParentGauge.ApplyUIVisual();
             }
 
             if (JobBars.Config.GaugeTimerOffset.Draw($"Time Offset{suffix}{_ID}", Name, Offset, out var newOffset)) {

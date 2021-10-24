@@ -55,6 +55,10 @@ namespace JobBars.Buffs {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
+            if (ImGui.Checkbox("Highlight Buffed Party Members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) {
+                JobBars.Config.Save();
+            }
+
             if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
                 JobBars.Config.Save();
             }
@@ -77,9 +81,7 @@ namespace JobBars.Buffs {
         // ==========================================
 
         protected override void DrawItem(BuffProps[] item) {
-            foreach (var buff in item) {
-                DrawBuff(buff);
-            }
+            foreach (var buff in item) DrawBuff(buff);
         }
 
         private void DrawBuff(BuffProps buff) {
@@ -90,10 +92,10 @@ namespace JobBars.Buffs {
         }
 
         public void DrawPositionBox() {
-            if (!LOCKED) {
-                if (JobBars.DrawPositionView("Buff Bar##BuffPosition", JobBars.Config.BuffPosition, out var pos)) {
-                    SetBuffPosition(pos);
-                }
+            if (LOCKED) return;
+
+            if (JobBars.DrawPositionView("Buff Bar##BuffPosition", JobBars.Config.BuffPosition, out var pos)) {
+                SetBuffPosition(pos);
             }
         }
 

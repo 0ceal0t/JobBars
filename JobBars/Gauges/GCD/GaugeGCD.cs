@@ -25,12 +25,12 @@ namespace JobBars.Gauges {
             }
         }
 
-        protected override void LoadUIImpl() {
+        protected override void LoadUI_() {
             foreach (var sg in SubGauges) sg.Reset();
             ActiveSubGauge = SubGauges[0];
         }
 
-        protected override void ApplyUIConfigImpl() {
+        protected override void ApplyUIVisual_() {
             if (UI is UIBar gauge) {
                 gauge.SetTextVisible(ShowText);
                 gauge.SetTextSwap(SwapText);

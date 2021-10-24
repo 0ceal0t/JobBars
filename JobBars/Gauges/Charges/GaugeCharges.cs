@@ -52,7 +52,7 @@ namespace JobBars.Gauges {
             PrevChargesValue = TotalDiamonds;
         }
 
-        protected override void LoadUIImpl() {
+        protected override void LoadUI_() {
             if (UI is UIBarDiamondCombo combo) {
                 combo.ClearSegments();
                 combo.SetTextColor(UIColor.NoColor);
@@ -71,7 +71,7 @@ namespace JobBars.Gauges {
             SetDiamondValue(0, 0, TotalDiamonds);
         }
 
-        protected override void ApplyUIConfigImpl() {
+        protected override void ApplyUIVisual_() {
             RefreshSameColor();
             if (UI is UIBarDiamondCombo combo) {
                 SetDiamondUIColors();
@@ -204,7 +204,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, BarColor, out var newColor)) {
                 BarColor = newColor;
-                ApplyUIConfig();
+                ApplyUIVisual();
             }
 
             if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{_ID}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {

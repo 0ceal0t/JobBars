@@ -9,8 +9,6 @@ namespace JobBars.UI {
         private AtkResNode* CooldownRoot = null;
 
         private void InitCooldowns(AtkUldPartsList* partsList) {
-            var addon = UIHelper.PartyListAddon;
-
             CooldownRoot = CreateResNode();
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
@@ -40,14 +38,14 @@ namespace JobBars.UI {
             CooldownRoot->Destroy(true);
             CooldownRoot = null;
 
-            var addon = UIHelper.PartyListAddon;
-            if (addon == null) return;
-            addon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = null;
-            addon->AtkUnitBase.UldManager.UpdateDrawNodeList();
+            var partyListAddon = UIHelper.PartyListAddon;
+            if (partyListAddon != null) {
+                partyListAddon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = null;
+            }
         }
 
         public void SetCooldownPosition(Vector2 pos) => UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
-        public void SetCooldownRowVisible(int idx, bool Visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, Visible);
+        public void SetCooldownRowVisible(int idx, bool visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, visible);
         public void ShowCooldowns() => UIHelper.Show(CooldownRoot);
         public void HideCooldowns() => UIHelper.Hide(CooldownRoot);
     }

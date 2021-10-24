@@ -35,7 +35,7 @@ namespace JobBars.Gauges {
             ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
         }
 
-        protected override void LoadUIImpl() {
+        protected override void LoadUI_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetMaxValue(MaxStacks);
             }
@@ -51,7 +51,7 @@ namespace JobBars.Gauges {
             SetValue(0);
         }
 
-        protected override void ApplyUIConfigImpl() {
+        protected override void ApplyUIVisual_() {
             if (UI is UIDiamond diamond) {
                 diamond.SetTextVisible(false);
             }
@@ -115,7 +115,7 @@ namespace JobBars.Gauges {
 
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Color, out var newColor)) {
                 Color = newColor;
-                ApplyUIConfig();
+                ApplyUIVisual();
             }
 
             if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{_ID}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {

@@ -20,7 +20,7 @@ namespace JobBars.Gauges {
             Function = function;
         }
 
-        protected override void LoadUIImpl() {
+        protected override void LoadUI_() {
             if (UI is UIBar gauge) {
                 gauge.SetSegments(Segments);
                 gauge.SetTextColor(UIColor.NoColor);
@@ -28,7 +28,7 @@ namespace JobBars.Gauges {
             SetValue(0, "0");
         }
 
-        protected override void ApplyUIConfigImpl() {
+        protected override void ApplyUIVisual_() {
             if (UI is UIBar gauge) {
                 gauge.SetTextVisible(ShowText);
                 gauge.SetTextSwap(SwapText);
@@ -59,7 +59,7 @@ namespace JobBars.Gauges {
         protected override void DrawGauge(string _ID, JobIds job) {
             if (JobBars.Config.GaugeColor.Draw($"Color{_ID}", Name, Color, out var newColor)) {
                 Color = newColor;
-                ApplyUIConfig();
+                ApplyUIVisual();
             }
         }
 

@@ -4,6 +4,7 @@ using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars {
 
@@ -19,7 +20,31 @@ namespace JobBars {
     public unsafe partial class JobBars {
         public static List<CurrentPartyMember> PartyMembers { get; private set; } = new();
 
-        private static void UpdatePartyMembers() {
+        public static void UpdatePartyMembers() {
+            var order = GetPartyMemberOrder();
+            var members = GetPartyMembers();
+            PartyMembers = order.Select(objectId => objectId == 0 ? null : members.Find(member => member.ObjectId == objectId)).ToList();
+        }
+
+        private static List<uint> GetPartyMemberOrder() {
+            var ret = new List<uint>();
+
+            var partyUI = UIHelper.GetPartyUI();
+            if (partyUI == null || partyUI->PartyMemberCount == 0) { // fallback
+                ret.Add(ClientState.LocalPlayer.ObjectId);
+                return ret;
+            }
+
+            for (int i = 0; i < partyUI->PartyMemberCount; i++) {
+                var member = partyUI->PartyMember[i];
+                var objectId = (uint)member.ObjectID;
+                ret.Add((objectId == 0xE0000000 || objectId == 0xFFFFFFFF) ? 0 : objectId);
+            }
+
+            return ret;
+        }
+
+        private static List<CurrentPartyMember> GetPartyMembers() {
             var ret = new List<CurrentPartyMember>();
             var localPlayer = ClientState.LocalPlayer;
 
@@ -39,8 +64,7 @@ namespace JobBars {
                 }
 
                 ret.Add(localPartyMember);
-                PartyMembers = ret;
-                return;
+                return ret;
             }
 
             for (int i = 0; i < 8; i++) {
@@ -65,7 +89,7 @@ namespace JobBars {
                 ret.Add(partyMember);
             }
 
-            PartyMembers = ret;
+            return ret;
         }
 
         public unsafe static bool IsInParty(uint objectId) {
