@@ -38,16 +38,18 @@
 - [ ] Mitigation - Living Dead
 - [ ] Mitigation - Reprisal
 - [ ] Mitigation - Dark Missionary
+- [ ] (**NEW**) Mitigation - Shadow Wall
 - [ ] Mitigation - The Blackest Night
 - [ ] Icon - Blood Weapon
 
 ### Warrior
-- [ ] (**NEW**) Guage - IR Stacks
-- [ ] (**NEW**) Guage - Surging Tempest
+- [ ] (**NEW**) Gauge - IR Stacks
+- [ ] (**NEW**) Gauge - Surging Tempest
 - [ ] (**NEW**) Buffs - IR (30 seconds)
 - [ ] (**NEW**) Mitigation - Holmgang (10 seconds)
 - [ ] Mitigation - Reprisal
 - [ ] Mitigation - Shake it Off
+- [ ] (**NEW**) Mitigation - Vengeance
 - [ ] (**NEW**) Mitigation - Nascent Flash / Raw Intuition / Bloodwhetting
 - [ ] (**NEW**) Icon - IR (30 seconds max)
 - [ ] (**NEW**) Icon - Surging Tempest
@@ -56,12 +58,13 @@
 - [ ] (**NEW**) Gauge - Req Stacks
 - [ ] Gauge - Atonement Stacks
 - [ ] Gauge - GCDs in Fight or Flight
-- [ ] (**NEW**) Guage - Goring Blade / Blade of Valor
+- [ ] (**NEW**) Gauge - Goring Blade / Blade of Valor
 - [ ] (**NEW**) Buffs - Req
 - [ ] Mitigation - Hallowed Ground
 - [ ] Mitigation - Reprisal
 - [ ] Mitigation - Divine Veil
-- [ ] Mitigation - Passage or Arms
+- [ ] (**NEW**) Mitigation - Sentinel
+- [ ] Mitigation - Passage of Arms
 - [ ] (**NEW**) Icon - Goring Blade / Blade of Valor (only display on Goring)
 - [ ] Icon - Fight or Flight
 
@@ -70,7 +73,8 @@
 - [ ] (**NEW**) Mitigation - Superbolide (10 seconds)
 - [ ] Mitigation - Reprisal
 - [ ] Mitigation - Heart of Light
-- [ ] (**NEW**) Mitigation - Heart of Corundum / Hearth of Stone (25s)
+- [ ] (**NEW**) Mitigation - Nebula
+- [ ] (**NEW**) Mitigation - Heart of Corundum / Heart of Stone (25s)
 - [ ] Icon - No Mercy
 
 ### Scholar
@@ -90,6 +94,7 @@
 - [ ] (**NEW**) Gauge - Stacks of Lilybell
 - [ ] Mitigation - Temperance
 - [ ] Mitigation - Benediction
+- [ ] Mitigation - Asylum
 - [ ] (**NEW**) Mitigation - Lilybell (15s duration, 180s CD) (**NOTE: this might change**)
 - [ ] Mitigation - Swiftcast
 - [ ] Icon - Dia
@@ -169,6 +174,7 @@
 - [ ] (**NEW**) Gauge - Immortal Sacrifice Stacks (8 max)
 - [ ] (**NEW**) Buffs - Arcane Circle (20s, 120s CD)
 - [ ] (**NEW**) Mitigation - Feint
+- [ ] (**NEW**) Mitigation - Arcane Crest (5s, 30s CD)
 - [ ] (**NEW**) Icon - Death's Design (Shadow of Death / Whorl of Death)
 
 ### Bard
@@ -206,7 +212,7 @@
 
 ### Black Mage
 - [ ] (**NEW**) Gauge - Procs (Fire = 30s, Thunder = 21s)
-- [ ] Guage - Thunder 3 + 4
+- [ ] Gauge - Thunder 3 + 4
 - [ ] Mitigation - Addle
 - [ ] Icon - Thunder
 - [ ] Icon - Leylines
