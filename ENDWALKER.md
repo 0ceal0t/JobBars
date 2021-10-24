@@ -25,6 +25,7 @@
 - [ ] [Texture Load Size](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Helper/UiHelper.Textures.cs#L96)
 - [ ] [Icon Nodes](https://github.com/0ceal0t/JobBars/blob/main/JobBars/UI/Icon/UIIconBuff.cs#L17)
 	- [Timer](https://github.com/0ceal0t/JobBars/blob/main/JobBars/UI/Icon/UIIconTimer.cs#L24)
+- [ ] Party list nodes
 
 ## Jobs
 

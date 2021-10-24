@@ -22,6 +22,8 @@ namespace JobBars.UI {
             Highlight->AtkResNode.Flags_2 = 0;
             Highlight->AtkResNode.DrawFlags = 0;
             Highlight->AtkResNode.Flags = 8243;
+            Highlight->AtkResNode.MultiplyBlue = 50;
+            Highlight->AtkResNode.MultiplyRed = 150;
             UIHelper.SetPosition(Highlight, 47, 21);
             UIHelper.Hide(Highlight);
         }

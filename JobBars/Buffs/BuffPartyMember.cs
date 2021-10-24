@@ -22,10 +22,8 @@ namespace JobBars.Buffs {
             var highlightMember = false;
             foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
-                if (tracker.Enabled) {
-                    trackers.Add(tracker);
-                    highlightMember = true;
-                }
+                if (tracker.Enabled) trackers.Add(tracker);
+                if (tracker.Highlighted) highlightMember = true;
             }
             return highlightMember;
         }

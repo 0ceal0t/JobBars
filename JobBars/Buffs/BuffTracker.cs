@@ -34,6 +34,7 @@ namespace JobBars.Buffs {
         public BuffState CurrentState => State;
         public uint Id => (uint)Icon;
         public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
+        public bool Highlighted => State == BuffState.Running;
 
         public BuffTracker(BuffProps props) {
             Duration = props.Duration;
