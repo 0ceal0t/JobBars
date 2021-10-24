@@ -95,14 +95,18 @@ namespace JobBars {
         public unsafe static bool IsInParty(uint objectId) {
             if (objectId == 0 || objectId == 0xE0000000 || objectId == 0xFFFFFFFF) return false;
 
+            if (PartyMembers == null) return false;
             foreach (var member in PartyMembers) {
+                if (member == null) continue;
                 if (member.ObjectId == objectId) return true;
             }
             return false;
         }
 
         public unsafe static void SearchForPartyMemberStatus(int ownerId, Dictionary<Item, Status> buffDict, List<BuffIds> buffsToSearch) {
+            if (PartyMembers == null) return;
             foreach (var member in PartyMembers) {
+                if (member == null) continue;
                 foreach (var entry in member.BuffDict) {
                     if (entry.Value.SourceID != ownerId) continue;
                     if (!buffsToSearch.Contains((BuffIds)entry.Value.StatusID)) continue;

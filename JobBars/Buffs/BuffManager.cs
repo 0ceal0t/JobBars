@@ -48,6 +48,8 @@ namespace JobBars.Buffs {
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             HashSet<BuffTracker> activeBuffs = new();
 
+            if (JobBars.PartyMembers == null) PluginLog.LogError("PARTYMEMBERS IS NULL");
+
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];
 

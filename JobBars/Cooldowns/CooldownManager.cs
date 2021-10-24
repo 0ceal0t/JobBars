@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using Dalamud.Logging;
+using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,8 @@ namespace JobBars.Cooldowns {
             float percent = (float)(millis % MILLIS_LOOP) / MILLIS_LOOP;
 
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
+
+            if (JobBars.PartyMembers == null) PluginLog.LogError("PARTYMEMBERS IS NULL");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];
