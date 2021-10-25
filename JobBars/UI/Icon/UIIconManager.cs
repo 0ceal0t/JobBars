@@ -20,9 +20,7 @@ namespace JobBars.UI {
             "_ActionBar07",
             "_ActionBar08",
             "_ActionBar09",
-            "_ActionCross",
-            "_ActionDoubleCrossL",
-            "_ActionDoubleCrossR",
+            "_ActionCross"
         };
         private static readonly int MILLIS_LOOP = 250;
 
@@ -66,7 +64,11 @@ namespace JobBars.UI {
             HashSet<UIIcon> FoundIcons = new();
 
             for (var hotbarIndex = 0; hotbarIndex < AllActionBars.Length; hotbarIndex++) {
-                var hotbar = hotbarData->Hotbars[hotbarIndex];
+                var isCross = hotbarIndex > 9;
+                var crossBarSet = isCross ? UIHelper.GetCrossBarSet() : -1;
+                if (isCross && (crossBarSet == -1 || crossBarSet > 7)) continue;
+
+                var hotbar = hotbarData->Hotbars[isCross ? 10 + crossBarSet : hotbarIndex];
 
                 var actionBar = (AddonActionBarBase*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(AllActionBars[hotbarIndex]);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null) continue;
@@ -88,6 +90,7 @@ namespace JobBars.UI {
                         found = true;
                         FoundIcons.Add(icon);
                         icon.Tick(percent, slotData.YellowBorder);
+
                         break;
                     }
                     if (found) continue; // already found an icon, don't need to create a new one

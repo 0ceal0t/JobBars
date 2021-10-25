@@ -3,6 +3,12 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.GameStructs {
     [StructLayout(LayoutKind.Explicit, Size = 0x2B8)]
+    public unsafe struct AddonActionBarCross {
+        [FieldOffset(0x000)] public AddonActionBarBase ActionBarBase;
+        [FieldOffset(0x190)] public int CrossBarSet;
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x2B8)]
     public unsafe struct AddonActionBarMain {
         [FieldOffset(0x000)] public AddonActionBarBase ActionBarBase;
     }

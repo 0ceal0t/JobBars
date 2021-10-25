@@ -61,6 +61,7 @@ namespace JobBars.UI {
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
+            UIHelper.Hide(Combo);
             UIHelper.Hide(BigText);
         }
 
@@ -69,6 +70,7 @@ namespace JobBars.UI {
                 State = IconState.BuffRunning;
                 UIHelper.Hide(OriginalOverlay);
                 UIHelper.Show(BigText);
+                UIHelper.Show(Combo);
             }
             BigText->SetText(((int)Math.Round(current)).ToString());
         }
@@ -78,12 +80,14 @@ namespace JobBars.UI {
             State = IconState.None;
 
             UIHelper.Hide(BigText);
+            UIHelper.Hide(Combo);
             UIHelper.Show(OriginalOverlay);
         }
 
         public override void Tick(float dashPercent, bool border) {
             var showBorder = CalcShowBorder(State == IconState.BuffRunning, border);
             Combo->PartId = !showBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
+            UIHelper.SetVisibility(Combo, showBorder);
         }
 
         public override void OnDispose() {
