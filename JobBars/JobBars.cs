@@ -6,7 +6,6 @@ using System.Threading;
 using JobBars.Helper;
 using JobBars.UI;
 using JobBars.Data;
-using JobBars.Gauges;
 using JobBars.Buffs;
 using JobBars.Cooldowns;
 using JobBars.Cursors;
@@ -23,6 +22,7 @@ using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Data;
 using JobBars.Icons;
+using JobBars.Gauges.Manager;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {

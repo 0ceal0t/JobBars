@@ -228,6 +228,11 @@ namespace JobBars.UI {
         }
 
         public void SetSegments(float[] segments) { // [0.5f, 1.0f]
+            if (segments == null) {
+                ClearSegments();
+                return;
+            }
+
             Segments = segments;
 
             for (int i = 0; i < segments.Length - 1; i++) {

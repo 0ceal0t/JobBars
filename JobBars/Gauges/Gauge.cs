@@ -1,7 +1,4 @@
-﻿using ImGuiNET;
-using JobBars.Data;
-using JobBars.UI;
-using System;
+﻿using JobBars.UI;
 using System.Numerics;
 
 namespace JobBars.Gauges {
@@ -26,147 +23,54 @@ namespace JobBars.Gauges {
     }
 
     public abstract class Gauge {
-        public static readonly GaugeCompleteSoundType[] ValidSoundType = (GaugeCompleteSoundType[])Enum.GetValues(typeof(GaugeCompleteSoundType));
+        public abstract void UpdateVisual();
+        public abstract void Tick();
+        public abstract void Cleanup();
+        public abstract int GetHeight();
+        public abstract int GetWidth();
+        public abstract int GetYOffset();
+        public abstract void SetPosition(Vector2 position);
+        public abstract void SetSplitPosition(Vector2 position);
+    }
 
-        public readonly string Name;
-        public UIGauge UI;
-        public bool Enabled;
-        public int Order { get; private set; }
-        public float Scale { get; private set; }
-        public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
+    public abstract class Gauge<T, S> : Gauge where T : UIGauge where S : GaugeTracker {
+        protected T UI;
+        protected S Tracker;
 
-        protected bool ShowText;
-        protected bool SwapText;
-        protected bool HideWhenInactive;
-
-        public Gauge(string name) {
-            Name = name;
-            Enabled = JobBars.Config.GaugeEnabled.Get(Name);
-            Order = JobBars.Config.GaugeOrder.Get(Name);
-            Scale = JobBars.Config.GaugeIndividualScale.Get(Name);
-            ShowText = JobBars.Config.GaugeShowText.Get(Name);
-            SwapText = JobBars.Config.GaugeSwapText.Get(Name);
-            HideWhenInactive = JobBars.Config.GaugeHideInactive.Get(Name);
-        }
-
-        public void LoadUI(UIGauge ui) {
-            UI = ui;
-            LoadUI_();
-            ApplyUIVisual();
-        }
-        protected abstract void LoadUI_();
-
-        public void ApplyUIVisual() {
-            if (UI == null) return;
-            UI.SetVisible(Enabled);
-            UI.SetScale(Scale);
-            if (JobBars.Config.GaugePositionType == GaugePositionType.Split) UI.SetSplitPosition(Position);
-
-            ApplyUIVisual_();
-        }
-        protected abstract void ApplyUIVisual_();
-
-        public void UnloadUI() {
-            UI.Cleanup();
+        public override void Cleanup() {
+            Tracker = null;
             UI = null;
         }
 
-        public abstract void ProcessAction(Item action);
+        public override void Tick() {
+            TickGauge();
 
-        public abstract void Tick();
-
-        public void TickActive() => UI?.SetVisible(!HideWhenInactive || GetActive());
-
-        protected abstract bool GetActive();
-
-        public int Height => UI == null ? 0 : (int)(Scale * GetHeight());
-        public int Width => UI == null ? 0 : (int)(Scale * GetWidth());
-        protected abstract int GetHeight();
-        protected abstract int GetWidth();
-        public abstract GaugeVisualType GetVisualType();
-
-        // ========= DRAW =============
-
-        public void Draw(string id, JobIds job) {
-            var _ID = id + Name;
-            string type = this switch {
-                GaugeGCD _ => "GCDS",
-                GaugeTimer _ => "TIMER",
-                GaugeProc _ => "PROCS",
-                GaugeCharges _ => "CHARGES",
-                GaugeStacks _ => "STACKS",
-                GaugeResources _ => "RESOURCES",
-                _ => ""
-            };
-
-            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
-
-            if (JobBars.Config.GaugeEnabled.Draw($"Enabled{_ID}", Name, out var newEnabled)) {
-                Enabled = newEnabled;
-                ApplyUIVisual();
-                JobBars.GaugeManager.UpdatePositionScale(job);
-            }
-
-            if (this is not GaugeCharges && this is not GaugeResources &&
-                JobBars.Config.GaugeHideInactive.Draw($"Hide When Inactive{_ID}", Name, HideWhenInactive, out var newHideWhenInactive)
-            ) {
-                HideWhenInactive = newHideWhenInactive;
-            }
-
-            if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{_ID}", Name, out var newScale)) {
-                Scale = Math.Max(0.1f, newScale);
-                ApplyUIVisual();
-                JobBars.GaugeManager.UpdatePositionScale(job);
-            }
-
-            if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
-                if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{_ID}", Name, out var newPos)) {
-                    SetSplitPosition(newPos);
-                }
-            }
-            else {
-                if (JobBars.Config.GaugeOrder.Draw($"Order{_ID}", Name, Order, out var newOrder)) {
-                    Order = newOrder;
-                    JobBars.GaugeManager.UpdatePositionScale(job);
-                }
-            }
-
-            DrawGaugeOptions(_ID);
-            DrawGauge(_ID, job);
-
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+            UI.SetVisible(!Tracker.GetConfig().HideWhenInactive || Tracker.GetActive());
         }
 
-        protected abstract void DrawGauge(string _ID, JobIds job);
+        public override void SetPosition(Vector2 position) => UI.SetPosition(position);
 
-        private void DrawGaugeOptions(string _ID) {
-            var type = GetVisualType();
+        public override void SetSplitPosition(Vector2 position) => UI.SetSplitPosition(position);
 
-            if (type == GaugeVisualType.Bar || type == GaugeVisualType.BarDiamondCombo) {
-                if (JobBars.Config.GaugeShowText.Draw($"Show Text{_ID}", Name, ShowText, out var newShowText)) {
-                    ShowText = newShowText;
-                    ApplyUIVisual();
-                }
-            }
+        public override void UpdateVisual() {
+            UI.SetVisible(Tracker.GetConfig().Enabled);
+            UI.SetScale(Tracker.GetConfig().Scale);
 
-            if (type == GaugeVisualType.Bar) {
-                if (JobBars.Config.GaugeSwapText.Draw($"Swap Text Position{_ID}", Name, SwapText, out var newSwapText)) {
-                    SwapText = newSwapText;
-                    ApplyUIVisual();
-                }
-            }
+            UpdateVisualGauge();
         }
 
-        public void DrawPositionBox() {
-            if (JobBars.DrawPositionView(Name + "##GaugePosition", Position, out var pos)) {
-                JobBars.Config.GaugeSplitPosition.Set(Name, pos);
-                SetSplitPosition(pos);
-            }
-        }
+        public override int GetHeight() => (int)(Tracker.GetConfig().Scale * GetHeightGauge());
 
-        private void SetSplitPosition(Vector2 pos) {
-            ApplyUIVisual();
-            JobBars.SetWindowPosition(Name + "##GaugePosition", pos);
-        }
+        public override int GetWidth() => (int)(Tracker.GetConfig().Scale * GetWidthGauge());
+
+        public override int GetYOffset() => UI.GetHorizontalYOffset();
+
+        protected abstract void TickGauge();
+
+        protected abstract void UpdateVisualGauge();
+
+        protected abstract int GetHeightGauge();
+
+        protected abstract int GetWidthGauge();
     }
 }

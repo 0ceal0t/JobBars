@@ -205,6 +205,11 @@ namespace JobBars.UI {
             }
         }
 
+        public void SetValue(int idx, bool value) {
+            if (value) SelectPart(idx);
+            else UnselectPart(idx);
+        }
+
         public void SelectPart(int idx) {
             UIHelper.Show(Ticks[idx].SelectedContainer);
         }

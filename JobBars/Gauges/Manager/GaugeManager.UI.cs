@@ -1,14 +1,12 @@
-﻿using Dalamud.Logging;
-using ImGuiNET;
+﻿using ImGuiNET;
 using JobBars.Data;
 using System;
 using System.Numerics;
 
-namespace JobBars.Gauges {
+namespace JobBars.Gauges.Manager {
     public partial class GaugeManager {
         private bool LOCKED = true;
-
-        public static readonly GaugePositionType[] ValidGaugePositionType = (GaugePositionType[])Enum.GetValues(typeof(GaugePositionType));
+        private static readonly GaugePositionType[] ValidGaugePositionType = (GaugePositionType[])Enum.GetValues(typeof(GaugePositionType));
 
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref JobBars.Config.GaugesEnabled)) {
@@ -102,28 +100,21 @@ namespace JobBars.Gauges {
             ImGui.Unindent();
         }
 
-        // ==========================================
-
-        protected override void DrawItem(Gauge item) => item.Draw(_ID, SelectedJob);
-
-        protected override string ItemToString(Gauge item) => item.Name;
-
         public void DrawPositionBox() {
-            if (!LOCKED) {
-                if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
-                    foreach (var gauge in CurrentGauges) gauge.DrawPositionBox();
+            if (LOCKED) return;
+            if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
+                foreach (var config in CurrentConfigs) config.DrawPositionBox();
+            }
+            else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) {
+                var currentPos = GetPerJobPosition();
+                if (JobBars.DrawPositionView($"Gauge Bar ({CurrentJob})##GaugePosition", currentPos, out var pos)) {
+                    SetGaugePositionPerJob(CurrentJob, pos);
                 }
-                else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) {
-                    var currentPos = GetPerJobPosition();
-                    if (JobBars.DrawPositionView($"Gauge Bar ({CurrentJob})##GaugePosition", currentPos, out var pos)) {
-                        SetGaugePositionPerJob(CurrentJob, pos);
-                    }
-                }
-                else { // GLOBAL
-                    var currentPos = JobBars.Config.GaugePositionGlobal;
-                    if (JobBars.DrawPositionView("Gauge Bar##GaugePosition", currentPos, out var pos)) {
-                        SetGaugePositionGlobal(pos);
-                    }
+            }
+            else { // GLOBAL
+                var currentPos = JobBars.Config.GaugePositionGlobal;
+                if (JobBars.DrawPositionView("Gauge Bar##GaugePosition", currentPos, out var pos)) {
+                    SetGaugePositionGlobal(pos);
                 }
             }
         }
@@ -141,5 +132,17 @@ namespace JobBars.Gauges {
             JobBars.Config.Save();
             JobBars.Builder.SetGaugePosition(pos);
         }
+
+        // ==========================================
+
+        protected override void DrawItem(GaugeConfig item) {
+            item.Draw(_ID, out bool newPos, out bool newVisual, out bool reset);
+            if (SelectedJob != CurrentJob) return;
+            if (newPos) UpdatePositionScale();
+            if (newVisual) UpdateVisuals();
+            if (reset) Reset();
+        }
+
+        protected override string ItemToString(GaugeConfig item) => item.Name;
     }
 }

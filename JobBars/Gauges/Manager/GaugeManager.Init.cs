@@ -1,10 +1,17 @@
-﻿using JobBars.Data;
+﻿using Dalamud;
+using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
 using System;
-using Dalamud;
 
-namespace JobBars.Gauges {
+using JobBars.Gauges.GCD;
+using JobBars.Gauges.Stacks;
+using JobBars.Gauges.Timer;
+using JobBars.Gauges.Charges;
+using JobBars.Gauges.Procs;
+using JobBars.Gauges.Resources;
+
+namespace JobBars.Gauges.Manager {
     public unsafe partial class GaugeManager {
         private void Init() {
             string procText = JobBars.ClientState.ClientLanguage switch {
@@ -15,10 +22,10 @@ namespace JobBars.Gauges {
                 _ => "触发"
             };
 
-            JobToValue.Add(JobIds.OTHER, Array.Empty<Gauge>());
+            JobToValue.Add(JobIds.OTHER, Array.Empty<GaugeConfig>());
             // ============ GNB ==================
-            JobToValue.Add(JobIds.GNB, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(BuffIds.NoMercy), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.GNB, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.NoMercy), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
@@ -28,16 +35,15 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ PLD ==================
-            JobToValue.Add(JobIds.PLD, new Gauge[] {
-                new GaugeStacks(UIHelper.Localize(BuffIds.SwordOath), new GaugeStacksProps {
+            JobToValue.Add(JobIds.PLD, new GaugeConfig[] {
+                new GaugeStacksConfig(UIHelper.Localize(BuffIds.SwordOath), GaugeVisualType.Diamond, new GaugeStacksProps {
                     MaxStacks = 3,
                     Triggers = new []{
                         new Item(BuffIds.SwordOath)
                     },
-                    Type = GaugeVisualType.Diamond,
                     Color = UIColor.BlueGreen
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.Requiescat), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.Requiescat), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 12,
                     Color = UIColor.LightBlue,
@@ -50,7 +56,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Requiescat)
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new GaugeSubGCDProps {
                     MaxCounter = 11,
                     MaxDuration = 25,
                     Color = UIColor.Red,
@@ -69,7 +75,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.FightOrFlight)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.GoringBlade), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.GoringBlade), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 21,
                     Color = UIColor.Orange,
                     Triggers = new []{
@@ -78,8 +84,8 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ WAR ==================
-            JobToValue.Add(JobIds.WAR, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(BuffIds.InnerRelease), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.WAR, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.InnerRelease), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.Orange,
@@ -91,7 +97,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.InnerRelease)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.StormsEye), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.StormsEye), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 60,
                     DefaultDuration = 30,
                     Color = UIColor.Red,
@@ -101,12 +107,13 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DRK ==================
-            JobToValue.Add(JobIds.DRK, new Gauge[] {
-                new GaugeResources($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeResources.DrkMp, new GaugeResourcesProps {
+            JobToValue.Add(JobIds.DRK, new GaugeConfig[] {
+                new GaugeResourcesConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.Bar, new GaugeResourcesProps {
                     Color = UIColor.Purple,
-                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f }
+                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f },
+                    Function = GaugeResourcesConfig.DrkMp
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.Red,
@@ -118,7 +125,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Delirium)
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.DarkBlue,
@@ -128,41 +135,43 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ AST ==================
-            JobToValue.Add(JobIds.AST, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.AST)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.AST, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.AST)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps {
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.GiantDominance), BuffIds.GiantDominance, UIColor.LightBlue)
+                        new ProcConfig(UIHelper.Localize(BuffIds.GiantDominance), BuffIds.GiantDominance, UIColor.LightBlue)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Combust3), new [] {
-                    new SubGaugeTimerProps {
-                        MaxDuration = 30,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(BuffIds.Combust3),
-                        Triggers = new []{
-                            new Item(BuffIds.Combust2),
-                            new Item(BuffIds.Combust3)
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Combust3), GaugeVisualType.Bar, new GaugeTimerProps {
+                    SubTimers = new [] {
+                        new GaugeSubTimerProps {
+                            MaxDuration = 30,
+                            Color = UIColor.LightBlue,
+                            SubName = UIHelper.Localize(BuffIds.Combust3),
+                            Triggers = new []{
+                                new Item(BuffIds.Combust2),
+                                new Item(BuffIds.Combust3)
+                            }
+                        },
+                        new GaugeSubTimerProps {
+                            MaxDuration = 18,
+                            Color = UIColor.LightBlue,
+                            SubName = UIHelper.Localize(BuffIds.Combust),
+                            Triggers = new []{
+                                new Item(BuffIds.Combust)
+                            }
                         }
-                    },
-                    new SubGaugeTimerProps {
-                        MaxDuration = 18,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(BuffIds.Combust),
-                        Triggers = new []{
-                            new Item(BuffIds.Combust)
-                        }
-                    },
+                    }
                 })
             });
             // ============ SCH ==================
-            JobToValue.Add(JobIds.SCH, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.SCH)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.SCH, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.SCH)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps{
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
+                        new ProcConfig(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
                     },
                     NoSoundOnProc = true
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Biolysis), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Biolysis), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.BlueGreen,
                     Triggers = new []{
@@ -173,36 +182,38 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ WHM ==================
-            JobToValue.Add(JobIds.WHM, new Gauge[] {
-                new GaugeTimer(UIHelper.Localize(BuffIds.Dia), new []{
-                    new SubGaugeTimerProps {
-                        MaxDuration = 30,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(BuffIds.Dia),
-                        Triggers = new []{
-                            new Item(BuffIds.Dia)
-                        }
-                    },
-                    new SubGaugeTimerProps {
-                        MaxDuration = 18,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(BuffIds.Aero2),
-                        Triggers = new [] {
-                            new Item(BuffIds.Aero),
-                            new Item(BuffIds.Aero2)
+            JobToValue.Add(JobIds.WHM, new GaugeConfig[] {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Dia), GaugeVisualType.Bar, new GaugeTimerProps {
+                    SubTimers = new [] {
+                        new GaugeSubTimerProps {
+                            MaxDuration = 30,
+                            Color = UIColor.LightBlue,
+                            SubName = UIHelper.Localize(BuffIds.Dia),
+                            Triggers = new []{
+                                new Item(BuffIds.Dia)
+                            }
+                        },
+                        new GaugeSubTimerProps {
+                            MaxDuration = 18,
+                            Color = UIColor.LightBlue,
+                            SubName = UIHelper.Localize(BuffIds.Aero2),
+                            Triggers = new [] {
+                                new Item(BuffIds.Aero),
+                                new Item(BuffIds.Aero2)
+                            }
                         }
                     }
                 })
             });
             // ============ BRD ==================
-            JobToValue.Add(JobIds.BRD, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.BRD)} {procText}", new GaugeProcProps {
+            JobToValue.Add(JobIds.BRD, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.BRD)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps {
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, UIColor.Yellow),
-                        new Proc(UIHelper.Localize(ActionIds.BloodLetter), ActionIds.BloodLetter, UIColor.Red)
+                        new ProcConfig(UIHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, UIColor.Yellow),
+                        new ProcConfig(UIHelper.Localize(ActionIds.BloodLetter), ActionIds.BloodLetter, UIColor.Red)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.VenomousBite), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.VenomousBite), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.Purple,
                     Triggers = new []{
@@ -210,7 +221,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.VenomousBite)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Stormbite), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Stormbite), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.LightBlue,
                     Triggers = new []{
@@ -218,7 +229,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Stormbite),
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.RagingStrikes), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.RagingStrikes), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 9,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
@@ -228,8 +239,8 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DRG ==================
-            JobToValue.Add(JobIds.DRG, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(BuffIds.LanceCharge), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.DRG, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.LanceCharge), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 8,
                     MaxDuration = 20,
                     Color = UIColor.Red,
@@ -237,7 +248,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.LanceCharge)
                     },
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.RightEye), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.RightEye), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 8,
                     MaxDuration = 20,
                     Color = UIColor.Orange,
@@ -246,10 +257,9 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.RightEye2)
                     }
                 }),
-                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.DRG)})", new GaugeChargesProps {
+                new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.DRG)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -271,44 +281,45 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ SMN ==================
-            JobToValue.Add(JobIds.SMN, new Gauge[] {
-                new GaugeStacks(UIHelper.Localize(BuffIds.Ruin4), new GaugeStacksProps {
+            JobToValue.Add(JobIds.SMN, new GaugeConfig[] {
+                new GaugeStacksConfig(UIHelper.Localize(BuffIds.Ruin4), GaugeVisualType.Diamond, new GaugeStacksProps {
                     MaxStacks = 4,
                     Triggers = new []{
                         new Item(BuffIds.Ruin4)
                     },
-                    Type = GaugeVisualType.Diamond,
                     Color = UIColor.DarkBlue
                 }),
-                new GaugeGCD(UIHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new []{
-                    new SubGaugeGCDProps {
-                        MaxCounter = 8,
-                        MaxDuration = 21,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(ActionIds.SummonBahamut),
-                        Increment = new []{
-                            new Item(ActionIds.Wyrmwave)
+                new GaugeGCDConfig(UIHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new GaugeGCDProps {
+                    SubGCDs = new [] {
+                        new GaugeSubGCDProps {
+                            MaxCounter = 8,
+                            MaxDuration = 21,
+                            Color = UIColor.LightBlue,
+                            SubName = UIHelper.Localize(ActionIds.SummonBahamut),
+                            Increment = new []{
+                                new Item(ActionIds.Wyrmwave)
+                            },
+                            Triggers = new []{
+                                new Item(ActionIds.SummonBahamut),
+                                new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
+                            }
                         },
-                        Triggers = new []{
-                            new Item(ActionIds.SummonBahamut),
-                            new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
-                        }
-                    },
-                    new SubGaugeGCDProps {
-                        MaxCounter = 8,
-                        MaxDuration = 21,
-                        Color = UIColor.Orange,
-                        SubName = UIHelper.Localize(ActionIds.FirebirdTrance),
-                        Increment = new []{
-                            new Item(ActionIds.ScarletFlame)
-                        },
-                        Triggers = new []{
-                            new Item(ActionIds.FirebirdTrance),
-                            new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
+                        new GaugeSubGCDProps {
+                            MaxCounter = 8,
+                            MaxDuration = 21,
+                            Color = UIColor.Orange,
+                            SubName = UIHelper.Localize(ActionIds.FirebirdTrance),
+                            Increment = new []{
+                                new Item(ActionIds.ScarletFlame)
+                            },
+                            Triggers = new []{
+                                new Item(ActionIds.FirebirdTrance),
+                                new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
+                            }
                         }
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Bio3), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Bio3), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.HealthGreen,
                     Triggers = new []{
@@ -317,7 +328,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Bio3)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Miasma3), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Miasma3), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 30,
                     Color = UIColor.BlueGreen,
                     Triggers = new []{
@@ -327,32 +338,31 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ SAM ==================
-            JobToValue.Add(JobIds.SAM, new Gauge[] {
-                new GaugeTimer(UIHelper.Localize(BuffIds.Jinpu), new SubGaugeTimerProps {
+            JobToValue.Add(JobIds.SAM, new GaugeConfig[] {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Jinpu), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 40,
                     Color = UIColor.DarkBlue,
                     Triggers = new []{
                         new Item(BuffIds.Jinpu)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Shifu), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Shifu), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 40,
                     Color = UIColor.Red,
                     Triggers = new []{
                         new Item(BuffIds.Shifu)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Higanbana), new SubGaugeTimerProps {
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Higanbana), GaugeVisualType.Bar, new GaugeSubTimerProps {
                     MaxDuration = 60,
                     Color = UIColor.Orange,
                     Triggers = new []{
                         new Item(BuffIds.Higanbana)
                     }
                 }),
-                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.SAM)})", new GaugeChargesProps {
+                new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.SAM)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -374,46 +384,46 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ BLM ==================
-            JobToValue.Add(JobIds.BLM, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.BLM)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.BLM, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.BLM)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps{
                     ShowText = true,
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, UIColor.Orange),
-                        new Proc(UIHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, UIColor.LightBlue)
+                        new ProcConfig(UIHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, UIColor.Orange),
+                        new ProcConfig(UIHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, UIColor.LightBlue)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Thunder3), new []{
-                    new SubGaugeTimerProps
-                    {
-                        MaxDuration = 24,
-                        Color = UIColor.DarkBlue,
-                        SubName = UIHelper.Localize(BuffIds.Thunder3),
-                        Triggers = new []{
-                            new Item(BuffIds.Thunder3),
-                            new Item(BuffIds.Thunder)
-                        }
-                    },
-                    new SubGaugeTimerProps
-                    {
-                        MaxDuration = 18,
-                        Color = UIColor.Purple,
-                        SubName = UIHelper.Localize(BuffIds.Thunder4),
-                        Triggers = new []{
-                            new Item(BuffIds.Thunder4),
-                            new Item(BuffIds.Thunder2)
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Thunder3), GaugeVisualType.Bar, new GaugeTimerProps {
+                    SubTimers = new[] {
+                        new GaugeSubTimerProps {
+                            MaxDuration = 24,
+                            Color = UIColor.DarkBlue,
+                            SubName = UIHelper.Localize(BuffIds.Thunder3),
+                            Triggers = new []{
+                                new Item(BuffIds.Thunder3),
+                                new Item(BuffIds.Thunder)
+                            }
+                        },
+                        new GaugeSubTimerProps {
+                            MaxDuration = 18,
+                            Color = UIColor.Purple,
+                            SubName = UIHelper.Localize(BuffIds.Thunder4),
+                            Triggers = new []{
+                                new Item(BuffIds.Thunder4),
+                                new Item(BuffIds.Thunder2)
+                            }
                         }
                     }
                 })
             });
             // ============ RDM ==================
-            JobToValue.Add(JobIds.RDM, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.RDM)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.RDM, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.RDM)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps{
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.VerstoneReady), BuffIds.VerstoneReady, UIColor.NoColor),
-                        new Proc(UIHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, UIColor.Red)
+                        new ProcConfig(UIHelper.Localize(BuffIds.VerstoneReady), BuffIds.VerstoneReady, UIColor.NoColor),
+                        new ProcConfig(UIHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, UIColor.Red)
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 10,
                     Color = UIColor.DarkBlue,
@@ -421,18 +431,17 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Manafication)
                     }
                 }),
-                new GaugeStacks(UIHelper.Localize(BuffIds.Acceleration), new GaugeStacksProps {
+                new GaugeStacksConfig(UIHelper.Localize(BuffIds.Acceleration), GaugeVisualType.Diamond, new GaugeStacksProps {
                     MaxStacks = 3,
                     Triggers = new []{
                         new Item(BuffIds.Acceleration)
                     },
-                    Type = GaugeVisualType.Diamond,
                     Color = UIColor.PurplePink
                 }),
             });
             // ============ MCH ==================
-            JobToValue.Add(JobIds.MCH, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(ActionIds.Hypercharge), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.MCH, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(ActionIds.Hypercharge), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 9,
                     Color = UIColor.Orange,
@@ -444,7 +453,7 @@ namespace JobBars.Gauges {
                         new Item(ActionIds.Hypercharge)
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 6,
                     MaxDuration = 10,
                     Color = UIColor.Red,
@@ -452,9 +461,8 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Wildfire)
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.GaussRound), new GaugeChargesProps {
+                new GaugeChargesConfig(UIHelper.Localize(ActionIds.GaussRound), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.Red,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     SameColor = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
@@ -466,9 +474,8 @@ namespace JobBars.Gauges {
                         }
                     }
                 }),
-                new GaugeCharges(UIHelper.Localize(ActionIds.Ricochet), new GaugeChargesProps {
+                new GaugeChargesConfig(UIHelper.Localize(ActionIds.Ricochet), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     SameColor = true,
                     Parts = new []{
                         new GaugesChargesPartProps {
@@ -482,20 +489,20 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ DNC ==================
-            JobToValue.Add(JobIds.DNC, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.DNC)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.DNC, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.DNC)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps{
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.FlourishingCascade), BuffIds.FlourishingCascade, UIColor.BrightGreen),
-                        new Proc(UIHelper.Localize(BuffIds.FlourishingFountain), BuffIds.FlourishingFountain, UIColor.Yellow),
-                        new Proc(UIHelper.Localize(BuffIds.FlourishingWindmill), BuffIds.FlourishingWindmill, UIColor.DarkBlue),
-                        new Proc(UIHelper.Localize(BuffIds.FlourishingShower), BuffIds.FlourishingShower, UIColor.Red),
-                        new Proc(UIHelper.Localize(BuffIds.FlourishingFanDance), BuffIds.FlourishingFanDance, UIColor.HealthGreen)
+                        new ProcConfig(UIHelper.Localize(BuffIds.FlourishingCascade), BuffIds.FlourishingCascade, UIColor.BrightGreen),
+                        new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFountain), BuffIds.FlourishingFountain, UIColor.Yellow),
+                        new ProcConfig(UIHelper.Localize(BuffIds.FlourishingWindmill), BuffIds.FlourishingWindmill, UIColor.DarkBlue),
+                        new ProcConfig(UIHelper.Localize(BuffIds.FlourishingShower), BuffIds.FlourishingShower, UIColor.Red),
+                        new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFanDance), BuffIds.FlourishingFanDance, UIColor.HealthGreen)
                     }
                 })
             });
             // ============ NIN ==================
-            JobToValue.Add(JobIds.NIN, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.NIN, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,
                     MaxDuration = 15,
                     Color = UIColor.Red,
@@ -503,10 +510,9 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Bunshin)
                     }
                 }),
-                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.NIN)})", new GaugeChargesProps {
+                new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.NoColor,
                     SameColor = true,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -528,8 +534,8 @@ namespace JobBars.Gauges {
                 })
             });
             // ============ MNK ==================
-            JobToValue.Add(JobIds.MNK, new Gauge[] {
-                new GaugeGCD(UIHelper.Localize(BuffIds.PerfectBalance), GaugeVisualType.Arrow, new SubGaugeGCDProps {
+            JobToValue.Add(JobIds.MNK, new GaugeConfig[] {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.PerfectBalance), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 6,
                     MaxDuration = 15,
                     Color = UIColor.Orange,
@@ -537,7 +543,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.PerfectBalance)
                     }
                 }),
-                new GaugeGCD(UIHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new SubGaugeGCDProps {
+                new GaugeGCDConfig(UIHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new GaugeSubGCDProps {
                     MaxCounter = 11,
                     MaxDuration = 20,
                     Color = UIColor.Red,
@@ -545,7 +551,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.RiddleOfFire)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.TwinSnakes), new SubGaugeTimerProps
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.TwinSnakes), GaugeVisualType.Bar, new GaugeSubTimerProps
                 {
                     MaxDuration = 15,
                     Color = UIColor.PurplePink,
@@ -553,7 +559,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.TwinSnakes)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Demolish), new SubGaugeTimerProps
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Demolish), GaugeVisualType.Bar, new GaugeSubTimerProps
                 {
                     MaxDuration = 18,
                     Color = UIColor.Yellow,
@@ -561,9 +567,8 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.Demolish)
                     }
                 }),
-                new GaugeCharges($"{UIHelper.Localize(ActionIds.TrueNorth)}/{UIHelper.Localize(ActionIds.RiddleOfEarth)}", new GaugeChargesProps {
+                new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)}/{UIHelper.Localize(ActionIds.RiddleOfEarth)}", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                     BarColor = UIColor.LightBlue,
-                    Type = GaugeVisualType.BarDiamondCombo,
                     Parts = new []{
                         new GaugesChargesPartProps {
                             Diamond = true,
@@ -602,15 +607,15 @@ namespace JobBars.Gauges {
                 }),
             });
             // ============ BLU ==================
-            JobToValue.Add(JobIds.BLU, new Gauge[] {
-                new GaugeProc($"{UIHelper.Localize(JobIds.BLU)} {procText}", new GaugeProcProps{
+            JobToValue.Add(JobIds.BLU, new GaugeConfig[] {
+                new GaugeProcsConfig($"{UIHelper.Localize(JobIds.BLU)} {procText}", GaugeVisualType.Diamond, new GaugeProcProps{
                     Procs = new []{
-                        new Proc(UIHelper.Localize(BuffIds.AstralAttenuation), BuffIds.AstralAttenuation, UIColor.NoColor),
-                        new Proc(UIHelper.Localize(BuffIds.UmbralAttenuation), BuffIds.UmbralAttenuation, UIColor.DarkBlue),
-                        new Proc(UIHelper.Localize(BuffIds.PhysicalAttenuation), BuffIds.PhysicalAttenuation, UIColor.Orange)
+                        new ProcConfig(UIHelper.Localize(BuffIds.AstralAttenuation), BuffIds.AstralAttenuation, UIColor.NoColor),
+                        new ProcConfig(UIHelper.Localize(BuffIds.UmbralAttenuation), BuffIds.UmbralAttenuation, UIColor.DarkBlue),
+                        new ProcConfig(UIHelper.Localize(BuffIds.PhysicalAttenuation), BuffIds.PhysicalAttenuation, UIColor.Orange)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.BluBleed), new SubGaugeTimerProps
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.BluBleed), GaugeVisualType.Bar, new GaugeSubTimerProps
                 {
                     MaxDuration = 60,
                     Color = UIColor.Red,
@@ -618,7 +623,7 @@ namespace JobBars.Gauges {
                         new Item(BuffIds.BluBleed)
                     }
                 }),
-                new GaugeTimer(UIHelper.Localize(BuffIds.Poison), new SubGaugeTimerProps
+                new GaugeTimerConfig(UIHelper.Localize(BuffIds.Poison), GaugeVisualType.Bar, new GaugeSubTimerProps
                 {
                     MaxDuration = 15,
                     Color = UIColor.HealthGreen,

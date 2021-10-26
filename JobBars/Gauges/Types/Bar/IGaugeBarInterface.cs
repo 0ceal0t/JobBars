@@ -1,0 +1,23 @@
+﻿using JobBars.UI;
+
+namespace JobBars.Gauges.Types.Bar {
+    public interface IGaugeBarInterface {
+        // ===== SETUP ======
+
+        public float[] GetBarSegments();
+
+        public bool GetBarTextVisible();
+
+        public bool GetBarTextSwap();
+
+        public ElementColor GetColor();
+
+        // ===== TICK =======
+
+        public bool GetBarDanger();
+
+        public string GetBarText();
+
+        public float GetBarPercent();
+    }
+}
