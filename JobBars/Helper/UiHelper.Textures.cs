@@ -3,6 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace JobBars.Helper {
     public unsafe struct Asset_PartList {
@@ -93,7 +94,8 @@ namespace JobBars.Helper {
             var ret = CreateAssets((uint)paths.Count);
             for (int i = 0; i < paths.Count; i++) {
                 var arg3 = JobBars.Config.Use4K ? 2u : 1u;
-                TextureLoadPath((AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8), paths[i], arg3);
+                var tex = (AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8);
+                TextureLoadPath(tex, paths[i], arg3);
             }
             return ret;
         }

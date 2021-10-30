@@ -35,7 +35,7 @@ namespace JobBars.Gauges.Types.Diamond {
             UI.SetMaxValue(Tracker.GetCurrentMaxTicks());
 
             var colors = Tracker.GetDiamondColors();
-            for(int i = 0; i < colors.Length; i++) {
+            for (int i = 0; i < colors.Length; i++) {
                 UI.SetColor(colors[i], i);
             }
         }

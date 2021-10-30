@@ -103,7 +103,7 @@ namespace JobBars.Gauges.Timer {
                     refreshVisuals = true;
                 }
             }
-            if (refreshVisuals) UI.UpdateVisual(); 
+            if (refreshVisuals) UI.UpdateVisual();
         }
 
         protected override void TickTracker() {

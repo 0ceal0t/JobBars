@@ -52,6 +52,7 @@ namespace JobBars.Data {
 
         public int GaugeSoundEffect = 0;
         public float GaugeLowTimerWarning = 4.0f;
+        public bool GaugePlayCompletionSound = true;
 
         // ===== BUFFS ======
 

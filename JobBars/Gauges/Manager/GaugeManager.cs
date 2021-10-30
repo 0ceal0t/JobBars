@@ -32,7 +32,7 @@ namespace JobBars.Gauges.Manager {
 
 
             CurrentJob = job;
-            for(var idx = 0; idx < CurrentConfigs.Length; idx++) {
+            for (var idx = 0; idx < CurrentConfigs.Length; idx++) {
                 var config = CurrentConfigs[idx];
 
                 CurrentGauges.Add(config switch {

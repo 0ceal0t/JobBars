@@ -54,7 +54,7 @@ namespace JobBars.Gauges.GCD {
         public GaugeSubGCDConfig[] SubGCDs { get; private set; }
 
         public GaugeGCDConfig(string name, GaugeVisualType type, GaugeSubGCDProps subConfig) : this(name, type, new GaugeGCDProps {
-            SubGCDs = new [] { subConfig }
+            SubGCDs = new[] { subConfig }
         }) { }
 
         public GaugeGCDConfig(string name, GaugeVisualType type, GaugeGCDProps props) : base(name, type) {

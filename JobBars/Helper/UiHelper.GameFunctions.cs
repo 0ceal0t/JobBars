@@ -62,6 +62,7 @@ namespace JobBars.Helper {
         }
 
         public static void PlaySeComplete() {
+            if (!JobBars.Config.GaugePlayCompletionSound) return;
             PlaySoundEffect(78, 0, 0);
         }
 
