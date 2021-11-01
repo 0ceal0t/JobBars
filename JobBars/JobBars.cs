@@ -71,24 +71,6 @@ namespace JobBars {
         private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78] || Condition[ConditionFlag.BetweenAreas] || Condition[ConditionFlag.BetweenAreas51];
         private bool LastCutscene = false;
 
-        // =====================
-
-        [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
-        private unsafe delegate void* RequestFileDelegate(IntPtr a1, IntPtr a2, IntPtr a3, byte a4);
-        private RequestFileDelegate RequestFile;
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate IntPtr GetFileManagerDelegate();
-        private GetFileManagerDelegate GetFileManager;
-
-        [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
-        private unsafe delegate IntPtr ReloadTextureDelegate(IntPtr a1);
-        private ReloadTextureDelegate ReloadTextureResource;
-
-        private DateTime StartTime;
-        private bool TexturesRefreshed = false;
-
-
         public JobBars(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
@@ -130,17 +112,9 @@ namespace JobBars {
 
             IconBuilder = new UIIconManager();
 
-
-            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>(SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 2D ?? ?? ?? ?? 49 8B CD"));
-            RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>(SigScanner.ScanText("E8 ?? ?? ?? ?? F0 FF 4F 5C 48 8D 4F 30"));
-            ReloadTextureResource = Marshal.GetDelegateForFunctionPointer<ReloadTextureDelegate>(SigScanner.ScanText("40 53 48 83 EC 20 48 83 B9 ?? ?? ?? ?? ?? 48 8B D9 74 52"));
-
             // ==========================
 
             InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
-            StartTime = DateTime.Now;
-
-            RefreshTextures();
 
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
             ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
@@ -154,7 +128,6 @@ namespace JobBars {
             IconDimmedHook = new Hook<IconDimmedDelegate>(iconDimmedPtr, IconDimmedDetour);
             IconDimmedHook.Enable();
 
-
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
             PluginInterface.UiBuilder.Draw += Animate;
             PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfig;
@@ -162,8 +135,6 @@ namespace JobBars {
             ClientState.TerritoryChanged += ZoneChanged;
             SetupCommands();
         }
-
-
 
         private void InitializeUI() { // this only ever gets run ONCE
             // these are created before the addons are even visible, so they aren't attached yet
@@ -220,12 +191,6 @@ namespace JobBars {
         private void Animate() => Animation.Tick();
 
         private void FrameworkOnUpdate(Framework framework) {
-            if (!TexturesRefreshed && (DateTime.Now - StartTime).TotalSeconds > 5) {
-                TexturesRefreshed = true;
-                PluginLog.Log("==== REFRESHING TEXTURES =====");
-                RefreshTextures();
-            }
-
             var addon = UIHelper.ChatLogAddon;
 
             if (!LoggedOut && RecreateUI) {
@@ -337,27 +302,6 @@ namespace JobBars {
 
         public void RemoveCommands() {
             CommandManager.RemoveHandler("/jobbars");
-        }
-
-        private void RefreshTextures() {
-            var fileManager = GetFileManager();
-            for (int i = 0; i < Builder.GaugeBuffAssets.AssetCount; i++) {
-                var asset = Builder.GaugeBuffAssets.Asset[i];
-                if (asset.AtkTexture.TextureType != TextureType.Resource) continue;
-                if (!asset.AtkTexture.IsTextureReady()) continue;
-
-                var resource = new IntPtr(asset.AtkTexture.Resource->TexFileResourceHandle);
-                if (resource == IntPtr.Zero) continue;
-
-                RequestFile(fileManager, resource + 56, resource, 1);
-
-                var oldKernel = Marshal.ReadIntPtr(resource + 0x118);
-                var newKernel = Marshal.ReadIntPtr(resource + 0x120);
-
-                if (newKernel == IntPtr.Zero || oldKernel == newKernel) continue;
-
-                ReloadTextureResource(resource);
-            }
         }
     }
 }

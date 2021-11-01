@@ -4,6 +4,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.GameStructs;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
@@ -14,15 +15,29 @@ namespace JobBars.Helper {
         public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
         public static TextureLoadPathDelegate TextureLoadPath { get; private set; }
 
+        [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
+        public unsafe delegate void* GetResourceSyncDelegate(IntPtr pFileManager, uint* pCategoryId, char* pResourceType, uint* pResourceHash, char* pPath, void* pUnknown);
+        public static GetResourceSyncDelegate GetResourceSync { get; private set; }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate IntPtr GetFileManagerDelegate();
+        public static GetFileManagerDelegate GetFileManager { get; private set; }
+
         private static IntPtr TargetAddress;
+
+        private static Crc32 Crc32;
 
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
             PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
             TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
+            GetResourceSync = Marshal.GetDelegateForFunctionPointer<GetResourceSyncDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00"));
+            GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>(JobBars.SigScanner.ScanText("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01"));
             TargetAddress = JobBars.SigScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
             SetupSheets();
+
+            Crc32 = new Crc32();
 
             Ready = true;
         }

@@ -1,9 +1,11 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
+using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace JobBars.Helper {
     public unsafe struct Asset_PartList {
@@ -93,11 +95,45 @@ namespace JobBars.Helper {
         public unsafe static AtkUldAsset* CreateAssets(List<string> paths) {
             var ret = CreateAssets((uint)paths.Count);
             for (int i = 0; i < paths.Count; i++) {
-                var arg3 = JobBars.Config.Use4K ? 2u : 1u;
+                var hd = JobBars.Config.Use4K ? 2u : 1u;
                 var tex = (AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8);
-                TextureLoadPath(tex, paths[i], arg3);
+                var path = paths[i];
+
+                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path);
+                TextureLoadPath(tex, resolvedPath, 1); // load as non-HD so that the "_hr1" doesn't get appended back again
+                Marshal.WriteByte(new IntPtr(tex->Resource) + 0x1a, JobBars.Config.Use4K ? (byte)2 : (byte)1); // switch back to HD if necessary
             }
             return ret;
+        }
+
+        private unsafe static string GetResolvedPath(string texPath) {
+            var pathBytes = Encoding.ASCII.GetBytes(texPath);
+            var bPath = stackalloc byte[pathBytes.Length + 1];
+            Marshal.Copy(pathBytes, 0, new IntPtr(bPath), pathBytes.Length);
+            var pPath = (char*)bPath;
+
+            var typeBytes = Encoding.ASCII.GetBytes("xet");
+            var bType = stackalloc byte[typeBytes.Length + 1];
+            Marshal.Copy(typeBytes, 0, new IntPtr(bType), typeBytes.Length);
+            var pResourceType = (char*)bType;
+
+            var categoryBytes = BitConverter.GetBytes((uint)6);
+            var bCategory = stackalloc byte[categoryBytes.Length + 1];
+            Marshal.Copy(categoryBytes, 0, new IntPtr(bCategory), categoryBytes.Length);
+            var pCategoryId = (uint*)bCategory;
+
+            Crc32.Init();
+            Crc32.Update(pathBytes);
+            var hashBytes = BitConverter.GetBytes(Crc32.Checksum);
+            var bHash = stackalloc byte[hashBytes.Length + 1];
+            Marshal.Copy(hashBytes, 0, new IntPtr(bHash), hashBytes.Length);
+            var pResourceHash = (uint*)bHash;
+
+            var resource = (TextureResourceHandle*) GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
+            var resolvedPath = resource->ResourceHandle.FileName.ToString();
+            resource->ResourceHandle.DecRef(); // not actually using this
+
+            return resolvedPath;
         }
 
         public unsafe static AtkUldAsset* CreateAssets(uint assetCount) {
