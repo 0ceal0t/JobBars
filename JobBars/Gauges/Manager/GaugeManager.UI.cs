@@ -85,7 +85,9 @@ namespace JobBars.Gauges.Manager {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Play Completion Sound", ref JobBars.Config.GaugePlayCompletionSound)) {
+            ImGui.SetNextItemWidth(50f);
+            if (ImGui.InputInt("Completion Sound Effect (0 = off)", ref JobBars.Config.GaugeCompletionSoundEffect, 0)) {
+                if (JobBars.Config.GaugeCompletionSoundEffect < 0) JobBars.Config.GaugeCompletionSoundEffect = 0;
                 JobBars.Config.Save();
             }
 

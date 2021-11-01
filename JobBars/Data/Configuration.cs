@@ -51,8 +51,8 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeTimerOffset = new(0f);
 
         public int GaugeSoundEffect = 0;
+        public int GaugeCompletionSoundEffect = 78;
         public float GaugeLowTimerWarning = 4.0f;
-        public bool GaugePlayCompletionSound = true;
 
         // ===== BUFFS ======
 

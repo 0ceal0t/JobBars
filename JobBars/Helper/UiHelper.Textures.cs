@@ -99,7 +99,7 @@ namespace JobBars.Helper {
                 var tex = (AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8);
                 var path = paths[i];
 
-                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path);
+                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path); // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
                 TextureLoadPath(tex, resolvedPath, 1); // load as non-HD so that the "_hr1" doesn't get appended back again
                 Marshal.WriteByte(new IntPtr(tex->Resource) + 0x1a, JobBars.Config.Use4K ? (byte)2 : (byte)1); // switch back to HD if necessary
             }
