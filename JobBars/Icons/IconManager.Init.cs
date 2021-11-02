@@ -200,7 +200,7 @@ namespace JobBars.Icons {
                     IsTimer = true,
                     Icons = new [] { ActionIds.ChaosThrust },
                     Triggers = new[] {
-                        new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 30 }
+                        new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 24 }
                     }
                 })
             });

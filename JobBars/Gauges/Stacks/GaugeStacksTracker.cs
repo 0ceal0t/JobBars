@@ -56,7 +56,7 @@ namespace JobBars.Gauges.Stacks {
 
         public int GetTotalMaxTicks() => Config.MaxStacks;
 
-        public int GetTicks() => Value;
+        public int GetArrowValue() => Value;
 
         public bool[] GetDiamondValue() => SplitArray(true, false, Value, Config.MaxStacks);
 

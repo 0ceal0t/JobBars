@@ -6,6 +6,7 @@ using JobBars.UI;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
+using Dalamud.Logging;
 
 namespace JobBars.Gauges.GCD {
     public class GaugeGCDTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface, IGaugeArrowInterface {
@@ -154,16 +155,14 @@ namespace JobBars.Gauges.GCD {
 
         public int GetCurrentMaxTicks() => ActiveSubGCD.GetMaxTicks();
 
-        public ElementColor[] GetDiamondColors() => SplitArray(GetColor(), GetTicks());
+        public ElementColor[] GetDiamondColors() => SplitArray(GetColor(), GetTotalMaxTicks());
 
         public bool GetDiamondTextVisible() => false;
 
-        public bool[] GetDiamondValue() {
-            throw new NotImplementedException();
-        }
+        public bool[] GetDiamondValue() => SplitArray(true, false, ActiveSubGCD.GetTicks(), GetTotalMaxTicks());
 
         public string[] GetDiamondText() => null;
 
-        public int GetTicks() => ActiveSubGCD.GetTicks();
+        public int GetArrowValue() => ActiveSubGCD.GetTicks();
     }
 }

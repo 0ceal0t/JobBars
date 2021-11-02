@@ -12,6 +12,6 @@ namespace JobBars.Gauges.Types.Arrow {
 
         // ===== TICK =======
 
-        public int GetTicks();
+        public int GetArrowValue();
     }
 }

@@ -78,11 +78,13 @@ namespace JobBars.Helper {
 
         public static void PlaySeComplete() {
             if (JobBars.Config.GaugeCompletionSoundEffect <= 0) return;
+            if (JobBars.LastCutscene) return;
             PlaySoundEffect(JobBars.Config.GaugeCompletionSoundEffect, 0, 0);
         }
 
         public static void PlaySeProgress() {
             if (JobBars.Config.GaugeSoundEffect <= 0) return;
+            if (JobBars.LastCutscene) return;
             PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
         }
 

@@ -29,7 +29,7 @@ namespace JobBars.Gauges {
             Order = JobBars.Config.GaugeOrder.Get(Name);
             Scale = JobBars.Config.GaugeIndividualScale.Get(Name);
             HideWhenInactive = JobBars.Config.GaugeHideInactive.Get(Name);
-            SetType(type);
+            SetType(JobBars.Config.GaugeType.Get(Name, type));
         }
 
         private void SetType(GaugeVisualType type) {

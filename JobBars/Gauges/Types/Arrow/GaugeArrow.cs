@@ -17,7 +17,7 @@ namespace JobBars.Gauges.Types.Arrow {
         protected override int GetWidthGauge() => UI.GetWidth(MaxStacks);
 
         protected override void TickGauge() {
-            UI.SetValue(Tracker.GetTicks());
+            UI.SetValue(Tracker.GetArrowValue());
         }
 
         protected override void UpdateVisualGauge() {
