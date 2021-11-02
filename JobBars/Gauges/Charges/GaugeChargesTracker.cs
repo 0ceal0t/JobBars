@@ -121,18 +121,24 @@ namespace JobBars.Gauges.Charges {
 
         public int GetTotalMaxTicks() => TotalCharges;
 
-        public ElementColor[] GetDiamondColors() {
-            var ret = new List<ElementColor>();
-            foreach (var part in Config.Parts) {
-                for (int i = 0; i < part.MaxCharges; i++) ret.Add(Config.SameColor ? Config.BarColor : part.Color);
+        public ElementColor GetTickColor(int idx) {
+            if (Config.SameColor) return Config.BarColor;
+
+            var startIdx = 0;
+            foreach (var part in Config.Parts.Where(x => x.Diamond)) {
+                var endIdx = startIdx + part.MaxCharges;
+                if (idx < endIdx) return part.Color;
+                startIdx = endIdx;
             }
-            return ret.ToArray();
+            return UIColor.NoColor;
         }
 
         public bool GetDiamondTextVisible() => false;
 
-        public bool[] GetDiamondValue() => ChargesActive.ToArray();
+        public bool GetTickValue(int idx) => ChargesActive[idx];
 
-        public string[] GetDiamondText() => null;
+        public string GetDiamondText(int idx) => "";
+
+        public bool GetReverseFill() => Config.ReverseFill;
     }
 }

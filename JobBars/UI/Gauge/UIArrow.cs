@@ -38,7 +38,6 @@ namespace JobBars.UI {
 
         private static readonly int MAX = 12;
         private List<TickStruct> Ticks = new();
-        private int LastValue = 0;
 
         public UIArrow(AtkUldPartsList* partsList) : base() {
             RootRes = UIBuilder.CreateResNode();
@@ -133,28 +132,28 @@ namespace JobBars.UI {
             }
         }
 
-        public override void SetColor(ElementColor color) {
-            foreach (var tick in Ticks) {
-                UIColor.SetColor(tick.Selected, color);
-            }
-        }
-
         public void SetMaxValue(int value) {
             for (int idx = 0; idx < MAX; idx++) {
                 UIHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
             }
         }
 
-        public void SetValue(int value) {
-            for (int idx = 0; idx < MAX; idx++) {
-                UIHelper.SetVisibility(Ticks[idx].Selected, idx < value);
+        public void SetColor(int idx, ElementColor color) {
+            UIColor.SetColor(Ticks[idx].Selected, color);
+        }
 
-                if (idx < value && idx >= LastValue) { // newly added
-                    var item = (AtkResNode*)Ticks[idx].Selected;
-                    Animation.AddAnim((float f) => UIHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
-                }
+        public void SetValue(int idx, bool value) {
+            var prevVisible = Ticks[idx].Selected->AtkResNode.IsVisible;
+            UIHelper.SetVisibility(Ticks[idx].Selected, value);
+
+            if (value && !prevVisible) {
+                var item = (AtkResNode*)Ticks[idx].Selected;
+                Animation.AddAnim((float f) => UIHelper.SetScale(item, f, f), 0.2f, 2.5f, 1.0f);
             }
-            LastValue = value;
+        }
+
+        public void Clear() {
+            for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
         }
 
         public override int GetHeight(int param) => 32;

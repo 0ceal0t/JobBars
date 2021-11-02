@@ -80,15 +80,19 @@ namespace JobBars.Gauges.GCD {
 
             public ElementColor GetColor() => Config.Color;
 
+            public ElementColor GetTickColor(int _) => Config.Color;
+
             public bool GetActive() => State != GaugeState.Inactive;
 
             public int GetMaxTicks() => Config.MaxCounter;
 
-            public int GetTicks() => Value;
+            public bool GetTickValue(int idx) => idx < Value;
 
             public float GetBarPercent() => ((float)Value) / Config.MaxCounter;
 
             public string GetText() => Value.ToString();
+
+            public bool GetReverseFill() => Config.ReverseFill;
         }
 
         // =========================
@@ -155,14 +159,14 @@ namespace JobBars.Gauges.GCD {
 
         public int GetCurrentMaxTicks() => ActiveSubGCD.GetMaxTicks();
 
-        public ElementColor[] GetDiamondColors() => SplitArray(GetColor(), GetTotalMaxTicks());
+        public ElementColor GetTickColor(int idx) => ActiveSubGCD.GetTickColor(idx);
 
         public bool GetDiamondTextVisible() => false;
 
-        public bool[] GetDiamondValue() => SplitArray(true, false, ActiveSubGCD.GetTicks(), GetTotalMaxTicks());
+        public bool GetTickValue(int idx) => ActiveSubGCD.GetTickValue(idx);
 
-        public string[] GetDiamondText() => null;
+        public string GetDiamondText(int idx) => "";
 
-        public int GetArrowValue() => ActiveSubGCD.GetTicks();
+        public bool GetReverseFill() => ActiveSubGCD.GetReverseFill();
     }
 }

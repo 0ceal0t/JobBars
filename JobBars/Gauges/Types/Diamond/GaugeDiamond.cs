@@ -9,24 +9,25 @@ namespace JobBars.Gauges.Types.Diamond {
             UI = JobBars.Builder.Diamonds[idx];
             MaxStacks = Tracker.GetTotalMaxTicks();
             UI.SetMaxValue(Tracker.GetCurrentMaxTicks());
-            UI.SetValue(0);
+            UI.Clear();
         }
 
         protected override int GetHeightGauge() => UI.GetHeight(0);
 
         protected override int GetWidthGauge() => UI.GetWidth(MaxStacks);
 
+        private bool Reverse => Tracker.GetReverseFill();
+        private int Size => Tracker.GetCurrentMaxTicks();
+        private int Index(int i) => Reverse ? (Size - i - 1) : i;
+
         protected override void TickGauge() {
-            var selected = Tracker.GetDiamondValue();
-            for (int i = 0; i < selected.Length; i++) {
-                UI.SetValue(i, selected[i]);
+            for (var i = 0; i < Size; i++) {
+                UI.SetValue(i, Tracker.GetTickValue(Index(i)));
             }
 
-            var text = Tracker.GetDiamondText();
-            if (text != null) {
-                for (int i = 0; i < text.Length; i++) {
-                    UI.SetText(i, text[i]);
-                }
+            if (!Tracker.GetDiamondTextVisible()) return;
+            for (var i = 0; i < Size; i++) {
+                UI.SetText(i, Tracker.GetDiamondText(Index(i)));
             }
         }
 
@@ -34,9 +35,8 @@ namespace JobBars.Gauges.Types.Diamond {
             UI.SetTextVisible(Tracker.GetDiamondTextVisible());
             UI.SetMaxValue(Tracker.GetCurrentMaxTicks());
 
-            var colors = Tracker.GetDiamondColors();
-            for (int i = 0; i < colors.Length; i++) {
-                UI.SetColor(colors[i], i);
+            for (var i = 0; i < Size; i++) {
+                UI.SetColor(i, Tracker.GetTickColor(Index(i)));
             }
         }
     }

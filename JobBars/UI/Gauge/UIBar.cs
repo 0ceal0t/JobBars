@@ -318,7 +318,7 @@ namespace JobBars.UI {
             }
         }
 
-        public override void SetColor(ElementColor color) {
+        public void SetColor(ElementColor color) {
             UIColor.SetColor(BarMainNode, color);
         }
 

@@ -8,10 +8,12 @@ namespace JobBars.Gauges.Types.Arrow {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor GetColor();
+        public ElementColor GetTickColor(int idx);
 
         // ===== TICK =======
 
-        public int GetArrowValue();
+        public bool GetTickValue(int idx);
+
+        public bool GetReverseFill();
     }
 }

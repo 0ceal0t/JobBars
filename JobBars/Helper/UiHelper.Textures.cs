@@ -128,6 +128,7 @@ namespace JobBars.Helper {
             Marshal.Copy(typeBytes, 0, new IntPtr(bType), typeBytes.Length);
             var pResourceType = (char*)bType;
 
+            // TODO: might need to change this based on path
             var categoryBytes = BitConverter.GetBytes((uint)6);
             var bCategory = stackalloc byte[categoryBytes.Length + 1];
             Marshal.Copy(categoryBytes, 0, new IntPtr(bCategory), categoryBytes.Length);

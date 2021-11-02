@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using JobBars.Data;
@@ -109,7 +110,7 @@ namespace JobBars {
                 if (member == null) continue;
                 foreach (var entry in member.BuffDict) {
                     if (entry.Value.SourceID != ownerId) continue;
-                    if (!buffsToSearch.Contains((BuffIds)entry.Value.StatusID)) continue;
+                    if (!buffsToSearch.Contains((BuffIds)entry.Key.Id)) continue;
                     buffDict[entry.Key] = entry.Value;
                 }
             }

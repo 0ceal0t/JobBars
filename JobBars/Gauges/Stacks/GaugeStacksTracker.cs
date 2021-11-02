@@ -56,19 +56,17 @@ namespace JobBars.Gauges.Stacks {
 
         public int GetTotalMaxTicks() => Config.MaxStacks;
 
-        public int GetArrowValue() => Value;
-
-        public bool[] GetDiamondValue() => SplitArray(true, false, Value, Config.MaxStacks);
+        public bool GetTickValue(int idx) => idx < Value;
 
         public bool GetBarDanger() => false;
 
-        public string[] GetDiamondText() => null;
+        public string GetDiamondText(int idx) => "";
 
         public float[] GetBarSegments() => null;
 
         public ElementColor GetColor() => Config.Color;
 
-        public ElementColor[] GetDiamondColors() => SplitArray(Config.Color, Config.MaxStacks);
+        public ElementColor GetTickColor(int _) => Config.Color;
 
         public bool GetDiamondTextVisible() => false;
 
@@ -81,5 +79,7 @@ namespace JobBars.Gauges.Stacks {
             GaugeBarConfig barConfig => barConfig.ShowText,
             _ => false
         };
+
+        public bool GetReverseFill() => Config.ReverseFill;
     }
 }

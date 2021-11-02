@@ -66,12 +66,17 @@ namespace JobBars.Gauges.Procs {
 
         public int GetTotalMaxTicks() => Procs.Count;
 
-        public ElementColor[] GetDiamondColors() => Procs.Select(proc => proc.Config.Color).ToArray();
+        public ElementColor GetTickColor(int idx) => Procs[idx].Config.Color;
 
         public bool GetDiamondTextVisible() => Config.ProcsShowText;
 
-        public bool[] GetDiamondValue() => Procs.Select(proc => proc.Active).ToArray();
+        public bool GetTickValue(int idx) => Procs[idx].Active;
 
-        public string[] GetDiamondText() => Procs.Select(proc => proc.RemainingTime >= 0 ? ((int)Math.Round(proc.RemainingTime)).ToString() : "").ToArray();
+        public string GetDiamondText(int idx) {
+            var proc = Procs[idx];
+            return proc.RemainingTime >= 0 ? ((int)Math.Round(proc.RemainingTime)).ToString() : "";
+        }
+
+        public bool GetReverseFill() => false;
     }
 }

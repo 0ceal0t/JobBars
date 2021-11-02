@@ -161,17 +161,7 @@ namespace JobBars.UI {
             }
         }
 
-        public override void SetColor(ElementColor color) {
-            SetColor(color, 0, MAX);
-        }
-
-        public void SetColor(ElementColor color, int start, int count) {
-            for (int idx = start; idx < (start + count); idx++) {
-                SetColor(color, idx);
-            }
-        }
-
-        public void SetColor(ElementColor color, int idx) {
+        public void SetColor(int idx, ElementColor color) {
             UIColor.SetColor(Ticks[idx].Selected, color);
         }
 
@@ -195,27 +185,8 @@ namespace JobBars.UI {
             }
         }
 
-        public void SetValue(int value) {
-            SetValue(value, 0, MAX);
-        }
-
-        public void SetValue(int value, int start, int count) {
-            for (int idx = start; idx < (start + count); idx++) {
-                UIHelper.SetVisibility(Ticks[idx].SelectedContainer, idx < (value + start));
-            }
-        }
-
         public void SetValue(int idx, bool value) {
-            if (value) SelectPart(idx);
-            else UnselectPart(idx);
-        }
-
-        public void SelectPart(int idx) {
-            UIHelper.Show(Ticks[idx].SelectedContainer);
-        }
-
-        public void UnselectPart(int idx) {
-            UIHelper.Hide(Ticks[idx].SelectedContainer);
+            UIHelper.SetVisibility(Ticks[idx].SelectedContainer, value);
         }
 
         public void SetText(int idx, string text) {
@@ -228,6 +199,10 @@ namespace JobBars.UI {
 
         public void HideText(int idx) {
             UIHelper.Hide(Ticks[idx].Text);
+        }
+
+        public void Clear() {
+            for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
         }
 
         public override int GetHeight(int param) => TextVisible ? 40 : 32;

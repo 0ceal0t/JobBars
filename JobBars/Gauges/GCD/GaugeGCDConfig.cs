@@ -30,6 +30,7 @@ namespace JobBars.Gauges.GCD {
             public bool Invert;
             public GaugeCompleteSoundType CompletionSound;
             public bool ProgressSound;
+            public bool ReverseFill;
 
             public GaugeSubGCDConfig(string name, GaugeSubGCDProps props) {
                 Name = name;
@@ -38,11 +39,12 @@ namespace JobBars.Gauges.GCD {
                 MaxCounter = props.MaxCounter;
                 MaxDuration = props.MaxDuration;
                 Triggers = props.Triggers;
+                Increment = props.Increment;
                 Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
                 Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
                 CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
                 ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
-                Increment = props.Increment;
+                ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
             }
         }
 
@@ -86,6 +88,10 @@ namespace JobBars.Gauges.GCD {
 
                 if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Progress{suffix}{id}", subGCD.Name, subGCD.ProgressSound, out var newProgressSound)) {
                     subGCD.ProgressSound = newProgressSound;
+                }
+
+                if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
+                    subGCD.ReverseFill = newReverseFill;
                 }
             }
         }

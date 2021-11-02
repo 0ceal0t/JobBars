@@ -11,31 +11,33 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
             UI.SetText("0");
 
             UI.SetMaxValue(Tracker.GetCurrentMaxTicks());
-            UI.SetDiamondValue(0);
+            UI.Clear();
         }
 
         protected override int GetHeightGauge() => UI.GetHeight(0);
 
         protected override int GetWidthGauge() => UI.GetWidth(0);
 
+        private bool Reverse => Tracker.GetReverseFill();
+        private int Size => Tracker.GetCurrentMaxTicks();
+        private int Index(int i) => Reverse ? (Size - i - 1) : i;
+
         protected override void TickGauge() {
             UI.SetTextColor(Tracker.GetBarDanger() ? UIColor.Red : UIColor.NoColor);
             UI.SetText(Tracker.GetBarText());
             UI.SetPercent(Tracker.GetBarPercent());
 
-            var selected = Tracker.GetDiamondValue();
-            for (int i = 0; i < selected.Length; i++) {
-                UI.SetDiamondValue(i, selected[i]);
+            for (var i = 0; i < Size; i++) {
+                UI.SetDiamondValue(i, Tracker.GetTickValue(Index(i)));
             }
         }
 
         protected override void UpdateVisualGauge() {
-            UI.SetColor(Tracker.GetColor());
+            UI.SetGaugeColor(Tracker.GetColor());
             UI.SetBarTextVisible(Tracker.GetBarTextVisible());
 
-            var colors = Tracker.GetDiamondColors();
-            for (int i = 0; i < colors.Length; i++) {
-                UI.SetDiamondColor(colors[i], i);
+            for (var i = 0; i < Size; i++) {
+                UI.SetDiamondColor(i, Tracker.GetTickColor(Index(i)));
             }
         }
     }

@@ -46,10 +46,10 @@ namespace JobBars.Gauges {
 
         protected abstract void TickTracker();
 
-        public static R[] SplitArray<R>(R left, int size) => SplitArray<R>(left, left, size, size);
-        public static R[] SplitArray<R>(R left, R right, int value, int size) {
+        public static R[] SplitArray<R>(R left, int size, bool reverse = false) => SplitArray(left, left, size, size, reverse);
+        public static R[] SplitArray<R>(R left, R right, int value, int size, bool reverse = false) {
             var ret = new R[size];
-            for (int i = 0; i < size; i++) ret[i] = i < value ? left : right;
+            for (int i = 0; i < size; i++) ret[reverse ? (size - i - 1) : i] = i < value ? left : right;
             return ret;
         }
     }

@@ -40,20 +40,12 @@ namespace JobBars.UI {
             Diamond.SetTextVisible(false);
         }
 
-        public void SetDiamondValue(int value, int start, int count) => Diamond.SetValue(value, start, count);
-        public void SetDiamondValue(int value) => Diamond.SetValue(value);
+        public void Clear() => Diamond.Clear();
         public void SetDiamondValue(int idx, bool value) => Diamond.SetValue(idx, value);
-
-        public override void SetColor(ElementColor color) {
-            SetGaugeColor(color);
-            SetDiamondColor(color);
-        }
 
         public void SetGaugeColor(ElementColor color) => Gauge.SetColor(color);
 
-        public void SetDiamondColor(ElementColor color) => Diamond.SetColor(color);
-        public void SetDiamondColor(ElementColor color, int start, int count) => Diamond.SetColor(color, start, count);
-        public void SetDiamondColor(ElementColor color, int idx) => Diamond.SetColor(color, idx);
+        public void SetDiamondColor(int idx, ElementColor color) => Diamond.SetColor(idx, color);
 
         public override int GetHeight(int param) => 50;
         public override int GetWidth(int param) => Gauge.GetWidth(param);

@@ -14,7 +14,7 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor[] GetDiamondColors();
+        public ElementColor GetTickColor(int idx);
 
         // ===== TICK =======
 
@@ -24,6 +24,8 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
 
         public float GetBarPercent();
 
-        public bool[] GetDiamondValue();
+        public bool GetTickValue(int idx);
+
+        public bool GetReverseFill();
     }
 }

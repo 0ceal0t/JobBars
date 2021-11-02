@@ -44,6 +44,7 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeProgressSound = new(true); // Timer, GCD, proc, stacks, charges
         public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
+        public BoolValueConfig GaugeReverseFill = new(false);
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
         public BoolValueConfig GaugeShowText = new(true);

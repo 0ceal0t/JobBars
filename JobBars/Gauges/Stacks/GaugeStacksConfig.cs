@@ -18,6 +18,7 @@ namespace JobBars.Gauges.Stacks {
         public ElementColor Color { get; private set; }
         public GaugeCompleteSoundType CompletionSound { get; private set; }
         public bool ProgressSound { get; private set; }
+        public bool ReverseFill { get; private set; }
 
         public GaugeStacksConfig(string name, GaugeVisualType type, GaugeStacksProps props) : base(name, type) {
             MaxStacks = props.MaxStacks;
@@ -25,6 +26,7 @@ namespace JobBars.Gauges.Stacks {
             Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
             CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
             ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
+            ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
         }
 
         protected override void DrawConfig(string id, out bool newPos, out bool newVisual, out bool reset) {
@@ -41,6 +43,10 @@ namespace JobBars.Gauges.Stacks {
 
             if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Change{id}", Name, ProgressSound, out var newProgressSound)) {
                 ProgressSound = newProgressSound;
+            }
+
+            if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{id}", Name, ReverseFill, out var newReverseFill)) {
+                ReverseFill = newReverseFill;
             }
         }
     }

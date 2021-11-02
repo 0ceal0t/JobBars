@@ -8,14 +8,16 @@ namespace JobBars.Gauges.Types.Diamond {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor[] GetDiamondColors();
+        public ElementColor GetTickColor(int idx);
 
         public bool GetDiamondTextVisible();
 
         // ===== TICK =======
 
-        public bool[] GetDiamondValue();
+        public bool GetTickValue(int idx);
 
-        public string[] GetDiamondText();
+        public string GetDiamondText(int idx);
+
+        public bool GetReverseFill();
     }
 }
