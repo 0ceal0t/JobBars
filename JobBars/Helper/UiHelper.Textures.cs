@@ -4,6 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -95,13 +96,23 @@ namespace JobBars.Helper {
         public unsafe static AtkUldAsset* CreateAssets(List<string> paths) {
             var ret = CreateAssets((uint)paths.Count);
             for (int i = 0; i < paths.Count; i++) {
-                var hd = JobBars.Config.Use4K ? 2u : 1u;
+                var hd = JobBars.Config.Use4K ? (byte)2 : (byte)1;
+
                 var tex = (AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8);
                 var path = paths[i];
 
-                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path); // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
-                TextureLoadPath(tex, resolvedPath, 1); // load as non-HD so that the "_hr1" doesn't get appended back again
-                Marshal.WriteByte(new IntPtr(tex->Resource) + 0x1a, JobBars.Config.Use4K ? (byte)2 : (byte)1); // switch back to HD if necessary
+                // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
+                // could also be icon.tex -> icon.tex
+                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path);
+                PluginLog.Log($"Resolved {path} -> {resolvedPath}");
+
+                if (Path.IsPathRooted(resolvedPath)) {
+                    TextureLoadPath(tex, resolvedPath, 1); // don't want to re-apply _hr1
+                    Marshal.WriteByte(new IntPtr(tex->Resource) + 0x1a, hd);
+                }
+                else {
+                    TextureLoadPath(tex, path, hd);
+                }
             }
             return ret;
         }
@@ -132,6 +143,8 @@ namespace JobBars.Helper {
             var resource = (TextureResourceHandle*) GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
             var resolvedPath = resource->ResourceHandle.FileName.ToString();
             resource->ResourceHandle.DecRef(); // not actually using this
+
+            PluginLog.Log($"RefCount {texPath} {resource->ResourceHandle.RefCount}");
 
             return resolvedPath;
         }

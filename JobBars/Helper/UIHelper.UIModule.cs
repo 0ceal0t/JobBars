@@ -19,10 +19,16 @@ namespace JobBars.Helper {
             return (AddonHotbarNumberArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
 
-        public static int GetCrossBarSet() {
-            var addon = (AddonActionBarCross*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ActionCross");
-            if (addon == null) return -1;
-            return addon->CrossBarSet;
+        public static AddonActionBarCross* GetCrossBar() {
+            return (AddonActionBarCross*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ActionCross");
+        }
+
+        public static AddonActionBarDoubleCross* GetLeftDoubleCrossBar() {
+            return (AddonActionBarDoubleCross*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ActionDoubleCrossL");
+        }
+
+        public static AddonActionBarDoubleCross* GetRightDoubleCrossBar() {
+            return (AddonActionBarDoubleCross*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ActionDoubleCrossR");
         }
 
         public static AtkUnitBase* ChatLogAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ChatLog");

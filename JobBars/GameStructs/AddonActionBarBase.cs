@@ -2,10 +2,56 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.GameStructs {
-    [StructLayout(LayoutKind.Explicit, Size = 0x2B8)]
+    [StructLayout(LayoutKind.Explicit, Size = 0x702)]
     public unsafe struct AddonActionBarCross {
         [FieldOffset(0x000)] public AddonActionBarBase ActionBarBase;
         [FieldOffset(0x190)] public int CrossBarSet;
+        [FieldOffset(0x6E8)] public uint LeftCompactFlags;
+        [FieldOffset(0x6EC)] public uint RightCompactFlags;
+        [FieldOffset(0x701)] public byte LeftHeld;
+        [FieldOffset(0x702)] public byte RightHeld;
+
+        public bool GetCompact(out int set, out bool left) {
+            set = -1;
+            left = false;
+
+            if (GetCompactLeft(out var setL, out var leftL)) {
+                set = setL;
+                left = leftL;
+                return true;
+            }
+
+            if (GetCompactRight(out var setR, out var leftR)) {
+                set = setR;
+                left = leftR;
+                return true;
+            }
+
+            return false;
+        }
+        public bool GetCompactLeft(out int set, out bool left) => GetSelectedCompact(LeftCompactFlags, out set, out left);
+        public bool GetCompactRight(out int set, out bool left) => GetSelectedCompact(RightCompactFlags, out set, out left);
+
+        public static bool GetSelectedCompact(uint flag, out int set, out bool left) { // 1 = 0/left, 2 = 0/right, 3 = 1/left, etc.
+            set = 0;
+            left = false;
+
+            if (flag == 0) return false;
+
+            var leftOver = flag % 2;
+            left = leftOver == 1;
+            set = (int)((flag - leftOver) / 2);
+
+            return true;
+        }
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 0x330)]
+    public unsafe struct AddonActionBarDoubleCross {
+        [FieldOffset(0x000)] public AddonActionBarBase ActionBarBase;
+        [FieldOffset(0x2E1)] public byte LargeDoubleCross;
+        [FieldOffset(0x2E8)] public int HotbarIndex; // set 0 = 10, set 7 = 17, etc.
+        [FieldOffset(0x2EC)] public byte Left;
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 0x2B8)]
