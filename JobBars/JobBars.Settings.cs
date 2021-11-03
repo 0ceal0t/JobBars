@@ -1,10 +1,14 @@
 ﻿using Dalamud.Interface;
 using ImGuiNET;
+using JobBars.Data;
+using System;
 using System.Numerics;
 
 namespace JobBars {
     public unsafe partial class JobBars {
         public bool Visible = false;
+
+        private readonly AttachAddon[] ValidAttachTypes = (AttachAddon[])Enum.GetValues(typeof(AttachAddon));
 
         private void BuildSettingsUI() {
             if (!PlayerExists) return;
@@ -16,6 +20,18 @@ namespace JobBars {
                 if (ImGui.Checkbox("Use 4K Textures (Requires Restart)" + _ID, ref Config.Use4K)) {
                     Config.Save();
                 }
+
+                if (ImGui.BeginCombo("Attached UI element (Requires Restart)" + _ID, $"{Config.AttachAddon}")) {
+                    foreach (var attachType in ValidAttachTypes) {
+                        if (ImGui.Selectable($"{attachType}" + _ID, attachType == Config.AttachAddon)) {
+                            Config.AttachAddon = attachType;
+                            Config.Save();
+                        }
+                    }
+                    ImGui.EndCombo();
+                }
+
+                // ==========================
 
                 ImGui.BeginTabBar("Tabs" + _ID);
                 if (ImGui.BeginTabItem("Gauges" + _ID)) {

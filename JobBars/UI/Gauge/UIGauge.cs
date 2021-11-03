@@ -10,10 +10,6 @@ namespace JobBars.UI {
             UIHelper.SetPosition(RootRes, (pos.X - p.X) / pScale.X, (pos.Y - p.Y) / pScale.Y);
         }
 
-        public abstract int GetHeight(int param);
-        public abstract int GetWidth(int param);
-        public abstract int GetHorizontalYOffset();
-
         public virtual void Cleanup() { }
     }
 }

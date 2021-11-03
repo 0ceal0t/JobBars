@@ -80,6 +80,11 @@ namespace JobBars.Gauges.Stacks {
             _ => false
         };
 
+        public bool GetVertical() => Config.TypeConfig switch {
+            GaugeBarConfig barConfig => barConfig.Vertical,
+            _ => false
+        };
+
         public bool GetReverseFill() => Config.ReverseFill;
     }
 }

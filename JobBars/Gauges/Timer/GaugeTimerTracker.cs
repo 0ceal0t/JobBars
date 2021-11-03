@@ -122,6 +122,11 @@ namespace JobBars.Gauges.Timer {
             _ => false
         };
 
+        public bool GetVertical() => Config.TypeConfig switch {
+            GaugeBarConfig barConfig => barConfig.Vertical,
+            _ => false
+        };
+
         public ElementColor GetColor() => ActiveSubTimer.GetColor();
 
         public bool GetBarDanger() => ActiveSubTimer.GetDanger();

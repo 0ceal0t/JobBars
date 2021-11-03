@@ -44,7 +44,6 @@ namespace JobBars.UI {
 
         private static readonly int MAX = 12;
         private List<TickStruct> Ticks = new();
-        private bool TextVisible = false;
 
         public UIDiamond(AtkUldPartsList* partsList) {
             RootRes = UIBuilder.CreateResNode();
@@ -172,7 +171,6 @@ namespace JobBars.UI {
         }
 
         public void SetTextVisible(bool showText) {
-            TextVisible = showText;
             SetSpacing(showText ? 5 : 0);
             for (int idx = 0; idx < MAX; idx++) {
                 UIHelper.SetVisibility(Ticks[idx].Text, showText);
@@ -204,9 +202,5 @@ namespace JobBars.UI {
         public void Clear() {
             for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
         }
-
-        public override int GetHeight(int param) => TextVisible ? 40 : 32;
-        public override int GetWidth(int param) => 32 + 20 * (param - 1);
-        public override int GetHorizontalYOffset() => -3;
     }
 }

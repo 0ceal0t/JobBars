@@ -147,6 +147,11 @@ namespace JobBars.Gauges.GCD {
             _ => false
         };
 
+        public bool GetVertical() => Config.TypeConfig switch {
+            GaugeBarConfig barConfig => barConfig.Vertical,
+            _ => false
+        };
+
         public ElementColor GetColor() => ActiveSubGCD.GetColor();
 
         public bool GetBarDanger() => false;

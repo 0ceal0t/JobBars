@@ -13,11 +13,18 @@ namespace JobBars.Data {
         Split
     }
 
+    public enum AttachAddon {
+        Chatbox,
+        HP_MP_Bars
+    }
+
     [Serializable]
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 1;
 
         public bool Use4K = false;
+
+        public AttachAddon AttachAddon = AttachAddon.Chatbox;
 
         // ====== GAUGES ======
 
@@ -38,6 +45,7 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
+        public BoolValueConfig GaugeVertical = new(false);
         public IntValueConfig GaugeProcOrder = new(-1);
         public ColorConfig GaugeProcColor = new();
         public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges

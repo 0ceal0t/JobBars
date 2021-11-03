@@ -39,6 +39,11 @@ namespace JobBars.Gauges.Resources {
             _ => false
         };
 
+        public bool GetVertical() => Config.TypeConfig switch {
+            GaugeBarConfig barConfig => barConfig.Vertical,
+            _ => false
+        };
+
         public ElementColor GetColor() => Config.Color;
 
         public bool GetBarDanger() => false;

@@ -31,24 +31,24 @@ namespace JobBars.UI {
             DisposeCursor();
             DisposeTextures(); // dispose last
 
-            var chatAddon = UIHelper.ChatLogAddon;
-            if (chatAddon != null) chatAddon->UldManager.UpdateDrawNodeList();
+            var attachAddon = UIHelper.AttachAddon;
+            if (attachAddon != null) attachAddon->UldManager.UpdateDrawNodeList();
 
             var partyListAddon = UIHelper.PartyListAddon;
             if (partyListAddon != null) partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
         public void Attach() {
-            var chatAddon = UIHelper.ChatLogAddon;
+            var attachAddon = UIHelper.AttachAddon;
             var partyListAddon = UIHelper.PartyListAddon;
 
             // ===== CONTAINERS =========
 
-            GaugeRoot->ParentNode = chatAddon->RootNode;
-            BuffRoot->ParentNode = chatAddon->RootNode;
-            CursorRoot->ParentNode = chatAddon->RootNode;
+            GaugeRoot->ParentNode = attachAddon->RootNode;
+            BuffRoot->ParentNode = attachAddon->RootNode;
+            CursorRoot->ParentNode = attachAddon->RootNode;
 
-            var lastNode = chatAddon->RootNode->ChildNode;
+            var lastNode = attachAddon->RootNode->ChildNode;
             while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
 
             UIHelper.Link(lastNode, GaugeRoot);
@@ -68,7 +68,7 @@ namespace JobBars.UI {
 
             // ======================
 
-            chatAddon->UldManager.UpdateDrawNodeList();
+            attachAddon->UldManager.UpdateDrawNodeList();
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 

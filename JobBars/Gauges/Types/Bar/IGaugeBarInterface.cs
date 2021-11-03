@@ -10,6 +10,8 @@ namespace JobBars.Gauges.Types.Bar {
 
         public bool GetBarTextSwap();
 
+        public bool GetVertical();
+
         public ElementColor GetColor();
 
         // ===== TICK =======

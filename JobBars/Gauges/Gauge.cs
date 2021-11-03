@@ -63,8 +63,6 @@ namespace JobBars.Gauges {
 
         public override int GetWidth() => (int)(Tracker.GetConfig().Scale * GetWidthGauge());
 
-        public override int GetYOffset() => UI.GetHorizontalYOffset();
-
         protected abstract void TickGauge();
 
         protected abstract void UpdateVisualGauge();

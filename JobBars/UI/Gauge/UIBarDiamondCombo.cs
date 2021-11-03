@@ -11,7 +11,7 @@ namespace JobBars.UI {
             Diamond = diamond;
             RootRes = gauge.RootRes;
 
-            Gauge.SetTextSwap(false);
+            Gauge.SetLayout(false, false);
             Diamond.SetTextVisible(false);
         }
 
@@ -46,10 +46,6 @@ namespace JobBars.UI {
         public void SetGaugeColor(ElementColor color) => Gauge.SetColor(color);
 
         public void SetDiamondColor(int idx, ElementColor color) => Diamond.SetColor(idx, color);
-
-        public override int GetHeight(int param) => 50;
-        public override int GetWidth(int param) => Gauge.GetWidth(param);
-        public override int GetHorizontalYOffset() => Gauge.GetHorizontalYOffset();
 
         public override void SetSplitPosition(Vector2 pos) {
             var p = UIHelper.GetNodePosition(JobBars.Builder.GaugeRoot);

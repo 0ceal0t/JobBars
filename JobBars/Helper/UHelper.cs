@@ -59,6 +59,11 @@ namespace JobBars.Helper {
             atkUnitBase->Flags_2 |= 0x4;
         }
 
+        public static void SetRotation(AtkResNode* node, float rotation) {
+            node->Rotation = rotation;
+            node->Flags_2 |= 0x1;
+        }
+
         public static void Link(AtkResNode* next, AtkResNode* prev) {
             if (next == null || prev == null) return;
             next->PrevSiblingNode = prev;

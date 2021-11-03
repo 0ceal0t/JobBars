@@ -155,9 +155,5 @@ namespace JobBars.UI {
         public void Clear() {
             for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
         }
-
-        public override int GetHeight(int param) => 32;
-        public override int GetWidth(int param) => 32 + 18 * (param - 1);
-        public override int GetHorizontalYOffset() => -3;
     }
 }

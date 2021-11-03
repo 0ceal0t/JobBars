@@ -11,9 +11,11 @@ namespace JobBars.Gauges.Types.Bar {
             UI.SetText("0");
         }
 
-        protected override int GetHeightGauge() => UI.GetHeight(0);
+        protected override int GetHeightGauge() => Tracker.GetVertical() ? 160 : 46;
 
-        protected override int GetWidthGauge() => UI.GetWidth(0);
+        protected override int GetWidthGauge() => Tracker.GetVertical() ? 55 : 160;
+
+        public override int GetYOffset() => 0;
 
         protected override void TickGauge() {
             UI.SetTextColor(Tracker.GetBarDanger() ? UIColor.Red : UIColor.NoColor);
@@ -24,7 +26,7 @@ namespace JobBars.Gauges.Types.Bar {
         protected override void UpdateVisualGauge() {
             UI.SetColor(Tracker.GetColor());
             UI.SetTextVisible(Tracker.GetBarTextVisible());
-            UI.SetTextSwap(Tracker.GetBarTextSwap());
+            UI.SetLayout(Tracker.GetBarTextSwap(), Tracker.GetVertical());
         }
     }
 }

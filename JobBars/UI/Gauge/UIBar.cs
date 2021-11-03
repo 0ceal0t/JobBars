@@ -27,6 +27,9 @@ namespace JobBars.UI {
         private Animation Anim = null;
         private float[] Segments = null;
 
+        private bool Vertical = false;
+        private bool TextSwap = false;
+
         public UIBar(AtkUldPartsList* partsList) {
 
             // ======= CONTAINERS =========
@@ -256,7 +259,15 @@ namespace JobBars.UI {
             }
 
             int size = text.Length * 17;
-            UIHelper.SetPosition(TextContainer, 129 - size, null);
+
+            if (Vertical) {
+                // when no text swap + vertical, it expands right, so don't need to do anything
+                if (TextSwap) UIHelper.SetPosition(TextContainer, (8 + 17) - size, null);
+            }
+            else {
+                UIHelper.SetPosition(TextContainer, (112 + 17) - size, null);
+            }
+
             UIHelper.SetSize(TextContainer, 30 + size, 40);
 
             UIHelper.SetPosition(TextBlurNode, 0, null);
@@ -272,9 +283,20 @@ namespace JobBars.UI {
 
         public void SetTextVisible(bool visible) => UIHelper.SetVisibility(TextContainer, visible);
 
-        public void SetTextSwap(bool swap) {
-            UIHelper.SetPosition(GaugeContainer, null, swap ? 24 : 0);
-            UIHelper.SetPosition(TextContainer, null, swap ? -3 : 6);
+        public void SetLayout(bool textSwap, bool vertical) {
+            Vertical = vertical;
+            TextSwap = textSwap;
+
+            if (Vertical) {
+                UIHelper.SetRotation(GaugeContainer, (float)(-Math.PI / 2f));
+                UIHelper.SetPosition(GaugeContainer, TextSwap ? 42 : 0, 158);
+                UIHelper.SetPosition(TextContainer, TextSwap ? 8 : 6, 125);
+            }
+            else {
+                UIHelper.SetRotation(GaugeContainer, 0);
+                UIHelper.SetPosition(GaugeContainer, 0, TextSwap ? 24 : 0);
+                UIHelper.SetPosition(TextContainer, 112, TextSwap ? -3 : 6);
+            }
         }
 
         public void SetPercent(float value) {
@@ -321,9 +343,5 @@ namespace JobBars.UI {
         public void SetColor(ElementColor color) {
             UIColor.SetColor(BarMainNode, color);
         }
-
-        public override int GetHeight(int param) => 46;
-        public override int GetWidth(int param) => 160;
-        public override int GetHorizontalYOffset() => 0;
     }
 }

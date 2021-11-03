@@ -15,7 +15,7 @@ namespace JobBars.Gauges.Manager {
     public partial class GaugeManager : PerJobManagerNested<GaugeConfig> {
         public JobIds CurrentJob = JobIds.OTHER;
         private GaugeConfig[] CurrentConfigs => JobToValue.TryGetValue(CurrentJob, out var configs) ? configs : JobToValue[JobIds.OTHER];
-        private List<GaugeTracker> CurrentGauges = new();
+        private readonly List<GaugeTracker> CurrentGauges = new();
 
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new(new[] { BuffIds.Excog }); // which buffs on party members do we care about?
 

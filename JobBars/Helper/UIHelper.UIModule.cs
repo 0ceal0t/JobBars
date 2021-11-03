@@ -3,6 +3,7 @@ using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Data;
 using JobBars.GameStructs;
 
 namespace JobBars.Helper {
@@ -34,5 +35,11 @@ namespace JobBars.Helper {
         public static AtkUnitBase* ChatLogAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ChatLog");
         public static AtkUnitBase* ParameterAddon => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_ParameterWidget");
         public static AddonPartyList* PartyListAddon => (AddonPartyList*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("_PartyList");
+
+        public static AtkUnitBase* AttachAddon => JobBars.AttachAddon switch {
+            Data.AttachAddon.Chatbox => ChatLogAddon,
+            Data.AttachAddon.HP_MP_Bars => ParameterAddon,
+            _ => null
+        };
     }
 }

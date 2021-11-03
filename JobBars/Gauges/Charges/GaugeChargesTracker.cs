@@ -107,6 +107,11 @@ namespace JobBars.Gauges.Charges {
             _ => false
         };
 
+        public bool GetVertical() => Config.TypeConfig switch {
+            GaugeBarConfig barConfig => barConfig.Vertical,
+            _ => false
+        };
+
         public bool GetBarTextSwap() => false;
 
         public ElementColor GetColor() => Config.BarColor;

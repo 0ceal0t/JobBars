@@ -12,9 +12,11 @@ namespace JobBars.Gauges.Types.Diamond {
             UI.Clear();
         }
 
-        protected override int GetHeightGauge() => UI.GetHeight(0);
+        protected override int GetHeightGauge() => Tracker.GetDiamondTextVisible() ? 40 : 32;
 
-        protected override int GetWidthGauge() => UI.GetWidth(MaxStacks);
+        protected override int GetWidthGauge() => 32 + 20 * (MaxStacks - 1);
+
+        public override int GetYOffset() => -3;
 
         private bool Reverse => Tracker.GetReverseFill();
         private int Size => Tracker.GetCurrentMaxTicks();

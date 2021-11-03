@@ -14,9 +14,11 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
             UI.Clear();
         }
 
-        protected override int GetHeightGauge() => UI.GetHeight(0);
+        protected override int GetHeightGauge() => 50;
 
-        protected override int GetWidthGauge() => UI.GetWidth(0);
+        protected override int GetWidthGauge() => 160;
+
+        public override int GetYOffset() => 0;
 
         private bool Reverse => Tracker.GetReverseFill();
         private int Size => Tracker.GetCurrentMaxTicks();

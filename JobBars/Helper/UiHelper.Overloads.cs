@@ -8,6 +8,7 @@ namespace JobBars.Helper {
         public static void SetScale<T>(T* node, float? scaleX, float? scaleY) where T : unmanaged => SetScale((AtkResNode*)node, scaleX, scaleY);
         public static void SetSize<T>(T* node, int? w, int? h) where T : unmanaged => SetSize((AtkResNode*)node, w, h);
         public static void SetPosition<T>(T* node, float? x, float? y) where T : unmanaged => SetPosition((AtkResNode*)node, x, y);
+        public static void SetRotation<T>(T* node, float rotation) where T : unmanaged => SetRotation((AtkResNode*)node, rotation);
 
         public static AtkTextNode* CloneNode(AtkTextNode* node) => (AtkTextNode*)CloneNode((AtkResNode*)node);
     }

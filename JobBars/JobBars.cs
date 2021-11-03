@@ -71,6 +71,8 @@ namespace JobBars {
         private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78] || Condition[ConditionFlag.BetweenAreas] || Condition[ConditionFlag.BetweenAreas51];
         public static bool LastCutscene { get; private set; } = false;
 
+        public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
+
         public JobBars(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
@@ -110,6 +112,7 @@ namespace JobBars {
                 Config.Save();
             }
 
+            AttachAddon = Config.AttachAddon;
             IconBuilder = new UIIconManager();
 
             // ==========================
@@ -191,7 +194,7 @@ namespace JobBars {
         private void Animate() => Animation.Tick();
 
         private void FrameworkOnUpdate(Framework framework) {
-            var addon = UIHelper.ChatLogAddon;
+            var addon = UIHelper.AttachAddon;
 
             if (!LoggedOut && RecreateUI) {
                 Logout();
