@@ -3,8 +3,7 @@
         public GaugeDiamondConfig(string name) : base(name) {
         }
 
-        public override void Draw(string id, out bool newPos, out bool newVisual, out bool reset) {
-            newPos = newVisual = reset = false;
+        public override void Draw(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
         }
     }
 }

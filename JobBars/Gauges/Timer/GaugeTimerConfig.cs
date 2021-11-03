@@ -67,9 +67,9 @@ namespace JobBars.Gauges.Timer {
             }
         }
 
-        protected override void DrawConfig(string id, out bool newPos, out bool newVisual, out bool reset) {
-            newPos = newVisual = reset = false;
+        public override GaugeTracker GetTracker(int idx) => new GaugeTimerTracker(this, idx);
 
+        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
             foreach (var subTimer in SubTimers) {
                 var suffix = string.IsNullOrEmpty(subTimer.SubName) ? "" : $" ({subTimer.SubName})";
 

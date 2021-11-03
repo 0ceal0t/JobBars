@@ -6,6 +6,6 @@
             Name = name;
         }
 
-        public abstract void Draw(string id, out bool newPos, out bool newVisual, out bool reset);
+        public abstract void Draw(string id, ref bool newPos, ref bool newVisual, ref bool reset);
     }
 }

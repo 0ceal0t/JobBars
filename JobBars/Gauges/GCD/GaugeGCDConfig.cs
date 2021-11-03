@@ -67,9 +67,9 @@ namespace JobBars.Gauges.GCD {
             }
         }
 
-        protected override void DrawConfig(string id, out bool newPos, out bool newVisual, out bool reset) {
-            newPos = newVisual = reset = false;
+        public override GaugeTracker GetTracker(int idx) => new GaugeGCDTracker(this, idx);
 
+        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
             foreach (var subGCD in SubGCDs) {
                 var suffix = string.IsNullOrEmpty(subGCD.SubName) ? "" : $" ({subGCD.SubName})";
 

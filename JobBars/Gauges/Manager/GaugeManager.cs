@@ -1,11 +1,5 @@
 ﻿using JobBars.Data;
 using JobBars.Helper;
-using JobBars.Gauges.Charges;
-using JobBars.Gauges.GCD;
-using JobBars.Gauges.Procs;
-using JobBars.Gauges.Resources;
-using JobBars.Gauges.Stacks;
-using JobBars.Gauges.Timer;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +27,7 @@ namespace JobBars.Gauges.Manager {
 
             CurrentJob = job;
             for (var idx = 0; idx < CurrentConfigs.Length; idx++) {
-                var config = CurrentConfigs[idx];
-
-                CurrentGauges.Add(config switch {
-                    GaugeStacksConfig stackConfig => new GaugeStacksTracker(stackConfig, idx),
-                    GaugeProcsConfig procConfig => new GaugeProcsTracker(procConfig, idx),
-                    GaugeChargesConfig chargeConfig => new GaugeChargesTracker(chargeConfig, idx),
-                    GaugeTimerConfig timerConfig => new GaugeTimerTracker(timerConfig, idx),
-                    GaugeGCDConfig gcdConfig => new GaugeGCDTracker(gcdConfig, idx),
-                    GaugeResourcesConfig resourceConfig => new GaugeResourcesTracker(resourceConfig, idx),
-                    _ => null
-                });
+                CurrentGauges.Add(CurrentConfigs[idx].GetTracker(idx));
             }
             UpdatePositionScale();
         }

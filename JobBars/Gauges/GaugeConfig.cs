@@ -32,6 +32,8 @@ namespace JobBars.Gauges {
             SetType(JobBars.Config.GaugeType.Get(Name, type));
         }
 
+        public abstract GaugeTracker GetTracker(int idx);
+
         private void SetType(GaugeVisualType type) {
             var validTypes = GetValidGaugeTypes();
             Type = validTypes.Contains(type) ? type : validTypes[0];
@@ -84,13 +86,9 @@ namespace JobBars.Gauges {
                 }
             }
 
-            TypeConfig.Draw(id, out var newPos_Type, out var newVisual_Type, out var reset_Type);
+            TypeConfig.Draw(id, ref newPos, ref newVisual, ref reset);
 
-            DrawConfig(id, out var newPos_Config, out var newVisual_Config, out var reset_Config);
-
-            newPos = newPos || newPos_Type || newPos_Config;
-            newVisual = newVisual || newVisual_Type || newVisual_Config;
-            reset = reset || reset_Type || reset_Config;
+            DrawConfig(id, ref newPos, ref newVisual, ref reset);
         }
 
         public void DrawPositionBox() {
@@ -103,7 +101,7 @@ namespace JobBars.Gauges {
 
         protected abstract GaugeVisualType[] GetValidGaugeTypes();
 
-        protected abstract void DrawConfig(string id, out bool newPos, out bool newVisual, out bool reset);
+        protected abstract void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset);
 
         private void SetSplitPosition(Vector2 pos) {
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);

@@ -21,6 +21,7 @@ namespace JobBars {
                     Config.Save();
                 }
 
+                ImGui.SetNextItemWidth(200f);
                 if (ImGui.BeginCombo("Attached UI element (Requires Restart)" + _ID, $"{Config.AttachAddon}")) {
                     foreach (var attachType in ValidAttachTypes) {
                         if (ImGui.Selectable($"{attachType}" + _ID, attachType == Config.AttachAddon)) {
@@ -30,6 +31,8 @@ namespace JobBars {
                     }
                     ImGui.EndCombo();
                 }
+
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
 
                 // ==========================
 

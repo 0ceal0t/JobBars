@@ -39,9 +39,9 @@ namespace JobBars.Gauges.Procs {
             ProcSound = JobBars.Config.GaugeProgressSound.Get(Name, !props.NoSoundOnProc);
         }
 
-        protected override void DrawConfig(string id, out bool newPos, out bool newVisual, out bool reset) {
-            newPos = newVisual = reset = false;
+        public override GaugeTracker GetTracker(int idx) => new GaugeProcsTracker(this, idx);
 
+        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
             if (JobBars.Config.GaugeShowText.Draw($"Show Text{id}", Name, ProcsShowText, out var newProcsShowText)) {
                 ProcsShowText = newProcsShowText;
                 newPos = true;

@@ -9,7 +9,7 @@ using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.Procs;
-using JobBars.Gauges.Resources;
+using JobBars.Gauges.Custom;
 
 namespace JobBars.Gauges.Manager {
     public unsafe partial class GaugeManager {
@@ -108,10 +108,10 @@ namespace JobBars.Gauges.Manager {
             });
             // ============ DRK ==================
             JobToValue.Add(JobIds.DRK, new GaugeConfig[] {
-                new GaugeResourcesConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.Bar, new GaugeResourcesProps {
+                new GaugeDrkMpConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
                     Color = UIColor.Purple,
-                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f },
-                    Function = GaugeResourcesConfig.DrkMp
+                    DarkArtsColor = UIColor.LightBlue,
+                    Segments = new[] { 0.3f, 0.6f, 0.9f, 1f }
                 }),
                 new GaugeGCDConfig(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                     MaxCounter = 5,

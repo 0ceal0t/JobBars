@@ -222,13 +222,13 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 </table>
 
 ## TODO
-- [ ] Vertical gauges
 - [ ] Custom text spacing
 - [ ] Completely custom gauges/buffs/cds (requires big rework)
-- [ ] Support crossbar better for icon replacement
 - [ ] Hide based on level
 - [ ] How many people got hit by buffs
 - [ ] Split up party buffs and personal buffs
+- [x] ~~Support crossbar better for icon replacement~~
+- [x] ~~Vertical gauges~~
 - [x] ~~Charges / Procs sounds options (when full, when empty, when new, etc.)~~
 - [x] ~~Text above/below gauges~~
 - [x] ~~SMN DoTs at 6 seconds [see this issue](https://github.com/0ceal0t/JobBars/issues/9)~~

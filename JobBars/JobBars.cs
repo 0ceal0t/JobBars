@@ -16,6 +16,7 @@ using Dalamud.Plugin;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Game;
+using Dalamud.Game.ClientState.JobGauge;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
@@ -30,6 +31,7 @@ namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ClientState ClientState { get; private set; }
+        public static JobGauges JobGauges { get; private set; }
         public static Framework Framework { get; private set; }
         public static Condition Condition { get; private set; }
         public static CommandManager CommandManager { get; private set; }
@@ -81,7 +83,8 @@ namespace JobBars {
                 Framework framework,
                 ObjectTable objects,
                 SigScanner sigScanner,
-                DataManager dataManager
+                DataManager dataManager,
+                JobGauges jobGauges
             ) {
             PluginInterface = pluginInterface;
             ClientState = clientState;
@@ -91,6 +94,7 @@ namespace JobBars {
             Objects = objects;
             SigScanner = sigScanner;
             DataManager = dataManager;
+            JobGauges = jobGauges;
 
             if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
 
