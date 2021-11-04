@@ -14,7 +14,6 @@ namespace JobBars.Gauges.Manager {
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new(new[] { BuffIds.Excog }); // which buffs on party members do we care about?
 
         public GaugeManager() : base("##JobBars_Gauges") {
-            Init();
             if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
             JobBars.Builder.HideAllGauges();
         }

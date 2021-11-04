@@ -6,27 +6,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JobBars.Buffs {
-    public unsafe partial class BuffManager : PerJobManager<BuffProps[]> {
-        private readonly List<BuffProps> LocalPlayerBuffs = new();
+namespace JobBars.Buffs.Manager {
+    public unsafe partial class BuffManager : PerJobManager<BuffConfig[]> {
+        private readonly List<BuffConfig> LocalPlayerConfigs = new();
         private Dictionary<uint, BuffPartyMember> ObjectIdToMember = new();
 
         public BuffManager() : base("##JobBars_Buffs") {
-            Init();
-
             foreach (var jobEntry in JobToValue)
-                LocalPlayerBuffs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
+                LocalPlayerConfigs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
 
             if (!JobBars.Config.BuffBarEnabled) JobBars.Builder.HideBuffs();
             JobBars.Builder.HideAllBuffs();
         }
 
-        public BuffProps[] GetBuffProps(JobIds job, bool isLocalPlayer) {
+        public BuffConfig[] GetBuffConfigs(JobIds job, bool isLocalPlayer) {
             var jobBuffs = JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
             if (!isLocalPlayer) return jobBuffs;
 
-            var combinedProps = new List<BuffProps>();
-            combinedProps.AddRange(LocalPlayerBuffs);
+            var combinedProps = new List<BuffConfig>();
+            combinedProps.AddRange(LocalPlayerConfigs);
             combinedProps.AddRange(jobBuffs.Where(x => !x.IsPlayerOnly));
             return combinedProps.ToArray();
         }

@@ -44,7 +44,7 @@ namespace JobBars.UI {
             Ring->Ctor();
             Ring->AtkResNode.NodeID = NodeIdx++;
             Ring->AtkResNode.Type = NodeType.Image;
-            Ring->AtkResNode.X = 0;
+            Ring->AtkResNode.X = 2;
             Ring->AtkResNode.Y = 2;
             Ring->AtkResNode.Width = 44;
             Ring->AtkResNode.Height = 46;

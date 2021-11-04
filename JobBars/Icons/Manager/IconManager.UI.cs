@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 
-namespace JobBars.Icons {
+namespace JobBars.Icons.Manager {
     public partial class IconManager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Icon Replacement Enabled", ref JobBars.Config.IconsEnabled)) {

@@ -69,6 +69,14 @@ namespace JobBars.Helper {
             }
         }
 
+        public static string ProcText => JobBars.ClientState.ClientLanguage switch {
+            Dalamud.ClientLanguage.Japanese => "Procs",
+            Dalamud.ClientLanguage.English => "Procs",
+            Dalamud.ClientLanguage.German => "Procs",
+            Dalamud.ClientLanguage.French => "Procs",
+            _ => "触发"
+        };
+
         public static string Localize(ActionIds action) => Localize(new Item(action));
         public static string Localize(BuffIds buff) => Localize(new Item(buff));
         public static string Localize(Item item) {

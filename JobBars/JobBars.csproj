@@ -67,6 +67,12 @@
     <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Gauges\Adjustments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="mkdir &quot;$(TargetDir)Output&quot;&#xD;&#xA;xcopy /Y &quot;$(TargetDir)JobBars.json&quot; &quot;$(TargetDir)Output&quot;" />
   </Target>

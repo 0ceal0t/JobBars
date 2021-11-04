@@ -6,9 +6,11 @@ using System.Threading;
 using JobBars.Helper;
 using JobBars.UI;
 using JobBars.Data;
-using JobBars.Buffs;
-using JobBars.Cooldowns;
-using JobBars.Cursors;
+using JobBars.Buffs.Manager;
+using JobBars.Cooldowns.Manager;
+using JobBars.Cursors.Manager;
+using JobBars.Icons.Manager;
+using JobBars.Gauges.Manager;
 
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -22,10 +24,6 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Data;
-using JobBars.Icons;
-using JobBars.Gauges.Manager;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {

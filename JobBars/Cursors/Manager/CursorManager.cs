@@ -4,17 +4,14 @@ using Dalamud.Interface;
 using JobBars.Data;
 using JobBars.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Helper;
-using System.Collections.Generic;
 
-namespace JobBars.Cursors {
+namespace JobBars.Cursors.Manager {
     public unsafe partial class CursorManager : PerJobManager<Cursor> {
         private Cursor CurrentCursor = null;
         private ElementColor InnerColor;
         private ElementColor OuterColor;
 
         public CursorManager() : base("##JobBars_Cursor") {
-            Init();
             InnerColor = UIColor.GetColor(JobBars.Config.CursorInnerColor, UIColor.MpPink);
             OuterColor = UIColor.GetColor(JobBars.Config.CursorOuterColor, UIColor.HealthGreen);
 

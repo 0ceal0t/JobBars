@@ -116,6 +116,10 @@ namespace JobBars.Data {
         public ComboValueConfig<UIIconComboType> IconComboType = new();
         public FloatValueConfig IconTimerOffset = new(0f);
 
+        // ====== ADJUSTMENTS =========
+
+        public BoolValueConfig AdjustmentEnabled = new(false);
+
         // =====================
 
         public void Save() {

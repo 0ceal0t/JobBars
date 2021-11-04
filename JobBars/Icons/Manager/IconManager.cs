@@ -2,13 +2,12 @@
 using System;
 using System.Linq;
 
-namespace JobBars.Icons {
+namespace JobBars.Icons.Manager {
     public unsafe partial class IconManager : PerJobManager<IconReplacer[]> {
         public JobIds CurrentJob = JobIds.OTHER;
         private IconReplacer[] CurrentIcons => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
         public IconManager() : base("##JobBars_Icons") {
-            Init();
         }
 
         public void SetJob(JobIds job) {

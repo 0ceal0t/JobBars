@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
 
-namespace JobBars.Cursors {
+namespace JobBars.Cursors.Manager {
     public partial class CursorManager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cursor Enabled" + _ID, ref JobBars.Config.CursorsEnabled)) {

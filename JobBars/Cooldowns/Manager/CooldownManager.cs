@@ -4,24 +4,22 @@ using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 
-namespace JobBars.Cooldowns {
+namespace JobBars.Cooldowns.Manager {
     public struct CooldownPartyMemberStruct {
         public uint ObjectId;
         public JobIds Job;
     }
 
-    public unsafe partial class CooldownManager : PerJobManager<CooldownProps[]> {
+    public unsafe partial class CooldownManager : PerJobManager<CooldownConfig[]> {
         private static readonly int MILLIS_LOOP = 250;
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
 
         public CooldownManager() : base("##JobBars_Cooldowns") {
-            Init();
-
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
             if (!JobBars.Config.CooldownsEnabled) JobBars.Builder.HideCooldowns();
         }
 
-        public CooldownProps[] GetCooldownProps(JobIds job) {
+        public CooldownConfig[] GetCooldownConfigs(JobIds job) {
             return JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
         }
 

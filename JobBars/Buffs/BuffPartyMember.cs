@@ -36,7 +36,7 @@ namespace JobBars.Buffs {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.BuffManager.GetBuffProps(CurrentJob, IsPlayer);
+            var trackerProps = JobBars.BuffManager.GetBuffConfigs(CurrentJob, IsPlayer);
             foreach (var prop in trackerProps) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new BuffTracker(prop));

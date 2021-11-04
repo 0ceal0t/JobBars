@@ -15,39 +15,34 @@ namespace JobBars.Cooldowns {
             OffCD
         }
 
-        public readonly ActionIds Icon;
+        private readonly CooldownConfig Config;
 
-        private readonly float Duration;
-        private readonly float CD;
-        private readonly Item[] Triggers;
+        public ActionIds Icon => Config.Icon;
 
         private TrackerState State = TrackerState.None;
         private DateTime LastActiveTime;
         private Item LastActiveTrigger;
         private float TimeLeft;
 
-        public CooldownTracker(CooldownProps props) {
-            Duration = props.Duration;
-            CD = props.CD;
-            Icon = props.Icon;
-            Triggers = props.Triggers;
+        public CooldownTracker(CooldownConfig config) {
+            Config = config;
         }
 
         public void ProcessAction(Item action) {
-            if (Triggers.Contains(action)) SetActive(action);
+            if (Config.Triggers.Contains(action)) SetActive(action);
         }
 
         private void SetActive(Item trigger) {
-            State = Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
+            State = Config.Duration == 0 ? TrackerState.OnCD : TrackerState.Running;
             LastActiveTime = DateTime.Now;
             LastActiveTrigger = trigger;
         }
 
         public void Tick(Dictionary<Item, Status> buffDict) {
-            if (State != TrackerState.Running && UIHelper.CheckForTriggers(buffDict, Triggers, out var trigger)) SetActive(trigger);
+            if (State != TrackerState.Running && UIHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
 
             if (State == TrackerState.Running) {
-                TimeLeft = UIHelper.TimeLeft(Duration, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = UIHelper.TimeLeft(Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) {
                     TimeLeft = 0;
 
@@ -55,7 +50,7 @@ namespace JobBars.Cooldowns {
                 }
             }
             else if (State == TrackerState.OnCD) {
-                TimeLeft = (float)(CD - (DateTime.Now - LastActiveTime).TotalSeconds);
+                TimeLeft = (float)(Config.CD - (DateTime.Now - LastActiveTime).TotalSeconds);
 
                 if (TimeLeft <= 0) {
                     State = TrackerState.OffCD;

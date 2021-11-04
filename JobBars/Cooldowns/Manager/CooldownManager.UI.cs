@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using System.Numerics;
 
-namespace JobBars.Cooldowns {
+namespace JobBars.Cooldowns.Manager {
     public unsafe partial class CooldownManager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cooldowns Enabled" + _ID, ref JobBars.Config.CooldownsEnabled)) {
@@ -51,22 +51,10 @@ namespace JobBars.Cooldowns {
 
         // ==========================================
 
-        protected override void DrawItem(CooldownProps[] item) {
-            foreach (var cdProp in item) DrawCooldown(cdProp);
-        }
-
-        private void DrawCooldown(CooldownProps cooldown) {
-            ImGui.TextColored(cooldown.Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{cooldown.Name}");
-
-            if (JobBars.Config.CooldownEnabled.Draw($"Enabled{_ID}{cooldown.Name}", cooldown.Name, cooldown.Enabled)) {
-                ResetUI();
-            }
-
-            if (JobBars.Config.CooldownOrder.Draw($"Order{_ID}{cooldown.Name}", cooldown.Name)) {
-                ResetUI();
-            }
-
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+        protected override void DrawItem(CooldownConfig[] item) {
+            var reset = false;
+            foreach (var cooldown in item) cooldown.Draw(_ID, ref reset);
+            if (reset) ResetUI();
         }
     }
 }

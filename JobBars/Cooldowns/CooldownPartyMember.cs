@@ -42,7 +42,7 @@ namespace JobBars.Cooldowns {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.CooldownManager.GetCooldownProps(CurrentJob);
+            var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(CurrentJob);
             foreach (var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new CooldownTracker(prop));
