@@ -40,7 +40,7 @@ namespace JobBars.GameStructs {
 
             var leftOver = flag % 2;
             left = leftOver == 1;
-            set = (int)((flag - leftOver) / 2);
+            set = (int)((flag + leftOver) / 2);
 
             return true;
         }
