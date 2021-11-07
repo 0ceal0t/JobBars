@@ -57,7 +57,7 @@ namespace JobBars.Cursors {
 
         private float GetValue(CursorType type, StatusNameId status, float statusDuration) => type switch {
             CursorType.None => 0,
-            CursorType.GCD => UIHelper.GetGCD(),
+            CursorType.GCD => UIHelper.GetGCD(out var _, out var _),
             CursorType.CastTime => GetCastTime(),
             CursorType.MpTick => UIHelper.GetMpTick(),
             CursorType.ActorTick => UIHelper.GetActorTick(),

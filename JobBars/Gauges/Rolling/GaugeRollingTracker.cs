@@ -1,34 +1,35 @@
 ﻿using JobBars.Gauges.Types.Bar;
+using JobBars.Helper;
 using JobBars.UI;
 
-namespace JobBars.Gauges.MP {
-    public class GaugeMPTracker : GaugeTracker, IGaugeBarInterface {
-        private readonly GaugeMPConfig Config;
+namespace JobBars.Gauges.Rolling {
+    public class GaugeRollingTracker : GaugeTracker, IGaugeBarInterface {
+        private readonly GaugeRollingConfig Config;
 
         protected float Value;
         protected string TextValue;
 
-        public GaugeMPTracker(GaugeMPConfig config, int idx) {
+        public GaugeRollingTracker(GaugeRollingConfig config, int idx) {
             Config = config;
             LoadUI(Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeMPTracker>(this, idx),
+                GaugeBarConfig _ => new GaugeBar<GaugeRollingTracker>(this, idx),
                 _ => null
             });
         }
 
         public override GaugeConfig GetConfig() => Config;
 
-        public override bool GetActive() => Value < 1f;
+        public override bool GetActive() => true;
 
         public override void ProcessAction(Item action) { }
 
         protected override void TickTracker() {
-            var mp = JobBars.ClientState.LocalPlayer.CurrentMp;
-            Value = mp / 10000f;
-            TextValue = ((int)(mp / 100)).ToString();
+            Value = UIHelper.GetGCD(out var timeElapsed, out var total);
+            var timeLeft = total - timeElapsed;
+            TextValue = timeLeft.ToString("0.00");
         }
 
-        public virtual float[] GetBarSegments() => Config.ShowSegments ? Config.Segments : null;
+        public virtual float[] GetBarSegments() => null;
 
         public virtual bool GetBarTextVisible() => Config.TypeConfig switch {
             GaugeBarConfig barConfig => barConfig.ShowText,

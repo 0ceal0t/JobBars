@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JobBars.Data;
 using JobBars.Gauges.MP;
+using JobBars.Gauges.Rolling;
 using JobBars.Helper;
 using JobBars.Jobs;
 
@@ -36,7 +37,7 @@ namespace JobBars.Gauges.Manager {
             var configList = new List<GaugeConfig>(configs);
             var jobName = UIHelper.Localize(job);
             if (mp) configList.Add(new GaugeMPConfig($"MP ({jobName})", GaugeVisualType.Bar, mpSegments, defaultDisabled:true));
-            //if (gcdRoll) configList.Add(new GaugeGCDRoll($"GCD ({jobName})", GaugeVisualType.Bar));
+            if (gcdRoll) configList.Add(new GaugeRollingConfig($"GCD ({jobName})", GaugeVisualType.Bar));
             return configList.ToArray();
 
         }

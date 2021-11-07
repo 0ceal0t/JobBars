@@ -58,8 +58,8 @@ namespace JobBars.Helper {
             return GetTickFrom(MpTime);
         }
 
-        public static float GetGCD() {
-            var recast = GetRecastActiveAndTotal((uint)Data.ActionIds.GoringBlade, out var timeElapsed, out var total);
+        public static float GetGCD(out float timeElapsed, out float total) {
+            var recast = GetRecastActiveAndTotal((uint)Data.ActionIds.GoringBlade, out timeElapsed, out total);
             if (!recast || total == 0) return 0;
             return timeElapsed / total;
         }
