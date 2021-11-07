@@ -7,6 +7,7 @@ using JobBars.UI;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Gauges.Types.Diamond;
+using Dalamud.Logging;
 
 namespace JobBars.Gauges.Charges {
     public class GaugeChargesTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface, IGaugeBarDiamondComboInterface {
@@ -41,6 +42,7 @@ namespace JobBars.Gauges.Charges {
             var currentChargesValue = 0;
 
             foreach (var part in Config.Parts) {
+                var diamondFound = false;
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
                         var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
@@ -55,7 +57,10 @@ namespace JobBars.Gauges.Charges {
                             currentChargesValue += buffValue;
                             AddToActive(buffValue, part.MaxCharges);
                         }
-                        if (buffExists) break;
+                        if (buffExists || buffValue > 0) {
+                            diamondFound = true;
+                            break;
+                        }
                     }
                     else {
                         var recastActive = UIHelper.GetRecastActive(trigger.Id, out var timeElapsed);
@@ -73,10 +78,13 @@ namespace JobBars.Gauges.Charges {
                             currentChargesValue += actionValue;
                             AddToActive(actionValue, part.MaxCharges);
                         }
-                        if (recastActive) break;
+                        if (recastActive || actionValue > 0) {
+                            diamondFound = true;
+                            break;
+                        }
                     }
                 }
-                AddToActive(0, part.MaxCharges); // part is empty
+                if (!diamondFound) AddToActive(0, part.MaxCharges); // part is empty
             }
             if (!barAssigned) BarTextValue = BarPercentValue = 0;
 

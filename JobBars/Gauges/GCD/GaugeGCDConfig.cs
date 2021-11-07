@@ -92,6 +92,7 @@ namespace JobBars.Gauges.GCD {
 
                 if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
                     subGCD.ReverseFill = newReverseFill;
+                    newVisual = true;
                 }
             }
         }

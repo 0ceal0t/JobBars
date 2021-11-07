@@ -57,6 +57,7 @@ namespace JobBars.Gauges.Charges {
 
             if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{id}", Name, ReverseFill, out var newReverseFill)) {
                 ReverseFill = newReverseFill;
+                newVisual = true;
             }
         }
     }
