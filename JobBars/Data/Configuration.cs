@@ -45,7 +45,6 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
-        public BoolValueConfig GaugeAltText = new(false);
         public BoolValueConfig GaugeVertical = new(false);
         public IntValueConfig GaugeProcOrder = new(-1);
         public ColorConfig GaugeProcColor = new();

@@ -17,7 +17,7 @@ namespace JobBars.Jobs {
             new GaugeDrkMPConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
                 Color = UIColor.Purple,
                 DarkArtsColor = UIColor.LightBlue,
-                Segments = new[] { 0.3f, 0.6f, 0.9f, 1f }
+                Segments = new[] { 0.3f, 0.6f, 0.9f }
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 5,
@@ -101,5 +101,11 @@ namespace JobBars.Jobs {
                 }
             })
         };
+
+        // DRK HAS A CUSTOM MP BAR, SO DON'T WORRY ABOUT THIS
+        public static bool MP => false;
+        public static float[] MP_SEGMENTS => null;
+
+        public static bool GCD_ROLL => true;
     }
 }

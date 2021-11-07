@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.Gauges.MP {
     public class GaugeMPTracker : GaugeTracker, IGaugeBarInterface {
-        private GaugeMPConfig Config;
+        private readonly GaugeMPConfig Config;
 
         protected float Value;
         protected string TextValue;

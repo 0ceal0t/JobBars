@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace JobBars.UI {
     public unsafe class UIBar : UIGauge {
-        private static readonly int MAX_SEGMENTS = 5;
+        private static readonly int MAX_SEGMENTS = 6;
 
         private AtkResNode* GaugeContainer;
         private AtkImageNode* Background;
@@ -29,7 +29,6 @@ namespace JobBars.UI {
 
         private bool Vertical = false;
         private bool TextSwap = false;
-        private bool AltText = false;
 
         public UIBar(AtkUldPartsList* partsList) {
 
@@ -176,8 +175,6 @@ namespace JobBars.UI {
 
             int size = text.Length * 17;
 
-            // TODO
-
             if (Vertical) {
                 // when no text swap + vertical, it expands right, so don't need to do anything
                 if (TextSwap) UIHelper.SetPosition(TextContainer, (8 + 17) - size, null);
@@ -186,13 +183,13 @@ namespace JobBars.UI {
                 UIHelper.SetPosition(TextContainer, (112 + 17) - size, null);
             }
 
+            UIHelper.SetPosition(TextNode, 14, null);
+            UIHelper.SetSize(TextNode, size, 30);
+
             UIHelper.SetSize(TextContainer, 30 + size, 40);
 
             UIHelper.SetPosition(TextBlurNode, 0, null);
             UIHelper.SetSize(TextBlurNode, 30 + size, 40);
-
-            UIHelper.SetPosition(TextNode, 14, null);
-            UIHelper.SetSize(TextNode, size, 30);
         }
 
         public void SetTextColor(ElementColor color) {
@@ -208,12 +205,12 @@ namespace JobBars.UI {
             if (Vertical) {
                 UIHelper.SetRotation(GaugeContainer, (float)(-Math.PI / 2f));
                 UIHelper.SetPosition(GaugeContainer, TextSwap ? 42 : 0, 158);
-                UIHelper.SetPosition(TextContainer, TextSwap ? 8 : 6, 125); // TODO
+                UIHelper.SetPosition(TextContainer, TextSwap ? 8 : 6, 125);
             }
             else {
                 UIHelper.SetRotation(GaugeContainer, 0);
                 UIHelper.SetPosition(GaugeContainer, 0, TextSwap ? 24 : 0);
-                UIHelper.SetPosition(TextContainer, 112, TextSwap ? -3 : 6); // TODO
+                UIHelper.SetPosition(TextContainer, 112, TextSwap ? -3 : 6);
             }
         }
 
@@ -226,7 +223,7 @@ namespace JobBars.UI {
 
 
             Anim?.Delete();
-            if (difference >= 0.05f) {
+            if (difference >= 0.01f) {
                 Anim = Animation.AddAnim(f => SetPercentInternal(f), 0.2f, LastPercent, value);
             }
             else {
@@ -244,10 +241,15 @@ namespace JobBars.UI {
                 var fullValue = 0f;
                 var partialValue = value;
 
+                var _segment = false;
                 for (int i = 0; i < Segments.Length; i++) {
                     if (Segments[i] <= value) fullValue = Segments[i];
-                    else break;
+                    else {
+                        _segment = true;
+                        break;
+                    }
                 }
+                if (!_segment) fullValue = value; // not less than any segment
                 if (fullValue == value) partialValue = 0;
 
                 var fullWidth = (int)(148 * fullValue);
@@ -270,12 +272,14 @@ namespace JobBars.UI {
 
             Segments = segments;
 
-            for (int i = 0; i < segments.Length - 1; i++) {
-                UIHelper.Show(Separators[i]);
-                Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
-            }
-            for (int i = segments.Length - 1; i < MAX_SEGMENTS - 1; i++) {
-                UIHelper.Hide(Separators[i]);
+            for (var i = 0; i < MAX_SEGMENTS - 1; i++) {
+                if (i < segments.Length && segments[i] > 0f && segments[i] < 1f) {
+                    UIHelper.Show(Separators[i]);
+                    Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
+                }
+                else {
+                    UIHelper.Hide(Separators[i]);
+                }
             }
         }
 
