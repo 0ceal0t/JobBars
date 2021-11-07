@@ -172,6 +172,7 @@
 - [ ] (**NEW**) Gauge - Procs (Enhanced Gibbet / Ehanced Cross Reaping , Enhanced Gallows / Enhanced Void Reaping)
 - [ ] (**NEW**) Gauge - Soul Reaver stacks (2 max)
 - [ ] (**NEW**) Gauge - Immortal Sacrifice Stacks (8 max)
+- [ ] (**NEW**) Gauge - True North
 - [ ] (**NEW**) Buffs - Arcane Circle (20s, 120s CD)
 - [ ] (**NEW**) Mitigation - Feint
 - [ ] (**NEW**) Mitigation - Arcane Crest (5s, 30s CD)

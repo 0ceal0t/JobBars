@@ -14,7 +14,7 @@ using System;
 namespace JobBars.Jobs {
     public static class DRK {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeDrkMpConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
+            new GaugeDrkMPConfig($"MP ({UIHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
                 Color = UIColor.Purple,
                 DarkArtsColor = UIColor.LightBlue,
                 Segments = new[] { 0.3f, 0.6f, 0.9f, 1f }

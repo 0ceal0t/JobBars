@@ -15,7 +15,7 @@ namespace JobBars.Gauges {
         public GaugeVisualType Type { get; private set; }
         public GaugeTypeConfig TypeConfig { get; private set; }
 
-        public bool Enabled { get; private set; }
+        public bool Enabled { get; protected set; }
         public int Order { get; private set; }
         public float Scale { get; private set; }
         public bool HideWhenInactive { get; private set; }
@@ -49,7 +49,7 @@ namespace JobBars.Gauges {
         public void Draw(string id, out bool newPos, out bool newVisual, out bool reset) {
             newPos = newVisual = reset = false;
 
-            if (JobBars.Config.GaugeEnabled.Draw($"Enabled{id}", Name, out var newEnabled)) {
+            if (JobBars.Config.GaugeEnabled.Draw($"Enabled{id}", Name, Enabled, out var newEnabled)) {
                 Enabled = newEnabled;
                 newVisual = true;
                 newPos = true;

@@ -29,18 +29,21 @@ namespace JobBars.Gauges {
         public void UpdateVisual() => UI.UpdateVisual();
 
         public void Tick() {
+            if (UI == null) return;
             TickTracker();
             UI.Tick();
         }
 
         public void Cleanup() {
             Disposed = true;
+            if (UI == null) return;
             UI.Cleanup();
             UI = null;
         }
 
         protected void LoadUI(Gauge ui) {
             UI = ui;
+            if (UI == null) return;
             UI.UpdateVisual();
         }
 

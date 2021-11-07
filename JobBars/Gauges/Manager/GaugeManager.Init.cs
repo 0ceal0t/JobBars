@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using JobBars.Data;
+using JobBars.Gauges.MP;
+using JobBars.Helper;
 using JobBars.Jobs;
 
 namespace JobBars.Gauges.Manager {
@@ -6,7 +10,7 @@ namespace JobBars.Gauges.Manager {
         protected override GaugeConfig[] GetOTHER() => Array.Empty<GaugeConfig>();
 
         protected override GaugeConfig[] GetGNB() => GNB.Gauges;
-        protected override GaugeConfig[] GetPLD() => PLD.Gauges;
+        protected override GaugeConfig[] GetPLD() => AddMiscGauges(PLD.Gauges, JobIds.PLD, true, true);
         protected override GaugeConfig[] GetWAR() => WAR.Gauges;
         protected override GaugeConfig[] GetDRK() => DRK.Gauges;
 
@@ -27,5 +31,14 @@ namespace JobBars.Gauges.Manager {
         protected override GaugeConfig[] GetBLM() => BLM.Gauges;
         protected override GaugeConfig[] GetRDM() => RDM.Gauges;
         protected override GaugeConfig[] GetBLU() => BLU.Gauges;
+
+        private GaugeConfig[] AddMiscGauges(GaugeConfig[] configs, JobIds job, bool mp, bool gcdRoll) {
+            var configList = new List<GaugeConfig>(configs);
+            var jobName = UIHelper.Localize(job);
+            if (mp) configList.Add(new GaugeMPConfig($"MP ({jobName})", GaugeVisualType.Bar, null, defaultDisabled:true));
+            //if (gcdRoll) configList.Add(new GaugeGCDRoll($"GCD ({jobName})", GaugeVisualType.Bar));
+            return configList.ToArray();
+
+        }
     }
 }

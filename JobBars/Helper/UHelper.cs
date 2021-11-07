@@ -35,6 +35,10 @@ namespace JobBars.Helper {
             node->Flags_2 |= 0x1;
         }
 
+        public static void Update(AtkResNode* node) {
+            node->Flags_2 |= 0x1;
+        }
+
         public static void SetVisibility(AtkResNode* node, bool visiblity) {
             if (visiblity) Show(node);
             else Hide(node);

@@ -43,8 +43,8 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
+            if (UI == null) return;
             TickGauge();
-
             UI.SetVisible(!Tracker.GetConfig().HideWhenInactive || Tracker.GetActive());
         }
 
@@ -53,6 +53,7 @@ namespace JobBars.Gauges {
         public override void SetSplitPosition(Vector2 position) => UI.SetSplitPosition(position);
 
         public override void UpdateVisual() {
+            if (UI == null) return;
             UI.SetVisible(Tracker.GetConfig().Enabled);
             UI.SetScale(Tracker.GetConfig().Scale);
 

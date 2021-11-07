@@ -1,4 +1,5 @@
-﻿using JobBars.UI;
+﻿using JobBars.Gauges.MP;
+using JobBars.UI;
 
 namespace JobBars.Gauges.Custom {
     public struct GaugeDrkMpProps {
@@ -7,29 +8,22 @@ namespace JobBars.Gauges.Custom {
         public ElementColor DarkArtsColor;
     }
 
-    public class GaugeDrkMpConfig : GaugeConfig {
+    public class GaugeDrkMPConfig : GaugeMPConfig {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Bar, GaugeVisualType.BarDiamondCombo, GaugeVisualType.Diamond, GaugeVisualType.Arrow };
         protected override GaugeVisualType[] GetValidGaugeTypes() => ValidGaugeVisualType;
 
-        public float[] Segments { get; private set; }
-        public ElementColor Color { get; private set; }
         public ElementColor DarkArtsColor { get; private set; }
 
         private string DarkArtsName => Name + "/DarkArts";
 
-        public GaugeDrkMpConfig(string name, GaugeVisualType type, GaugeDrkMpProps props) : base(name, type) {
-            Segments = props.Segments;
-            Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
+        public GaugeDrkMPConfig(string name, GaugeVisualType type, GaugeDrkMpProps props) : base(name, type, props.Segments) {
             DarkArtsColor = JobBars.Config.GaugeColor.Get(DarkArtsName, props.DarkArtsColor);
         }
 
-        public override GaugeTracker GetTracker(int idx) => new GaugeDrkMpTracker(this, idx);
+        public override GaugeTracker GetTracker(int idx) => new GaugeDrkMPTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
-            if (JobBars.Config.GaugeColor.Draw($"Color{id}", Name, Color, out var newColor)) {
-                Color = newColor;
-                newVisual = true;
-            }
+            base.DrawConfig(id, ref newPos, ref newVisual, ref reset);
 
             if (JobBars.Config.GaugeColor.Draw($"Dark Arts Color{id}", Name, Color, out var newDarkArtsColor)) {
                 DarkArtsColor = newDarkArtsColor;

@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using JobBars.Helper;
+using System.Numerics;
 
 namespace JobBars.Data {
     public abstract class PerJobManagerNested<T> : PerJobManagerGeneric<T[]> where T : class {
@@ -18,9 +19,13 @@ namespace JobBars.Data {
 
                     foreach (var item in entry.Value) {
                         var itemId = ItemToString(item) + _ID;
+                        var enabled = IsEnabled(item);
+
+                        ImGui.PushStyleColor(ImGuiCol.Text, enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1));
                         if (ImGui.Selectable(itemId, item == SettingsItemSelected)) {
                             SettingsItemSelected = item;
                         }
+                        ImGui.PopStyleColor();
                     }
 
                     ImGui.Unindent();
@@ -42,5 +47,7 @@ namespace JobBars.Data {
         protected abstract string ItemToString(T item);
 
         protected abstract void DrawItem(T item);
+
+        protected abstract bool IsEnabled(T item);
     }
 }

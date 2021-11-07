@@ -222,6 +222,8 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 </table>
 
 ## TODO
+- [ ] GCD rolling gauges
+- [ ] Alternate text style
 - [ ] Custom text spacing
 - [ ] Completely custom gauges/buffs/cds (requires big rework)
 - [ ] Hide based on level

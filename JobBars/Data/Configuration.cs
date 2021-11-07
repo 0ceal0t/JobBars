@@ -45,6 +45,7 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeIndividualScale = new(1.0f);
         public BoolValueConfig GaugeEnabled = new(true);
         public IntValueConfig GaugeOrder = new(-1);
+        public BoolValueConfig GaugeAltText = new(false);
         public BoolValueConfig GaugeVertical = new(false);
         public IntValueConfig GaugeProcOrder = new(-1);
         public ColorConfig GaugeProcColor = new();
@@ -52,6 +53,7 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeProgressSound = new(true); // Timer, GCD, proc, stacks, charges
         public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
+        public BoolValueConfig GaugeShowSegments = new(true);
         public BoolValueConfig GaugeReverseFill = new(false);
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
@@ -115,10 +117,6 @@ namespace JobBars.Data {
         public BoolValueConfig IconEnabled = new(true);
         public ComboValueConfig<UIIconComboType> IconComboType = new();
         public FloatValueConfig IconTimerOffset = new(0f);
-
-        // ====== ADJUSTMENTS =========
-
-        public BoolValueConfig AdjustmentEnabled = new(false);
 
         // =====================
 

@@ -29,6 +29,7 @@ namespace JobBars.UI {
 
         private bool Vertical = false;
         private bool TextSwap = false;
+        private bool AltText = false;
 
         public UIBar(AtkUldPartsList* partsList) {
 
@@ -167,6 +168,122 @@ namespace JobBars.UI {
             layout.Cleanup();
         }
 
+        public void SetText(string text) {
+            if (text != CurrentText) {
+                TextNode->SetText(text);
+                CurrentText = text;
+            }
+
+            int size = text.Length * 17;
+
+            // TODO
+
+            if (Vertical) {
+                // when no text swap + vertical, it expands right, so don't need to do anything
+                if (TextSwap) UIHelper.SetPosition(TextContainer, (8 + 17) - size, null);
+            }
+            else {
+                UIHelper.SetPosition(TextContainer, (112 + 17) - size, null);
+            }
+
+            UIHelper.SetSize(TextContainer, 30 + size, 40);
+
+            UIHelper.SetPosition(TextBlurNode, 0, null);
+            UIHelper.SetSize(TextBlurNode, 30 + size, 40);
+
+            UIHelper.SetPosition(TextNode, 14, null);
+            UIHelper.SetSize(TextNode, size, 30);
+        }
+
+        public void SetTextColor(ElementColor color) {
+            UIColor.SetColor(TextNode, color);
+        }
+
+        public void SetTextVisible(bool visible) => UIHelper.SetVisibility(TextContainer, visible);
+
+        public void SetLayout(bool textSwap, bool vertical) {
+            Vertical = vertical;
+            TextSwap = textSwap;
+
+            if (Vertical) {
+                UIHelper.SetRotation(GaugeContainer, (float)(-Math.PI / 2f));
+                UIHelper.SetPosition(GaugeContainer, TextSwap ? 42 : 0, 158);
+                UIHelper.SetPosition(TextContainer, TextSwap ? 8 : 6, 125); // TODO
+            }
+            else {
+                UIHelper.SetRotation(GaugeContainer, 0);
+                UIHelper.SetPosition(GaugeContainer, 0, TextSwap ? 24 : 0);
+                UIHelper.SetPosition(TextContainer, 112, TextSwap ? -3 : 6); // TODO
+            }
+        }
+
+        public void SetPercent(float value) {
+            if (value > 1) value = 1;
+            else if (value < 0) value = 0;
+
+            var difference = Math.Abs(value - LastPercent);
+            if (difference == 0) return;
+
+
+            Anim?.Delete();
+            if (difference >= 0.05f) {
+                Anim = Animation.AddAnim(f => SetPercentInternal(f), 0.2f, LastPercent, value);
+            }
+            else {
+                SetPercentInternal(value);
+            }
+            LastPercent = value;
+        }
+
+        public void SetPercentInternal(float value) {
+            if (Segments == null) {
+                UIHelper.SetSize(BarMainNode, (int)(148 * value), 20);
+                UIHelper.SetSize(BarSecondaryNode, 0, 20);
+            }
+            else {
+                var fullValue = 0f;
+                var partialValue = value;
+
+                for (int i = 0; i < Segments.Length; i++) {
+                    if (Segments[i] <= value) fullValue = Segments[i];
+                    else break;
+                }
+                if (fullValue == value) partialValue = 0;
+
+                var fullWidth = (int)(148 * fullValue);
+                var partialWidth = (int)(148 * partialValue);
+
+                UIHelper.SetSize(BarMainNode, fullWidth, 20);
+                UIHelper.SetSize(BarSecondaryNode, partialWidth, 20);
+            }
+        }
+
+        public void SetColor(ElementColor color) {
+            UIColor.SetColor(BarMainNode, color);
+        }
+
+        public void SetSegments(float[] segments) { // [0.5f, 1.0f]
+            if (segments == null) {
+                ClearSegments();
+                return;
+            }
+
+            Segments = segments;
+
+            for (int i = 0; i < segments.Length - 1; i++) {
+                UIHelper.Show(Separators[i]);
+                Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
+            }
+            for (int i = segments.Length - 1; i < MAX_SEGMENTS - 1; i++) {
+                UIHelper.Hide(Separators[i]);
+            }
+        }
+
+        public void ClearSegments() {
+            Segments = null;
+            foreach (var seps in Separators) UIHelper.Hide(seps);
+        }
+
         public override void Dispose() {
             if (GaugeContainer != null) {
                 GaugeContainer->Destroy(true);
@@ -228,120 +345,6 @@ namespace JobBars.UI {
                 RootRes->Destroy(true);
                 RootRes = null;
             }
-        }
-
-        public void SetSegments(float[] segments) { // [0.5f, 1.0f]
-            if (segments == null) {
-                ClearSegments();
-                return;
-            }
-
-            Segments = segments;
-
-            for (int i = 0; i < segments.Length - 1; i++) {
-                UIHelper.Show(Separators[i]);
-                Separators[i]->AtkResNode.X = 8 + (int)(148 * segments[i]);
-            }
-            for (int i = segments.Length - 1; i < MAX_SEGMENTS - 1; i++) {
-                UIHelper.Hide(Separators[i]);
-            }
-        }
-
-        public void ClearSegments() {
-            Segments = null;
-            foreach (var seps in Separators) UIHelper.Hide(seps);
-        }
-
-        public void SetText(string text) {
-            if (text != CurrentText) {
-                TextNode->SetText(text);
-                CurrentText = text;
-            }
-
-            int size = text.Length * 17;
-
-            if (Vertical) {
-                // when no text swap + vertical, it expands right, so don't need to do anything
-                if (TextSwap) UIHelper.SetPosition(TextContainer, (8 + 17) - size, null);
-            }
-            else {
-                UIHelper.SetPosition(TextContainer, (112 + 17) - size, null);
-            }
-
-            UIHelper.SetSize(TextContainer, 30 + size, 40);
-
-            UIHelper.SetPosition(TextBlurNode, 0, null);
-            UIHelper.SetSize(TextBlurNode, 30 + size, 40);
-
-            UIHelper.SetPosition(TextNode, 14, null);
-            UIHelper.SetSize(TextNode, size, 30);
-        }
-
-        public void SetTextColor(ElementColor color) {
-            UIColor.SetColor(TextNode, color);
-        }
-
-        public void SetTextVisible(bool visible) => UIHelper.SetVisibility(TextContainer, visible);
-
-        public void SetLayout(bool textSwap, bool vertical) {
-            Vertical = vertical;
-            TextSwap = textSwap;
-
-            if (Vertical) {
-                UIHelper.SetRotation(GaugeContainer, (float)(-Math.PI / 2f));
-                UIHelper.SetPosition(GaugeContainer, TextSwap ? 42 : 0, 158);
-                UIHelper.SetPosition(TextContainer, TextSwap ? 8 : 6, 125);
-            }
-            else {
-                UIHelper.SetRotation(GaugeContainer, 0);
-                UIHelper.SetPosition(GaugeContainer, 0, TextSwap ? 24 : 0);
-                UIHelper.SetPosition(TextContainer, 112, TextSwap ? -3 : 6);
-            }
-        }
-
-        public void SetPercent(float value) {
-            if (value > 1) value = 1;
-            else if (value < 0) value = 0;
-
-            var difference = Math.Abs(value - LastPercent);
-            if (difference == 0) return;
-
-
-            Anim?.Delete();
-            if (difference >= 0.05f) {
-                Anim = Animation.AddAnim(f => SetPercentInternal(f), 0.2f, LastPercent, value);
-            }
-            else {
-                SetPercentInternal(value);
-            }
-            LastPercent = value;
-        }
-
-        public void SetPercentInternal(float value) {
-            if (Segments == null) {
-                UIHelper.SetSize(BarMainNode, (int)(148 * value), 20);
-                UIHelper.SetSize(BarSecondaryNode, 0, 20);
-            }
-            else {
-                var fullValue = 0f;
-                var partialValue = value;
-
-                for (int i = 0; i < Segments.Length; i++) {
-                    if (Segments[i] <= value) fullValue = Segments[i];
-                    else break;
-                }
-                if (fullValue == value) partialValue = 0;
-
-                var fullWidth = (int)(148 * fullValue);
-                var partialWidth = (int)(148 * partialValue);
-
-                UIHelper.SetSize(BarMainNode, fullWidth, 20);
-                UIHelper.SetSize(BarSecondaryNode, partialWidth, 20);
-            }
-        }
-
-        public void SetColor(ElementColor color) {
-            UIColor.SetColor(BarMainNode, color);
         }
     }
 }

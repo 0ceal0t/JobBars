@@ -4,71 +4,46 @@ using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Diamond;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using JobBars.Gauges.MP;
 
 namespace JobBars.Gauges.Custom {
-    public class GaugeDrkMpTracker : GaugeTracker, IGaugeBarInterface, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
-        private readonly GaugeDrkMpConfig Config;
-        private float Value;
-        private string TextValue;
+    public class GaugeDrkMPTracker : GaugeMPTracker, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
+        private readonly GaugeDrkMPConfig Config;
         private bool DarkArts = false;
 
-        public GaugeDrkMpTracker(GaugeDrkMpConfig config, int idx) {
+        public GaugeDrkMPTracker(GaugeDrkMPConfig config, int idx) : base(config, idx) {
             Config = config;
             LoadUI(Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeDrkMpTracker>(this, idx),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMpTracker>(this, idx),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMpTracker>(this, idx),
-                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMpTracker>(this, idx),
+                GaugeBarConfig _ => new GaugeBar<GaugeDrkMPTracker>(this, idx),
+                GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMPTracker>(this, idx),
+                GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMPTracker>(this, idx),
+                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMPTracker>(this, idx),
                 _ => null
             });
         }
 
         public override GaugeConfig GetConfig() => Config;
 
-        public override bool GetActive() => true;
-
-        public override void ProcessAction(Item action) { }
-
         protected override void TickTracker() {
-            var mp = JobBars.ClientState.LocalPlayer.CurrentMp;
-            Value = mp / 10000f;
-            TextValue = ((int)(mp / 100)).ToString();
+            base.TickTracker();
 
             var drkGauge = JobBars.JobGauges.Get<DRKGauge>();
             DarkArts = drkGauge != null && drkGauge.HasDarkArts;
         }
 
-        public float[] GetBarSegments() => Config.Segments;
-
-        public bool GetBarTextSwap() => Config.TypeConfig switch {
-            GaugeBarConfig barConfig => barConfig.SwapText,
-            _ => false
-        };
-
-        public bool GetBarTextVisible() => Config.TypeConfig switch {
+        public override bool GetBarTextVisible() => Config.TypeConfig switch {
             GaugeBarConfig barConfig => barConfig.ShowText,
             GaugeBarDiamondComboConfig comboConfig => comboConfig.ShowText,
             _ => false
         };
 
-        public bool GetVertical() => Config.TypeConfig switch {
-            GaugeBarConfig barConfig => barConfig.Vertical,
-            _ => false
-        };
-
-        public ElementColor GetColor() => Config.Color;
-
-        public bool GetBarDanger() => false;
-
-        public string GetBarText() => TextValue;
-
-        public float GetBarPercent() => Value;
+        // ======== DIAMOND ============
 
         public int GetCurrentMaxTicks() => 1;
 
         public ElementColor GetTickColor(int idx) => Config.DarkArtsColor;
 
-        public bool GetTickValue(int _) => DarkArts;
+        public bool GetTickValue(int idx) => DarkArts;
 
         public bool GetReverseFill() => false; // doesn't matter anyway, only 1 charge
 
