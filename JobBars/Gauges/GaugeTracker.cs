@@ -10,11 +10,11 @@ namespace JobBars.Gauges {
 
         public int Order => GetConfig().Order;
 
-        public int Height => UI.GetHeight();
+        public int Height => UI?.GetHeight() ?? 0;
 
-        public int Width => UI.GetWidth();
+        public int Width => UI?.GetWidth() ?? 0;
 
-        public int YOffset => UI.GetYOffset();
+        public int YOffset => UI?.GetYOffset() ?? 0;
 
         public abstract GaugeConfig GetConfig();
 
@@ -22,11 +22,11 @@ namespace JobBars.Gauges {
 
         public abstract void ProcessAction(Item action);
 
-        public void SetPosition(Vector2 position) => UI.SetPosition(position);
+        public void SetPosition(Vector2 position) => UI?.SetPosition(position);
 
-        public void UpdateSplitPosition() => UI.SetSplitPosition(GetConfig().Position);
+        public void UpdateSplitPosition() => UI?.SetSplitPosition(GetConfig().Position);
 
-        public void UpdateVisual() => UI.UpdateVisual();
+        public void UpdateVisual() => UI?.UpdateVisual();
 
         public void Tick() {
             if (UI == null) return;

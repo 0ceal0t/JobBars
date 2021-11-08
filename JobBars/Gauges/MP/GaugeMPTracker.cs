@@ -1,4 +1,5 @@
-﻿using JobBars.Gauges.Types.Bar;
+﻿using Dalamud.Logging;
+using JobBars.Gauges.Types.Bar;
 using JobBars.UI;
 
 namespace JobBars.Gauges.MP {
@@ -8,8 +9,9 @@ namespace JobBars.Gauges.MP {
         protected float Value;
         protected string TextValue;
 
-        public GaugeMPTracker(GaugeMPConfig config, int idx) {
+        public GaugeMPTracker(GaugeMPConfig config, int idx, bool noInit = false) {
             Config = config;
+            if (noInit) return;
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeMPTracker>(this, idx),
                 _ => null

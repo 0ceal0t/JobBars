@@ -5,13 +5,14 @@ using JobBars.Gauges.Types.Diamond;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using JobBars.Gauges.MP;
+using Dalamud.Logging;
 
 namespace JobBars.Gauges.Custom {
     public class GaugeDrkMPTracker : GaugeMPTracker, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
         private readonly GaugeDrkMPConfig Config;
         private bool DarkArts = false;
 
-        public GaugeDrkMPTracker(GaugeDrkMPConfig config, int idx) : base(config, idx) {
+        public GaugeDrkMPTracker(GaugeDrkMPConfig config, int idx) : base(config, idx, true) {
             Config = config;
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeDrkMPTracker>(this, idx),
