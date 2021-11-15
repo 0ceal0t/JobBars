@@ -11,9 +11,12 @@ namespace JobBars.UI {
         private bool Dimmed = false;
 
         private AtkResNode* OriginalRecastContainer;
+        private AtkResNode* OriginalPreCombo;
+        private AtkResNode* OriginalComboContainer;
+        private AtkImageNode* OriginalCombo;
+
         private AtkImageNode* Ring;
         private AtkTextNode* Text;
-        private AtkResNode* ComboContainer;
         private AtkImageNode* Combo;
 
         public UIIconTimer(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) :
@@ -25,12 +28,33 @@ namespace JobBars.UI {
             OriginalImage = (AtkImageNode*)nodeList[0];
             var originalRing = (AtkImageNode*)nodeList[7];
 
-            ComboContainer = IconComponent->ComboBorder;
-            Combo = (AtkImageNode*)ComboContainer->ChildNode;
-            IconComponent->ComboBorder = null;
+            OriginalPreCombo = IconComponent->Frame->PrevSiblingNode;
+            OriginalComboContainer = IconComponent->ComboBorder;
+            OriginalCombo = (AtkImageNode*)OriginalComboContainer->ChildNode;
+
+            Combo = UIHelper.CleanAlloc<AtkImageNode>();
+            Combo->Ctor();
+            Combo->AtkResNode.NodeID = NodeIdx++;
+            Combo->AtkResNode.Type = NodeType.Image;
+            Combo->AtkResNode.X = 0;
+            Combo->AtkResNode.Width = 48;
+            Combo->AtkResNode.Height = 48;
+            Combo->AtkResNode.Flags = 8243;
+            Combo->AtkResNode.Flags_2 = 1;
+            Combo->AtkResNode.Flags_2 |= 4;
+            Combo->WrapMode = 1;
+            Combo->PartId = 0;
+            Combo->PartsList = OriginalCombo->PartsList;
             Combo->PartId = 0;
 
-            UIHelper.Show(ComboContainer);
+            Combo->AtkResNode.ParentNode = OriginalComboContainer->ParentNode;
+
+            OriginalPreCombo->PrevSiblingNode = (AtkResNode*)Combo;
+            Combo->AtkResNode.NextSiblingNode = OriginalPreCombo;
+
+            Combo->AtkResNode.PrevSiblingNode = OriginalComboContainer->PrevSiblingNode;
+            OriginalPreCombo->PrevSiblingNode->NextSiblingNode = (AtkResNode*)Combo;
+
             UIHelper.Show(Combo);
 
             Text = (AtkTextNode*)IconComponent->UnknownImageNode;
@@ -109,17 +133,20 @@ namespace JobBars.UI {
         }
 
         public override void OnDispose() {
-            // remove ring from containing node
             OriginalRecastContainer->ChildNode->PrevSiblingNode->PrevSiblingNode = null;
+
+            OriginalPreCombo->PrevSiblingNode = OriginalComboContainer;
+            Combo->AtkResNode.PrevSiblingNode->NextSiblingNode = OriginalComboContainer;
+
             Component->Component->UldManager.UpdateDrawNodeList();
 
             IconComponent->UnknownImageNode = (AtkImageNode*)Text;
             Text = null;
 
-            IconComponent->ComboBorder = ComboContainer;
-            Combo->PartId = 0;
-            Combo = null;
-            ComboContainer = null;
+            if (Combo != null) {
+                Combo->AtkResNode.Destroy(true);
+                Combo = null;
+            }
 
             if (Ring != null) {
                 Ring->AtkResNode.Destroy(true);
@@ -129,6 +156,9 @@ namespace JobBars.UI {
             JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
             if (Dimmed) SetDimmed(false);
 
+            OriginalPreCombo = null;
+            OriginalComboContainer = null;
+            OriginalCombo = null;
             OriginalRecastContainer = null;
             OriginalImage = null;
         }

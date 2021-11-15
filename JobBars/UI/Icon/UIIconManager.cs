@@ -30,6 +30,15 @@ namespace JobBars.UI {
         private readonly List<UIIcon> Icons = new();
         private readonly HashSet<IntPtr> IconOverride = new();
 
+        private struct CreateIconStruct {
+            public uint Action;
+            public uint ActionId;
+            public int HotBarIndex;
+            public int SlotIndex;
+            public AtkComponentNode* Component;
+            public UIIconProps Props;
+        }
+
         public UIIconManager() {
         }
 
@@ -64,46 +73,58 @@ namespace JobBars.UI {
             if (hotbarData == null) return;
 
             HashSet<UIIcon> foundIcons = new();
+            HashSet<CreateIconStruct> createIcons = new();
 
             for (var hotbarIndex = 0; hotbarIndex < AllActionBars.Length; hotbarIndex++) {
                 var actionBar = (AddonActionBarBase*)AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(AllActionBars[hotbarIndex]);
                 if (actionBar == null || actionBar->ActionBarSlotsAction == null || actionBar->AtkUnitBase.IsVisible == false) continue;
 
                 if (hotbarIndex == 10) { // cross
-                    ProcessCrossHotbar(hotbarIndex, actionBar, hotbarData, foundIcons, percent);
+                    ProcessCrossHotbar(hotbarIndex, actionBar, hotbarData, foundIcons, createIcons, percent);
                 }
                 else if(hotbarIndex == 11) {
-                    ProcessDoubleCrossHotbar(hotbarIndex, actionBar, UIHelper.GetLeftDoubleCrossBar(), true, hotbarData, foundIcons, percent);
+                    ProcessDoubleCrossHotbar(hotbarIndex, actionBar, UIHelper.GetLeftDoubleCrossBar(), true, hotbarData, foundIcons, createIcons, percent);
                 }
                 else if(hotbarIndex == 12) {
-                    ProcessDoubleCrossHotbar(hotbarIndex, actionBar, UIHelper.GetRightDoubleCrossBar(), false, hotbarData, foundIcons, percent);
+                    ProcessDoubleCrossHotbar(hotbarIndex, actionBar, UIHelper.GetRightDoubleCrossBar(), false, hotbarData, foundIcons, createIcons, percent);
                 }
                 else {
-                    ProcessNormalHotbar(hotbarIndex, actionBar, hotbarData, foundIcons, percent);
+                    ProcessNormalHotbar(hotbarIndex, actionBar, hotbarData, foundIcons, createIcons, percent);
                 }
             }
 
-            foreach (var icon in Icons.Where(x => !foundIcons.Contains(x))) icon.Dispose();
+            // remove unused
+            foreach (var icon in Icons.Where(x => !foundIcons.Contains(x))) {
+                icon.Dispose();
+            }
             Icons.RemoveAll(x => !foundIcons.Contains(x));
+
+            // create new
+            foreach (var create in createIcons) {
+                UIIcon newIcon = create.Props.IsTimer ?
+                    new UIIconTimer(create.Action, create.ActionId, create.HotBarIndex, create.SlotIndex, create.Component, create.Props) :
+                    new UIIconBuff(create.Action, create.ActionId, create.HotBarIndex, create.SlotIndex, create.Component, create.Props);
+                Icons.Add(newIcon);
+            }
         }
 
-        private void ProcessCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, float percent) {
+        private void ProcessCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent) {
             var crossBar = UIHelper.GetCrossBar();
             if (crossBar == null) return;
 
             if (crossBar->LeftCompactFlags != 0 || crossBar->RightCompactFlags != 0) {
-                ProcessCompactCrossHotbar(hotbarIndex, actionBar, crossBar, hotbarData, foundIcons, percent);
+                ProcessCompactCrossHotbar(hotbarIndex, actionBar, crossBar, hotbarData, foundIcons, createIcons, percent);
                 return;
             }
 
             var hotbar = hotbarData->Hotbars[10 + crossBar->CrossBarSet];
 
             for (var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++) {
-                ProcessIcon(hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, percent);
+                ProcessIcon(hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent);
             }
         }
 
-        private void ProcessCompactCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarCross* crossBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, float percent) {
+        private void ProcessCompactCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarCross* crossBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent) {
             crossBar->GetCompact(out var compactSet, out var compactLeft);
 
             var set = 10 + compactSet - 1;
@@ -113,11 +134,11 @@ namespace JobBars.UI {
                 var slotIndex = idx + 4;
                 var dataIndex = idx + (compactLeft ? 0 : 8);
 
-                ProcessIcon(hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, percent);
+                ProcessIcon(hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent);
             }
         }
 
-        private void ProcessDoubleCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarDoubleCross* doubleCrossBar, bool left, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, float percent) {
+        private void ProcessDoubleCrossHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarDoubleCross* doubleCrossBar, bool left, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent) {
             var hotbar = hotbarData->Hotbars[doubleCrossBar->HotbarIndex];
             var setLeft = doubleCrossBar->Left == 1;
             var large = doubleCrossBar->LargeDoubleCross == 1;
@@ -130,19 +151,19 @@ namespace JobBars.UI {
                     dataIndex += 4;
                 }
 
-                ProcessIcon(hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, percent);
+                ProcessIcon(hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent);
             }
         }
 
-        private void ProcessNormalHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, float percent) {
+        private void ProcessNormalHotbar(int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<UIIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent) {
             var hotbar = hotbarData->Hotbars[hotbarIndex];
 
             for (var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++) {
-                ProcessIcon(hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, percent);
+                ProcessIcon(hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent);
             }
         }
 
-        private void ProcessIcon(int hotbarIndex, int slotIndex, HotbarSlotStruct slotData, ActionBarSlotAction slot, HashSet<UIIcon> foundIcons, float percent) {
+        private void ProcessIcon(int hotbarIndex, int slotIndex, HotbarSlotStruct slotData, ActionBarSlotAction slot, HashSet<UIIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent) {
             if (slotData.Type != HotbarSlotStructType.Action) return;
 
             var action = UIHelper.GetAdjustedAction(slotData.ActionId);
@@ -163,11 +184,14 @@ namespace JobBars.UI {
             }
             if (found) return; // already found an icon, don't need to create a new one
 
-            UIIcon newIcon = props.IsTimer ?
-                new UIIconTimer(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props) :
-                new UIIconBuff(action, slotData.ActionId, hotbarIndex, slotIndex, slot.Icon, props);
-            foundIcons.Add(newIcon);
-            Icons.Add(newIcon);
+            createIcons.Add(new CreateIconStruct {
+                Action = action,
+                ActionId = slotData.ActionId,
+                HotBarIndex = hotbarIndex,
+                SlotIndex = slotIndex,
+                Component = slot.Icon,
+                Props = props
+            });
         }
 
         public void AddIconOverride(IntPtr icon) {
