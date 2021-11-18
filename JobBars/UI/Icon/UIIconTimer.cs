@@ -14,6 +14,7 @@ namespace JobBars.UI {
         private AtkResNode* OriginalPreCombo;
         private AtkResNode* OriginalComboContainer;
         private AtkImageNode* OriginalCombo;
+        public AtkTextNode* OriginalText;
 
         private AtkImageNode* Ring;
         private AtkTextNode* Text;
@@ -32,6 +33,8 @@ namespace JobBars.UI {
             OriginalComboContainer = IconComponent->ComboBorder;
             OriginalCombo = (AtkImageNode*)OriginalComboContainer->ChildNode;
 
+            OriginalText = (AtkTextNode*)IconComponent->UnknownImageNode;
+
             Combo = UIHelper.CleanAlloc<AtkImageNode>();
             Combo->Ctor();
             Combo->AtkResNode.NodeID = NodeIdx++;
@@ -49,20 +52,36 @@ namespace JobBars.UI {
 
             Combo->AtkResNode.ParentNode = OriginalComboContainer->ParentNode;
 
-            OriginalPreCombo->PrevSiblingNode = (AtkResNode*)Combo;
-            Combo->AtkResNode.NextSiblingNode = OriginalPreCombo;
+            UIHelper.Link(OriginalPreCombo, (AtkResNode*)Combo);
+            UIHelper.Link((AtkResNode*)Combo, OriginalComboContainer->PrevSiblingNode);
+            
+            // ========================
 
-            Combo->AtkResNode.PrevSiblingNode = OriginalComboContainer->PrevSiblingNode;
-            OriginalPreCombo->PrevSiblingNode->NextSiblingNode = (AtkResNode*)Combo;
-
-            UIHelper.Show(Combo);
-
-            Text = (AtkTextNode*)IconComponent->UnknownImageNode;
-            IconComponent->UnknownImageNode = null;
+            Text = UIHelper.CleanAlloc<AtkTextNode>();
+            Text->Ctor();
+            Text->AtkResNode.NodeID = NodeIdx++;
+            Text->AtkResNode.Type = NodeType.Text;
+            Text->AtkResNode.X = 3;
+            Text->AtkResNode.Y = 37;
+            Text->AtkResNode.Width = 48;
+            Text->AtkResNode.Height = 12;
+            Text->AtkResNode.Flags = 8243;
+            Text->AtkResNode.Flags_2 = 1;
+            Text->AtkResNode.Flags_2 |= 4;
+            Text->LineSpacing = 12;
+            Text->AlignmentFontType = 3;
+            Text->FontSize = 12;
+            Text->TextFlags = 8;
             Text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
             Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
-            Text->AtkResNode.Alpha_2 = 0xFF;
             Text->SetText("");
+
+            Text->AtkResNode.ParentNode = OriginalText->AtkResNode.ParentNode;
+
+            UIHelper.Link(OriginalText->AtkResNode.NextSiblingNode, (AtkResNode*)Text);
+            UIHelper.Link((AtkResNode*)Text, OriginalText->AtkResNode.PrevSiblingNode);
+
+            // ==========================
 
             Ring = UIHelper.CleanAlloc<AtkImageNode>(); // for timer
             Ring->Ctor();
@@ -84,6 +103,7 @@ namespace JobBars.UI {
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
+            UIHelper.Show(Combo);
             UIHelper.Hide(Text);
             UIHelper.Hide(Ring);
         }
@@ -135,8 +155,17 @@ namespace JobBars.UI {
         public override void OnDispose() {
             OriginalRecastContainer->ChildNode->PrevSiblingNode->PrevSiblingNode = null;
 
+            // ======================
+
             OriginalPreCombo->PrevSiblingNode = OriginalComboContainer;
             Combo->AtkResNode.PrevSiblingNode->NextSiblingNode = OriginalComboContainer;
+
+            // =====================
+
+            Text->AtkResNode.NextSiblingNode->PrevSiblingNode = (AtkResNode*)OriginalText;
+            Text->AtkResNode.PrevSiblingNode->NextSiblingNode = (AtkResNode*)OriginalText;
+
+            // =====================
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
@@ -153,12 +182,18 @@ namespace JobBars.UI {
                 Ring = null;
             }
 
+            if (Text != null) {
+                Text->AtkResNode.Destroy(true);
+                Text = null;
+            }
+
             JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
             if (Dimmed) SetDimmed(false);
 
             OriginalPreCombo = null;
             OriginalComboContainer = null;
             OriginalCombo = null;
+            OriginalText = null;
             OriginalRecastContainer = null;
             OriginalImage = null;
         }
