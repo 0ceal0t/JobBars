@@ -61,16 +61,16 @@ namespace JobBars.UI {
             Text->Ctor();
             Text->AtkResNode.NodeID = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.X = 3;
-            Text->AtkResNode.Y = 37;
-            Text->AtkResNode.Width = 48;
-            Text->AtkResNode.Height = 12;
+            Text->AtkResNode.X = OriginalText->AtkResNode.X;
+            Text->AtkResNode.Y = OriginalText->AtkResNode.Y;
+            Text->AtkResNode.Width = OriginalText->AtkResNode.Width;
+            Text->AtkResNode.Height = OriginalText->AtkResNode.Height;
             Text->AtkResNode.Flags = 8243;
             Text->AtkResNode.Flags_2 = 1;
             Text->AtkResNode.Flags_2 |= 4;
-            Text->LineSpacing = 12;
-            Text->AlignmentFontType = 3;
-            Text->FontSize = 12;
+            Text->LineSpacing = OriginalText->LineSpacing;
+            Text->AlignmentFontType = OriginalText->AlignmentFontType;
+            Text->FontSize = OriginalText->FontSize;
             Text->TextFlags = 8;
             Text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
             Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
@@ -168,9 +168,6 @@ namespace JobBars.UI {
             // =====================
 
             Component->Component->UldManager.UpdateDrawNodeList();
-
-            IconComponent->UnknownImageNode = (AtkImageNode*)Text;
-            Text = null;
 
             if (Combo != null) {
                 Combo->AtkResNode.Destroy(true);
