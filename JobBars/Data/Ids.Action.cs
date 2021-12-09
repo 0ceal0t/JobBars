@@ -76,14 +76,13 @@
         TheBole = 4404,
         TheEwer = 4405,
         TheSpire = 4406,
-        LordOfCrowns = 7444,
-        LadyOfCrowns = 7445,
         CollectiveUnconscious = 3613,
         EarthlyStar = 7439,
-        CelestialOpposition = 16553,
         NeutralSect = 16559,
         Lightspeed = 3606,
         StellarDetonation = 8324,
+        Macrocosmos = 25874,
+        Astrodyne = 25870,
 
         // MNK ===========
         TrueNorth = 7546, // All melee

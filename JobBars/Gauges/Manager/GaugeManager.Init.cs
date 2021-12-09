@@ -18,6 +18,7 @@ namespace JobBars.Gauges.Manager {
         protected override GaugeConfig[] GetAST() => AddMiscGauges(AST.Gauges, JobIds.AST, AST.MP, AST.MP_SEGMENTS, AST.GCD_ROLL);
         protected override GaugeConfig[] GetSCH() => AddMiscGauges(SCH.Gauges, JobIds.SCH, SCH.MP, SCH.MP_SEGMENTS, SCH.GCD_ROLL);
         protected override GaugeConfig[] GetWHM() => AddMiscGauges(WHM.Gauges, JobIds.WHM, WHM.MP, WHM.MP_SEGMENTS, WHM.GCD_ROLL);
+        protected override GaugeConfig[] GetSGE() => AddMiscGauges(SGE.Gauges, JobIds.SGE, SGE.MP, SGE.MP_SEGMENTS, SGE.GCD_ROLL);
 
         protected override GaugeConfig[] GetBRD() => AddMiscGauges(BRD.Gauges, JobIds.BRD, BRD.MP, BRD.MP_SEGMENTS, BRD.GCD_ROLL);
         protected override GaugeConfig[] GetMCH() => AddMiscGauges(MCH.Gauges, JobIds.MCH, MCH.MP, MCH.MP_SEGMENTS, MCH.GCD_ROLL);
@@ -27,6 +28,7 @@ namespace JobBars.Gauges.Manager {
         protected override GaugeConfig[] GetSAM() => AddMiscGauges(SAM.Gauges, JobIds.SAM, SAM.MP, SAM.MP_SEGMENTS, SAM.GCD_ROLL);
         protected override GaugeConfig[] GetNIN() => AddMiscGauges(NIN.Gauges, JobIds.NIN, NIN.MP, NIN.MP_SEGMENTS, NIN.GCD_ROLL);
         protected override GaugeConfig[] GetMNK() => AddMiscGauges(MNK.Gauges, JobIds.MNK, MNK.MP, MNK.MP_SEGMENTS, MNK.GCD_ROLL);
+        protected override GaugeConfig[] GetRPR() => AddMiscGauges(RPR.Gauges, JobIds.RPR, RPR.MP, RPR.MP_SEGMENTS, RPR.GCD_ROLL);
 
         protected override GaugeConfig[] GetSMN() => AddMiscGauges(SMN.Gauges, JobIds.SMN, SMN.MP, SMN.MP_SEGMENTS, SMN.GCD_ROLL);
         protected override GaugeConfig[] GetBLM() => AddMiscGauges(BLM.Gauges, JobIds.BLM, BLM.MP, BLM.MP_SEGMENTS, BLM.GCD_ROLL);

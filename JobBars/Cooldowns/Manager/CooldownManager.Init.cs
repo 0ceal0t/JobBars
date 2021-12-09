@@ -13,6 +13,7 @@ namespace JobBars.Cooldowns.Manager {
         protected override CooldownConfig[] GetAST() => AST.Cooldowns;
         protected override CooldownConfig[] GetSCH() => SCH.Cooldowns;
         protected override CooldownConfig[] GetWHM() => WHM.Cooldowns;
+        protected override CooldownConfig[] GetSGE() => SGE.Cooldowns;
 
         protected override CooldownConfig[] GetBRD() => BRD.Cooldowns;
         protected override CooldownConfig[] GetMCH() => MCH.Cooldowns;
@@ -22,6 +23,7 @@ namespace JobBars.Cooldowns.Manager {
         protected override CooldownConfig[] GetSAM() => SAM.Cooldowns;
         protected override CooldownConfig[] GetNIN() => NIN.Cooldowns;
         protected override CooldownConfig[] GetMNK() => MNK.Cooldowns;
+        protected override CooldownConfig[] GetRPR() => RPR.Cooldowns;
 
         protected override CooldownConfig[] GetSMN() => SMN.Cooldowns;
         protected override CooldownConfig[] GetBLM() => BLM.Cooldowns;

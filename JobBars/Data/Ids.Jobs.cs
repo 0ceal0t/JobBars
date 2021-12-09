@@ -18,6 +18,8 @@
         DNC = 38,
         NIN = 30,
         MNK = 20,
-        BLU = 36
+        BLU = 36,
+        RPR = 39,
+        SGE = 40
     }
 }

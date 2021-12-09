@@ -85,20 +85,6 @@ namespace JobBars.Jobs {
                 Triggers = new []{ new Item(BuffIds.TheEwer) },
                 IsPlayerOnly = true
             }),
-            new BuffConfig(UIHelper.Localize(BuffIds.LadyOfCrowns), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.LadyOfCrowns,
-                Color = UIColor.Purple,
-                Triggers = new []{ new Item(BuffIds.LadyOfCrowns) },
-                IsPlayerOnly = true
-            }),
-            new BuffConfig(UIHelper.Localize(BuffIds.LordOfCrowns), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.LordOfCrowns,
-                Color = UIColor.Red,
-                Triggers = new []{ new Item(BuffIds.LordOfCrowns) },
-                IsPlayerOnly = true
-            }),
             new BuffConfig(UIHelper.Localize(ActionIds.Divination), new BuffProps {
                 CD = 120,
                 Duration = 15,
@@ -117,10 +103,11 @@ namespace JobBars.Jobs {
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.NeutralSect) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.CelestialOpposition), new CooldownProps {
-                Icon = ActionIds.CelestialOpposition,
-                CD = 60,
-                Triggers = new []{ new Item(ActionIds.CelestialOpposition) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.Macrocosmos), new CooldownProps {
+                Icon = ActionIds.Macrocosmos,
+                CD = 180,
+                Duration = 15,
+                Triggers = new []{ new Item(ActionIds.Macrocosmos) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.EarthlyStar), new CooldownProps {
                 Icon = ActionIds.EarthlyStar,
@@ -162,6 +149,14 @@ namespace JobBars.Jobs {
                 },
                 Triggers = new [] {
                     new IconTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
+                }
+            }),
+            new IconReplacer(UIHelper.Localize(ActionIds.Astrodyne), new IconProps {
+                Icons = new [] {
+                    ActionIds.Astrodyne
+                },
+                Triggers = new[] {
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
                 }
             })
         };

@@ -23,6 +23,7 @@ namespace JobBars.Data {
             JobToValue.Add(JobIds.AST, GetAST());
             JobToValue.Add(JobIds.SCH, GetSCH());
             JobToValue.Add(JobIds.WHM, GetWHM());
+            JobToValue.Add(JobIds.SGE, GetSGE());
 
             JobToValue.Add(JobIds.BRD, GetBRD());
             JobToValue.Add(JobIds.MCH, GetMCH());
@@ -32,6 +33,7 @@ namespace JobBars.Data {
             JobToValue.Add(JobIds.SAM, GetSAM());
             JobToValue.Add(JobIds.NIN, GetNIN());
             JobToValue.Add(JobIds.MNK, GetMNK());
+            JobToValue.Add(JobIds.RPR, GetRPR());
 
             JobToValue.Add(JobIds.SMN, GetSMN());
             JobToValue.Add(JobIds.BLM, GetBLM());
@@ -47,6 +49,7 @@ namespace JobBars.Data {
         protected abstract T GetAST();
         protected abstract T GetSCH();
         protected abstract T GetWHM();
+        protected abstract T GetSGE();
         protected abstract T GetBRD();
         protected abstract T GetMCH();
         protected abstract T GetDNC();
@@ -54,6 +57,7 @@ namespace JobBars.Data {
         protected abstract T GetSAM();
         protected abstract T GetNIN();
         protected abstract T GetMNK();
+        protected abstract T GetRPR();
         protected abstract T GetSMN();
         protected abstract T GetBLM();
         protected abstract T GetRDM();

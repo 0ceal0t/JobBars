@@ -64,7 +64,7 @@ namespace JobBars.UI {
             // ===== COOLDOWNS =========
 
             CooldownRoot->ParentNode = partyListAddon->AtkUnitBase.RootNode;
-            partyListAddon->AtkUnitBase.UldManager.NodeList[21]->PrevSiblingNode = CooldownRoot;
+            partyListAddon->AtkUnitBase.UldManager.NodeList[27]->PrevSiblingNode = CooldownRoot;
 
             // ======================
 

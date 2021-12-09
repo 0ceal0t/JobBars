@@ -15,6 +15,7 @@ namespace JobBars.Icons.Manager {
         protected override IconReplacer[] GetAST() => AST.Icons;
         protected override IconReplacer[] GetSCH() => SCH.Icons;
         protected override IconReplacer[] GetWHM() => WHM.Icons;
+        protected override IconReplacer[] GetSGE() => SGE.Icons;
 
         protected override IconReplacer[] GetBRD() => BRD.Icons;
         protected override IconReplacer[] GetMCH() => MCH.Icons;
@@ -24,6 +25,7 @@ namespace JobBars.Icons.Manager {
         protected override IconReplacer[] GetSAM() => SAM.Icons;
         protected override IconReplacer[] GetNIN() => NIN.Icons;
         protected override IconReplacer[] GetMNK() => MNK.Icons;
+        protected override IconReplacer[] GetRPR() => RPR.Icons;
 
         protected override IconReplacer[] GetSMN() => SMN.Icons;
         protected override IconReplacer[] GetBLM() => BLM.Icons;

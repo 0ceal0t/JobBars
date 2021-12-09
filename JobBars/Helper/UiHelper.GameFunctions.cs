@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
@@ -23,8 +24,6 @@ namespace JobBars.Helper {
         public unsafe delegate IntPtr GetFileManagerDelegate();
         public static GetFileManagerDelegate GetFileManager { get; private set; }
 
-        private static IntPtr TargetAddress;
-
         private static Crc32 Crc32;
 
         public static bool Ready { get; private set; } = false;
@@ -34,7 +33,6 @@ namespace JobBars.Helper {
             TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
             GetResourceSync = Marshal.GetDelegateForFunctionPointer<GetResourceSyncDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00"));
             GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>(JobBars.SigScanner.ScanText("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01"));
-            TargetAddress = JobBars.SigScanner.GetStaticAddressFromSig("48 8B 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 50 ?? 48 85 DB", 3);
             SetupSheets();
 
             Crc32 = new Crc32();
@@ -117,7 +115,7 @@ namespace JobBars.Helper {
         public static GameObject PreviousEnemyTarget => GetPreviousEnemyTarget();
 
         private static GameObject GetPreviousEnemyTarget() {
-            var actorAddress = Marshal.ReadIntPtr(TargetAddress + 0xF0);
+            var actorAddress = Marshal.ReadIntPtr(new IntPtr(TargetSystem.Instance()) + 0xF0);
             if (actorAddress == IntPtr.Zero) return null;
 
             return JobBars.Objects.CreateObjectReference(actorAddress);

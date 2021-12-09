@@ -68,9 +68,6 @@
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Gauges\Adjustments\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

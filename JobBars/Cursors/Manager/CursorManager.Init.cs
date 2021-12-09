@@ -13,6 +13,7 @@ namespace JobBars.Cursors.Manager {
         protected override Cursor GetAST() => AST.Cursors;
         protected override Cursor GetSCH() => SCH.Cursors;
         protected override Cursor GetWHM() => WHM.Cursors;
+        protected override Cursor GetSGE() => SGE.Cursors;
 
         protected override Cursor GetBRD() => BRD.Cursors;
         protected override Cursor GetMCH() => MCH.Cursors;
@@ -22,6 +23,7 @@ namespace JobBars.Cursors.Manager {
         protected override Cursor GetSAM() => SAM.Cursors;
         protected override Cursor GetNIN() => NIN.Cursors;
         protected override Cursor GetMNK() => MNK.Cursors;
+        protected override Cursor GetRPR() => RPR.Cursors;
 
         protected override Cursor GetSMN() => SMN.Cursors;
         protected override Cursor GetBLM() => BLM.Cursors;

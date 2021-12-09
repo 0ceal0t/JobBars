@@ -13,6 +13,7 @@ namespace JobBars.Buffs.Manager {
         protected override BuffConfig[] GetAST() => AST.Buffs;
         protected override BuffConfig[] GetSCH() => SCH.Buffs;
         protected override BuffConfig[] GetWHM() => WHM.Buffs;
+        protected override BuffConfig[] GetSGE() => SGE.Buffs;
 
         protected override BuffConfig[] GetBRD() => BRD.Buffs;
         protected override BuffConfig[] GetMCH() => MCH.Buffs;
@@ -22,6 +23,7 @@ namespace JobBars.Buffs.Manager {
         protected override BuffConfig[] GetSAM() => SAM.Buffs;
         protected override BuffConfig[] GetNIN() => NIN.Buffs;
         protected override BuffConfig[] GetMNK() => MNK.Buffs;
+        protected override BuffConfig[] GetRPR() => RPR.Buffs;
 
         protected override BuffConfig[] GetSMN() => SMN.Buffs;
         protected override BuffConfig[] GetBLM() => BLM.Buffs;

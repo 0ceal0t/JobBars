@@ -13,7 +13,6 @@
 - [ ] [Cursor Dragging](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Cursors/CursorManager.cs#L51)
 - [ ] [Action Ids](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Data/Ids.Action.cs)
 - [ ] [Buff Ids](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Data/Ids.Buffs.cs)
-- [ ] [Job Ids](https://github.com/0ceal0t/JobBars/blob/main/JobBars/Data/Ids.Jobs.cs)
 - [ ] [Effect Enum](https://github.com/0ceal0t/JobBars/blob/main/JobBars/GameStructs/ActionEffectStructs.cs)
 - [ ] [Action Bar Struct](https://github.com/0ceal0t/JobBars/blob/main/JobBars/GameStructs/AddonActionBarBase.cs)
 - [ ] [Hotbar Data Struct](https://github.com/0ceal0t/JobBars/blob/main/JobBars/GameStructs/AddonHotbarNumberArray.cs)

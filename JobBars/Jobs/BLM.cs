@@ -5,6 +5,7 @@ using JobBars.Data;
 
 using JobBars.Gauges;
 using JobBars.Gauges.Procs;
+using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
@@ -21,10 +22,17 @@ namespace JobBars.Jobs {
                     new ProcConfig(UIHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, UIColor.LightBlue)
                 }
             }),
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Triplecast), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
+                Triggers = new []{
+                    new Item(BuffIds.Triplecast)
+                },
+                Color = UIColor.MpPink
+            }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.Thunder3), GaugeVisualType.Bar, new GaugeTimerProps {
                 SubTimers = new[] {
                     new GaugeSubTimerProps {
-                        MaxDuration = 24,
+                        MaxDuration = 30,
                         Color = UIColor.DarkBlue,
                         SubName = UIHelper.Localize(BuffIds.Thunder3),
                         Triggers = new []{
@@ -66,8 +74,8 @@ namespace JobBars.Jobs {
                     ActionIds.Thunder3
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 24 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 24 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 30 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
                 }
             }),
             new IconReplacer(UIHelper.Localize(BuffIds.Thunder4), new IconProps {
@@ -90,7 +98,7 @@ namespace JobBars.Jobs {
             new IconReplacer(UIHelper.Localize(BuffIds.Sharpcast), new IconProps {
                 Icons = new [] { ActionIds.Sharpcast },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 15 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 30 }
                 }
             })
         };
