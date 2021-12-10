@@ -80,6 +80,8 @@
         CausticBite = 124,
         StraightShotReady = 122,
         Barrage = 128,
+        RadiantFinale = 2722,
+        BattleVoice = 141,
 
         // MCH =========
         Wildfire = 0x79a,
@@ -87,12 +89,12 @@
 
         // DNC =========
         Devilment = 0x721,
-        FlourishingCascade = 1814,
-        FlourishingFountain = 1815,
-        FlourishingWindmill = 1816,
-        FlourishingShower = 1817,
-        FlourishingFanDance = 1820,
         Improvisation = 1827,
+        FlourishingSymmetry = 2693,
+        FlourishingFlow = 2694,
+        ThreefoldFanDance = 1820,
+        FourfoldFanDance = 2699,
+        FlourishingStarfall = 2700,
 
         // BLM =========
         Firestarter = 165,

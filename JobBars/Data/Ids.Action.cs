@@ -124,6 +124,7 @@
         BloodLetter = 110,
         Troubadour = 7405,
         NaturesMinne = 7408,
+        RadiantFinale = 25785,
 
         // MCH ===========
         Wildfire = 2878,

@@ -15,11 +15,11 @@ namespace JobBars.Jobs {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
             new GaugeProcsConfig($"{UIHelper.Localize(JobIds.DNC)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = new []{
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingCascade), BuffIds.FlourishingCascade, UIColor.BrightGreen),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFountain), BuffIds.FlourishingFountain, UIColor.Yellow),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingWindmill), BuffIds.FlourishingWindmill, UIColor.DarkBlue),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingShower), BuffIds.FlourishingShower, UIColor.Red),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFanDance), BuffIds.FlourishingFanDance, UIColor.HealthGreen)
+                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingSymmetry), BuffIds.FlourishingSymmetry, UIColor.BrightGreen),
+                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFlow), BuffIds.FlourishingFlow, UIColor.LightBlue),
+                    new ProcConfig(UIHelper.Localize(BuffIds.ThreefoldFanDance), BuffIds.ThreefoldFanDance, UIColor.HealthGreen),
+                    new ProcConfig(UIHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, UIColor.DarkBlue),
+                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingStarfall), BuffIds.FlourishingStarfall, UIColor.Red)
                 }
             })
         };
@@ -47,7 +47,7 @@ namespace JobBars.Jobs {
             new CooldownConfig(UIHelper.Localize(ActionIds.ShieldSamba), new CooldownProps {
                 Icon = ActionIds.ShieldSamba,
                 Duration = 15,
-                CD = 120,
+                CD = 90,
                 Triggers = new []{ new Item(ActionIds.ShieldSamba) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Improvisation), new CooldownProps {

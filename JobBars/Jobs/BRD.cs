@@ -4,6 +4,7 @@ using JobBars.Cursors;
 using JobBars.Data;
 
 using JobBars.Gauges;
+using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
 using JobBars.Gauges.Procs;
 using JobBars.Gauges.Timer;
@@ -15,14 +16,26 @@ using System;
 namespace JobBars.Jobs {
     public static class BRD {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeProcsConfig($"{UIHelper.Localize(JobIds.BRD)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps {
+            new GaugeProcsConfig(UIHelper.Localize(BuffIds.StraightShotReady), GaugeVisualType.Diamond, new GaugeProcProps {
                 Procs = new []{
-                    new ProcConfig(UIHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, UIColor.Yellow),
-                    new ProcConfig(UIHelper.Localize(ActionIds.BloodLetter), ActionIds.BloodLetter, UIColor.Red)
+                    new ProcConfig(UIHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, UIColor.Yellow)
+                }
+            }),
+            new GaugeChargesConfig(UIHelper.Localize(ActionIds.BloodLetter), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = UIColor.Red,
+                SameColor = true,
+                Parts = new []{
+                    new GaugesChargesPartProps {
+                        Bar = true,
+                        Diamond = true,
+                        CD = 15,
+                        MaxCharges = 3,
+                        Triggers = new[] { new Item(ActionIds.BloodLetter) }
+                    }
                 }
             }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.VenomousBite), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 30,
+                MaxDuration = 45,
                 Color = UIColor.Purple,
                 Triggers = new []{
                     new Item(BuffIds.CausticBite),
@@ -30,7 +43,7 @@ namespace JobBars.Jobs {
                 }
             }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.Stormbite), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 30,
+                MaxDuration = 45,
                 Color = UIColor.LightBlue,
                 Triggers = new []{
                     new Item(BuffIds.Windbite),
@@ -38,8 +51,8 @@ namespace JobBars.Jobs {
                 }
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.RagingStrikes), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 9,
-                MaxDuration = 20,
+                MaxCounter = 7,
+                MaxDuration = 15,
                 Color = UIColor.Orange,
                 Triggers = new []{
                     new Item(BuffIds.RagingStrikes)
@@ -49,21 +62,28 @@ namespace JobBars.Jobs {
 
         public static BuffConfig[] Buffs => new[] {
             new BuffConfig(UIHelper.Localize(ActionIds.BattleVoice), new BuffProps {
-                CD = 180,
-                Duration = 20,
+                CD = 120,
+                Duration = 15,
                 Icon = ActionIds.BattleVoice,
                 Color = UIColor.Orange,
                 Triggers = new []{ new Item(ActionIds.BattleVoice) }
             }),
+            new BuffConfig(UIHelper.Localize(ActionIds.RadiantFinale), new BuffProps {
+                CD = 110,
+                Duration = 15,
+                Icon = ActionIds.RadiantFinale,
+                Color = UIColor.DarkBlue,
+                Triggers = new []{ new Item(ActionIds.RadiantFinale) }
+            }),
             new BuffConfig(UIHelper.Localize(BuffIds.Barrage), new BuffProps {
-                CD = 80,
+                CD = 120,
                 Duration = 10,
                 Icon = ActionIds.Barrage,
                 Color = UIColor.Yellow,
                 Triggers = new []{ new Item(BuffIds.Barrage) }
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.RagingStrikes), new BuffProps {
-                CD = 80,
+                CD = 120,
                 Duration = 20,
                 Icon = ActionIds.RagingStrikes,
                 Color = UIColor.Yellow,
@@ -77,7 +97,7 @@ namespace JobBars.Jobs {
             new CooldownConfig(UIHelper.Localize(ActionIds.Troubadour), new CooldownProps {
                 Icon = ActionIds.Troubadour,
                 Duration = 15,
-                CD = 120,
+                CD = 90,
                 Triggers = new []{ new Item(ActionIds.Troubadour) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.NaturesMinne), new CooldownProps {
@@ -92,7 +112,19 @@ namespace JobBars.Jobs {
             new IconReplacer(UIHelper.Localize(BuffIds.RagingStrikes), new IconProps {
                 Icons = new [] { ActionIds.RagingStrikes },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 20 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 15 }
+                }
+            }),
+            new IconReplacer(UIHelper.Localize(BuffIds.BattleVoice), new IconProps {
+                Icons = new [] { ActionIds.BattleVoice },
+                Triggers = new[] {
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 15 }
+                }
+            }),
+            new IconReplacer(UIHelper.Localize(BuffIds.RadiantFinale), new IconProps {
+                Icons = new [] { ActionIds.RadiantFinale },
+                Triggers = new[] {
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 15 }
                 }
             }),
             new IconReplacer(UIHelper.Localize(BuffIds.VenomousBite), new IconProps {
@@ -102,8 +134,8 @@ namespace JobBars.Jobs {
                     ActionIds.VenomousBite,
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.CausticBite), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.VenomousBite), Duration = 30 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.CausticBite), Duration = 45 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.VenomousBite), Duration = 45 },
                 }
             }),
             new IconReplacer(UIHelper.Localize(BuffIds.Stormbite), new IconProps {
@@ -113,8 +145,8 @@ namespace JobBars.Jobs {
                     ActionIds.Stormbite,
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Windbite), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Stormbite), Duration = 30 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Windbite), Duration = 45 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Stormbite), Duration = 45 },
                 }
             })
         };

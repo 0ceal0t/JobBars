@@ -74,7 +74,7 @@ namespace JobBars.Jobs {
                     ActionIds.Thunder3
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 30 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 21 },
                     new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
                 }
             }),
