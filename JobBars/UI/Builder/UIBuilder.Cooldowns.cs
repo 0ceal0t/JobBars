@@ -40,7 +40,7 @@ namespace JobBars.UI {
 
             var partyListAddon = UIHelper.PartyListAddon;
             if (partyListAddon != null) {
-                partyListAddon->AtkUnitBase.UldManager.NodeList[27]->PrevSiblingNode = null;
+                partyListAddon->AtkUnitBase.UldManager.NodeList[25]->PrevSiblingNode = null;
             }
         }
 
