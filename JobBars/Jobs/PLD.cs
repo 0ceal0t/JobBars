@@ -15,25 +15,19 @@ using System;
 namespace JobBars.Jobs {
     public static class PLD {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Requiescat), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
+                Triggers = new []{
+                    new Item(BuffIds.Requiescat)
+                },
+                Color = UIColor.LightBlue
+            }),
             new GaugeStacksConfig(UIHelper.Localize(BuffIds.SwordOath), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.SwordOath)
                 },
                 Color = UIColor.BlueGreen
-            }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.Requiescat), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 12,
-                Color = UIColor.LightBlue,
-                Increment = new []{
-                    new Item(ActionIds.HolySpirit),
-                    new Item(ActionIds.HolyCircle),
-                    new Item(ActionIds.Confiteor)
-                },
-                Triggers = new []{
-                    new Item(BuffIds.Requiescat)
-                }
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new GaugeSubGCDProps {
                 MaxCounter = 11,
@@ -58,12 +52,21 @@ namespace JobBars.Jobs {
                 MaxDuration = 21,
                 Color = UIColor.Orange,
                 Triggers = new []{
-                    new Item(BuffIds.GoringBlade)
+                    new Item(BuffIds.GoringBlade),
+                    new Item(BuffIds.BladeOfValor)
                 }
             })
         };
 
-        public static BuffConfig[] Buffs => Array.Empty<BuffConfig>();
+        public static BuffConfig[] Buffs => new[] {
+            new BuffConfig(UIHelper.Localize(ActionIds.Requiescat), new BuffProps {
+                CD = 60,
+                Duration = 30,
+                Icon = ActionIds.Requiescat,
+                Color = UIColor.LightBlue,
+                Triggers = new []{ new Item(ActionIds.Requiescat) }
+            })
+        };
 
         public static Cursor Cursors => new(JobIds.PLD, CursorType.None, CursorType.GCD);
 
@@ -95,12 +98,6 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Requiescat), new IconProps {
-                Icons = new [] { ActionIds.Requiescat },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Requiescat), Duration = 12 }
-                }
-            }),
             new IconReplacer(UIHelper.Localize(BuffIds.FightOrFlight), new IconProps {
                 Icons = new [] { ActionIds.FightOrFlight },
                 Triggers = new[] {
@@ -111,14 +108,15 @@ namespace JobBars.Jobs {
                 IsTimer = true,
                 Icons = new [] { ActionIds.GoringBlade },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.GoringBlade), Duration = 21 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.GoringBlade), Duration = 21 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.BladeOfValor), Duration = 21 }
                 }
             })
         };
 
         public static bool MP => true;
 
-        public static float[] MP_SEGMENTS => new[] { 0.2f, 0.4f, 0.6f, 0.8f, 1f };
+        public static float[] MP_SEGMENTS => new[] { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
 
         public static bool GCD_ROLL => true;
     }

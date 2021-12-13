@@ -13,8 +13,9 @@
 
         // PLD =========
         FightOrFlight = 0x4c,
-        Requiescat = 0x558,
+        Requiescat = 1368,
         GoringBlade = 725,
+        BladeOfValor = 2721,
         SwordOath = 1902,
         DivineVeil = 726,
         PassageOfArms = 1175,
@@ -48,9 +49,8 @@
         HarmonyOfSpirit = 2714,
 
         // MNK =========
-        PerfectBalance = 0x6e,
-        RiddleOfFire = 0x49d,
-        RiddleOfEarth = 1179,
+        PerfectBalance = 110,
+        RiddleOfFire = 1181,
         TrueNorth = 1250,
         TwinSnakes = 101,
         Demolish = 246,
@@ -116,8 +116,7 @@
         Ruin4 = 1212,
 
         // RDM =========
-        Manafication = 0x7b3,
-        Embolden = 0x4d7,
+        Manafication = 1971,
         VerfireReady = 1234,
         VerstoneReady = 1235,
         Acceleration = 1238,

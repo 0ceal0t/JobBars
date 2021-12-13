@@ -21,13 +21,12 @@ namespace JobBars.Jobs {
                     new ProcConfig(UIHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, UIColor.Red)
                 }
             }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 10,
-                Color = UIColor.DarkBlue,
-                Triggers = new[] {
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
+                Triggers = new []{
                     new Item(BuffIds.Manafication)
-                }
+                },
+                Color = UIColor.DarkBlue
             }),
             new GaugeStacksConfig(UIHelper.Localize(BuffIds.Acceleration), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
@@ -35,13 +34,13 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.Acceleration)
                 },
                 Color = UIColor.PurplePink
-            }),
+            })
         };
 
         public static BuffConfig[] Buffs => new[] {
             new BuffConfig(UIHelper.Localize(ActionIds.Manafication), new BuffProps {
                 CD = 110,
-                Duration = 10,
+                Duration = 15,
                 Icon = ActionIds.Manafication,
                 Color = UIColor.DarkBlue,
                 Triggers = new []{ new Item(ActionIds.Manafication) }
@@ -63,17 +62,16 @@ namespace JobBars.Jobs {
                 Duration = 10,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.Addle) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.MagickBarrier), new CooldownProps {
+                Icon = ActionIds.MagickBarrier,
+                Duration = 10,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.MagickBarrier) }
             })
         };
 
-        public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Manafication), new IconProps {
-                Icons = new [] { ActionIds.Manafication },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Manafication), Duration = 10 }
-                }
-            })
-        };
+        public static IconReplacer[] Icons => Array.Empty<IconReplacer>();
 
         public static bool MP => true;
 

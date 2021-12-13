@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
@@ -15,13 +16,12 @@ using System;
 namespace JobBars.Jobs {
     public static class MNK {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.PerfectBalance), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 6,
-                MaxDuration = 15,
-                Color = UIColor.Orange,
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.PerfectBalance), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.PerfectBalance)
-                }
+                },
+                Color = UIColor.Orange
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new GaugeSubGCDProps {
                 MaxCounter = 11,
@@ -31,48 +31,30 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.RiddleOfFire)
                 }
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.TwinSnakes), GaugeVisualType.Bar, new GaugeSubTimerProps
-            {
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.TwinSnakes), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 15,
                 Color = UIColor.PurplePink,
                 Triggers = new []{
                     new Item(BuffIds.TwinSnakes)
                 }
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Demolish), GaugeVisualType.Bar, new GaugeSubTimerProps
-            {
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Demolish), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 18,
                 Color = UIColor.Yellow,
                 Triggers = new [] {
                     new Item(BuffIds.Demolish)
                 }
             }),
-            new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)}/{UIHelper.Localize(ActionIds.RiddleOfEarth)}", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = UIColor.LightBlue,
+            new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.MNK)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = UIColor.NoColor,
+                SameColor = true,
                 Parts = new []{
                     new GaugesChargesPartProps {
                         Diamond = true,
-                        MaxCharges = 3,
-                        Color = UIColor.Yellow,
-                        CD = 30,
-                        Triggers = new []{
-                            new Item(ActionIds.RiddleOfEarth)
-                        }
-                    },
-                    new GaugesChargesPartProps {
-                        Diamond = true,
                         MaxCharges = 2,
-                        Color = UIColor.NoColor,
                         CD = 45,
                         Triggers = new []{
                             new Item(ActionIds.TrueNorth)
-                        }
-                    },
-                    new GaugesChargesPartProps {
-                        Bar = true,
-                        Duration = 10,
-                        Triggers = new []{
-                            new Item(BuffIds.RiddleOfEarth)
                         }
                     },
                     new GaugesChargesPartProps {
@@ -89,25 +71,18 @@ namespace JobBars.Jobs {
 
         public static BuffConfig[] Buffs => new[] {
             new BuffConfig(UIHelper.Localize(ActionIds.Brotherhood), new BuffProps {
-                CD = 90,
+                CD = 120,
                 Duration = 15,
                 Icon = ActionIds.Brotherhood,
                 Color = UIColor.Orange,
                 Triggers = new []{ new Item(ActionIds.Brotherhood) }
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.RiddleOfFire), new BuffProps {
-                CD = 90,
+                CD = 60,
                 Duration = 20,
                 Icon = ActionIds.RiddleOfFire,
                 Color = UIColor.Red,
                 Triggers = new []{ new Item(ActionIds.RiddleOfFire) }
-            }),
-            new BuffConfig(UIHelper.Localize(BuffIds.PerfectBalance), new BuffProps {
-                CD = 90,
-                Duration = 15,
-                Icon = ActionIds.PerfectBalance,
-                Color = UIColor.Orange,
-                Triggers = new []{ new Item(BuffIds.PerfectBalance) }
             })
         };
 

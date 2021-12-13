@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
 using JobBars.UI;
@@ -14,13 +15,12 @@ using System;
 namespace JobBars.Jobs {
     public static class NIN {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 15,
-                Color = UIColor.Red,
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
                 Triggers = new []{
                     new Item(BuffIds.Bunshin)
-                }
+                },
+                Color = UIColor.Red
             }),
             new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                 BarColor = UIColor.NoColor,

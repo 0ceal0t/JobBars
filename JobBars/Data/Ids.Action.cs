@@ -24,16 +24,13 @@
         Requiescat = 7383,
         FastBlade = 0x09,
         RiotBlade = 0x0F,
-        GoringBlade = 0xDD2,
+        GoringBlade = 3538,
         RageOfHalone = 21,
         ShieldLob = 24,
         RoyalAuthority = 0xDD3,
         Atonement = 0x404C,
         TotalEclipse = 0x1CD5,
         Prominence = 0x4049,
-        HolySpirit = 0x1CD8,
-        HolyCircle = 0x404A,
-        Confiteor = 0x404B,
         HallowedGround = 30,
         DivineVeil = 3540,
         PassageOfArms = 7385,
@@ -88,7 +85,6 @@
         Brotherhood = 7396,
         PerfectBalance = 69,
         RiddleOfFire = 7395,
-        RiddleOfEarth = 7394,
         TwinSnakes = 61,
         Demolish = 66,
         Mantra = 65,
@@ -165,6 +161,7 @@
         // RDM ===========
         Embolden = 7520,
         Manafication = 7521,
+        MagickBarrier = 25857,
 
         // BLU ===========
         SongOfTorment = 11386,
