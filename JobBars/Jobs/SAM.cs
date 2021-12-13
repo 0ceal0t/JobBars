@@ -5,6 +5,7 @@ using JobBars.Data;
 
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
+using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
@@ -14,18 +15,25 @@ using System;
 namespace JobBars.Jobs {
     public static class SAM {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Jinpu), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Meikyo), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
+                Triggers = new []{
+                    new Item(BuffIds.Meikyo)
+                },
+                Color = UIColor.BlueGreen
+            }),
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Fugetsu), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 Color = UIColor.DarkBlue,
                 Triggers = new []{
-                    new Item(BuffIds.Jinpu)
+                    new Item(BuffIds.Fugetsu)
                 }
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Shifu), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Fuka), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 Color = UIColor.Red,
                 Triggers = new []{
-                    new Item(BuffIds.Shifu)
+                    new Item(BuffIds.Fuka)
                 }
             }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.Higanbana), GaugeVisualType.Bar, new GaugeSubTimerProps {
@@ -60,12 +68,12 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.DoubleMidare), new BuffProps {
-                CD = 60,
-                Duration = 5,
-                Icon = ActionIds.DoubleMidare,
-                Color = UIColor.DarkBlue,
-                Triggers = new []{ new Item(ActionIds.DoubleMidare) }
+            new BuffConfig(UIHelper.Localize(ActionIds.OgiNamikiri), new BuffProps {
+                CD = 120,
+                Duration = 30,
+                Icon = ActionIds.OgiNamikiri,
+                Color = UIColor.Red,
+                Triggers = new []{ new Item(BuffIds.OgiNamikiri) }
             })
         };
 
@@ -81,18 +89,18 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Jinpu), new IconProps {
+            new IconReplacer(UIHelper.Localize(BuffIds.Fugetsu), new IconProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Jinpu },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Jinpu), Duration = 40 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Fugetsu), Duration = 40 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Shifu), new IconProps {
+            new IconReplacer(UIHelper.Localize(BuffIds.Fuka), new IconProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Shifu },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Shifu), Duration = 40 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Fuka), Duration = 40 }
                 }
             })
         };

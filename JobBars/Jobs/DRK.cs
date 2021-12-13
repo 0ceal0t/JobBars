@@ -40,7 +40,7 @@ namespace JobBars.Jobs {
         public static BuffConfig[] Buffs => new[] {
             new BuffConfig(UIHelper.Localize(BuffIds.Delirium), new BuffProps {
                 CD = 60,
-                Duration = 10,
+                Duration = 15,
                 Icon = ActionIds.Delirium,
                 Color = UIColor.Red,
                 Triggers = new []{ new Item(BuffIds.Delirium) }

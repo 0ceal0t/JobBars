@@ -5,6 +5,7 @@ using JobBars.Data;
 
 using JobBars.Gauges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Procs;
 using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
@@ -15,83 +16,34 @@ using System;
 namespace JobBars.Jobs {
     public static class SMN {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Ruin4), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 4,
-                Triggers = new []{
-                    new Item(BuffIds.Ruin4)
-                },
-                Color = UIColor.DarkBlue
-            }),
-            new GaugeGCDConfig(UIHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new GaugeGCDProps {
-                SubGCDs = new [] {
-                    new GaugeSubGCDProps {
-                        MaxCounter = 8,
-                        MaxDuration = 21,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(ActionIds.SummonBahamut),
-                        Increment = new []{
-                            new Item(ActionIds.Wyrmwave)
-                        },
-                        Triggers = new []{
-                            new Item(ActionIds.SummonBahamut),
-                            new Item(ActionIds.Wyrmwave) // in case this registers first for some reason
-                        }
-                    },
-                    new GaugeSubGCDProps {
-                        MaxCounter = 8,
-                        MaxDuration = 21,
-                        Color = UIColor.Orange,
-                        SubName = UIHelper.Localize(ActionIds.FirebirdTrance),
-                        Increment = new []{
-                            new Item(ActionIds.ScarletFlame)
-                        },
-                        Triggers = new []{
-                            new Item(ActionIds.FirebirdTrance),
-                            new Item(ActionIds.ScarletFlame) // in case this registers first for some reason
-                        }
-                    }
-                }
-            }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Bio3), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 30,
-                Color = UIColor.HealthGreen,
-                Triggers = new []{
-                    new Item(BuffIds.ArcBio),
-                    new Item(BuffIds.ArcBio2),
-                    new Item(BuffIds.Bio3)
-                }
-            }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Miasma3), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 30,
-                Color = UIColor.BlueGreen,
-                Triggers = new []{
-                    new Item(BuffIds.Miasma),
-                    new Item(BuffIds.Miasma3)
+            new GaugeProcsConfig(UIHelper.Localize(BuffIds.FurtherRuin), GaugeVisualType.Diamond, new GaugeProcProps{
+                Procs = new []{
+                    new ProcConfig(UIHelper.Localize(BuffIds.FurtherRuin), BuffIds.FurtherRuin, UIColor.DarkBlue)
                 }
             })
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.Devotion), new BuffProps {
-                CD = 180,
-                Duration = 15,
-                Icon = ActionIds.Devotion,
-                Color = UIColor.Yellow,
-                Triggers = new []{ new Item(ActionIds.Devotion) }
+            new BuffConfig(UIHelper.Localize(ActionIds.SearingLight), new BuffProps {
+                CD = 120,
+                Duration = 30,
+                Icon = ActionIds.SearingLight,
+                Color = UIColor.Purple,
+                Triggers = new []{ new Item(ActionIds.SearingLight) }
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.SummonBahamut), new BuffProps {
                 CD = 120,
-                Duration = 20,
+                Duration = 15,
                 Icon = ActionIds.SummonBahamut,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(ActionIds.SummonBahamut) }
             }),
-            new BuffConfig(UIHelper.Localize(ActionIds.FirebirdTrance), new BuffProps {
+            new BuffConfig(UIHelper.Localize(ActionIds.SummonPhoenix), new BuffProps {
                 CD = 120,
-                Duration = 20,
-                Icon = ActionIds.FirebirdTrance,
+                Duration = 15,
+                Icon = ActionIds.SummonPhoenix,
                 Color = UIColor.Orange,
-                Triggers = new []{ new Item(ActionIds.FirebirdTrance) }
+                Triggers = new []{ new Item(ActionIds.SummonPhoenix) }
             })
         };
 
@@ -111,32 +63,7 @@ namespace JobBars.Jobs {
             })
         };
 
-        public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Bio3), new IconProps {
-                IsTimer = true,
-                Icons = new [] {
-                    ActionIds.ArcBio,
-                    ActionIds.ArcBio2,
-                    ActionIds.Bio3
-                },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ArcBio), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ArcBio2), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Bio3), Duration = 30 }
-                }
-            }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Miasma), new IconProps {
-                IsTimer = true,
-                Icons = new [] {
-                    ActionIds.Miasma,
-                    ActionIds.Miasma3
-                },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Miasma), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Miasma3), Duration = 30 }
-                }
-            })
-        };
+        public static IconReplacer[] Icons => Array.Empty<IconReplacer>();
 
         public static bool MP => true;
 

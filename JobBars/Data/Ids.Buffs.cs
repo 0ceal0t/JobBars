@@ -8,8 +8,8 @@
         WalkingDead = 811,
 
         // WAR =========
-        InnerRelease = 0x499,
-        StormsEye = 0x5a,
+        InnerRelease = 1177,
+        SurgingTempest = 2677,
 
         // PLD =========
         FightOrFlight = 0x4c,
@@ -24,6 +24,8 @@
         NoMercy = 0x727,
 
         // SCH =========
+        ArcBio = 179,
+        ArcBio2 = 189,
         Biolysis = 1895,
         Excog = 1220,
         ChainStratagem = 7436,
@@ -33,6 +35,7 @@
         Aero2 = 144,
         Dia = 1871,
         PresenceOfMind = 157,
+        LilyBell = 2709,
 
         // AST =========
         TheBalance = 0x75a,
@@ -69,9 +72,11 @@
         Bunshin = 0x7a2,
 
         // SAM =========
-        Jinpu = 0x512,
-        Shifu = 0x513,
+        Meikyo = 1233,
+        Fugetsu = 1298,
+        Fuka = 1299,
         Higanbana = 1228,
+        OgiNamikiri = 2959,
 
         // BRD =========
         RagingStrikes = 0x7d,
@@ -108,12 +113,7 @@
         Triplecast = 1211,
 
         // SMN =========
-        ArcBio = 179,
-        ArcBio2 = 189,
-        Bio3 = 1214,
-        Miasma = 180,
-        Miasma3 = 1215,
-        Ruin4 = 1212,
+        FurtherRuin = 2701,
 
         // RDM =========
         Manafication = 1971,

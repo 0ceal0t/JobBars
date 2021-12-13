@@ -50,15 +50,17 @@ namespace JobBars.Jobs {
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.SummonSeraph) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.DeploymentTactics), new CooldownProps {
-                Icon = ActionIds.DeploymentTactics,
+            new CooldownConfig(UIHelper.Localize(ActionIds.Expedient), new CooldownProps {
+                Icon = ActionIds.Expedient,
+                Duration = 20,
                 CD = 120,
-                Triggers = new []{ new Item(ActionIds.DeploymentTactics) }
+                Triggers = new []{ new Item(ActionIds.Expedient) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Recitation), new CooldownProps {
-                Icon = ActionIds.Recitation,
-                CD = 90,
-                Triggers = new []{ new Item(ActionIds.Recitation) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.Protraction), new CooldownProps {
+                Icon = ActionIds.Protraction,
+                Duration = 10,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Protraction) }
             }),
             new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,

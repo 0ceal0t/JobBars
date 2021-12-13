@@ -4,6 +4,7 @@ using JobBars.Cursors;
 using JobBars.Data;
 
 using JobBars.Gauges;
+using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
@@ -33,7 +34,14 @@ namespace JobBars.Jobs {
                         }
                     }
                 }
-            })
+            }),
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.LilyBell), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
+                Triggers = new []{
+                    new Item(BuffIds.LilyBell)
+                },
+                Color = UIColor.BlueGreen
+            }),
         };
 
         public static BuffConfig[] Buffs => Array.Empty<BuffConfig>();
@@ -52,11 +60,11 @@ namespace JobBars.Jobs {
                 CD = 180,
                 Triggers = new []{ new Item(ActionIds.Benediction) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Asylum), new CooldownProps {
-                Icon = ActionIds.Asylum,
-                Duration = 24,
-                CD = 90,
-                Triggers = new []{ new Item(ActionIds.Asylum) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.LilyBell), new CooldownProps {
+                Icon = ActionIds.LilyBell,
+                Duration = 15,
+                CD = 180,
+                Triggers = new []{ new Item(ActionIds.LilyBell) }
             }),
             new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,

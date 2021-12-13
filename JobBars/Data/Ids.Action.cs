@@ -12,13 +12,12 @@
 
         // WAR ==========
         InnerRelease = 7389,
-        FellCleave = 0xDDD,
-        Decimate = 0xDDE,
         ShakeItOff = 7388,
         Holmgang = 43,
         NascentFlash = 16464,
         RawIntuition = 3551,
         StormsEye = 45,
+        Bloodwhetting = 25751,
 
         // PLD ===========
         Requiescat = 7383,
@@ -48,8 +47,8 @@
         SchBio2 = 17865,
         ChainStratagem = 7436,
         SummonSeraph = 16545,
-        DeploymentTactics = 3585,
-        Recitation = 16542,
+        Expedient = 25868,
+        Protraction = 25867,
 
         // WHM ===========
         Dia = 16532,
@@ -59,6 +58,7 @@
         Temperance = 16536,
         Benediction = 140,
         PresenceOfMind = 136,
+        LilyBell = 25862,
 
         // AST ===========
         Combust1 = 3599,
@@ -102,10 +102,10 @@
         Bunshin = 16493,
 
         // SAM ===========
-        DoubleMidare = 0x4066,
         Higanbana = 7489,
         Jinpu = 7478,
         Shifu = 7479,
+        OgiNamikiri = 25781,
 
         // BRD ===========
         CausticBite = 0x1CEE,
@@ -146,17 +146,9 @@
         Sharpcast = 3574,
 
         // SMN ===========
-        ArcBio = 164,
-        ArcBio2 = 178,
-        Bio3 = 7424,
-        Miasma = 168,
-        Miasma3 = 7425,
-        SummonBahamut = 0x1D03,
-        FirebirdTrance = 0x40A5,
-        Wyrmwave = 0x1D04,
-        ScarletFlame = 0x4087,
-        Devotion = 7423,
-        TriDisaster = 3580,
+        SummonBahamut = 7427,
+        SummonPhoenix = 25831,
+        SearingLight = 25801,
 
         // RDM ===========
         Embolden = 7520,
