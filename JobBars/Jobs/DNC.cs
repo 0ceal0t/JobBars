@@ -55,6 +55,11 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 CD = 120,
                 Triggers = new []{ new Item(BuffIds.Improvisation) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.CuringWaltz), new CooldownProps {
+                Icon = ActionIds.CuringWaltz,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.CuringWaltz) }
             })
         };
 

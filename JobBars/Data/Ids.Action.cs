@@ -79,6 +79,17 @@
         Macrocosmos = 25874,
         Astrodyne = 25870,
 
+        // SGE ============
+        Dosis = 24283,
+        Dosis2 = 24306,
+        Dosis3 = 24312,
+        EukrasianDosis = 24293,
+        EukrasianDosis2 = 24308,
+        EukrasianDosis3 = 24314,
+        Pneuma = 24318,
+        Zoe = 24300,
+        Panhaima = 24311,
+
         // MNK ===========
         TrueNorth = 7546, // All melee
         Feint = 7549, // All melee
@@ -106,6 +117,11 @@
         Jinpu = 7478,
         Shifu = 7479,
         OgiNamikiri = 25781,
+
+        // RPR ===========
+        ArcaneCircle = 24405,
+        ArcaneCrest = 24404,
+        ShadowOfDeath = 24378,
 
         // BRD ===========
         CausticBite = 0x1CEE,
@@ -135,6 +151,7 @@
         Devilment = 16011,
         ShieldSamba = 16012,
         Improvisation = 16014,
+        CuringWaltz = 16015,
 
         // BLM ===========
         Addle = 7560, // All casters

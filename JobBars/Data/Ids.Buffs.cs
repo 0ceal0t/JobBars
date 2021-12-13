@@ -51,6 +51,12 @@
         Lightspeed = 841,
         HarmonyOfSpirit = 2714,
 
+        // SGE ============
+        EukrasianDosis = 2614,
+        EukrasianDosis2 = 2615,
+        EukrasianDosis3 = 2616,
+        Zoe = 2611,
+
         // MNK =========
         PerfectBalance = 110,
         RiddleOfFire = 1181,
@@ -77,6 +83,12 @@
         Fuka = 1299,
         Higanbana = 1228,
         OgiNamikiri = 2959,
+
+        // RPR ==========
+        SoulReaver = 2587,
+        SoulReaver2 = 2854,
+        ImmortalSacrifice = 2592,
+        DeathsDesign = 2586,
 
         // BRD =========
         RagingStrikes = 0x7d,

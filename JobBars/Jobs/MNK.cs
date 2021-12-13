@@ -66,7 +66,7 @@ namespace JobBars.Jobs {
                     }
                 },
                 CompletionSound = GaugeCompleteSoundType.Never
-            }),
+            })
         };
 
         public static BuffConfig[] Buffs => new[] {
