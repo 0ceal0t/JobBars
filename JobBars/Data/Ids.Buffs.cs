@@ -2,7 +2,7 @@
     public enum BuffIds : uint {
 
         // DRK =========
-        Delirium = 0x7b4,
+        Delirium = 1972,
         BloodWeapon = 0x2e6,
         LivingDead = 810,
         WalkingDead = 811,
@@ -60,8 +60,9 @@
         BattleLitany = 0x312,
         RightEye = 0x776,
         RightEye2 = 0x5ad,
-        Disembowel = 1914,
         ChaosThrust = 118,
+        ChaoticSpring = 2719,
+        PowerSurge = 2720,
 
         // NIN =========
         TrickAttack = 0x27e,
@@ -85,7 +86,6 @@
 
         // MCH =========
         Wildfire = 0x79a,
-        Reassemble = 851,
 
         // DNC =========
         Devilment = 0x721,

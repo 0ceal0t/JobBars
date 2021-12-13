@@ -64,14 +64,14 @@ namespace JobBars.Jobs {
                 Triggers = new []{ new Item(ActionIds.DragonSight) }
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.BattleLitany), new BuffProps {
-                CD = 180,
-                Duration = 20,
+                CD = 120,
+                Duration = 15,
                 Icon = ActionIds.BattleLitany,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(ActionIds.BattleLitany) }
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.LanceCharge), new BuffProps {
-                CD = 90,
+                CD = 60,
                 Duration = 20,
                 Icon = ActionIds.LanceCharge,
                 Color = UIColor.Red,
@@ -104,18 +104,22 @@ namespace JobBars.Jobs {
                     new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Disembowel), new IconProps {
+            new IconReplacer(UIHelper.Localize(BuffIds.PowerSurge), new IconProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Disembowel },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Disembowel), Duration = 24 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 24 }
                 }
             }),
             new IconReplacer(UIHelper.Localize(BuffIds.ChaosThrust), new IconProps {
                 IsTimer = true,
-                Icons = new [] { ActionIds.ChaosThrust },
+                Icons = new [] {
+                    ActionIds.ChaosThrust,
+                    ActionIds.ChaoticSpring
+                },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 24 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 24 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChaoticSpring), Duration = 24 }
                 }
             })
         };

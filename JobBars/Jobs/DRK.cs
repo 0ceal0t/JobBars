@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Custom;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
 using JobBars.UI;
@@ -19,17 +20,12 @@ namespace JobBars.Jobs {
                 DarkArtsColor = UIColor.LightBlue,
                 Segments = new[] { 0.3f, 0.6f, 0.9f }
             }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 10,
-                Color = UIColor.Red,
-                Increment = new []{
-                    new Item(ActionIds.BloodSpiller),
-                    new Item(ActionIds.Quietus)
-                },
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Delirium), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.Delirium)
-                }
+                },
+                Color = UIColor.Red
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 5,
@@ -43,7 +39,7 @@ namespace JobBars.Jobs {
 
         public static BuffConfig[] Buffs => new[] {
             new BuffConfig(UIHelper.Localize(BuffIds.Delirium), new BuffProps {
-                CD = 90,
+                CD = 60,
                 Duration = 10,
                 Icon = ActionIds.Delirium,
                 Color = UIColor.Red,
@@ -88,12 +84,6 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Delirium), new IconProps {
-                Icons = new [] { ActionIds.Delirium },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Delirium), Duration = 10 }
-                }
-            }),
             new IconReplacer(UIHelper.Localize(BuffIds.BloodWeapon), new IconProps {
                 Icons = new [] { ActionIds.BloodWeapon },
                 Triggers = new[] {

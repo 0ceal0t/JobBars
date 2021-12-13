@@ -31,7 +31,7 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => new[] {
             new CooldownConfig(UIHelper.Localize(ActionIds.Superbolide), new CooldownProps {
                 Icon = ActionIds.Superbolide,
-                Duration = 8,
+                Duration = 10,
                 CD = 360,
                 Triggers = new []{ new Item(ActionIds.Superbolide) }
             }),

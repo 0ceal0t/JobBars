@@ -7,8 +7,6 @@
         LivingDead = 3638,
         Delirium = 7390,
         LivingShadow = 0x4058,
-        BloodSpiller = 0x1CE0,
-        Quietus = 0x1CDF,
         TheBlackestNight = 7393,
         BloodWeapon = 3625,
 
@@ -101,6 +99,7 @@
         LanceCharge = 85,
         Disembowel = 87,
         ChaosThrust = 88,
+        ChaoticSpring = 25772,
 
         // NIN ===========
         TrickAttack = 2258,
@@ -133,7 +132,6 @@
         AutoCrossbow = 0x4071,
         GaussRound = 2874,
         Ricochet = 2890,
-        Reassemble = 2876,
         Tactician = 16889,
 
         // DNC ===========

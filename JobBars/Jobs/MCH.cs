@@ -69,13 +69,6 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.Wildfire,
                 Color = UIColor.Orange,
                 Triggers = new []{ new Item(ActionIds.Wildfire) }
-            }),
-            new BuffConfig(UIHelper.Localize(BuffIds.Reassemble), new BuffProps {
-                CD = 55,
-                Duration = 5,
-                Icon = ActionIds.Reassemble,
-                Color = UIColor.DarkBlue,
-                Triggers = new []{ new Item(BuffIds.Reassemble) }
             })
         };
 
@@ -85,7 +78,7 @@ namespace JobBars.Jobs {
             new CooldownConfig(UIHelper.Localize(ActionIds.Tactician), new CooldownProps {
                 Icon = ActionIds.Tactician,
                 Duration = 15,
-                CD = 120,
+                CD = 90,
                 Triggers = new []{ new Item(ActionIds.Tactician) }
             })
         };
