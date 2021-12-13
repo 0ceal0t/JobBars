@@ -98,11 +98,11 @@ namespace JobBars.Helper {
         private static string ConvertItemToString(Item item) {
             if (item.Type == ItemType.Buff) {
                 var buff = StatusSheet.Where(x => x.RowId == item.Id);
-                return ToTitleCase(buff.First().Name);
+                return buff.Count() == 0 ? "Unknown" : ToTitleCase(buff.First().Name);
             }
             else {
                 var action = ActionSheet.Where(x => x.RowId == item.Id);
-                return ToTitleCase(action.First().Name);
+                return action.Count() == 0 ? "Unknown" : ToTitleCase(action.First().Name);
             }
         }
 

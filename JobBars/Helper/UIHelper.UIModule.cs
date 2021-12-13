@@ -9,8 +9,7 @@ namespace JobBars.Helper {
         public unsafe static AddonPartyListIntArray* GetPartyUI() {
             var uiModule = Framework.Instance()->GetUiModule();
             if (uiModule == null) return null;
-            var numArray = uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[4];
-            return (AddonPartyListIntArray*)numArray->IntArray;
+            return (AddonPartyListIntArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[4]->IntArray;
         }
 
         public static AddonHotbarNumberArray* GetHotbarUI() {

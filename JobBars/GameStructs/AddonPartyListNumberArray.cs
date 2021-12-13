@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace JobBars.GameStructs {
-    [StructLayout(LayoutKind.Sequential, Size = 519 * 4)]
+    [StructLayout(LayoutKind.Sequential, Size = 710 * 4)]
     public unsafe struct AddonPartyListIntArray {
         public int Unknown000;
         public int Unknown001;
@@ -15,58 +15,10 @@ namespace JobBars.GameStructs {
         public int Unknown008;
 
         public AddonPartyListMembersIntArray PartyMember;
-
-        public int Unknown321;
-        public OneHundredIntegers Unknowns322;
-        public OneHundredIntegers Unknowns422;
-        public TenIntegers Unknowns432;
-        public TenIntegers Unknowns442;
-        public TenIntegers Unknowns452;
-        public TenIntegers Unknowns462;
-        public TenIntegers Unknowns472;
-        public TenIntegers Unknowns482;
-        public TenIntegers Unknowns492;
-        public TenIntegers Unknowns502;
-        public TenIntegers Unknowns512;
-        public int Unknown513;
-        public int Unknown514;
-        public int Unknown515;
-        public int Unknown516;
-        public int Unknown517;
-        public int Unknown518;
-        public int Unknown519;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Size = 10 * 4)]
-    public struct TenIntegers {
-        public int i0;
-        public int i1;
-        public int i2;
-        public int i3;
-        public int i4;
-        public int i5;
-        public int i6;
-        public int i7;
-        public int i8;
-        public int i9;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Size = 100 * 4)]
-    public struct OneHundredIntegers {
-        public TenIntegers i0;
-        public TenIntegers i1;
-        public TenIntegers i2;
-        public TenIntegers i3;
-        public TenIntegers i4;
-        public TenIntegers i5;
-        public TenIntegers i6;
-        public TenIntegers i7;
-        public TenIntegers i8;
-        public TenIntegers i9;
     }
 
 
-    [StructLayout(LayoutKind.Sequential, Size = 39 * 4 * 8)]
+    [StructLayout(LayoutKind.Sequential, Size = 41 * 4 * 8)]
     public unsafe struct AddonPartyListMembersIntArray {
         public AddonPartyListMemberIntArray Member0;
         public AddonPartyListMemberIntArray Member1;
@@ -90,7 +42,7 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout(LayoutKind.Sequential, Size = 39 * 4)]
+    [StructLayout(LayoutKind.Sequential, Size = 41 * 4)]
     public unsafe struct AddonPartyListMemberIntArray {
         public int Level;
         public int ClassJobIcon;
@@ -126,6 +78,8 @@ namespace JobBars.GameStructs {
         public int Unknown33;
 
         public int CastingPercent;
+        public int CastingTargetIcon;
+        public int Unknown36;
         public int ObjectID;
     }
 }

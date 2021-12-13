@@ -71,6 +71,7 @@ namespace JobBars {
             for (int i = 0; i < 8; i++) {
                 PartyMember* info = (PartyMember*)(new IntPtr(groupManager->PartyMembers) + 0x230 * i);
                 if (info->ObjectID == 0 || info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF) continue;
+
                 var partyMember = new CurrentPartyMember {
                     IsPlayer = info->ObjectID == localPlayer.ObjectId,
                     ObjectId = info->ObjectID,
