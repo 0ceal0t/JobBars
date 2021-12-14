@@ -131,7 +131,6 @@
         Manafication = 1971,
         VerfireReady = 1234,
         VerstoneReady = 1235,
-        Acceleration = 1238,
 
         // BLU =========
         BluBleed = 1714,

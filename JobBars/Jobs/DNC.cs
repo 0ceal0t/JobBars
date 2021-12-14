@@ -16,9 +16,9 @@ namespace JobBars.Jobs {
             new GaugeProcsConfig($"{UIHelper.Localize(JobIds.DNC)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = new []{
                     new ProcConfig(UIHelper.Localize(BuffIds.FlourishingSymmetry), BuffIds.FlourishingSymmetry, UIColor.BrightGreen),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFlow), BuffIds.FlourishingFlow, UIColor.LightBlue),
+                    new ProcConfig(UIHelper.Localize(BuffIds.FlourishingFlow), BuffIds.FlourishingFlow, UIColor.DarkBlue),
                     new ProcConfig(UIHelper.Localize(BuffIds.ThreefoldFanDance), BuffIds.ThreefoldFanDance, UIColor.HealthGreen),
-                    new ProcConfig(UIHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, UIColor.DarkBlue),
+                    new ProcConfig(UIHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, UIColor.LightBlue),
                     new ProcConfig(UIHelper.Localize(BuffIds.FlourishingStarfall), BuffIds.FlourishingStarfall, UIColor.Red)
                 }
             })

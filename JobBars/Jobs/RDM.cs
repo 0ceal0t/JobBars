@@ -27,13 +27,6 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.Manafication)
                 },
                 Color = UIColor.DarkBlue
-            }),
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Acceleration), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 3,
-                Triggers = new []{
-                    new Item(BuffIds.Acceleration)
-                },
-                Color = UIColor.PurplePink
             })
         };
 
