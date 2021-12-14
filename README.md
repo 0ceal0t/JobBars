@@ -112,7 +112,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
   <tr><td>                           </td><td>                     </td><td> Earthly Star            </td><td> Giant Dominance    </td></tr>
 </table>
 
-### <img src="assets/job_icons/SGE.png" height="20px" width="20px"> Astrologian
+### <img src="assets/job_icons/SGE.png" height="20px" width="20px"> Sage
 
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
@@ -166,7 +166,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
   <tr><td> True North                </td><td>                     </td><td>                      </td><td>                    </td></tr>
 </table>
 
-### <img src="assets/job_icons/RPR.png" height="20px" width="20px"> Samurai
+### <img src="assets/job_icons/RPR.png" height="20px" width="20px"> Reaper
 
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
