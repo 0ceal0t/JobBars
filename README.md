@@ -38,8 +38,8 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Delirium          </td><td> Delirium            </td><td> Living Dead          </td><td> Delirium           </td></tr>
-  <tr><td> GCDs in Blood Weapon      </td><td> Living Shadow       </td><td> Reprisal             </td><td> Blood Weapon       </td></tr>
+  <tr><td> Delirium Stacks           </td><td> Delirium            </td><td> Living Dead          </td><td> Blood Weapon       </td></tr>
+  <tr><td> GCDs in Blood Weapon      </td><td> Living Shadow       </td><td> Reprisal             </td><td>                    </td></tr>
   <tr><td> MP                        </td><td>                     </td><td> Dark Missionary      </td><td>                    </td></tr>
   <tr><td>                           </td><td>                     </td><td> The Blackest Night   </td><td>                    </td></tr>
 </table>
@@ -50,10 +50,10 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Inner Release     </td><td> Inner Release       </td><td> Holmgang             </td><td> Inner Release      </td></tr>
-  <tr><td> Storm's Eye               </td><td>                     </td><td> Reprisal             </td><td> Storm's Eye        </td></tr>
+  <tr><td> Inner Release Stacks      </td><td> Inner Release       </td><td> Holmgang             </td><td> Inner Release      </td></tr>
+  <tr><td> Surging Tempest           </td><td>                     </td><td> Reprisal             </td><td> Surging Tempest    </td></tr>
   <tr><td>                           </td><td>                     </td><td> Shake it Off         </td><td>                    </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Nascent Flash        </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Bloodwhetting        </td><td>                    </td></tr>
 </table>
 
 
@@ -62,10 +62,11 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Requiescat        </td><td>                     </td><td> Hallowed Ground      </td><td> Requiescat         </td></tr>
+  <tr><td> Requiescat Stacks         </td><td> Requiescat          </td><td> Hallowed Ground      </td><td> Requiescat         </td></tr>
   <tr><td> GCDs in Fight or Flight   </td><td>                     </td><td> Reprisal             </td><td> Goring Blade       </td></tr>
   <tr><td> Goring Blade              </td><td>                     </td><td> Divine Veil          </td><td> Fight or Flight    </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Passage of Arms      </td><td>                    </td></tr>
+  <tr><td> Sword Oath Stacks         </td><td>                     </td><td> Passage of Arms      </td><td>                    </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td>                      </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/GNB.png" height="20px" width="20px"> Gunbreaker
@@ -84,8 +85,9 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
   <tr><td> Excog                     </td><td> Chain Stratagem     </td><td> Seraph               </td><td> Biolysis           </td></tr>
-  <tr><td> Biolysis                  </td><td>                     </td><td> Deployment Tactics   </td><td> Chain Stratagem    </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Recitation           </td><td>                    </td></tr>
+  <tr><td> Biolysis                  </td><td>                     </td><td> Expedient            </td><td> Chain Stratagem    </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td> Protraction          </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Swiftcast            </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/WHM.png" height="20px" width="20px"> White Mage
@@ -94,8 +96,9 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
   <tr><td> Dia                       </td><td>                     </td><td> Temperance           </td><td> Dia                </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Benedictiob          </td><td> Presence of Mind   </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Asylum               </td><td>                    </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td> Benediction          </td><td> Presence of Mind   </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Lilybell             </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Swiftcast            </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/AST.png" height="20px" width="20px"> Astrologian
@@ -104,9 +107,19 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
   <tr><td> Combust                   </td><td> Cards               </td><td> Netural Sect            </td><td> Combust            </td></tr>
-  <tr><td> Upgraded Earthly Star     </td><td> Divination          </td><td> Celestial Opposition    </td><td> Lightspeed         </td></tr>
-  <tr><td> Lightspeed                </td><td>                     </td><td> Collective Unconscious  </td><td>                    </td></tr>
-  <tr><td>                           </td><td>                     </td><td> Earthly Star            </td><td>                    </td></tr>
+  <tr><td> Upgraded Earthly Star     </td><td> Divination          </td><td> Macrocosmos             </td><td> Lightspeed         </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td> Swiftcast               </td><td> Astrodyne          </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Earthly Star            </td><td> Giant Dominance    </td></tr>
+</table>
+
+### <img src="assets/job_icons/SGE.png" height="20px" width="20px"> Astrologian
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Eukrasian Dosis           </td><td>                     </td><td> Pneuma                  </td><td> Eukrasian Dosis    </td></tr>
+  <tr><td> MP                        </td><td>                     </td><td> Zoe                     </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Panhaima                </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/MNK.png" height="20px" width="20px"> Monk
@@ -114,9 +127,11 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> Twin Snakes                  </td><td> Brotherhood         </td><td> Feint                </td><td> Twin Snakes        </td></tr>
-  <tr><td> Demolish                     </td><td> Riddle of Fire      </td><td> Mantra               </td><td> Demolish           </td></tr>
-  <tr><td> Riddle of Earth / True North </td><td>                     </td><td>                      </td><td> Riddle of Fire     </td></tr>
+  <tr><td> Perfect Balance Stacks       </td><td> Brotherhood         </td><td> Feint                </td><td> Twin Snakes        </td></tr>
+  <tr><td> GCDS in Riddle of Fire       </td><td> Riddle of Fire      </td><td> Mantra               </td><td> Demolish           </td></tr>
+  <tr><td> Twin Snakes                  </td><td>                     </td><td>                      </td><td> Riddle of Fire     </td></tr>
+  <tr><td> Demolish                     </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> True North                   </td><td>                     </td><td>                      </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/DRG.png" height="20px" width="20px"> Dragoon
@@ -126,8 +141,8 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 
   <tr><td> GCDs in Lance Charge      </td><td> Battle Litany       </td><td> Feint                </td><td> Dragonsight        </td></tr>
   <tr><td> GCDs in Dragonsight       </td><td> Dragonsight         </td><td>                      </td><td> Lance Charge       </td></tr>
-  <tr><td> True North                </td><td> Lance Charge        </td><td>                      </td><td> Disembowel         </td></tr>
-  <tr><td>                           </td><td>                     </td><td>                      </td><td> Chaos Thrust       </td></tr>
+  <tr><td> True North                </td><td> Lance Charge        </td><td>                      </td><td> Power Surge        </td></tr>
+  <tr><td>                           </td><td>                     </td><td>                      </td><td> Chaotic Spring     </td></tr>
 </table>
 
 ### <img src="assets/job_icons/NIN.png" height="20px" width="20px"> Ninja
@@ -135,7 +150,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Bunshin           </td><td> Trick Attack        </td><td> Feint                </td><td> Trick Attack        </td></tr>
+  <tr><td> Bunshin Stacks            </td><td> Trick Attack        </td><td> Feint                </td><td> Trick Attack        </td></tr>
   <tr><td> True North                </td><td> Bunshin             </td><td>                      </td><td>                     </td></tr>
 </table>
 
@@ -144,9 +159,21 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> Jinpu                     </td><td> Double Midare       </td><td> Feint                </td><td> Jinpu              </td></tr>
-  <tr><td> Shifu                     </td><td>                     </td><td>                      </td><td> Shifu              </td></tr>
+  <tr><td> Meikyo Stacks             </td><td> Ogi Namikiri        </td><td> Feint                </td><td> Fugetsu            </td></tr>
+  <tr><td> Fugetsu                   </td><td>                     </td><td>                      </td><td> Fuka               </td></tr>
+  <tr><td> Fuka                      </td><td>                     </td><td>                      </td><td>                    </td></tr>
   <tr><td> Higanbana                 </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> True North                </td><td>                     </td><td>                      </td><td>                    </td></tr>
+</table>
+
+### <img src="assets/job_icons/RPR.png" height="20px" width="20px"> Samurai
+
+<table>
+  <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
+
+  <tr><td> Soul Reaver Stacks        </td><td> Arcane Circle       </td><td> Feint                </td><td> Death's Design     </td></tr>
+  <tr><td> Immortal Sacrifice Stacks </td><td>                     </td><td> Arcane Crest         </td><td>                    </td></tr>
+  <tr><td> Death's Design            </td><td>                     </td><td>                      </td><td>                    </td></tr>
   <tr><td> True North                </td><td>                     </td><td>                      </td><td>                    </td></tr>
 </table>
 
@@ -155,9 +182,11 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Raging Strikes    </td><td> Battle Voice        </td><td> Troubadour           </td><td> Caustic Bite       </td></tr>
+  <tr><td> Bloodletter Charges       </td><td> Battle Voice        </td><td> Troubadour           </td><td> Caustic Bite       </td></tr>
   <tr><td> Caustic Bite              </td><td> Raging Strikes      </td><td> Nature's Minne       </td><td> Stormbite          </td></tr>
   <tr><td> Stormbite                 </td><td> Barrage             </td><td>                      </td><td> Raging Strikes     </td></tr>
+  <tr><td> GCDs in Raging Strikes    </td><td> Radiant Finale      </td><td>                      </td><td> Radiant Finale     </td></tr>
+  <tr><td>                           </td><td>                     </td><td>                      </td><td> Battle Voice       </td></tr>
 </table>
 
 ### <img src="assets/job_icons/MCH.png" height="20px" width="20px"> Machinist
@@ -178,6 +207,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 
   <tr><td> Procs                     </td><td> Technical Step      </td><td> Shield Samba         </td><td> Devilment          </td></tr>
   <tr><td>                           </td><td> Devilment           </td><td> Improvisation        </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td> Curing Waltz         </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/BLM.png" height="20px" width="20px"> Black Mage
@@ -187,7 +217,7 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 
   <tr><td> Thunder                   </td><td>                     </td><td> Addle                </td><td> Thunder            </td></tr>
   <tr><td> Fire and Thunder Procs    </td><td>                     </td><td>                      </td><td> Leylines           </td></tr>
-  <tr><td>                           </td><td>                     </td><td>                      </td><td> Sharpcast          </td></tr>
+  <tr><td> Triplecast Stacks         </td><td>                     </td><td>                      </td><td> Sharpcast          </td></tr>
 </table>
 
 ### <img src="assets/job_icons/SMN.png" height="20px" width="20px"> Summoner
@@ -195,10 +225,9 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> Ruin 4 Stacks             </td><td> Devotion            </td><td> Addle                </td><td> Bio                </td></tr>
-  <tr><td> Bio                       </td><td> Summon Bahamut      </td><td>                      </td><td> Miasma             </td></tr>
-  <tr><td> Miasma                    </td><td> Firebird Trance     </td><td>                      </td><td>                    </td></tr>
-  <tr><td> Wyrmwave/Scarlet Flame    </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Further Ruin              </td><td> Searing Light       </td><td> Addle                </td><td>                    </td></tr>
+  <tr><td>                           </td><td> Summon Bahamut      </td><td> Swiftcast            </td><td>                    </td></tr>
+  <tr><td>                           </td><td> Summon Phoenix      </td><td>                      </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/RDM.png" height="20px" width="20px"> Red Mage
@@ -206,9 +235,9 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 <table>
   <tr><th width="200px">Gauges</th> <th width="200px">Buffs</th> <th width="200px">Mitigation</th> <th width="200px">Icon Display</th> </tr>
 
-  <tr><td> GCDs in Manafication      </td><td> Embolden            </td><td> Addle                </td><td> Manafication       </td></tr>
-  <tr><td> Fire and Stone Procs      </td><td> Manafication        </td><td>                      </td><td>                    </td></tr>
-  <tr><td> Acceleration Stacks       </td><td>                     </td><td>                      </td><td>                    </td></tr>
+  <tr><td> Manafication Stacks       </td><td> Embolden            </td><td> Addle                </td><td>                    </td></tr>
+  <tr><td> Fire and Stone Procs      </td><td> Manafication        </td><td> Magick Barrier       </td><td>                    </td></tr>
+  <tr><td>                           </td><td>                     </td><td>                      </td><td>                    </td></tr>
 </table>
 
 ### <img src="assets/job_icons/BLU.png" height="20px" width="20px"> Blue Mage

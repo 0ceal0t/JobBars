@@ -53,16 +53,12 @@ namespace JobBars.Jobs {
                         Diamond = true,
                         MaxCharges = 2,
                         CD = 45,
-                        Triggers = new []{
-                            new Item(ActionIds.TrueNorth)
-                        }
+                        Triggers = new []{  new Item(ActionIds.TrueNorth) }
                     },
                     new GaugesChargesPartProps {
                         Bar = true,
                         Duration = 10,
-                        Triggers = new []{
-                            new Item(BuffIds.TrueNorth)
-                        }
+                        Triggers = new []{ new Item(BuffIds.TrueNorth) }
                     }
                 },
                 CompletionSound = GaugeCompleteSoundType.Never
