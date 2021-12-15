@@ -15,7 +15,7 @@ namespace JobBars.Gauges.Stacks {
                 GaugeBarConfig _ => new GaugeBar<GaugeStacksTracker>(this, idx),
                 GaugeArrowConfig _ => new GaugeArrow<GaugeStacksTracker>(this, idx),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeStacksTracker>(this, idx),
-                _ => null
+                _ => new GaugeDiamond<GaugeStacksTracker>(this, idx) // DEFAULT
             });
         }
 

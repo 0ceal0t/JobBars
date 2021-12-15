@@ -28,7 +28,7 @@ namespace JobBars.Gauges.Procs {
             Procs = Config.Procs.Select(p => new Proc(p)).OrderBy(proc => proc.Config.Order).ToList();
             LoadUI(Config.TypeConfig switch {
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeProcsTracker>(this, idx),
-                _ => null
+                _ => new GaugeDiamond<GaugeProcsTracker>(this, idx) // DEFAULT
             });
         }
 

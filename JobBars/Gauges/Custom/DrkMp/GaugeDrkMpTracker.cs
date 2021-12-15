@@ -19,7 +19,7 @@ namespace JobBars.Gauges.Custom {
                 GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMPTracker>(this, idx),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMPTracker>(this, idx),
                 GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMPTracker>(this, idx),
-                _ => null
+                _ => new GaugeBarDiamondCombo<GaugeDrkMPTracker>(this, idx) // DEFAULT
             });
         }
 

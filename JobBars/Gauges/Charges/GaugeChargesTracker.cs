@@ -26,7 +26,7 @@ namespace JobBars.Gauges.Charges {
                 GaugeBarConfig _ => new GaugeBar<GaugeChargesTracker>(this, idx),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeChargesTracker>(this, idx),
                 GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeChargesTracker>(this, idx),
-                _ => null
+                _ => new GaugeBarDiamondCombo<GaugeChargesTracker>(this, idx) // DEFAULT
             });
         }
 

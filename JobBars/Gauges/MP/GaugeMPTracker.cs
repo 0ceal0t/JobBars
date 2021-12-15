@@ -14,7 +14,7 @@ namespace JobBars.Gauges.MP {
             if (noInit) return;
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeMPTracker>(this, idx),
-                _ => null
+                _ => new GaugeBar<GaugeMPTracker>(this, idx) // DEFAULT
             });
         }
 

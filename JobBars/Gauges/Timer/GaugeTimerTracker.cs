@@ -88,7 +88,8 @@ namespace JobBars.Gauges.Timer {
             ActiveSubTimer = SubTimers[0];
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeTimerTracker>(this, idx),
-                _ => null
+                GaugeDiamondConfig _ => new GaugeDiamond<GaugeTimerTracker>(this, idx),
+                _ => new GaugeBar<GaugeTimerTracker>(this, idx) // DEFAULT
             });
         }
 
