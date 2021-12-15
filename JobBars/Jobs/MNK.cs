@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Procs;
 using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
@@ -23,19 +24,17 @@ namespace JobBars.Jobs {
                 },
                 Color = UIColor.Orange
             }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new GaugeSubGCDProps {
-                MaxCounter = 11,
-                MaxDuration = 20,
-                Color = UIColor.Red,
-                Triggers = new []{
-                    new Item(BuffIds.RiddleOfFire)
-                }
+            new GaugeProcsConfig(UIHelper.Localize(BuffIds.LeadenFist), GaugeVisualType.Diamond, new GaugeProcProps{
+                Procs = new []{
+                    new ProcConfig(UIHelper.Localize(BuffIds.LeadenFist), BuffIds.LeadenFist, UIColor.Yellow)
+                },
+                NoSoundOnProc = true
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.TwinSnakes), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.DisciplinedFist), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 15,
                 Color = UIColor.PurplePink,
                 Triggers = new []{
-                    new Item(BuffIds.TwinSnakes)
+                    new Item(BuffIds.DisciplinedFist)
                 }
             }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.Demolish), GaugeVisualType.Bar, new GaugeSubTimerProps {
@@ -43,6 +42,14 @@ namespace JobBars.Jobs {
                 Color = UIColor.Yellow,
                 Triggers = new [] {
                     new Item(BuffIds.Demolish)
+                }
+            }),
+            new GaugeGCDConfig(UIHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new GaugeSubGCDProps {
+                MaxCounter = 11,
+                MaxDuration = 20,
+                Color = UIColor.Red,
+                Triggers = new []{
+                    new Item(BuffIds.RiddleOfFire)
                 }
             }),
             new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.MNK)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
@@ -106,11 +113,11 @@ namespace JobBars.Jobs {
                     new IconTriggerStruct { Trigger = new Item(BuffIds.RiddleOfFire), Duration = 20 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.TwinSnakes), new IconProps {
+            new IconReplacer(UIHelper.Localize(BuffIds.DisciplinedFist), new IconProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.TwinSnakes },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.TwinSnakes), Duration = 15 }
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.DisciplinedFist), Duration = 15 }
                 }
             }),
             new IconReplacer(UIHelper.Localize(BuffIds.Demolish), new IconProps {

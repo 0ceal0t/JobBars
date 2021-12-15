@@ -14,7 +14,7 @@ using System;
 namespace JobBars.Jobs {
     public static class SCH {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeProcsConfig($"{UIHelper.Localize(JobIds.SCH)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig(UIHelper.Localize(BuffIds.Excog), GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = new []{
                     new ProcConfig(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
                 },

@@ -20,9 +20,9 @@ namespace JobBars.Data {
 
     [Serializable]
     public class Configuration : IPluginConfiguration {
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = 2;
 
-        public bool Use4K = false;
+        public bool Use4K = true;
 
         public AttachAddon AttachAddon = AttachAddon.Chatbox;
 
@@ -81,6 +81,7 @@ namespace JobBars.Data {
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
+        public int BuffTextSize = 15;
 
         // ===== COOLDOWNS ======
 

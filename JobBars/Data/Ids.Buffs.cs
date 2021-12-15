@@ -55,14 +55,14 @@
         EukrasianDosis = 2614,
         EukrasianDosis2 = 2615,
         EukrasianDosis3 = 2616,
-        Zoe = 2611,
 
         // MNK =========
         PerfectBalance = 110,
         RiddleOfFire = 1181,
         TrueNorth = 1250,
-        TwinSnakes = 101,
+        DisciplinedFist = 3001,
         Demolish = 246,
+        LeadenFist = 1861,
 
         // DRG =========
         LanceCharge = 0x748,

@@ -50,7 +50,7 @@ namespace JobBars.Gauges.Timer {
 
         // ===============================
 
-        private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Bar };
+        private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.Bar, GaugeVisualType.Diamond };
         protected override GaugeVisualType[] GetValidGaugeTypes() => ValidGaugeVisualType;
 
         public GaugeSubTimerConfig[] SubTimers { get; private set; }

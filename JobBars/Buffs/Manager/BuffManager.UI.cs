@@ -75,6 +75,14 @@ namespace JobBars.Buffs.Manager {
                 ResetUI();
             }
 
+            if (ImGui.InputInt("Buff Text Size", ref JobBars.Config.BuffTextSize)) {
+                if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
+                if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
+                JobBars.Config.Save();
+
+                JobBars.Builder.UpdateBuffsTextSize();
+            }
+
             ImGui.Unindent();
         }
 

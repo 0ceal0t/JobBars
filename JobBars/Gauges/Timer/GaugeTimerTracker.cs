@@ -5,9 +5,10 @@ using System.Linq;
 using JobBars.Helper;
 using JobBars.UI;
 using JobBars.Gauges.Types.Bar;
+using JobBars.Gauges.Types.Diamond;
 
 namespace JobBars.Gauges.Timer {
-    public class GaugeTimerTracker : GaugeTracker, IGaugeBarInterface {
+    public class GaugeTimerTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface {
         private class GaugeSubTimer {
             private readonly GaugeTimerConfig.GaugeSubTimerConfig Config;
 
@@ -134,5 +135,19 @@ namespace JobBars.Gauges.Timer {
         public string GetBarText() => ActiveSubTimer.GetText();
 
         public float GetBarPercent() => ActiveSubTimer.GetBarPercent();
+
+        public int GetTotalMaxTicks() => 1;
+
+        public int GetCurrentMaxTicks() => 1;
+
+        public ElementColor GetTickColor(int idx) => ActiveSubTimer.GetColor();
+
+        public bool GetDiamondTextVisible() => false;
+
+        public bool GetTickValue(int idx) => ActiveSubTimer.GetActive();
+
+        public string GetDiamondText(int idx) => "";
+
+        public bool GetReverseFill() => false;
     }
 }

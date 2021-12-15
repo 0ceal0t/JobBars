@@ -36,11 +36,11 @@ namespace JobBars.Jobs {
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Pneuma) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Zoe), new CooldownProps {
-                Icon = ActionIds.Zoe,
+            new CooldownConfig(UIHelper.Localize(ActionIds.Holos), new CooldownProps {
+                Icon = ActionIds.Holos,
                 CD = 90,
                 Duration = 30,
-                Triggers = new []{ new Item(BuffIds.Zoe) }
+                Triggers = new []{ new Item(ActionIds.Holos) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Panhaima), new CooldownProps {
                 Icon = ActionIds.Panhaima,

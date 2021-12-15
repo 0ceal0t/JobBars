@@ -28,8 +28,8 @@ namespace JobBars.UI {
             RootRes->ChildCount = 4;
 
             TextNode = UIBuilder.CreateTextNode();
-            TextNode->FontSize = 15;
-            TextNode->LineSpacing = 15;
+            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
+            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
             TextNode->AlignmentFontType = 20;
             TextNode->AtkResNode.Width = WIDTH;
             TextNode->AtkResNode.Height = HEIGHT;
@@ -118,7 +118,7 @@ namespace JobBars.UI {
         }
 
         public void SetPosition(int idx) {
-            var position_x = idx % BUFFS_HORIZONTAL;
+            var position_x = BUFFS_HORIZONTAL == 0 ? 0 : idx % BUFFS_HORIZONTAL;
             var position_y = BUFFS_HORIZONTAL == 0 ? 0 : (idx - position_x) / BUFFS_HORIZONTAL;
 
             int xMod = JobBars.Config.BuffRightToLeft ? -1 : 1;
@@ -163,6 +163,11 @@ namespace JobBars.UI {
             var newColor = color;
             newColor.AddBlue -= 50;
             UIColor.SetColor(Border, newColor);
+        }
+
+        public void SetTextSize(int size) {
+            TextNode->LineSpacing = (byte)size;
+            TextNode->FontSize = (byte)size;
         }
     }
 }

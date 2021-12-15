@@ -87,7 +87,7 @@
         EukrasianDosis2 = 24308,
         EukrasianDosis3 = 24314,
         Pneuma = 24318,
-        Zoe = 24300,
+        Holos = 24310,
         Panhaima = 24311,
 
         // MNK ===========

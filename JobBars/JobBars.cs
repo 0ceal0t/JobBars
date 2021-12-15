@@ -108,7 +108,7 @@ namespace JobBars {
                 Config = new Configuration();
                 Config.Save();
             }
-            if (Config.Version == 0) {
+            if (Config.Version < 2) {
                 PluginLog.Log("Old config version found");
                 Config = new Configuration();
                 Config.Save();

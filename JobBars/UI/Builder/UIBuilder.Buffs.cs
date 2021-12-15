@@ -67,6 +67,12 @@ namespace JobBars.UI {
             }
         }
 
+        public void UpdateBuffsTextSize() {
+            foreach(var buff in Buffs) {
+                buff.SetTextSize(JobBars.Config.BuffTextSize);
+            }
+        }
+
         public void SetBuffPartyListVisible(int idx, bool visible) => PartyListBuffs[idx].SetVisibility(visible);
         public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);
         public void SetBuffScale(float scale) => SetScale(BuffRoot, scale, scale);
