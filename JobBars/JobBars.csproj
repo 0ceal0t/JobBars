@@ -33,10 +33,6 @@
       <Private>false</Private>
       <HintPath>..\lib\FFXIVClientStructs.dll</HintPath>
     </Reference>
-    <Reference Include="FFXIVClientStructs.Common">
-      <Private>false</Private>
-      <HintPath>..\lib\FFXIVClientStructs.Common.dll</HintPath>
-    </Reference>
     <Reference Include="Dalamud">
       <Private>false</Private>
       <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
