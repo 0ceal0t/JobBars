@@ -3,6 +3,9 @@
 
         // DRK =========
         Reprisal = 7535, // All tanks
+        Rampart = 7531, // All tanks
+        Provoke = 7533, // All tanks
+        Shirk = 7537, // All tanks
         DarkMissionary = 16471,
         LivingDead = 3638,
         Delirium = 7390,
@@ -11,6 +14,7 @@
         BloodWeapon = 3625,
 
         // WAR ==========
+        Vengeance = 44,
         InnerRelease = 7389,
         ShakeItOff = 7388,
         Holmgang = 43,

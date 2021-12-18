@@ -57,6 +57,30 @@ namespace JobBars.Jobs {
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.Reprisal) }
             }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rampart)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Rampart,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Rampart) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Provoke)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Provoke,
+                Duration = 0,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Provoke) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Shirk)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Shirk,
+                Duration = 0,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Shirk) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Vengeance)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Vengeance,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Vengeance) }
+            }),
             new CooldownConfig(UIHelper.Localize(ActionIds.ShakeItOff), new CooldownProps {
                 Icon = ActionIds.ShakeItOff,
                 Duration = 15,
