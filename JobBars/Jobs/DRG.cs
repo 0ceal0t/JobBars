@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
 using JobBars.UI;
@@ -29,6 +30,14 @@ namespace JobBars.Jobs {
                 Triggers = new []{
                     new Item(BuffIds.RightEye),
                     new Item(BuffIds.RightEye2)
+                }
+            }),
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.ChaoticSpring), GaugeVisualType.Bar, new GaugeSubTimerProps {
+                MaxDuration = 24,
+                Color = UIColor.Purple,
+                Triggers = new [] {
+                    new Item(BuffIds.ChaosThrust),
+                    new Item(BuffIds.ChaoticSpring)
                 }
             }),
             new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.DRG)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {

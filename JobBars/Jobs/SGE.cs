@@ -38,8 +38,8 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Holos), new CooldownProps {
                 Icon = ActionIds.Holos,
-                CD = 90,
-                Duration = 30,
+                CD = 120,
+                Duration = 20,
                 Triggers = new []{ new Item(ActionIds.Holos) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Panhaima), new CooldownProps {

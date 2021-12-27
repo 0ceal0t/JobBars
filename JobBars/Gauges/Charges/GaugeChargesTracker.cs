@@ -14,6 +14,7 @@ namespace JobBars.Gauges.Charges {
         private readonly GaugeChargesConfig Config;
         private readonly int TotalCharges;
         private readonly List<bool> ChargesActive = new();
+        private readonly bool IsCDBar;
 
         private int ChargesActiveTotal = 0;
         private float BarTextValue = 0;
@@ -22,6 +23,7 @@ namespace JobBars.Gauges.Charges {
         public GaugeChargesTracker(GaugeChargesConfig config, int idx) {
             Config = config;
             TotalCharges = Config.Parts.Where(p => p.Diamond).Select(d => d.MaxCharges).Sum();
+            IsCDBar = Config.Parts.Where(p => p.Bar).All(p => p.Triggers.All(t => t.Type != ItemType.Buff));
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeChargesTracker>(this, idx),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeChargesTracker>(this, idx),
@@ -32,7 +34,7 @@ namespace JobBars.Gauges.Charges {
 
         public override GaugeConfig GetConfig() => Config;
 
-        public override bool GetActive() => true;
+        public override bool GetActive() => IsCDBar ? ChargesActiveTotal < TotalCharges : BarPercentValue > 0f; // CD not full : buff active
 
         public override void ProcessAction(Item action) { }
 

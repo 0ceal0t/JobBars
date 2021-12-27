@@ -51,8 +51,8 @@ namespace JobBars.Jobs {
                 }
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.RagingStrikes), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 7,
-                MaxDuration = 15,
+                MaxCounter = 8,
+                MaxDuration = 20,
                 Color = UIColor.Orange,
                 Triggers = new []{
                     new Item(BuffIds.RagingStrikes)
