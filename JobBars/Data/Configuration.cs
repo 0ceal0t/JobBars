@@ -75,13 +75,14 @@ namespace JobBars.Data {
         public bool BuffIncludeParty = true;
         public bool BuffOrderByActive = true;
         public float BuffDisplayTimer = 30f;
+        public bool BuffThinBorder = false;
 
         public BoolValueConfig BuffEnabled = new(true);
 
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
-        public int BuffTextSize = 15;
+        public int BuffTextSize = 18;
 
         // ===== COOLDOWNS ======
 

@@ -14,8 +14,9 @@ namespace JobBars.UI {
         public static readonly ushort DIAMOND_BG = 7;
         public static readonly ushort DIAMOND_FG = 8;
         public static readonly ushort BUFF_BORDER = 9;
-        public static readonly ushort BUFF_OVERLAY = 10;
-        public static readonly ushort BUFF_PARTYLIST = 11;
+        public static readonly ushort BUFF_BORDER_THIN = 10;
+        public static readonly ushort BUFF_OVERLAY = 11;
+        public static readonly ushort BUFF_PARTYLIST = 12;
 
         public static readonly ushort CD_BORDER = 0;
         public static readonly ushort CD_DASH_START = 1;
@@ -51,6 +52,7 @@ namespace JobBars.UI {
 
             gaugeBuffLayout.Add("ui/uld/IconA_Frame.tex", new[] {
                 new PartStruct(252, 12, 47, 47),  // BUFF_BORDER
+                new PartStruct(0, 96, 48, 48),    // BUFF_BORDER_THIN
                 new PartStruct(365, 4, 37, 37),   // BUFF_OVERLAY
             });
 

@@ -83,6 +83,12 @@ namespace JobBars.Buffs.Manager {
                 JobBars.Builder.UpdateBuffsTextSize();
             }
 
+            if (ImGui.Checkbox("Thin Buff Border", ref JobBars.Config.BuffThinBorder)) {
+                JobBars.Config.Save();
+
+                JobBars.Builder.UpdateBorderThin();
+            }
+
             ImGui.Unindent();
         }
 

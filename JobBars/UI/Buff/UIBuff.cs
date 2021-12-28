@@ -5,7 +5,7 @@ using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe class UIBuff : UIElement {
-        public static readonly ushort WIDTH = 37;
+        public static readonly ushort WIDTH = 36;
         public static readonly ushort HEIGHT = 28;
 
         private AtkTextNode* TextNode;
@@ -30,7 +30,7 @@ namespace JobBars.UI {
             TextNode = UIBuilder.CreateTextNode();
             TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
             TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
-            TextNode->AlignmentFontType = 20;
+            TextNode->AlignmentFontType = 4;
             TextNode->AtkResNode.Width = WIDTH;
             TextNode->AtkResNode.Height = HEIGHT;
             TextNode->AtkResNode.X = 0;
@@ -49,7 +49,7 @@ namespace JobBars.UI {
             Icon->WrapMode = 1;
 
             UIHelper.LoadIcon(Icon, 405);
-            UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 37, 28);
+            UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 36, 28);
 
             Overlay = UIBuilder.CreateImageNode();
             Overlay->AtkResNode.Width = WIDTH;
@@ -62,11 +62,11 @@ namespace JobBars.UI {
             Overlay->WrapMode = 1;
 
             Border = UIBuilder.CreateNineNode();
-            Border->AtkResNode.Width = (ushort)(WIDTH + 4);
-            Border->AtkResNode.Height = (ushort)(HEIGHT + 4);
-            Border->AtkResNode.X = -2;
-            Border->AtkResNode.Y = -2;
-            Border->PartID = UIBuilder.BUFF_BORDER;
+            Border->AtkResNode.Width = (ushort)(WIDTH + 8);
+            Border->AtkResNode.Height = (ushort)(HEIGHT + 8);
+            Border->AtkResNode.X = -4;
+            Border->AtkResNode.Y = -3;
+            Border->PartID = JobBars.Config.BuffThinBorder ? UIBuilder.BUFF_BORDER_THIN : UIBuilder.BUFF_BORDER;
             Border->PartsList = partsList;
 
             Border->TopOffset = 5;
@@ -160,6 +160,10 @@ namespace JobBars.UI {
         }
 
         public void SetColor(ElementColor color) {
+            if (JobBars.Config.BuffThinBorder) {
+                UIColor.SetColor(Border, UIColor.NoColor);
+                return;
+            }
             var newColor = color;
             newColor.AddBlue -= 50;
             UIColor.SetColor(Border, newColor);
@@ -168,6 +172,10 @@ namespace JobBars.UI {
         public void SetTextSize(int size) {
             TextNode->LineSpacing = (byte)size;
             TextNode->FontSize = (byte)size;
+        }
+
+        public void SetBorderThin(bool thin) {
+            Border->PartID = thin ? UIBuilder.BUFF_BORDER_THIN : UIBuilder.BUFF_BORDER;
         }
     }
 }

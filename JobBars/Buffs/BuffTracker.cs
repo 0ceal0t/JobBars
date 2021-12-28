@@ -82,6 +82,7 @@ namespace JobBars.Buffs {
             }
 
             UI.Show();
+            UI.SetColor(Config.Color);
 
             if (State == BuffState.Running) {
                 UI.SetOffCD();
@@ -102,7 +103,6 @@ namespace JobBars.Buffs {
 
         private void SetupUI() {
             UI.LoadIcon(Config.Icon);
-            UI.SetColor(Config.Color);
         }
 
         public void Reset() {
