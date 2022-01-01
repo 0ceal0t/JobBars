@@ -31,15 +31,67 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.SGE, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new CooldownConfig[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.Pneuma), new CooldownProps {
-                Icon = ActionIds.Pneuma,
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
+                Icon = ActionIds.Swiftcast,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LucidDreaming)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
+                Icon = ActionIds.LucidDreaming,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.LucidDreaming) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Surecast)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
+                Icon = ActionIds.Surecast,
                 CD = 120,
-                Triggers = new []{ new Item(ActionIds.Pneuma) }
+                Triggers = new []{ new Item(ActionIds.Surecast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rescue)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
+                Icon = ActionIds.Rescue,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Rescue) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Physis2), new CooldownProps {
+                Icon = ActionIds.Physis2,
+                Duration = 15,
+                CD = 60,
+                Triggers = new []{
+                    new Item(ActionIds.Physis),
+                    new Item(ActionIds.Physis2),
+                }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Soteria), new CooldownProps {
+                Icon = ActionIds.Soteria,
+                Duration = 15,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Soteria) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Kerachole), new CooldownProps {
+                Icon = ActionIds.Kerachole,
+                Duration = 15,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Kerachole) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Ixochole), new CooldownProps {
+                Icon = ActionIds.Ixochole,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Ixochole) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Taurochole), new CooldownProps {
+                Icon = ActionIds.Taurochole,
+                CD = 45,
+                Triggers = new []{ new Item(ActionIds.Taurochole) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Haima), new CooldownProps {
+                Icon = ActionIds.Haima,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Haima) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Holos), new CooldownProps {
                 Icon = ActionIds.Holos,
-                CD = 90,
-                Duration = 30,
+                CD = 120,
+                Duration = 20,
                 Triggers = new []{ new Item(ActionIds.Holos) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Panhaima), new CooldownProps {
@@ -48,10 +100,10 @@ namespace JobBars.Jobs {
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Panhaima) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
-                Icon = ActionIds.Swiftcast,
-                CD = 60,
-                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.Pneuma), new CooldownProps {
+                Icon = ActionIds.Pneuma,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Pneuma) }
             })
         };
 

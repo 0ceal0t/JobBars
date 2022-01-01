@@ -49,16 +49,53 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.WHM, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new[] {
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
+                Icon = ActionIds.Swiftcast,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LucidDreaming)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
+                Icon = ActionIds.LucidDreaming,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.LucidDreaming) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Surecast)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
+                Icon = ActionIds.Surecast,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Surecast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rescue)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
+                Icon = ActionIds.Rescue,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Rescue) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Benediction), new CooldownProps {
+                Icon = ActionIds.Benediction,
+                CD = 180,
+                Triggers = new []{ new Item(ActionIds.Benediction) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Asylum), new CooldownProps {
+                Icon = ActionIds.Asylum,
+                Duration = 24,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Asylum) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Assize), new CooldownProps {
+                Icon = ActionIds.Assize,
+                Duration = 45,
+                Triggers = new []{ new Item(ActionIds.Assize) }
+            }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Temperance), new CooldownProps {
                 Icon = ActionIds.Temperance,
                 Duration = 20,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Temperance) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Benediction), new CooldownProps {
-                Icon = ActionIds.Benediction,
-                CD = 180,
-                Triggers = new []{ new Item(ActionIds.Benediction) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.Aquaveil), new CooldownProps {
+                Icon = ActionIds.Aquaveil,
+                Duration = 8,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Aquaveil) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.LilyBell), new CooldownProps {
                 Icon = ActionIds.LilyBell,
@@ -66,11 +103,7 @@ namespace JobBars.Jobs {
                 CD = 180,
                 Triggers = new []{ new Item(ActionIds.LilyBell) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.WHM)})", new CooldownProps {
-                Icon = ActionIds.Swiftcast,
-                CD = 60,
-                Triggers = new []{ new Item(ActionIds.Swiftcast) }
-            })
+
         };
 
         public static IconReplacer[] Icons => new[] {

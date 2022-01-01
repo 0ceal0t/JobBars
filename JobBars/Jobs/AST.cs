@@ -97,17 +97,41 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.AST, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.NeutralSect), new CooldownProps {
-                Icon = ActionIds.NeutralSect,
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.AST)})", new CooldownProps {
+                Icon = ActionIds.Swiftcast,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LucidDreaming)} ({UIHelper.Localize(JobIds.AST)})", new CooldownProps {
+                Icon = ActionIds.LucidDreaming,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.LucidDreaming) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Surecast)} ({UIHelper.Localize(JobIds.AST)})", new CooldownProps {
+                Icon = ActionIds.Surecast,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Surecast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rescue)} ({UIHelper.Localize(JobIds.AST)})", new CooldownProps {
+                Icon = ActionIds.Rescue,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Rescue) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Synastry), new CooldownProps {
+                Icon = ActionIds.Synastry,
                 Duration = 20,
                 CD = 120,
-                Triggers = new []{ new Item(ActionIds.NeutralSect) }
+                Triggers = new []{ new Item(ActionIds.Synastry) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Macrocosmos), new CooldownProps {
-                Icon = ActionIds.Macrocosmos,
-                CD = 180,
-                Duration = 15,
-                Triggers = new []{ new Item(ActionIds.Macrocosmos) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.CollectiveUnconscious), new CooldownProps {
+                Icon = ActionIds.CollectiveUnconscious,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.CollectiveUnconscious) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.CelestialOpposition), new CooldownProps {
+                Icon = ActionIds.CelestialOpposition,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.CelestialOpposition) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.EarthlyStar), new CooldownProps {
                 Icon = ActionIds.EarthlyStar,
@@ -115,10 +139,23 @@ namespace JobBars.Jobs {
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.EarthlyStar) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.AST)})", new CooldownProps {
-                Icon = ActionIds.Swiftcast,
+            new CooldownConfig(UIHelper.Localize(ActionIds.NeutralSect), new CooldownProps {
+                Icon = ActionIds.NeutralSect,
+                Duration = 20,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.NeutralSect) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Exaltation), new CooldownProps {
+                Icon = ActionIds.Exaltation,
+                Duration = 8,
                 CD = 60,
-                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+                Triggers = new []{ new Item(ActionIds.Exaltation) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Macrocosmos), new CooldownProps {
+                Icon = ActionIds.Macrocosmos,
+                CD = 180,
+                Duration = 15,
+                Triggers = new []{ new Item(ActionIds.Macrocosmos) }
             })
         };
 

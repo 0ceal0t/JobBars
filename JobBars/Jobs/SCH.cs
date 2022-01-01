@@ -44,17 +44,53 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.SCH, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new[] {
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
+                Icon = ActionIds.Swiftcast,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LucidDreaming)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
+                Icon = ActionIds.LucidDreaming,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.LucidDreaming) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Surecast)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
+                Icon = ActionIds.Surecast,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Surecast) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rescue)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
+                Icon = ActionIds.Rescue,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Rescue) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.SacredSoil), new CooldownProps {
+                Icon = ActionIds.SacredSoil,
+                Duration = 15,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.SacredSoil) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Indomitability), new CooldownProps {
+                Icon = ActionIds.Indomitability,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Indomitability) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Dissipation), new CooldownProps {
+                Icon = ActionIds.Dissipation,
+                Duration = 30,
+                CD = 180,
+                Triggers = new []{ new Item(ActionIds.Dissipation) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Excogitation), new CooldownProps {
+                Icon = ActionIds.Excogitation,
+                CD = 45,
+                Triggers = new []{ new Item(ActionIds.Excogitation) }
+            }),
             new CooldownConfig(UIHelper.Localize(ActionIds.SummonSeraph), new CooldownProps {
                 Icon = ActionIds.SummonSeraph,
                 Duration = 22,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.SummonSeraph) }
-            }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Expedient), new CooldownProps {
-                Icon = ActionIds.Expedient,
-                Duration = 20,
-                CD = 120,
-                Triggers = new []{ new Item(ActionIds.Expedient) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Protraction), new CooldownProps {
                 Icon = ActionIds.Protraction,
@@ -62,10 +98,11 @@ namespace JobBars.Jobs {
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.Protraction) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SCH)})", new CooldownProps {
-                Icon = ActionIds.Swiftcast,
-                CD = 60,
-                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+            new CooldownConfig(UIHelper.Localize(ActionIds.Expedient), new CooldownProps {
+                Icon = ActionIds.Expedient,
+                Duration = 20,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Expedient) }
             })
         };
 
