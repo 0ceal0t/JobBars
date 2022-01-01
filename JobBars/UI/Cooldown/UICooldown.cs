@@ -126,7 +126,7 @@ namespace JobBars.UI {
     }
 
     public unsafe class UICooldown : UIElement {
-        public static readonly int MAX_ITEMS = 5;
+        public static readonly int MAX_ITEMS = 20;
 
         public List<UICooldownItem> Items = new();
 
