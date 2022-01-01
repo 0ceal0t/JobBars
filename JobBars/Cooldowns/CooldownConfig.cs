@@ -24,7 +24,7 @@ namespace JobBars.Cooldowns {
             Name = name;
             Icon = props.Icon;
             Triggers = props.Triggers;
-            Duration = props.Duration;
+            Duration = JobBars.Config.CooldownsHideActiveBuffDuration ? 0 : props.Duration;
             CD = props.CD;
             Enabled = JobBars.Config.CooldownEnabled.Get(Name);
             Order = JobBars.Config.CooldownOrder.Get(Name);
