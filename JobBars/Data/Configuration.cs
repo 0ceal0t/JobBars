@@ -91,6 +91,8 @@ namespace JobBars.Data {
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
         public bool CooldownsShowBorderWhenActive = true;
+        public bool CooldownsHideActiveBuffDuration = false;
+
 
         public bool CooldownsLeftAligned = false;
 

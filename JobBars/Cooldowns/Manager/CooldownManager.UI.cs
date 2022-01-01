@@ -46,6 +46,10 @@ namespace JobBars.Cooldowns.Manager {
                 JobBars.Config.Save();
             }
 
+            if (ImGui.Checkbox("Hide Active Buff Duration (Show Only Cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) {
+                JobBars.Config.Save();
+            }
+
             ImGui.Unindent();
         }
 
