@@ -45,11 +45,26 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.WAR, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.Holmgang), new CooldownProps {
-                Icon = ActionIds.Holmgang,
-                Duration = 10,
-                CD = 240,
-                Triggers = new []{ new Item(ActionIds.Holmgang) }
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rampart)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Rampart,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Rampart) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LowBlow)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.LowBlow,
+                CD = 25,
+                Triggers = new []{ new Item(ActionIds.LowBlow) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Provoke)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Provoke,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Provoke) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.Interject)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Interject,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.Interject) }
             }),
             new CooldownConfig($"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
@@ -57,29 +72,34 @@ namespace JobBars.Jobs {
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.Reprisal) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Rampart)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
-                Icon = ActionIds.Rampart,
-                Duration = 20,
-                CD = 90,
-                Triggers = new []{ new Item(ActionIds.Rampart) }
-            }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Provoke)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
-                Icon = ActionIds.Provoke,
-                Duration = 0,
-                CD = 30,
-                Triggers = new []{ new Item(ActionIds.Provoke) }
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.ArmsLength)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.ArmsLength,
+                Duration = 6,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ArmsLength) }
             }),
             new CooldownConfig($"{UIHelper.Localize(ActionIds.Shirk)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
                 Icon = ActionIds.Shirk,
-                Duration = 0,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Shirk) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Vengeance)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+            new CooldownConfig(UIHelper.Localize(ActionIds.ThrillOfBattle), new CooldownProps {
+                Icon = ActionIds.ThrillOfBattle,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ThrillOfBattle) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Vengeance), new CooldownProps {
                 Icon = ActionIds.Vengeance,
                 Duration = 15,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Vengeance) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Holmgang), new CooldownProps {
+                Icon = ActionIds.Holmgang,
+                Duration = 10,
+                CD = 240,
+                Triggers = new []{ new Item(ActionIds.Holmgang) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.ShakeItOff), new CooldownProps {
                 Icon = ActionIds.ShakeItOff,
