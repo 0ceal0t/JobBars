@@ -75,6 +75,34 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.MCH, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.LegGraze)} ({UIHelper.Localize(JobIds.MCH)})", new CooldownProps {
+                Icon = ActionIds.LegGraze,
+                Duration = 10,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.LegGraze) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.SecondWind)} ({UIHelper.Localize(JobIds.MCH)})", new CooldownProps {
+                Icon = ActionIds.SecondWind,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.SecondWind) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.FootGraze)} ({UIHelper.Localize(JobIds.MCH)})", new CooldownProps {
+                Icon = ActionIds.FootGraze,
+                Duration = 10,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.FootGraze) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.HeadGraze)} ({UIHelper.Localize(JobIds.MCH)})", new CooldownProps {
+                Icon = ActionIds.HeadGraze,
+                CD = 30,
+                Triggers = new []{ new Item(ActionIds.HeadGraze) }
+            }),
+            new CooldownConfig($"{UIHelper.Localize(ActionIds.ArmsLength)} ({UIHelper.Localize(JobIds.MCH)})", new CooldownProps {
+                Icon = ActionIds.ArmsLength,
+                Duration = 6,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ArmsLength) }
+            }),
             new CooldownConfig(UIHelper.Localize(ActionIds.Tactician), new CooldownProps {
                 Icon = ActionIds.Tactician,
                 Duration = 15,
