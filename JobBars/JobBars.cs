@@ -274,6 +274,12 @@ namespace JobBars {
             CooldownManager.Tick(inCombat);
             CursorManager.Tick(inCombat);
             IconManager.Tick();
+
+            var time = DateTime.Now;
+            var millis = time.Second * 1000 + time.Millisecond;
+            var percent = (float)(millis % 1000) / 1000;
+
+            Builder.Tick( Config.GaugePulse ? percent : 0f );
         }
 
         private void CheckForHUDChange(AtkUnitBase* addon) {

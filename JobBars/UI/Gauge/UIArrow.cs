@@ -5,11 +5,13 @@ using System.Collections.Generic;
 
 namespace JobBars.UI {
     public unsafe class UIArrow : UIGauge {
-        private class TickStruct {
+        private class UIArrowTick {
             public AtkResNode* MainTick;
             public AtkImageNode* Background;
             public AtkResNode* SelectedContainer;
             public AtkImageNode* Selected;
+
+            private ElementColor Color = UIColor.NoColor;
 
             public void Dispose() {
                 if (Selected != null) {
@@ -34,10 +36,19 @@ namespace JobBars.UI {
                     MainTick = null;
                 }
             }
+
+            public void SetColor(ElementColor color) {
+                Color = color;
+                UIColor.SetColor(Selected, color);
+            }
+
+            public void Tick(float percent) {
+                UIColor.SetColorPulse((AtkResNode*)Selected, Color, percent);
+            }
         }
 
         private static readonly int MAX = 12;
-        private List<TickStruct> Ticks = new();
+        private List<UIArrowTick> Ticks = new();
 
         public UIArrow(AtkUldPartsList* partsList) : base() {
             RootRes = UIBuilder.CreateResNode();
@@ -46,7 +57,7 @@ namespace JobBars.UI {
             RootRes->Width = 160;
             RootRes->Height = 46;
 
-            TickStruct lastTick = null;
+            UIArrowTick lastTick = null;
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
@@ -102,7 +113,7 @@ namespace JobBars.UI {
                 bg->AtkResNode.ParentNode = tick;
                 selectedContainer->ParentNode = tick;
 
-                var newTick = new TickStruct {
+                var newTick = new UIArrowTick {
                     MainTick = tick,
                     Background = bg,
                     Selected = selected,
@@ -139,7 +150,7 @@ namespace JobBars.UI {
         }
 
         public void SetColor(int idx, ElementColor color) {
-            UIColor.SetColor(Ticks[idx].Selected, color);
+            Ticks[idx].SetColor(color);
         }
 
         public void SetValue(int idx, bool value) {
@@ -154,6 +165,10 @@ namespace JobBars.UI {
 
         public void Clear() {
             for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
+        }
+
+        public void Tick(float percent) {
+            Ticks.ForEach(t => t.Tick(percent));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Logging;
+using ImGuiNET;
 using JobBars.Data;
 using System;
 using System.Numerics;
@@ -82,6 +83,10 @@ namespace JobBars.Gauges.Manager {
                 if (!JobBars.Config.GaugesHideOutOfCombat && JobBars.Config.GaugesEnabled) { // since they might be hidden
                     JobBars.Builder.ShowGauges();
                 }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Pulse Diamond and Arrow Color", ref JobBars.Config.GaugePulse)) {
                 JobBars.Config.Save();
             }
 

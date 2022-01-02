@@ -70,6 +70,8 @@ namespace JobBars.Data {
         public int GaugeCompletionSoundEffect = 78;
         public float GaugeLowTimerWarning = 4.0f;
 
+        public bool GaugePulse = true;
+
         // ===== BUFFS ======
 
         public Vector2 BuffPosition = new(200, 200);

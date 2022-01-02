@@ -42,7 +42,7 @@ namespace JobBars.Cooldowns {
             if (State != TrackerState.Running && UIHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
 
             if (State == TrackerState.Running) {
-                TimeLeft = UIHelper.TimeLeft(Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = UIHelper.TimeLeft(JobBars.Config.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) {
                     TimeLeft = 0;
 

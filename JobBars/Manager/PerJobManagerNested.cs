@@ -14,7 +14,6 @@ namespace JobBars.Data {
 
                 var rowId = UIHelper.Localize(entry.Key) + _ID;
                 if (ImGui.CollapsingHeader(rowId)) {
-                    SelectedJob = entry.Key;
                     ImGui.Indent();
 
                     foreach (var item in entry.Value) {
@@ -23,6 +22,7 @@ namespace JobBars.Data {
 
                         ImGui.PushStyleColor(ImGuiCol.Text, enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1));
                         if (ImGui.Selectable(itemId, item == SettingsItemSelected)) {
+                            SelectedJob = entry.Key;
                             SettingsItemSelected = item;
                         }
                         ImGui.PopStyleColor();

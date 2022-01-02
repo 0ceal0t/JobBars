@@ -7,15 +7,15 @@ namespace JobBars.UI {
     public struct ElementColor {
         public string Name;
 
-        public ushort AddRed;
-        public ushort AddGreen;
-        public ushort AddBlue;
+        public short AddRed;
+        public short AddGreen;
+        public short AddBlue;
 
         public byte MultiplyRed;
         public byte MultiplyGreen;
         public byte MultiplyBlue;
 
-        public ElementColor(string name, ushort addRed, ushort addGreen, ushort addBlue, byte multRed, byte multGreen, byte multBlue) {
+        public ElementColor(string name, short addRed, short addGreen, short addBlue, byte multRed, byte multGreen, byte multBlue) {
             Name = name;
             AddRed = addRed;
             AddGreen = addGreen;
@@ -44,20 +44,33 @@ namespace JobBars.UI {
         public unsafe static void SetColor(AtkTextNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkNineGridNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkImageNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
-        public unsafe static void SetColor(AtkResNode* node, ElementColor color) {
-            node->AddRed = color.AddRed;
-            node->AddGreen = color.AddGreen;
-            node->AddBlue = color.AddBlue;
-            node->AddRed_2 = color.AddRed;
-            node->AddGreen_2 = color.AddGreen;
-            node->AddBlue_2 = color.AddBlue;
+        public unsafe static void SetColor(AtkResNode* node, ElementColor color) => SetColor(node, color.AddRed, color.AddGreen, color.AddBlue, color.MultiplyRed, color.MultiplyGreen, color.MultiplyBlue);
+        public unsafe static void SetColor(AtkResNode* node, short addRed, short addGreen, short addBlue, byte multRed, byte multGreen, byte multBlue) {
+            node->AddRed = (ushort)addRed;
+            node->AddGreen = (ushort)addGreen;
+            node->AddBlue = (ushort)addBlue;
+            node->AddRed_2 = (ushort)addRed;
+            node->AddGreen_2 = (ushort)addGreen;
+            node->AddBlue_2 = (ushort)addBlue;
 
-            node->MultiplyRed = color.MultiplyRed;
-            node->MultiplyGreen = color.MultiplyGreen;
-            node->MultiplyBlue = color.MultiplyBlue;
-            node->MultiplyRed_2 = color.MultiplyRed;
-            node->MultiplyGreen_2 = color.MultiplyGreen;
-            node->MultiplyBlue_2 = color.MultiplyBlue;
+            node->MultiplyRed = multRed;
+            node->MultiplyGreen = multGreen;
+            node->MultiplyBlue = multBlue;
+            node->MultiplyRed_2 = multRed;
+            node->MultiplyGreen_2 = multGreen;
+            node->MultiplyBlue_2 = multBlue;
+        }
+        public unsafe static void SetColorPulse(AtkResNode* node, ElementColor color, float percent) {
+            // 0 = color
+            // 50 = color + 100
+            // 100 = color
+
+            var add = (short)(75 * (1f - 2f * Math.Abs(percent - 0.5f))); // 0 -> 1 -> 0
+            var currentRed = (short)(color.AddRed + add);
+            var currentGreen = (short)(color.AddGreen + add);
+            var currentBlue = (short)(color.AddBlue + add);
+
+            SetColor(node, currentRed, currentGreen, currentBlue, color.MultiplyRed, color.MultiplyGreen, color.MultiplyBlue);
         }
 
         // ======== COLORS ======
@@ -66,13 +79,13 @@ namespace JobBars.UI {
         public static readonly ElementColor Purple = new("Purple", 50, 0, 150, 80, 75, 80);
         public static readonly ElementColor Red = new("Red", 150, 0, 0, 80, 80, 80);
         public static readonly ElementColor LightBlue = new("Light Blue", 0, 100, 140, 80, 100, 100);
-        public static readonly ElementColor Orange = new("Orange", 120, 50, 65506, 100, 100, 100);
-        public static readonly ElementColor PurplePink = new("Purple-Pink", 80, 65476, 50, 100, 100, 100);
-        public static readonly ElementColor BlueGreen = new("Blue-Green", 65456, 50, 90, 80, 80, 40);
-        public static readonly ElementColor BrightGreen = new("Bright Green", 65486, 100, 0, 90, 100, 100);
-        public static readonly ElementColor Yellow = new("Yellow", 130, 100, 65516, 100, 100, 100);
+        public static readonly ElementColor Orange = new("Orange", 120, 50, -29, 100, 100, 100);
+        public static readonly ElementColor PurplePink = new("Purple-Pink", 80, -59, 50, 100, 100, 100);
+        public static readonly ElementColor BlueGreen = new("Blue-Green", -79, 50, 90, 80, 80, 40);
+        public static readonly ElementColor BrightGreen = new("Bright Green", -49, 100, 0, 90, 100, 100);
+        public static readonly ElementColor Yellow = new("Yellow", 130, 100, -19, 100, 100, 100);
         public static readonly ElementColor White = new("White", 150, 140, 140, 100, 100, 100);
-        public static readonly ElementColor DarkBlue = new("Dark Blue", 65516, 65516, 120, 100, 100, 100);
+        public static readonly ElementColor DarkBlue = new("Dark Blue", -19, -19, 120, 100, 100, 100);
         public static readonly ElementColor NoColor = new("No Color", 0, 0, 0, 100, 100, 100);
 
         public static Dictionary<string, ElementColor> AllColors { get; private set; } = new();

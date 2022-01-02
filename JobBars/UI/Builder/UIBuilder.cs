@@ -72,6 +72,11 @@ namespace JobBars.UI {
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
+        public void Tick(float percent) {
+            Arrows.ForEach(x => x.Tick(percent));
+            Diamonds.ForEach(x => x.Tick(percent));
+        }
+
         // ==== HELPER FUNCTIONS ============
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
