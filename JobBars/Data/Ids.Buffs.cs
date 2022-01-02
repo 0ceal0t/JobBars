@@ -89,6 +89,7 @@
         SoulReaver2 = 2854,
         ImmortalSacrifice = 2592,
         DeathsDesign = 2586,
+        BloodsownCircle = 2972,
 
         // BRD =========
         RagingStrikes = 0x7d,

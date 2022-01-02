@@ -166,6 +166,10 @@
         SummonBahamut = 7427,
         SummonPhoenix = 25831,
         SearingLight = 25801,
+        AstralImpulse = 25820,
+        AstralFlare = 25821,
+        FountainOfFire = 16514,
+        BrandOfPurgatory = 16515,
 
         // RDM ===========
         Embolden = 7520,

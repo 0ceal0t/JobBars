@@ -50,6 +50,11 @@ namespace JobBars.Cooldowns.Manager {
                 JobBars.Config.Save();
             }
 
+            if (ImGui.Checkbox("Show Party Members' Cooldowns" + _ID, ref JobBars.Config.CooldownsShowPartyMembers)) {
+                JobBars.Config.Save();
+                ResetUI();
+            }
+
             ImGui.Unindent();
         }
 

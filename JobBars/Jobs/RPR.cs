@@ -31,6 +31,16 @@ namespace JobBars.Jobs {
                 },
                 Color = UIColor.PurplePink
             }),
+            new GaugeTimerConfig(UIHelper.Localize(BuffIds.BloodsownCircle), GaugeVisualType.Bar, new GaugeSubTimerProps {
+                MaxDuration = 6,
+                DefaultDuration = 30,
+                Color = UIColor.BlueGreen,
+                HideLowWarning = true,
+                NoLowWarningSound = true,
+                Triggers = new [] {
+                    new Item(BuffIds.BloodsownCircle)
+                }
+            }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.DeathsDesign), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 60,
                 DefaultDuration = 30,

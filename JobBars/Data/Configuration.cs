@@ -13,6 +13,12 @@ namespace JobBars.Data {
         Split
     }
 
+    public enum CursorPositionType {
+        MouseCursor,
+        Middle,
+        CustomPosition
+    }
+
     public enum AttachAddon {
         Chatbox,
         HP_MP_Bars
@@ -92,7 +98,7 @@ namespace JobBars.Data {
         public bool CooldownsHideOutOfCombat = false;
         public bool CooldownsShowBorderWhenActive = true;
         public bool CooldownsHideActiveBuffDuration = false;
-
+        public bool CooldownsShowPartyMembers = true;
 
         public bool CooldownsLeftAligned = false;
 
@@ -104,7 +110,8 @@ namespace JobBars.Data {
         public bool CursorsEnabled = false;
         public bool CursorHideWhenHeld = false;
         public bool CursorHideOutOfCombat = false;
-        public bool CursorKeepInMiddle = false;
+        public CursorPositionType CursorPosition = CursorPositionType.MouseCursor;
+        public Vector2 CursorCustomPosition = new(200, 200);
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
         public string CursorInnerColor = UIColor.MpPink.Name;

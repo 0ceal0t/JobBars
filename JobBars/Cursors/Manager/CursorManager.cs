@@ -43,7 +43,7 @@ namespace JobBars.Cursors.Manager {
 
             var viewport = ImGuiHelpers.MainViewport;
 
-            if (!JobBars.Config.CursorKeepInMiddle) {
+            if (JobBars.Config.CursorPosition == CursorPositionType.MouseCursor) {
                 var pos = ImGui.GetMousePos() - viewport.Pos;
                 var atkStage = AtkStage.GetSingleton();
 
@@ -60,8 +60,7 @@ namespace JobBars.Cursors.Manager {
             }
             else {
                 JobBars.Builder.ShowCursor();
-                var pos = viewport.Size / 2;
-                JobBars.Builder.SetCursorPosition(pos);
+                JobBars.Builder.SetCursorPosition(JobBars.Config.CursorPosition == CursorPositionType.Middle ? viewport.Size / 2 : JobBars.Config.CursorCustomPosition);
             }
 
             var inner = CurrentCursor.GetInner();

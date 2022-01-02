@@ -21,7 +21,7 @@ namespace JobBars.Jobs {
                 Color = UIColor.Red,
                 Triggers = new []{
                     new Item(BuffIds.LanceCharge)
-                },
+                }
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.RightEye), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 8,

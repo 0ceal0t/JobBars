@@ -54,6 +54,11 @@ namespace JobBars.Cooldowns.Manager {
                     continue;
                 }
 
+                if (!JobBars.Config.CooldownsShowPartyMembers && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) {
+                    JobBars.Builder.SetCooldownRowVisible(idx, false);
+                    continue;
+                }
+
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new CooldownPartyMember(partyMember.ObjectId);
                 member.Tick(JobBars.Builder.Cooldowns[idx], partyMember, percent);
                 newObjectIdToMember[partyMember.ObjectId] = member;

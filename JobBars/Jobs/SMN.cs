@@ -20,6 +20,36 @@ namespace JobBars.Jobs {
                 Procs = new []{
                     new ProcConfig(UIHelper.Localize(BuffIds.FurtherRuin), BuffIds.FurtherRuin, UIColor.DarkBlue)
                 }
+            }),
+            new GaugeGCDConfig(UIHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new GaugeGCDProps {
+                SubGCDs = new [] {
+                    new GaugeSubGCDProps {
+                        MaxCounter = 6,
+                        MaxDuration = 15,
+                        Color = UIColor.LightBlue,
+                        SubName = UIHelper.Localize(ActionIds.SummonBahamut),
+                        Increment = new []{
+                            new Item(ActionIds.AstralImpulse),
+                            new Item(ActionIds.AstralFlare)
+                        },
+                        Triggers = new []{
+                            new Item(ActionIds.SummonBahamut)
+                        }
+                    },
+                    new GaugeSubGCDProps {
+                        MaxCounter = 6,
+                        MaxDuration = 15,
+                        Color = UIColor.Orange,
+                        SubName = UIHelper.Localize(ActionIds.SummonPhoenix),
+                        Increment = new []{
+                            new Item(ActionIds.FountainOfFire),
+                            new Item(ActionIds.BrandOfPurgatory)
+                        },
+                        Triggers = new []{
+                            new Item(ActionIds.SummonPhoenix)
+                        }
+                    }
+                }
             })
         };
 

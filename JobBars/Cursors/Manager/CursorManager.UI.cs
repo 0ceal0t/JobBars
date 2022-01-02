@@ -1,8 +1,11 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
+using System;
 
 namespace JobBars.Cursors.Manager {
     public partial class CursorManager {
+        private static readonly CursorPositionType[] ValidCursorPositionType = (CursorPositionType[])Enum.GetValues(typeof(CursorPositionType));
+
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cursor Enabled" + _ID, ref JobBars.Config.CursorsEnabled)) {
                 JobBars.Config.Save();
@@ -22,8 +25,20 @@ namespace JobBars.Cursors.Manager {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.Checkbox("Keep Cursor in Center", ref JobBars.Config.CursorKeepInMiddle)) {
-                JobBars.Config.Save();
+            if (ImGui.BeginCombo("Cursor Positioning", $"{JobBars.Config.CursorPosition}")) {
+                foreach (var positionType in ValidCursorPositionType) {
+                    if (ImGui.Selectable($"{positionType}" + _ID, positionType == JobBars.Config.CursorPosition)) {
+                        JobBars.Config.CursorPosition = positionType;
+                        JobBars.Config.Save();
+                    }
+                }
+                ImGui.EndCombo();
+            }
+
+            if (JobBars.Config.CursorPosition == CursorPositionType.CustomPosition) {
+                if (ImGui.InputFloat2("Custom Cursor Position", ref JobBars.Config.CursorCustomPosition)) {
+                    JobBars.Config.Save();
+                }
             }
 
             if (ImGui.InputFloat("Inner Scale" + _ID, ref JobBars.Config.CursorInnerScale)) {
