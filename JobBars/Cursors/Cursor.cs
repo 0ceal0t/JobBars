@@ -27,8 +27,8 @@ namespace JobBars.Cursors {
         private CursorType InnerType;
         private CursorType OuterType;
 
-        private StatusNameId InnerStatus;
-        private StatusNameId OuterStatus;
+        private ItemData InnerStatus;
+        private ItemData OuterStatus;
         private float InnerStatusDuration;
         private float OuterStatusDuration;
 
@@ -40,13 +40,13 @@ namespace JobBars.Cursors {
             InnerType = JobBars.Config.CursorType.Get(InnerName, inner);
             OuterType = JobBars.Config.CursorType.Get(OuterName, outer);
 
-            InnerStatus = JobBars.Config.CursorStatus.Get(InnerName, new StatusNameId {
+            InnerStatus = JobBars.Config.CursorStatus.Get(InnerName, new ItemData {
                 Name = "[NONE]",
-                Status = new Item()
+                Data = new Item()
             });
-            OuterStatus = JobBars.Config.CursorStatus.Get(OuterName, new StatusNameId {
+            OuterStatus = JobBars.Config.CursorStatus.Get(OuterName, new ItemData {
                 Name = "[NONE]",
-                Status = new Item()
+                Data = new Item()
             });
             InnerStatusDuration = JobBars.Config.CursorStatusDuration.Get(InnerName, 5f);
             OuterStatusDuration = JobBars.Config.CursorStatusDuration.Get(OuterName, 5f);
@@ -55,7 +55,7 @@ namespace JobBars.Cursors {
         public float GetInner() => GetValue(InnerType, InnerStatus, InnerStatusDuration);
         public float GetOuter() => GetValue(OuterType, OuterStatus, OuterStatusDuration);
 
-        private float GetValue(CursorType type, StatusNameId status, float statusDuration) => type switch {
+        private float GetValue(CursorType type, ItemData status, float statusDuration) => type switch {
             CursorType.None => 0,
             CursorType.GCD => UIHelper.GetGCD(out var _, out var _),
             CursorType.CastTime => UIHelper.GetCastTime(out var _, out var _),
@@ -69,17 +69,19 @@ namespace JobBars.Cursors {
             _ => 0
         };
 
-        private static float GetStatusTime(StatusNameId status, float statusDuration) {
+        private static float GetStatusTime(ItemData status, float statusDuration) {
             if (statusDuration == 0) return 0;
-            if (status.Status.Id == 0) return 0;
-            var ret = (UIHelper.PlayerStatus.TryGetValue(status.Status, out var value) ? (value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1) : 0) / statusDuration;
+            if (status.Data.Id == 0) return 0;
+            var ret = (UIHelper.PlayerStatus.TryGetValue(status.Data, out var value) ? (value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1) : 0) / statusDuration;
             return Math.Min(ret, 1f);
         }
 
         private static float GetSlidecastTime() {
+            if (JobBars.Config.GaugeSlidecastTime <= 0f) return UIHelper.GetCastTime(out var _, out var _);
+
             var isCasting = UIHelper.GetCurrentCast(out var currentTime, out var totalTime);
             if (!isCasting || totalTime == 0) return 0;
-            var slidecastTime = totalTime - 0.5f;
+            var slidecastTime = totalTime - JobBars.Config.GaugeSlidecastTime;
             if (currentTime > slidecastTime) return 0;
             return currentTime / slidecastTime;
         }
@@ -90,7 +92,7 @@ namespace JobBars.Cursors {
             }
 
             if (InnerType == CursorType.StatusTime) {
-                if (JobBars.Config.CursorStatus.Draw($"Inner Status{_ID}", InnerName, UIHelper.StatusNames, InnerStatus, out var newInnerStatus)) {
+                if (JobBars.Config.CursorStatus.Draw($"Inner Status{_ID}", InnerName, UIHelper.StatusList, InnerStatus, out var newInnerStatus)) {
                     InnerStatus = newInnerStatus;
                 }
                 if (JobBars.Config.CursorStatusDuration.Draw($"Inner Status Duration{_ID}", InnerName, InnerStatusDuration, out var newInnerStatusDuration)) {
@@ -103,7 +105,7 @@ namespace JobBars.Cursors {
             }
 
             if (OuterType == CursorType.StatusTime) {
-                if (JobBars.Config.CursorStatus.Draw($"Outer Status{_ID}", OuterName, UIHelper.StatusNames, OuterStatus, out var newOuterStatus)) {
+                if (JobBars.Config.CursorStatus.Draw($"Outer Status{_ID}", OuterName, UIHelper.StatusList, OuterStatus, out var newOuterStatus)) {
                     OuterStatus = newOuterStatus;
                 }
                 if (JobBars.Config.CursorStatusDuration.Draw($"Outer Status Duration{_ID}", OuterName, OuterStatusDuration, out var newOuterStautsDuration)) {

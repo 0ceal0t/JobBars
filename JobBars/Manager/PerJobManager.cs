@@ -20,11 +20,11 @@ namespace JobBars.Data {
             }
             else {
                 ImGui.BeginChild(_ID + "Selected");
-                DrawItem(JobToValue[SelectedJob]);
+                DrawItem(JobToValue[SelectedJob], SelectedJob);
                 ImGui.EndChild();
             }
         }
 
-        protected abstract void DrawItem(T item);
+        protected abstract void DrawItem(T item, JobIds job);
     }
 }

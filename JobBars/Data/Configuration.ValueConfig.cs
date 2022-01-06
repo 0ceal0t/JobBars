@@ -106,7 +106,7 @@ namespace JobBars.Data {
             value = default;
             return false;
         }
-
+        public bool Draw(string id, string name, List<T> comboOptions, T defaultValue, out T value) => Draw(id ,name, comboOptions.ToArray(), defaultValue, out value);
         public bool Draw(string id, string name, T[] comboOptions, T defaultValue, out T value) {
             value = Get(name, defaultValue);
             if (DrawCombo(id, comboOptions, value, out value)) {

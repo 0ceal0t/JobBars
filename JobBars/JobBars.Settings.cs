@@ -10,6 +10,9 @@ namespace JobBars {
 
         private readonly AttachAddon[] ValidAttachTypes = (AttachAddon[])Enum.GetValues(typeof(AttachAddon));
 
+        public static readonly Vector4 RED_COLOR = new(0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f);
+        public static readonly Vector4 GREEN_COLOR = new(0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f);
+
         private void BuildSettingsUI() {
             if (!PlayerExists) return;
             if (!Visible) return;
@@ -92,6 +95,27 @@ namespace JobBars {
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
             ImGui.Separator();
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+        }
+
+        public static bool RemoveButton(string label, bool small = false) => ColorButton(label, RED_COLOR, small);
+
+        public static bool OkButton(string label, bool small = false) => ColorButton(label, GREEN_COLOR, small);
+
+        public static bool ColorButton(string label, Vector4 color, bool small) {
+            var ret = false;
+            ImGui.PushStyleColor(ImGuiCol.Button, color);
+            if (small) {
+                if (ImGui.SmallButton(label)) {
+                    ret = true;
+                }
+            }
+            else {
+                if (ImGui.Button(label)) {
+                    ret = true;
+                }
+            }
+            ImGui.PopStyleColor();
+            return ret;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using JobBars.Data;
 
 namespace JobBars.Icons.Manager {
     public partial class IconManager {
@@ -9,7 +10,7 @@ namespace JobBars.Icons.Manager {
             }
         }
 
-        protected override void DrawItem(IconReplacer[] item) {
+        protected override void DrawItem(IconReplacer[] item, JobIds _) {
             foreach (var icon in item) {
                 icon.Draw(_ID, SelectedJob);
             }

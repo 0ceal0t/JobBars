@@ -76,6 +76,7 @@
         // NIN =========
         TrickAttack = 0x27e,
         Bunshin = 0x7a2,
+        RaijuReady = 2690,
 
         // SAM =========
         Meikyo = 1233,

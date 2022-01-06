@@ -15,6 +15,13 @@ using System;
 namespace JobBars.Jobs {
     public static class NIN {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.RaijuReady), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
+                Triggers = new []{
+                    new Item(BuffIds.RaijuReady)
+                },
+                Color = UIColor.PurplePink
+            }),
             new GaugeStacksConfig(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = new []{

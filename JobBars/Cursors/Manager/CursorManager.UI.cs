@@ -66,7 +66,7 @@ namespace JobBars.Cursors.Manager {
             }
         }
 
-        protected override void DrawItem(Cursor item) {
+        protected override void DrawItem(Cursor item, JobIds _) {
             item.Draw(_ID);
         }
     }

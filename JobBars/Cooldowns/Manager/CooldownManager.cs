@@ -14,13 +14,24 @@ namespace JobBars.Cooldowns.Manager {
         private static readonly int MILLIS_LOOP = 250;
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
 
+        private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = new();
+
         public CooldownManager() : base("##JobBars_Cooldowns") {
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
             if (!JobBars.Config.CooldownsEnabled) JobBars.Builder.HideCooldowns();
+
+            // initialize custom cooldowns
+            foreach (var custom in JobBars.Config.CustomCooldown) {
+                if (CustomCooldowns.ContainsKey(custom.Job)) CustomCooldowns[custom.Job] = new();
+                CustomCooldowns[custom.Job].Add(new CooldownConfig(custom.Name, custom.Props));
+            }
         }
 
         public CooldownConfig[] GetCooldownConfigs(JobIds job) {
-            return JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
+            List<CooldownConfig> configs = new();
+            if (JobToValue.TryGetValue(job, out var props)) configs.AddRange(props);
+            if (CustomCooldowns.TryGetValue(job, out var customProps)) configs.AddRange(customProps);
+            return configs.ToArray();
         }
 
         public void PerformAction(Item action, uint objectId) {

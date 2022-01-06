@@ -2,10 +2,13 @@
 using ImGuiNET;
 using System;
 using System.Numerics;
+using System.Linq;
 using JobBars.Gauges;
 using JobBars.UI;
 using JobBars.Cursors;
 using JobBars.Gauges.Rolling;
+using System.Collections.Generic;
+using JobBars.Cooldowns;
 
 namespace JobBars.Data {
     public enum GaugePositionType {
@@ -23,6 +26,12 @@ namespace JobBars.Data {
     public enum AttachAddon {
         Chatbox,
         HP_MP_Bars
+    }
+
+    public struct CustomCooldownProps {
+        public string Name;
+        public JobIds Job;
+        public CooldownProps Props;
     }
 
     [Serializable]
@@ -110,6 +119,8 @@ namespace JobBars.Data {
         public BoolValueConfig CooldownEnabled = new(true);
         public IntValueConfig CooldownOrder = new(-1);
 
+        public List<CustomCooldownProps> CustomCooldown = new();
+
         // ===== CURSOR =======
 
         public bool CursorsEnabled = false;
@@ -123,7 +134,7 @@ namespace JobBars.Data {
         public string CursorOuterColor = UIColor.HealthGreen.Name;
 
         public ComboValueConfig<CursorType> CursorType = new();
-        public ComboValueConfig<Helper.StatusNameId> CursorStatus = new(true);
+        public ComboValueConfig<Helper.ItemData> CursorStatus = new(true);
         public FloatValueConfig CursorStatusDuration = new(5f);
 
         // ===== ICONS ===========
@@ -134,6 +145,20 @@ namespace JobBars.Data {
         public FloatValueConfig IconTimerOffset = new(0f);
 
         // =====================
+
+        public void RemoveCustomCooldown(string name) {
+            CustomCooldown.RemoveAll(x => x.Name == name);
+            Save();
+        }
+
+        public void AddCustomCooldown(string name, JobIds job, CooldownProps props) {
+            CustomCooldown.Add(new CustomCooldownProps {
+                Job = job,
+                Name = name,
+                Props = props
+            });
+            Save();
+        }
 
         public void Save() {
             JobBars.PluginInterface.SavePluginConfig(this);

@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using JobBars.Data;
 using System.Numerics;
 
 namespace JobBars.Buffs.Manager {
@@ -94,7 +95,7 @@ namespace JobBars.Buffs.Manager {
 
         // ==========================================
 
-        protected override void DrawItem(BuffConfig[] item) {
+        protected override void DrawItem(BuffConfig[] item, JobIds _) {
             var reset = false;
             foreach (var buff in item) buff.Draw(_ID, ref reset);
             if (reset) ResetUI();

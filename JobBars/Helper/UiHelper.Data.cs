@@ -7,31 +7,32 @@ using Lumina.Excel.GeneratedSheets;
 using JobBars.Data;
 
 namespace JobBars.Helper {
-    public struct StatusNameId {
+    public struct ItemData {
         public string Name;
-        public Item Status;
+        public Item Data;
+        public ushort Icon;
 
         public override string ToString() {
             return Name;
         }
 
         public override bool Equals(object obj) {
-            return obj is StatusNameId overrides && Equals(overrides);
+            return obj is ItemData overrides && Equals(overrides);
         }
 
-        public bool Equals(StatusNameId other) {
-            return Status.Id == other.Status.Id;
+        public bool Equals(ItemData other) {
+            return Data.Id == other.Data.Id;
         }
 
         public override int GetHashCode() {
-            return HashCode.Combine(Name, Status);
+            return HashCode.Combine(Name, Data);
         }
 
-        public static bool operator ==(StatusNameId left, StatusNameId right) {
+        public static bool operator ==(ItemData left, ItemData right) {
             return left.Equals(right);
         }
 
-        public static bool operator !=(StatusNameId left, StatusNameId right) {
+        public static bool operator !=(ItemData left, ItemData right) {
             return !(left == right);
         }
     }
@@ -40,7 +41,8 @@ namespace JobBars.Helper {
         private static readonly HashSet<uint> GCDs = new();
         private static readonly Dictionary<uint, uint> ActionToIcon = new();
 
-        public static StatusNameId[] StatusNames { get; private set; }
+        public static List<ItemData> StatusList { get; private set; } = new();
+        public static List<ItemData> ActionList { get; private set; } = new();
 
         // ===============
 
@@ -98,11 +100,11 @@ namespace JobBars.Helper {
         private static string ConvertItemToString(Item item) {
             if (item.Type == ItemType.Buff) {
                 var buff = StatusSheet.Where(x => x.RowId == item.Id);
-                return buff.Count() == 0 ? "Unknown" : ToTitleCase(buff.First().Name);
+                return !buff.Any() ? "Unknown" : ToTitleCase(buff.First().Name);
             }
             else {
                 var action = ActionSheet.Where(x => x.RowId == item.Id);
-                return action.Count() == 0 ? "Unknown" : ToTitleCase(action.First().Name);
+                return !action.Any() ? "Unknown" : ToTitleCase(action.First().Name);
             }
         }
 
@@ -113,6 +115,8 @@ namespace JobBars.Helper {
         private static void SetupSheets() {
             JobToString = new();
             ItemToString = new();
+            ActionList.Clear();
+            StatusList.Clear();
 
             ActionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
@@ -127,20 +131,28 @@ namespace JobBars.Helper {
                     if (item.CooldownGroup != 58 && item.AdditionalCooldownGroup != 58) continue; // not actually a gcd
                     GCDs.Add(item.RowId);
                 }
+
+                ActionList.Add(new ItemData {
+                    Name = item.Name,
+                    Icon = item.Icon,
+                    Data = new Item {
+                        Id = item.RowId,
+                        Type = ItemType.Action
+                    }
+                });
             }
 
-            List<StatusNameId> statusList = new();
             StatusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
             foreach (var item in StatusSheet) {
-                statusList.Add(new StatusNameId {
+                StatusList.Add(new ItemData {
                     Name = item.Name,
-                    Status = new Item {
+                    Icon = item.Icon,
+                    Data = new Item {
                         Id = item.RowId,
                         Type = ItemType.Buff
                     }
                 });
             }
-            StatusNames = statusList.ToArray();
 
             JobSheet = JobBars.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
         }
