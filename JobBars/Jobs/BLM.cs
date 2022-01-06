@@ -106,7 +106,5 @@ namespace JobBars.Jobs {
         public static bool MP => true;
 
         public static float[] MP_SEGMENTS => new[] { 0.88f }; // 3f4 (with umbral hearts) + 1f4 + 3f4
-
-        public static bool GCD_ROLL => false;
     }
 }

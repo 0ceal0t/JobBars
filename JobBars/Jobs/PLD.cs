@@ -117,7 +117,5 @@ namespace JobBars.Jobs {
         public static bool MP => true;
 
         public static float[] MP_SEGMENTS => new[] { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
-
-        public static bool GCD_ROLL => true;
     }
 }

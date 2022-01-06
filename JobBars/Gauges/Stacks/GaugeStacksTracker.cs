@@ -50,6 +50,8 @@ namespace JobBars.Gauges.Stacks {
 
         public float GetBarPercent() => ((float)Value) / Config.MaxStacks;
 
+        public float GetBarIndicatorPercent() => 0;
+
         public string GetBarText() => Value.ToString();
 
         public int GetCurrentMaxTicks() => Config.MaxStacks;

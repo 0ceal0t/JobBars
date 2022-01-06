@@ -5,6 +5,7 @@ using System.Numerics;
 using JobBars.Gauges;
 using JobBars.UI;
 using JobBars.Cursors;
+using JobBars.Gauges.Rolling;
 
 namespace JobBars.Data {
     public enum GaugePositionType {
@@ -65,6 +66,8 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeShowText = new(true);
         public BoolValueConfig GaugeSwapText = new(false);
         public FloatValueConfig GaugeTimerOffset = new(0f);
+        public ComboValueConfig<GaugeGCDRollingType> GaugeGCDRolling = new();
+        public float GaugeSlidecastTime = 0.5f;
 
         public int GaugeSoundEffect = 0;
         public int GaugeCompletionSoundEffect = 78;

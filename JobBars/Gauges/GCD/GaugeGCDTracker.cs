@@ -160,6 +160,8 @@ namespace JobBars.Gauges.GCD {
 
         public float GetBarPercent() => ActiveSubGCD.GetBarPercent();
 
+        public float GetBarIndicatorPercent() => 0;
+
         public int GetTotalMaxTicks() => MaxWidth;
 
         public int GetCurrentMaxTicks() => ActiveSubGCD.GetMaxTicks();

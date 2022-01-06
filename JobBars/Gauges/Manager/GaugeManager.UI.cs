@@ -105,10 +105,14 @@ namespace JobBars.Gauges.Manager {
                 JobBars.Config.Save();
             }
             ImGui.SameLine();
-            if (ImGui.SmallButton("Test##Prog Sound Effect")) Helper.UIHelper.PlaySeProgress();
+            if (ImGui.SmallButton("Test##Proc Sound Effect")) Helper.UIHelper.PlaySeProgress();
 
             ImGui.SetNextItemWidth(50f);
             if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.InputFloat("Slidecast Seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
                 JobBars.Config.Save();
             }
 

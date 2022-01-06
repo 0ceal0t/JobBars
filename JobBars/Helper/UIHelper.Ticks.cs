@@ -69,5 +69,11 @@ namespace JobBars.Helper {
             var diff = (currentTime - time).TotalSeconds;
             return (float)(diff % 3.0f / 3.0f);
         }
+
+        public static float GetCastTime(out float timeElapsed, out float total) {
+            var isCasting = GetCurrentCast(out timeElapsed, out total);
+            if (!isCasting || total == 0) return 0;
+            return timeElapsed / total;
+        }
     }
 }

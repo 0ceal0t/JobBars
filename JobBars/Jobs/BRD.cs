@@ -154,7 +154,5 @@ namespace JobBars.Jobs {
         public static bool MP => false;
 
         public static float[] MP_SEGMENTS => null;
-
-        public static bool GCD_ROLL => true;
     }
 }

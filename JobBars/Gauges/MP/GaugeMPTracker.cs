@@ -54,5 +54,7 @@ namespace JobBars.Gauges.MP {
         public virtual string GetBarText() => TextValue;
 
         public virtual float GetBarPercent() => Value;
+
+        public float GetBarIndicatorPercent() => 0;
     }
 }

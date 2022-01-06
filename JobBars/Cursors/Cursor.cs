@@ -58,7 +58,7 @@ namespace JobBars.Cursors {
         private float GetValue(CursorType type, StatusNameId status, float statusDuration) => type switch {
             CursorType.None => 0,
             CursorType.GCD => UIHelper.GetGCD(out var _, out var _),
-            CursorType.CastTime => GetCastTime(),
+            CursorType.CastTime => UIHelper.GetCastTime(out var _, out var _),
             CursorType.MpTick => UIHelper.GetMpTick(),
             CursorType.ActorTick => UIHelper.GetActorTick(),
             CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
@@ -82,12 +82,6 @@ namespace JobBars.Cursors {
             var slidecastTime = totalTime - 0.5f;
             if (currentTime > slidecastTime) return 0;
             return currentTime / slidecastTime;
-        }
-
-        private static float GetCastTime() {
-            var isCasting = UIHelper.GetCurrentCast(out var currentTime, out var totalTime);
-            if (!isCasting || totalTime == 0) return 0;
-            return currentTime / totalTime;
         }
 
         public void Draw(string _ID) {

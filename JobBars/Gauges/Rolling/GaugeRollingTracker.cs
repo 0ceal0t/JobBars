@@ -7,6 +7,7 @@ namespace JobBars.Gauges.Rolling {
         private readonly GaugeRollingConfig Config;
 
         protected float Value;
+        protected float IndicatorValue;
         protected string TextValue;
 
         public GaugeRollingTracker(GaugeRollingConfig config, int idx) {
@@ -24,9 +25,16 @@ namespace JobBars.Gauges.Rolling {
         public override void ProcessAction(Item action) { }
 
         protected override void TickTracker() {
-            Value = UIHelper.GetGCD(out var timeElapsed, out var total);
-            var timeLeft = total - timeElapsed;
-            TextValue = timeLeft.ToString("0.00");
+            if (Config.RollingType == GaugeGCDRollingType.GCD) {
+                Value = UIHelper.GetGCD(out var timeElapsed, out var total);
+                IndicatorValue = 0f;
+                TextValue = (total - timeElapsed).ToString("0.00");
+            }
+            else if (Config.RollingType == GaugeGCDRollingType.CastTime) {
+                Value = UIHelper.GetCastTime(out var timeElapsed, out var total);
+                IndicatorValue = (JobBars.Config.GaugeSlidecastTime > 0f && total > 0f) ? JobBars.Config.GaugeSlidecastTime / total : 0f;
+                TextValue = (total - timeElapsed).ToString("0.00");
+            }
         }
 
         public virtual float[] GetBarSegments() => null;
@@ -53,5 +61,7 @@ namespace JobBars.Gauges.Rolling {
         public virtual string GetBarText() => TextValue;
 
         public virtual float GetBarPercent() => Value;
+
+        public float GetBarIndicatorPercent() => IndicatorValue;
     }
 }

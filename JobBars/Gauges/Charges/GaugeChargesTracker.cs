@@ -7,7 +7,6 @@ using JobBars.UI;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Gauges.Types.Diamond;
-using Dalamud.Logging;
 
 namespace JobBars.Gauges.Charges {
     public class GaugeChargesTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface, IGaugeBarDiamondComboInterface {
@@ -131,6 +130,8 @@ namespace JobBars.Gauges.Charges {
         public string GetBarText() => $"{(int)Math.Round(BarTextValue)}";
 
         public float GetBarPercent() => BarPercentValue;
+
+        public float GetBarIndicatorPercent() => 0;
 
         public int GetCurrentMaxTicks() => TotalCharges;
 

@@ -137,6 +137,8 @@ namespace JobBars.Gauges.Timer {
 
         public float GetBarPercent() => ActiveSubTimer.GetBarPercent();
 
+        public float GetBarIndicatorPercent() => 0;
+
         public int GetTotalMaxTicks() => 1;
 
         public int GetCurrentMaxTicks() => 1;

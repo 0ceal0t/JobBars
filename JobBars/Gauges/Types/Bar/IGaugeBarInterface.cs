@@ -21,5 +21,7 @@ namespace JobBars.Gauges.Types.Bar {
         public string GetBarText();
 
         public float GetBarPercent();
+
+        public float GetBarIndicatorPercent();
     }
 }

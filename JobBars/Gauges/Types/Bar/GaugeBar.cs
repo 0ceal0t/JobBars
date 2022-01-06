@@ -20,7 +20,10 @@ namespace JobBars.Gauges.Types.Bar {
         protected override void TickGauge() {
             UI.SetTextColor(Tracker.GetBarDanger() ? UIColor.Red : UIColor.NoColor);
             UI.SetText(Tracker.GetBarText());
-            UI.SetPercent(Tracker.GetBarPercent());
+
+            var value = Tracker.GetBarPercent();
+            UI.SetPercent(value);
+            UI.SetIndicatorPercent(Tracker.GetBarIndicatorPercent(), value);
         }
 
         protected override void UpdateVisualGauge() {

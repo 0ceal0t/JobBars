@@ -15,6 +15,7 @@ namespace JobBars.UI {
         private AtkNineGridNode* BarMainNode;
         private AtkNineGridNode* BarSecondaryNode;
         private AtkImageNode* Frame;
+        private AtkNineGridNode* Indicator;
 
         private AtkResNode* TextContainer;
         private AtkTextNode* TextNode;
@@ -113,6 +114,18 @@ namespace JobBars.UI {
             Frame->Flags = 0;
             Frame->WrapMode = 1;
 
+            Indicator = UIBuilder.CreateNineNode();
+            Indicator->AtkResNode.Width = 160;
+            Indicator->AtkResNode.Height = 20;
+            Indicator->AtkResNode.X = 0;
+            Indicator->AtkResNode.Y = 0;
+            Indicator->PartID = UIBuilder.GAUGE_FRAME_PART;
+            Indicator->PartsList = partsList;
+            Indicator->TopOffset = 5;
+            Indicator->BottomOffset = 5;
+            Indicator->RightOffset = 15;
+            Indicator->LeftOffset = 15;
+
             // ======== TEXT ==========
             TextContainer = UIBuilder.CreateResNode();
             TextContainer->X = 112;
@@ -156,7 +169,8 @@ namespace JobBars.UI {
                     new LayoutNode(BarContainer,
                         barNodes.ToArray()
                     ),
-                    new LayoutNode(Frame)
+                    new LayoutNode(Frame),
+                    new LayoutNode(Indicator)
                 }),
                 new LayoutNode(TextContainer, new[] {
                     new LayoutNode(TextNode),
@@ -230,6 +244,19 @@ namespace JobBars.UI {
                 SetPercentInternal(value);
             }
             LastPercent = value;
+        }
+
+        public void SetIndicatorPercent(float indicatorPercent, float valuePercent) {
+            if (indicatorPercent <= 0f) {
+                //UIHelper.Hide(Indicator);
+                return;
+            }
+
+            var canSlidecast = valuePercent >= (1f - indicatorPercent); // TODO
+            UIHelper.Show(Indicator);
+            var width = (int)(160 * indicatorPercent);
+            UIHelper.SetSize(Indicator, width, 20);
+            UIHelper.SetPosition(Indicator, 160 - width, 0);
         }
 
         public void SetPercentInternal(float value) {
@@ -327,6 +354,12 @@ namespace JobBars.UI {
                 Frame->UnloadTexture();
                 Frame->AtkResNode.Destroy(true);
                 Frame = null;
+            }
+
+            if (Indicator != null) {
+                // TODO
+                Indicator->AtkResNode.Destroy(true);
+                Indicator = null;
             }
 
             if (TextContainer != null) {

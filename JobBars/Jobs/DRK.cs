@@ -95,7 +95,5 @@ namespace JobBars.Jobs {
         // DRK HAS A CUSTOM MP BAR, SO DON'T WORRY ABOUT THIS
         public static bool MP => false;
         public static float[] MP_SEGMENTS => null;
-
-        public static bool GCD_ROLL => true;
     }
 }
