@@ -248,7 +248,7 @@ namespace JobBars.UI {
 
         public void SetIndicatorPercent(float indicatorPercent, float valuePercent) {
             if (indicatorPercent <= 0f) {
-                //UIHelper.Hide(Indicator);
+                UIHelper.Hide(Indicator);
                 return;
             }
 
