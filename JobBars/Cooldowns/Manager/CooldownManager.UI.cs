@@ -87,6 +87,7 @@ namespace JobBars.Cooldowns.Manager {
                         CustomCooldowns[job].Remove(custom);
                         JobBars.Config.RemoveCustomCooldown(custom.Name);
                         reset = true;
+                        break;
                     }
                     else {
                         custom.Draw(_ID, ref reset); // Draw custom
@@ -100,13 +101,13 @@ namespace JobBars.Cooldowns.Manager {
                 if (ImGui.Button("New Custom Cooldown")) ShowNewCustom = true;
             }
             else {
-                ImGui.Text("Trigger Type");
-                ImGui.SameLine();
                 if (ImGui.BeginCombo("##CustomCD_4", $"{CustomTriggerType}", ImGuiComboFlags.HeightLargest)) {
                     if (ImGui.Selectable("Action", CustomTriggerType == CustomCooldownType.Action)) CustomTriggerType = CustomCooldownType.Action;
                     if (ImGui.Selectable("Buff", CustomTriggerType == CustomCooldownType.Buff)) CustomTriggerType = CustomCooldownType.Buff;
                     ImGui.EndCombo();
                 }
+                ImGui.SameLine();
+                ImGui.Text("Trigger Type");
 
                 if (CustomTriggerType == CustomCooldownType.Action) CustomTriggerAction.Draw();
                 else CustomTriggerBuff.Draw();
@@ -129,6 +130,7 @@ namespace JobBars.Cooldowns.Manager {
                             Triggers = new[] { selected.Data }
                         };
 
+                        if (!CustomCooldowns.ContainsKey(job)) CustomCooldowns[job] = new();
                         CustomCooldowns[job].Add(new CooldownConfig(newName, newProps));
                         JobBars.Config.AddCustomCooldown(newName, job, newProps);
 

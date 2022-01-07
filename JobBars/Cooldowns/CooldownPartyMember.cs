@@ -43,8 +43,11 @@ namespace JobBars.Cooldowns {
             Trackers.Clear();
 
             var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(CurrentJob);
+            var count = 0;
             foreach (var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;
+                count++;
+                if (count > UICooldown.MAX_ITEMS) continue;
                 Trackers.Add(new CooldownTracker(prop));
             }
         }

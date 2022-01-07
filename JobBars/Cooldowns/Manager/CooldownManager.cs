@@ -22,7 +22,7 @@ namespace JobBars.Cooldowns.Manager {
 
             // initialize custom cooldowns
             foreach (var custom in JobBars.Config.CustomCooldown) {
-                if (CustomCooldowns.ContainsKey(custom.Job)) CustomCooldowns[custom.Job] = new();
+                if (!CustomCooldowns.ContainsKey(custom.Job)) CustomCooldowns[custom.Job] = new();
                 CustomCooldowns[custom.Job].Add(new CooldownConfig(custom.Name, custom.Props));
             }
         }

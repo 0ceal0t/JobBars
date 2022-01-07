@@ -53,7 +53,7 @@ namespace JobBars.UI {
             Border->PartsList = partsList;
             Border->Flags = 0;
             Border->WrapMode = 1;
-            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 4) / 47.0f);
+            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
 
             TextNode->AtkResNode.ParentNode = RootRes;
             Icon->AtkResNode.ParentNode = RootRes;
@@ -126,7 +126,7 @@ namespace JobBars.UI {
     }
 
     public unsafe class UICooldown : UIElement {
-        public static readonly int MAX_ITEMS = 5;
+        public static readonly int MAX_ITEMS = 10;
 
         public List<UICooldownItem> Items = new();
 

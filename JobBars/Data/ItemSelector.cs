@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Logging;
+using ImGuiNET;
 using JobBars.Helper;
 using Lumina.Data.Files;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace JobBars.Data {
     public class ItemSelector {
-        private List<ItemData> Data;
+        private readonly List<ItemData> Data;
         public ImGuiScene.TextureWrap Icon;
 
         private ItemData Selected = new ItemData {
@@ -36,11 +37,11 @@ namespace JobBars.Data {
         public ItemSelector(string label, string id, List<ItemData> data) {
             Label = label;
             Id = id;
+            Data = data;
         }
 
         public bool Draw() {
-            ImGui.Text(Label);
-            ImGui.SameLine();
+            var ret = false;
             if (ImGui.BeginCombo(Id, Text, ImGuiComboFlags.HeightLargest)) {
                 var resetScroll = false;
                 if (ImGui.InputText($"Search{Id}", ref SearchText, 100)) {
@@ -76,14 +77,16 @@ namespace JobBars.Data {
                     if (ImGui.Button("Select" + Id)) {
                         Selected = SearchSelected;
                         Text = Selected.Name;
-                        return true;
+                        ret = true;
                     }
                 }
 
                 ImGui.EndCombo();
             }
+            ImGui.SameLine();
+            ImGui.Text(Label);
 
-            return false;
+            return ret;
         }
 
         private void LoadIcon(ushort iconId) {
