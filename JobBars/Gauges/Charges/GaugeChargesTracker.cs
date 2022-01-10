@@ -92,13 +92,13 @@ namespace JobBars.Gauges.Charges {
             if (currentChargesValue != ChargesActiveTotal) {
                 if (currentChargesValue == 0) {
                     if (Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
-                        UIHelper.PlaySeComplete();
+                        Config.PlayCompletionSoundEffect();
                 }
                 else if (currentChargesValue == TotalCharges) {
                     if (Config.CompletionSound == GaugeCompleteSoundType.When_Full || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
-                        UIHelper.PlaySeComplete();
+                        Config.PlayCompletionSoundEffect();
                 }
-                else if (Config.ProgressSound) UIHelper.PlaySeProgress();
+                else Config.PlaySoundEffect();
             }
             ChargesActiveTotal = currentChargesValue;
         }

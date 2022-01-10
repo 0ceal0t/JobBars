@@ -1,4 +1,5 @@
-﻿using JobBars.Data;
+﻿using ImGuiNET;
+using JobBars.Data;
 using JobBars.UI;
 
 namespace JobBars.Gauges.Procs {
@@ -31,12 +32,10 @@ namespace JobBars.Gauges.Procs {
 
         public ProcConfig[] Procs { get; private set; }
         public bool ProcsShowText { get; private set; }
-        public bool ProcSound { get; private set; }
 
         public GaugeProcsConfig(string name, GaugeVisualType type, GaugeProcProps props) : base(name, type) {
             Procs = props.Procs;
             ProcsShowText = JobBars.Config.GaugeShowText.Get(Name, props.ShowText);
-            ProcSound = JobBars.Config.GaugeProgressSound.Get(Name, !props.NoSoundOnProc);
         }
 
         public override GaugeTracker GetTracker(int idx) => new GaugeProcsTracker(this, idx);
@@ -48,11 +47,11 @@ namespace JobBars.Gauges.Procs {
                 newVisual = true;
             }
 
-            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound on Proc{id}", Name, ProcSound, out var newProcSound)) {
-                ProcSound = newProcSound;
-            }
+            DrawSoundEffect("Proc Sound Effect");
 
             foreach (var proc in Procs) {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
+
                 if (JobBars.Config.GaugeProcOrder.Draw($"Order ({proc.Name})", proc.Name, proc.Order, out var newOrder)) {
                     proc.Order = newOrder;
                     reset = true;

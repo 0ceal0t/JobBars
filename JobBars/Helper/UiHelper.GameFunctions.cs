@@ -10,7 +10,7 @@ using JobBars.GameStructs;
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
         public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3);
-        public static PlaySoundEffectDelegate PlaySoundEffect { get; private set; }
+        public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
@@ -29,7 +29,7 @@ namespace JobBars.Helper {
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
-            PlaySoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
+            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
             TextureLoadPath = Marshal.GetDelegateForFunctionPointer<TextureLoadPathDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24 ??"));
             GetResourceSync = Marshal.GetDelegateForFunctionPointer<GetResourceSyncDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? 00 00 48 8D 8F ?? ?? 00 00 48 89 87 ?? ?? 00 00"));
             GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>(JobBars.SigScanner.ScanText("48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01"));
@@ -74,16 +74,10 @@ namespace JobBars.Helper {
             return allocation;
         }
 
-        public static void PlaySeComplete() {
-            if (JobBars.Config.GaugeCompletionSoundEffect <= 0) return;
+        public static void PlaySoundEffect(int soundEffect) {
+            if (soundEffect <= 0) return;
             if (JobBars.LastCutscene) return;
-            PlaySoundEffect(JobBars.Config.GaugeCompletionSoundEffect, 0, 0);
-        }
-
-        public static void PlaySeProgress() {
-            if (JobBars.Config.GaugeSoundEffect <= 0) return;
-            if (JobBars.LastCutscene) return;
-            PlaySoundEffect(JobBars.Config.GaugeSoundEffect + 36, 0, 0);
+            PlayGameSoundEffect(soundEffect, 0, 0);
         }
 
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {

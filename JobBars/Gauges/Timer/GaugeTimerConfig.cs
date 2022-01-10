@@ -1,4 +1,5 @@
 ﻿using JobBars.UI;
+using ImGuiNET;
 
 namespace JobBars.Gauges.Timer {
     public struct GaugeSubTimerProps {
@@ -10,7 +11,6 @@ namespace JobBars.Gauges.Timer {
         public ElementColor Color;
         public bool Invert;
         public float DefaultDuration;
-        public bool NoLowWarningSound;
     }
 
     public struct GaugeTimerProps {
@@ -26,11 +26,11 @@ namespace JobBars.Gauges.Timer {
             public readonly float DefaultDuration;
             public readonly bool NoRefresh;
             public readonly Item[] Triggers;
-            public readonly bool HideLowWarning;
+            public readonly bool HideLowWarning; // Visual low warning
             public ElementColor Color;
             public bool Invert;
             public float Offset;
-            public bool LowWarningSound;
+            public float LowWarningTime;
 
             public GaugeSubTimerConfig(string name, GaugeSubTimerProps props) {
                 Name = name;
@@ -44,7 +44,7 @@ namespace JobBars.Gauges.Timer {
                 Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
                 Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
                 Offset = JobBars.Config.GaugeTimerOffset.Get(Name);
-                LowWarningSound = JobBars.Config.GaugeProgressSound.Get(Name, !props.NoLowWarningSound);
+                LowWarningTime = JobBars.Config.GaugeLowTimerWarning_2.Get(Name);
             }
         }
 
@@ -70,7 +70,11 @@ namespace JobBars.Gauges.Timer {
         public override GaugeTracker GetTracker(int idx) => new GaugeTimerTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
+            DrawSoundEffect("Low Warning Sound Effect");
+
             foreach (var subTimer in SubTimers) {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
+
                 var suffix = string.IsNullOrEmpty(subTimer.SubName) ? "" : $" ({subTimer.SubName})";
 
                 if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{id}", subTimer.Name, subTimer.Color, out var newColor)) {
@@ -86,8 +90,8 @@ namespace JobBars.Gauges.Timer {
                     subTimer.Invert = newInvert;
                 }
 
-                if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound When Low{suffix}{id}", subTimer.Name, subTimer.LowWarningSound, out var newLowWarningSound)) {
-                    subTimer.LowWarningSound = newLowWarningSound;
+                if (JobBars.Config.GaugeLowTimerWarning_2.Draw($"Low Warning Time{suffix}{id}", subTimer.Name, subTimer.LowWarningTime, out var newLowWarning)) {
+                    subTimer.LowWarningTime = newLowWarning;
                 }
             }
         }

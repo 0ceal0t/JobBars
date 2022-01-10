@@ -10,6 +10,7 @@ using JobBars.Gauges.Types.Diamond;
 namespace JobBars.Gauges.Timer {
     public class GaugeTimerTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface {
         private class GaugeSubTimer {
+            private readonly GaugeTimerConfig TopConfig;
             private readonly GaugeTimerConfig.GaugeSubTimerConfig Config;
 
             private GaugeState State = GaugeState.Inactive;
@@ -20,10 +21,10 @@ namespace JobBars.Gauges.Timer {
             private float TimeLeft;
             private float PercentRemaining;
 
-            private static float LOW_TIME_WARNING => JobBars.Config.GaugeLowTimerWarning;
             private float OffsetMaxDuration => Config.Offset == Config.MaxDuration ? 1f : Config.MaxDuration - Config.Offset;
 
-            public GaugeSubTimer(GaugeTimerConfig.GaugeSubTimerConfig config) {
+            public GaugeSubTimer(GaugeTimerConfig topConfig, GaugeTimerConfig.GaugeSubTimerConfig config) {
+                TopConfig = topConfig;
                 Config = config;
             }
 
@@ -50,9 +51,9 @@ namespace JobBars.Gauges.Timer {
                         State = GaugeState.Inactive;
                     }
 
-                    bool currentDanger = currentTimeLeft < LOW_TIME_WARNING && LOW_TIME_WARNING > 0 && !Config.HideLowWarning && currentTimeLeft > 0;
-                    bool beforeOk = TimeLeft >= LOW_TIME_WARNING;
-                    if (currentDanger && beforeOk && Config.LowWarningSound) UIHelper.PlaySeProgress();
+                    bool currentDanger = currentTimeLeft < Config.LowWarningTime && Config.LowWarningTime > 0 && !Config.HideLowWarning && currentTimeLeft > 0;
+                    bool beforeOk = TimeLeft >= Config.LowWarningTime;
+                    if (currentDanger && beforeOk) TopConfig.PlaySoundEffect();
                     InDanger = currentDanger;
 
                     var barTimeLeft = Config.Invert ? (currentTimeLeft == 0 ? 0 : OffsetMaxDuration - currentTimeLeft) : currentTimeLeft;
@@ -84,7 +85,7 @@ namespace JobBars.Gauges.Timer {
 
         public GaugeTimerTracker(GaugeTimerConfig config, int idx) {
             Config = config;
-            SubTimers = Config.SubTimers.Select(subTimer => new GaugeSubTimer(subTimer)).ToList();
+            SubTimers = Config.SubTimers.Select(subTimer => new GaugeSubTimer(config, subTimer)).ToList();
             ActiveSubTimer = SubTimers[0];
             LoadUI(Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeTimerTracker>(this, idx),

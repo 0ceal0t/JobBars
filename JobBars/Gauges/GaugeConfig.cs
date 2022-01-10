@@ -8,6 +8,7 @@ using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Diamond;
 using JobBars.Gauges.Types.BarDiamondCombo;
+using ImGuiNET;
 
 namespace JobBars.Gauges {
     public abstract class GaugeConfig {
@@ -19,6 +20,8 @@ namespace JobBars.Gauges {
         public int Order { get; private set; }
         public float Scale { get; private set; }
         public bool HideWhenInactive { get; private set; }
+        public int SoundEffect { get; private set; }
+        public int CompletionSoundEffect { get; private set; }
         public Vector2 Position => JobBars.Config.GaugeSplitPosition.Get(Name);
 
         public static readonly GaugeCompleteSoundType[] ValidSoundType = (GaugeCompleteSoundType[])Enum.GetValues(typeof(GaugeCompleteSoundType));
@@ -29,6 +32,8 @@ namespace JobBars.Gauges {
             Order = JobBars.Config.GaugeOrder.Get(Name);
             Scale = JobBars.Config.GaugeIndividualScale.Get(Name);
             HideWhenInactive = JobBars.Config.GaugeHideInactive.Get(Name);
+            SoundEffect = JobBars.Config.GaugeSoundEffect_2.Get(Name);
+            CompletionSoundEffect = JobBars.Config.GaugeCompletionSoundEffect_2.Get(Name);
             SetType(JobBars.Config.GaugeType.Get(Name, type));
         }
 
@@ -89,6 +94,46 @@ namespace JobBars.Gauges {
             TypeConfig.Draw(id, ref newPos, ref newVisual, ref reset);
 
             DrawConfig(id, ref newPos, ref newVisual, ref reset);
+        }
+
+        protected void DrawSoundEffect(string label = "Progress Sound Effect") {
+            if (ImGui.Button("Test##SoundEffect")) Helper.UIHelper.PlaySoundEffect(SoundEffect);
+            ImGui.SameLine();
+
+            ImGui.SetNextItemWidth(100f);
+            if (JobBars.Config.GaugeSoundEffect_2.Draw($"{label} (0 = off)", Name, SoundEffect, out var newSoundEffect)) {
+                SoundEffect = newSoundEffect;
+            }
+            ImGui.SameLine();
+            HelpMarker("For macro sound effects, add 36. For example, <se.6> would be 6+36=42");
+        }
+
+        public void PlaySoundEffect() => Helper.UIHelper.PlaySoundEffect(SoundEffect);
+
+        protected void DrawCompletionSoundEffect() {
+            if (ImGui.Button("Test##CompletionSoundEffect")) Helper.UIHelper.PlaySoundEffect(CompletionSoundEffect);
+            ImGui.SameLine();
+
+            ImGui.SetNextItemWidth(100f);
+            if (JobBars.Config.GaugeCompletionSoundEffect_2.Draw($"Completion Sound Effect (0 = off)", Name, CompletionSoundEffect, out var newSoundEffect)) {
+                CompletionSoundEffect = newSoundEffect;
+            }
+            ImGui.SameLine();
+            HelpMarker("For macro sound effects, add 36. For example, <se.6> would be 6+36=42");
+        }
+
+        public void PlayCompletionSoundEffect() => Helper.UIHelper.PlaySoundEffect(CompletionSoundEffect);
+
+        public static void HelpMarker(string text) {
+            ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 5);
+            ImGui.TextDisabled("(?)");
+            if (ImGui.IsItemHovered()) {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
+                ImGui.TextUnformatted(text);
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
+            }
         }
 
         public void DrawPositionBox() {

@@ -1,4 +1,5 @@
-﻿using JobBars.UI;
+﻿using ImGuiNET;
+using JobBars.UI;
 
 namespace JobBars.Gauges.GCD {
     public struct GaugeSubGCDProps {
@@ -10,7 +11,6 @@ namespace JobBars.Gauges.GCD {
         public string SubName;
         public Item[] Increment;
         public GaugeCompleteSoundType CompletionSound;
-        public bool ProgressSound;
     }
 
     public struct GaugeGCDProps {
@@ -29,7 +29,6 @@ namespace JobBars.Gauges.GCD {
             public ElementColor Color;
             public bool Invert;
             public GaugeCompleteSoundType CompletionSound;
-            public bool ProgressSound;
             public bool ReverseFill;
 
             public GaugeSubGCDConfig(string name, GaugeSubGCDProps props) {
@@ -43,7 +42,6 @@ namespace JobBars.Gauges.GCD {
                 Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
                 Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
                 CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
-                ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
                 ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
             }
         }
@@ -70,7 +68,12 @@ namespace JobBars.Gauges.GCD {
         public override GaugeTracker GetTracker(int idx) => new GaugeGCDTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
+            DrawSoundEffect();
+            DrawCompletionSoundEffect();
+
             foreach (var subGCD in SubGCDs) {
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
+
                 var suffix = string.IsNullOrEmpty(subGCD.SubName) ? "" : $" ({subGCD.SubName})";
 
                 if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{id}", subGCD.Name, subGCD.Color, out var newColor)) {
@@ -84,10 +87,6 @@ namespace JobBars.Gauges.GCD {
 
                 if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{suffix}{id}", subGCD.Name, ValidSoundType, subGCD.CompletionSound, out var newCompletionSound)) {
                     subGCD.CompletionSound = newCompletionSound;
-                }
-
-                if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Progress{suffix}{id}", subGCD.Name, subGCD.ProgressSound, out var newProgressSound)) {
-                    subGCD.ProgressSound = newProgressSound;
                 }
 
                 if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {

@@ -58,7 +58,7 @@ namespace JobBars.Gauges.Procs {
                 proc.Active = procActive;
             }
 
-            if (playSound && Config.ProcSound) UIHelper.PlaySeComplete();
+            if (playSound) Config.PlaySoundEffect();
             State = procActiveCount == 0 ? GaugeState.Inactive : GaugeState.Active;
         }
 

@@ -91,27 +91,6 @@ namespace JobBars.Gauges.Manager {
             }
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputInt("Completion Sound Effect (0 = off)", ref JobBars.Config.GaugeCompletionSoundEffect, 0)) {
-                if (JobBars.Config.GaugeCompletionSoundEffect < 0) JobBars.Config.GaugeCompletionSoundEffect = 0;
-                JobBars.Config.Save();
-            }
-            ImGui.SameLine();
-            if (ImGui.SmallButton("Test##Completion Sound Effect")) Helper.UIHelper.PlaySeComplete();
-
-            ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputInt("Sound Effect # (0 = off)", ref JobBars.Config.GaugeSoundEffect, 0)) {
-                if (JobBars.Config.GaugeSoundEffect < 0) JobBars.Config.GaugeSoundEffect = 0;
-                if (JobBars.Config.GaugeSoundEffect > 16) JobBars.Config.GaugeSoundEffect = 16;
-                JobBars.Config.Save();
-            }
-            ImGui.SameLine();
-            if (ImGui.SmallButton("Test##Proc Sound Effect")) Helper.UIHelper.PlaySeProgress();
-
-            ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("DoT Low Warning Time (0 = off)", ref JobBars.Config.GaugeLowTimerWarning)) {
-                JobBars.Config.Save();
-            }
-
             if (ImGui.InputFloat("Slidecast Seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
                 JobBars.Config.Save();
             }

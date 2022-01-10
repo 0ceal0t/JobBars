@@ -35,14 +35,14 @@ namespace JobBars.Gauges.Stacks {
             if (currentValue != Value) {
                 if (currentValue == 0) {
                     if (Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
-                        UIHelper.PlaySeComplete();
+                        Config.PlayCompletionSoundEffect();
                 }
                 else if (currentValue == Config.MaxStacks) {
                     if (Config.CompletionSound == GaugeCompleteSoundType.When_Full || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
-                        UIHelper.PlaySeComplete();
+                        Config.PlayCompletionSoundEffect();
                 }
                 else {
-                    if (Config.ProgressSound) UIHelper.PlaySeProgress();
+                    Config.PlaySoundEffect();
                 }
             }
             Value = currentValue;

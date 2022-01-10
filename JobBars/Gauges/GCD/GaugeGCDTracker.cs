@@ -11,6 +11,7 @@ using Dalamud.Logging;
 namespace JobBars.Gauges.GCD {
     public class GaugeGCDTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface, IGaugeArrowInterface {
         private class GaugeSubGCD {
+            private readonly GaugeGCDConfig TopConfig;
             private readonly GaugeGCDConfig.GaugeSubGCDConfig Config;
 
             private int Counter;
@@ -23,7 +24,8 @@ namespace JobBars.Gauges.GCD {
 
             private int Value;
 
-            public GaugeSubGCD(GaugeGCDConfig.GaugeSubGCDConfig config) {
+            public GaugeSubGCD(GaugeGCDConfig topConfig, GaugeGCDConfig.GaugeSubGCDConfig config) {
+                TopConfig = topConfig;
                 Config = config;
             }
 
@@ -37,7 +39,7 @@ namespace JobBars.Gauges.GCD {
                     Counter = 0;
 
                     if (Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
-                        UIHelper.PlaySeComplete();
+                        TopConfig.PlayCompletionSoundEffect();
 
                     ret = true;
                 }
@@ -47,9 +49,9 @@ namespace JobBars.Gauges.GCD {
                     if (Counter < Config.MaxCounter) {
                         Counter++;
 
-                        if (Config.ProgressSound) UIHelper.PlaySeProgress();
+                        TopConfig.PlaySoundEffect();
                         if (Counter == Config.MaxCounter && (Config.CompletionSound == GaugeCompleteSoundType.When_Full || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full))
-                            UIHelper.PlaySeComplete();
+                            TopConfig.PlayCompletionSoundEffect();
                     }
                 }
 
@@ -105,7 +107,7 @@ namespace JobBars.Gauges.GCD {
 
         public GaugeGCDTracker(GaugeGCDConfig config, int idx) {
             Config = config;
-            SubGCDs = Config.SubGCDs.Select(subGCD => new GaugeSubGCD(subGCD)).ToList();
+            SubGCDs = Config.SubGCDs.Select(subGCD => new GaugeSubGCD(config, subGCD)).ToList();
             MaxWidth = Config.SubGCDs.Select(subGCD => subGCD.MaxCounter).Max();
             ActiveSubGCD = SubGCDs[0];
             LoadUI(Config.TypeConfig switch {

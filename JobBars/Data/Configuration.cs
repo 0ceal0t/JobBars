@@ -64,8 +64,6 @@ namespace JobBars.Data {
         public BoolValueConfig GaugeVertical = new(false);
         public IntValueConfig GaugeProcOrder = new(-1);
         public ColorConfig GaugeProcColor = new();
-        public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges
-        public BoolValueConfig GaugeProgressSound = new(true); // Timer, GCD, proc, stacks, charges
         public BoolValueConfig GaugeHideInactive = new(false);
         public BoolValueConfig GaugeInvert = new(false);
         public BoolValueConfig GaugeShowSegments = new(true);
@@ -78,9 +76,10 @@ namespace JobBars.Data {
         public ComboValueConfig<GaugeGCDRollingType> GaugeGCDRolling = new();
         public float GaugeSlidecastTime = 0.5f;
 
-        public int GaugeSoundEffect = 0;
-        public int GaugeCompletionSoundEffect = 78;
-        public float GaugeLowTimerWarning = 4.0f;
+        public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges
+        public FloatValueConfig GaugeLowTimerWarning_2 = new(4.0f);
+        public IntValueConfig GaugeSoundEffect_2 = new(0);
+        public IntValueConfig GaugeCompletionSoundEffect_2 = new(78);
 
         public bool GaugePulse = true;
 

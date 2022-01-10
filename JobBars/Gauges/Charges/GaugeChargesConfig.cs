@@ -27,7 +27,6 @@ namespace JobBars.Gauges.Charges {
         public bool SameColor { get; private set; }
         public ElementColor BarColor { get; private set; }
         public GaugeCompleteSoundType CompletionSound { get; private set; }
-        public bool ProgressSound { get; private set; }
         public bool ReverseFill { get; private set; }
 
         public GaugeChargesConfig(string name, GaugeVisualType type, GaugeChargesProps props) : base(name, type) {
@@ -35,7 +34,6 @@ namespace JobBars.Gauges.Charges {
             SameColor = props.SameColor;
             BarColor = JobBars.Config.GaugeColor.Get(Name, props.BarColor);
             CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
-            ProgressSound = JobBars.Config.GaugeProgressSound.Get(Name, props.ProgressSound);
             ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
         }
 
@@ -51,9 +49,8 @@ namespace JobBars.Gauges.Charges {
                 CompletionSound = newCompletionSound;
             }
 
-            if (JobBars.Config.GaugeProgressSound.Draw($"Play Sound On Change{id}", Name, ProgressSound, out var newProgressSound)) {
-                ProgressSound = newProgressSound;
-            }
+            DrawCompletionSoundEffect();
+            DrawSoundEffect();
 
             if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{id}", Name, ReverseFill, out var newReverseFill)) {
                 ReverseFill = newReverseFill;
