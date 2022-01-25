@@ -9,12 +9,12 @@ namespace JobBars.Helper {
         public unsafe static AddonPartyListIntArray* GetPartyUI() {
             var uiModule = Framework.Instance()->GetUiModule();
             if (uiModule == null) return null;
-            return (AddonPartyListIntArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[4]->IntArray;
+            return (AddonPartyListIntArray*)uiModule->GetRaptureAtkModule()->AtkModule.AtkArrayDataHolder.NumberArrays[4]->IntArray;
         }
 
         public static AddonHotbarNumberArray* GetHotbarUI() {
             var uiModule = Framework.Instance()->GetUiModule();
-            return (AddonHotbarNumberArray*)uiModule->RaptureAtkModule.AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
+            return (AddonHotbarNumberArray*)uiModule->GetRaptureAtkModule()->AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
 
         public static AtkUnitBase* GetAddon(string name) => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName(name);
