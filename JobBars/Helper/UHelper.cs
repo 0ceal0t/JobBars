@@ -73,6 +73,24 @@ namespace JobBars.Helper {
             next->PrevSiblingNode = prev;
             prev->NextSiblingNode = next;
         }
+
+        public static void Attach(AtkUnitBase parent, AtkResNode* child) => Attach(parent.RootNode, child);
+
+        public static void Attach(AtkUnitBase* parent, AtkResNode* child) => Attach(parent->RootNode, child);
+
+        public static void Attach(AtkResNode* rootNode, AtkResNode* child) {
+            var lastNode = rootNode->ChildNode;
+            while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
+
+            Link(lastNode, child);
+        }
+
+        public static void Detach(AtkResNode* node) {
+            if (node->NextSiblingNode != null && node->NextSiblingNode->PrevSiblingNode == node) {
+                node->NextSiblingNode->PrevSiblingNode = null; // unlink
+            }
+            node->NextSiblingNode = null;
+        }
     }
 
     public unsafe struct LayoutNode {

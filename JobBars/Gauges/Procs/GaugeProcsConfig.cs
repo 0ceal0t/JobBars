@@ -6,7 +6,7 @@ namespace JobBars.Gauges.Procs {
     public struct GaugeProcProps {
         public bool ShowText;
         public ProcConfig[] Procs;
-        public bool NoSoundOnProc;
+        public GaugeCompleteSoundType ProcSound;
     }
 
     public class ProcConfig {
@@ -32,10 +32,12 @@ namespace JobBars.Gauges.Procs {
 
         public ProcConfig[] Procs { get; private set; }
         public bool ProcsShowText { get; private set; }
+        public GaugeCompleteSoundType ProcSound { get; private set; }
 
         public GaugeProcsConfig(string name, GaugeVisualType type, GaugeProcProps props) : base(name, type) {
             Procs = props.Procs;
             ProcsShowText = JobBars.Config.GaugeShowText.Get(Name, props.ShowText);
+            ProcSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.ProcSound);
         }
 
         public override GaugeTracker GetTracker(int idx) => new GaugeProcsTracker(this, idx);
@@ -45,6 +47,10 @@ namespace JobBars.Gauges.Procs {
                 ProcsShowText = newProcsShowText;
                 newPos = true;
                 newVisual = true;
+            }
+
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Proc Sound{id}", Name, ValidSoundType, ProcSound, out var newProcSound)) {
+                ProcSound = newProcSound;
             }
 
             DrawSoundEffect("Proc Sound Effect");

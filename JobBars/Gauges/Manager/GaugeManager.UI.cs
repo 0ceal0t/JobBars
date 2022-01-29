@@ -43,16 +43,11 @@ namespace JobBars.Gauges.Manager {
                 }
             }
 
-            if (ImGui.BeginCombo("Gauge Positioning" + _ID, $"{JobBars.Config.GaugePositionType}")) {
-                foreach (var positionType in ValidGaugePositionType) {
-                    if (ImGui.Selectable($"{positionType}" + _ID, positionType == JobBars.Config.GaugePositionType)) {
-                        JobBars.Config.GaugePositionType = positionType;
-                        JobBars.Config.Save();
+            if (JobBars.DrawCombo(ValidGaugePositionType, JobBars.Config.GaugePositionType, "Gauge Positioning", _ID, out var newPosition)) {
+                JobBars.Config.GaugePositionType = newPosition;
+                JobBars.Config.Save();
 
-                        UpdatePositionScale();
-                    }
-                }
-                ImGui.EndCombo();
+                UpdatePositionScale();
             }
 
             if (JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING

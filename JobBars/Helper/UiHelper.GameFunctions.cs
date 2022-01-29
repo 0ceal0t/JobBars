@@ -9,7 +9,7 @@ using JobBars.GameStructs;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
-        public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3);
+        public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3,  int a4);
         public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -75,9 +75,10 @@ namespace JobBars.Helper {
         }
 
         public static void PlaySoundEffect(int soundEffect) {
+            if (soundEffect == 19 || soundEffect == 21) return;
             if (soundEffect <= 0) return;
             if (JobBars.LastCutscene) return;
-            PlayGameSoundEffect(soundEffect, 0, 0);
+            PlayGameSoundEffect(soundEffect, 0, 0, 0);
         }
 
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {

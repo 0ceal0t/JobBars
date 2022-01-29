@@ -25,14 +25,9 @@ namespace JobBars.Cursors.Manager {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.BeginCombo("Cursor Positioning", $"{JobBars.Config.CursorPosition}")) {
-                foreach (var positionType in ValidCursorPositionType) {
-                    if (ImGui.Selectable($"{positionType}" + _ID, positionType == JobBars.Config.CursorPosition)) {
-                        JobBars.Config.CursorPosition = positionType;
-                        JobBars.Config.Save();
-                    }
-                }
-                ImGui.EndCombo();
+            if (JobBars.DrawCombo(ValidCursorPositionType, JobBars.Config.CursorPosition, "Cursor Positioning", _ID, out var newPosition)) {
+                JobBars.Config.CursorPosition = newPosition;
+                JobBars.Config.Save();
             }
 
             if (JobBars.Config.CursorPosition == CursorPositionType.CustomPosition) {

@@ -72,6 +72,7 @@ namespace JobBars {
         public static bool LastCutscene { get; private set; } = false;
 
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
+        public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
         public JobBars(
                 DalamudPluginInterface pluginInterface,
@@ -115,6 +116,7 @@ namespace JobBars {
             }
 
             AttachAddon = Config.AttachAddon;
+            CooldownAttachAddon = Config.CooldownAttachAddon;
             IconBuilder = new UIIconManager();
 
             // ==========================
@@ -196,7 +198,7 @@ namespace JobBars {
         private void Animate() => Animation.Tick();
 
         private void FrameworkOnUpdate(Framework framework) {
-            var addon = UIHelper.AttachAddon;
+            var addon = UIHelper.BuffGaugeAttachAddon;
 
             if (!LoggedOut && RecreateUI) {
                 Logout();

@@ -1,6 +1,4 @@
-﻿using System;
-using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
 namespace JobBars.UI {
@@ -21,9 +19,8 @@ namespace JobBars.UI {
         }
 
         public void Dispose() {
-            if (GaugeRoot->NextSiblingNode != null && GaugeRoot->NextSiblingNode->PrevSiblingNode == GaugeRoot) {
-                GaugeRoot->NextSiblingNode->PrevSiblingNode = null; // unlink
-            }
+            UIHelper.Detach(GaugeRoot);
+            UIHelper.Detach(CooldownRoot);
 
             DisposeCooldowns();
             DisposeGauges();
@@ -31,7 +28,7 @@ namespace JobBars.UI {
             DisposeCursor();
             DisposeTextures(); // dispose last
 
-            var attachAddon = UIHelper.AttachAddon;
+            var attachAddon = UIHelper.BuffGaugeAttachAddon;
             if (attachAddon != null) attachAddon->UldManager.UpdateDrawNodeList();
 
             var partyListAddon = UIHelper.PartyListAddon;
@@ -39,19 +36,17 @@ namespace JobBars.UI {
         }
 
         public void Attach() {
-            var attachAddon = UIHelper.AttachAddon;
+            var buffGaugeAddon = UIHelper.BuffGaugeAttachAddon;
+            var cooldownAddon = UIHelper.CooldownAttachAddon;
             var partyListAddon = UIHelper.PartyListAddon;
 
             // ===== CONTAINERS =========
 
-            GaugeRoot->ParentNode = attachAddon->RootNode;
-            BuffRoot->ParentNode = attachAddon->RootNode;
-            CursorRoot->ParentNode = attachAddon->RootNode;
+            GaugeRoot->ParentNode = buffGaugeAddon->RootNode;
+            BuffRoot->ParentNode = buffGaugeAddon->RootNode;
+            CursorRoot->ParentNode = buffGaugeAddon->RootNode;
 
-            var lastNode = attachAddon->RootNode->ChildNode;
-            while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
-
-            UIHelper.Link(lastNode, GaugeRoot);
+            UIHelper.Attach(buffGaugeAddon, GaugeRoot);
 
             // ===== BUFF PARTYLIST ======
 
@@ -63,12 +58,14 @@ namespace JobBars.UI {
 
             // ===== COOLDOWNS =========
 
-            CooldownRoot->ParentNode = partyListAddon->AtkUnitBase.RootNode;
-            partyListAddon->AtkUnitBase.UldManager.NodeList[25]->PrevSiblingNode = CooldownRoot;
+            CooldownRoot->ParentNode = cooldownAddon->RootNode;
+
+            UIHelper.Attach(partyListAddon->AtkUnitBase, CooldownRoot);
 
             // ======================
 
-            attachAddon->UldManager.UpdateDrawNodeList();
+            buffGaugeAddon->UldManager.UpdateDrawNodeList();
+            cooldownAddon->UldManager.UpdateDrawNodeList();
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
@@ -80,7 +77,7 @@ namespace JobBars.UI {
         // ==== HELPER FUNCTIONS ============
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.AttachAddon;
+            var addon = UIHelper.BuffGaugeAttachAddon;
             if (addon == null) return;
             var p = UIHelper.GetNodePosition(addon->RootNode);
             var pScale = UIHelper.GetNodeScale(addon->RootNode);
@@ -88,7 +85,7 @@ namespace JobBars.UI {
         }
 
         private void SetScale(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.AttachAddon;
+            var addon = UIHelper.BuffGaugeAttachAddon;
             if (addon == null) return;
             var p = UIHelper.GetNodeScale(addon->RootNode);
             UIHelper.SetScale(node, X / p.X, Y / p.Y);

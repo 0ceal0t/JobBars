@@ -100,7 +100,7 @@ namespace JobBars.Gauges {
             if (ImGui.Button("Test##SoundEffect")) Helper.UIHelper.PlaySoundEffect(SoundEffect);
             ImGui.SameLine();
 
-            ImGui.SetNextItemWidth(100f);
+            ImGui.SetNextItemWidth(200f);
             if (JobBars.Config.GaugeSoundEffect_2.Draw($"{label} (0 = off)", Name, SoundEffect, out var newSoundEffect)) {
                 SoundEffect = newSoundEffect;
             }
@@ -114,7 +114,7 @@ namespace JobBars.Gauges {
             if (ImGui.Button("Test##CompletionSoundEffect")) Helper.UIHelper.PlaySoundEffect(CompletionSoundEffect);
             ImGui.SameLine();
 
-            ImGui.SetNextItemWidth(100f);
+            ImGui.SetNextItemWidth(200f);
             if (JobBars.Config.GaugeCompletionSoundEffect_2.Draw($"Completion Sound Effect (0 = off)", Name, CompletionSoundEffect, out var newSoundEffect)) {
                 CompletionSoundEffect = newSoundEffect;
             }

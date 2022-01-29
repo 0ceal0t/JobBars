@@ -53,8 +53,13 @@ namespace JobBars.Gauges.Procs {
                     proc.RemainingTime = 0;
                 }
 
-                if (procActive && !proc.Active) playSound = true;
                 if (procActive) procActiveCount++;
+                if (procActive != proc.Active) {
+                    if (procActive && (Config.ProcSound == GaugeCompleteSoundType.When_Full || Config.ProcSound == GaugeCompleteSoundType.When_Empty_or_Full))
+                        playSound = true;
+                    else if (!procActive && (Config.ProcSound == GaugeCompleteSoundType.When_Empty || Config.ProcSound == GaugeCompleteSoundType.When_Empty_or_Full))
+                        playSound = true;
+                }
                 proc.Active = procActive;
             }
 

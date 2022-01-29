@@ -31,9 +31,14 @@ namespace JobBars.Helper {
 
         public static AddonPartyList* PartyListAddon => (AddonPartyList*)GetAddon("_PartyList");
 
-        public static AtkUnitBase* AttachAddon => JobBars.AttachAddon switch {
+        public static AtkUnitBase* BuffGaugeAttachAddon => GetAddon(JobBars.AttachAddon);
+
+        public static AtkUnitBase* CooldownAttachAddon => GetAddon(JobBars.CooldownAttachAddon);
+
+        public static AtkUnitBase* GetAddon(Data.AttachAddon addon) => addon switch {
             Data.AttachAddon.Chatbox => ChatLogAddon,
             Data.AttachAddon.HP_MP_Bars => ParameterAddon,
+            Data.AttachAddon.PartyList => (AtkUnitBase*)PartyListAddon,
             _ => null
         };
     }

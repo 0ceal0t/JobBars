@@ -8,8 +8,7 @@ namespace JobBars {
     public unsafe partial class JobBars {
         public bool Visible = false;
 
-        private readonly AttachAddon[] ValidAttachTypes = (AttachAddon[])Enum.GetValues(typeof(AttachAddon));
-
+        public static readonly AttachAddon[] ValidAttachTypes = (AttachAddon[])Enum.GetValues(typeof(AttachAddon));
         public static readonly Vector4 RED_COLOR = new(0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f);
         public static readonly Vector4 GREEN_COLOR = new(0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f);
 
@@ -25,14 +24,9 @@ namespace JobBars {
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (ImGui.BeginCombo("Attached UI element (Requires Restart)" + _ID, $"{Config.AttachAddon}")) {
-                    foreach (var attachType in ValidAttachTypes) {
-                        if (ImGui.Selectable($"{attachType}" + _ID, attachType == Config.AttachAddon)) {
-                            Config.AttachAddon = attachType;
-                            Config.Save();
-                        }
-                    }
-                    ImGui.EndCombo();
+                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Attached UI element (Requires Restart)", _ID, out var newAttach)) {
+                    Config.AttachAddon = newAttach;
+                    Config.Save();
                 }
 
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
@@ -115,6 +109,21 @@ namespace JobBars {
                 }
             }
             ImGui.PopStyleColor();
+            return ret;
+        }
+
+        public static bool DrawCombo<T>(T[] validOptions, T currentValue, string label, string _ID, out T newValue) {
+            newValue = currentValue;
+            var ret = false;
+            if (ImGui.BeginCombo(label + _ID, $"{currentValue}")) {
+                foreach (var value in validOptions) {
+                    if (ImGui.Selectable($"{value}" + _ID, value.Equals(currentValue))) {
+                        ret = true;
+                        newValue = value;
+                    }
+                }
+                ImGui.EndCombo();
+            }
             return ret;
         }
     }

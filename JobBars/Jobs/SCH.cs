@@ -18,7 +18,7 @@ namespace JobBars.Jobs {
                 Procs = new []{
                     new ProcConfig(UIHelper.Localize(BuffIds.Excog), BuffIds.Excog, UIColor.BrightGreen)
                 },
-                NoSoundOnProc = true
+                ProcSound = GaugeCompleteSoundType.When_Empty
             }),
             new GaugeTimerConfig(UIHelper.Localize(BuffIds.Biolysis), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 30,

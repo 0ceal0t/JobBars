@@ -37,11 +37,6 @@ namespace JobBars.UI {
 
             CooldownRoot->Destroy(true);
             CooldownRoot = null;
-
-            var partyListAddon = UIHelper.PartyListAddon;
-            if (partyListAddon != null) {
-                partyListAddon->AtkUnitBase.UldManager.NodeList[25]->PrevSiblingNode = null;
-            }
         }
 
         public void SetCooldownPosition(Vector2 pos) => UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);

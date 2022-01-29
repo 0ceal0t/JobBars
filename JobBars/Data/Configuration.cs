@@ -25,7 +25,8 @@ namespace JobBars.Data {
 
     public enum AttachAddon {
         Chatbox,
-        HP_MP_Bars
+        HP_MP_Bars,
+        PartyList
     }
 
     public struct CustomCooldownProps {
@@ -41,6 +42,8 @@ namespace JobBars.Data {
         public bool Use4K = true;
 
         public AttachAddon AttachAddon = AttachAddon.Chatbox;
+
+        public AttachAddon CooldownAttachAddon = AttachAddon.PartyList;
 
         // ====== GAUGES ======
 

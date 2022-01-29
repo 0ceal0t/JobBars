@@ -128,8 +128,7 @@ namespace JobBars.Helper {
                 if (item.Icon != 405 && item.Icon != 0) ActionToIcon[item.RowId] = item.Icon;
 
                 if (actionId == 2 || actionId == 3) { // spell or weaponskill
-                    if (item.CooldownGroup != 58 && item.AdditionalCooldownGroup != 58) continue; // not actually a gcd
-                    GCDs.Add(item.RowId);
+                    if (item.CooldownGroup == 58 || item.AdditionalCooldownGroup == 58) GCDs.Add(item.RowId); // not actually a gcd
                 }
 
                 ActionList.Add(new ItemData {
