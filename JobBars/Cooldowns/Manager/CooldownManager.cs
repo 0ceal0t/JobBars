@@ -83,6 +83,12 @@ namespace JobBars.Cooldowns.Manager {
             ObjectIdToMember = newObjectIdToMember;
         }
 
+        public void UpdatePositionScale() {
+            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+            JobBars.Builder.SetCooldownScale(JobBars.Config.CooldownScale);
+            JobBars.Builder.RefreshCooldownsLayout();
+        }
+
         public void ResetUI() {
             ObjectIdToMember.Clear();
         }

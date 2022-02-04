@@ -46,9 +46,19 @@ namespace JobBars.Cooldowns.Manager {
                 ResetUI();
             }
 
-            if (ImGui.InputFloat2("Position" + _ID, ref JobBars.Config.CooldownPosition)) {
+            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.CooldownScale)) {
+                UpdatePositionScale();
                 JobBars.Config.Save();
-                JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+            }
+
+            if (ImGui.InputFloat2("Position" + _ID, ref JobBars.Config.CooldownPosition)) {
+                UpdatePositionScale();
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.InputFloat("Line Height" + _ID, ref JobBars.Config.CooldownsSpacing)) {
+                UpdatePositionScale();
+                JobBars.Config.Save();
             }
 
             ImGui.Unindent();

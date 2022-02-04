@@ -21,7 +21,6 @@ namespace JobBars.UI {
 
                 Cooldowns.Add(newItem);
                 newItem.RootRes->ParentNode = CooldownRoot;
-                UIHelper.SetPosition(newItem.RootRes, 0, 40 * i);
 
                 if (lastCooldown != null) UIHelper.Link(lastCooldown.RootRes, newItem.RootRes);
                 lastCooldown = newItem;
@@ -29,6 +28,14 @@ namespace JobBars.UI {
 
             CooldownRoot->ChildCount = (ushort)((1 + Cooldowns[0].RootRes->ChildCount) * Cooldowns.Count);
             CooldownRoot->ChildNode = Cooldowns[0].RootRes;
+
+            RefreshCooldownsLayout();
+        }
+
+        public void RefreshCooldownsLayout() {
+            for (int i = 0; i < Cooldowns.Count; i++) {
+                UIHelper.SetPosition(Cooldowns[i].RootRes, 0, JobBars.Config.CooldownsSpacing * i);
+            }
         }
 
         private void DisposeCooldowns() {
@@ -40,6 +47,7 @@ namespace JobBars.UI {
         }
 
         public void SetCooldownPosition(Vector2 pos) => UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
+        public void SetCooldownScale(float scale) => UIHelper.SetScale(CooldownRoot, scale, scale);
         public void SetCooldownRowVisible(int idx, bool visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, visible);
         public void ShowCooldowns() => UIHelper.Show(CooldownRoot);
         public void HideCooldowns() => UIHelper.Hide(CooldownRoot);

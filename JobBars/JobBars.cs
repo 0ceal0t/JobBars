@@ -291,6 +291,7 @@ namespace JobBars {
             if (currentPosition != LastPosition || currentScale != LastScale) {
                 GaugeManager.UpdatePositionScale();
                 BuffManager.UpdatePositionScale();
+                CooldownManager.UpdatePositionScale();
             }
             LastPosition = currentPosition;
             LastScale = currentScale;

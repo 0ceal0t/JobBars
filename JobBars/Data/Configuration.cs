@@ -109,6 +109,8 @@ namespace JobBars.Data {
         // ===== COOLDOWNS ======
 
         public Vector2 CooldownPosition = new(-40, 40);
+        public float CooldownScale = 1.0f;
+        public float CooldownsSpacing = 40f;
 
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
