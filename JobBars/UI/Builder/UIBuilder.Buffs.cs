@@ -85,5 +85,6 @@ namespace JobBars.UI {
         public void ShowBuffs() => UIHelper.Show(BuffRoot);
         public void HideBuffs() => UIHelper.Hide(BuffRoot);
         public void HideAllBuffs() => Buffs.ForEach(x => x.Hide());
+        public void UpdateBuffsSize() => Buffs.ForEach(x => x.UpdateSize());
     }
 }

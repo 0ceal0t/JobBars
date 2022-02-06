@@ -98,6 +98,7 @@ namespace JobBars.Data {
         public bool BuffOrderByActive = true;
         public float BuffDisplayTimer = 30f;
         public bool BuffThinBorder = false;
+        public bool BuffSquare = false;
 
         public BoolValueConfig BuffEnabled = new(true);
 

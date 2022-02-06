@@ -40,6 +40,11 @@ namespace JobBars.Buffs.Manager {
                 JobBars.Builder.RefreshBuffLayout();
             }
 
+            if (ImGui.Checkbox("Square Buffs" + _ID, ref JobBars.Config.BuffSquare)) {
+                JobBars.Config.Save();
+                JobBars.Builder.UpdateBuffsSize();
+            }
+
             if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.BuffScale)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();

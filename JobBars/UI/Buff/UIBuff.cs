@@ -5,8 +5,8 @@ using JobBars.Helper;
 
 namespace JobBars.UI {
     public unsafe class UIBuff : UIElement {
-        public static readonly ushort WIDTH = 36;
-        public static readonly ushort HEIGHT = 28;
+        public static ushort WIDTH => (ushort)(JobBars.Config.BuffSquare ? 40 : 36);
+        public static ushort HEIGHT => (ushort)(JobBars.Config.BuffSquare ? 40 : 28);
 
         private AtkTextNode* TextNode;
         private AtkImageNode* Overlay;
@@ -23,16 +23,12 @@ namespace JobBars.UI {
             RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
-            RootRes->Width = WIDTH;
-            RootRes->Height = HEIGHT;
             RootRes->ChildCount = 4;
 
             TextNode = UIBuilder.CreateTextNode();
             TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
             TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
             TextNode->AlignmentFontType = 4;
-            TextNode->AtkResNode.Width = WIDTH;
-            TextNode->AtkResNode.Height = HEIGHT;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
@@ -40,8 +36,6 @@ namespace JobBars.UI {
             TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
 
             Icon = UIBuilder.CreateImageNode();
-            Icon->AtkResNode.Width = WIDTH;
-            Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
             Icon->AtkResNode.Y = 0;
             Icon->PartId = 0;
@@ -49,10 +43,8 @@ namespace JobBars.UI {
             Icon->WrapMode = 1;
 
             UIHelper.LoadIcon(Icon, 405);
-            UIHelper.UpdatePart(Icon->PartsList, 0, 1, 6, 36, 28);
 
             Overlay = UIBuilder.CreateImageNode();
-            Overlay->AtkResNode.Width = WIDTH;
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
             Overlay->AtkResNode.Y = 0;
@@ -62,8 +54,6 @@ namespace JobBars.UI {
             Overlay->WrapMode = 1;
 
             Border = UIBuilder.CreateNineNode();
-            Border->AtkResNode.Width = (ushort)(WIDTH + 8);
-            Border->AtkResNode.Height = (ushort)(HEIGHT + 8);
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -3;
             Border->PartID = JobBars.Config.BuffThinBorder ? UIBuilder.BUFF_BORDER_THIN : UIBuilder.BUFF_BORDER;
@@ -85,6 +75,26 @@ namespace JobBars.UI {
             UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)Overlay);
             UIHelper.Link((AtkResNode*)Overlay, (AtkResNode*)Border);
             TextNode->SetText("");
+
+            UpdateSize();
+        }
+
+        public void UpdateSize() {
+            RootRes->Width = WIDTH;
+            RootRes->Height = HEIGHT;
+
+            TextNode->AtkResNode.Width = WIDTH;
+            TextNode->AtkResNode.Height = HEIGHT;
+
+            Icon->AtkResNode.Width = WIDTH;
+            Icon->AtkResNode.Height = HEIGHT;
+
+            UIHelper.UpdatePart(Icon->PartsList, 0, (ushort)((40 - WIDTH) / 2), (ushort)((40 - HEIGHT) / 2), WIDTH, HEIGHT);
+
+            Overlay->AtkResNode.Width = WIDTH;
+
+            Border->AtkResNode.Width = (ushort)(WIDTH + 8);
+            Border->AtkResNode.Height = (ushort)(HEIGHT + 8);
         }
 
         public override void Dispose() {
