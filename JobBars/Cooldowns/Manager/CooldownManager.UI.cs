@@ -35,12 +35,6 @@ namespace JobBars.Cooldowns.Manager {
         private void DrawPositionRow() {
             ImGui.Indent();
 
-            ImGui.SetNextItemWidth(200f);
-            if (JobBars.DrawCombo(JobBars.ValidAttachTypes, JobBars.Config.CooldownAttachAddon, "Attached UI element (Requires Restart)", _ID, out var newAttach)) {
-                JobBars.Config.CooldownAttachAddon = newAttach;
-                JobBars.Config.Save();
-            }
-
             if (ImGui.Checkbox("Left-Aligned" + _ID, ref JobBars.Config.CooldownsLeftAligned)) {
                 JobBars.Config.Save();
                 ResetUI();

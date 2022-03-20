@@ -80,8 +80,12 @@ namespace JobBars.Helper {
 
         public static void Attach(AtkResNode* rootNode, AtkResNode* child) {
             var lastNode = rootNode->ChildNode;
-            while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
-
+            if (lastNode == null) return;
+            while (lastNode->PrevSiblingNode != null) {
+                if (lastNode == child) return; // already present
+                lastNode = lastNode->PrevSiblingNode;
+            }
+            if (lastNode == child) return; // already present
             Link(lastNode, child);
         }
 

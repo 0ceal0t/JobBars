@@ -22,7 +22,7 @@ namespace JobBars.Jobs {
                 }
             }),
             new GaugeStacksConfig(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 5,
+                MaxStacks = 6,
                 Triggers = new []{
                     new Item(BuffIds.Manafication)
                 },
