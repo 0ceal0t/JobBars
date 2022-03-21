@@ -31,6 +31,9 @@ namespace JobBars.UI {
             var attachAddon = UIHelper.BuffGaugeAttachAddon;
             if (attachAddon != null) attachAddon->UldManager.UpdateDrawNodeList();
 
+            var cooldownAddon = UIHelper.CooldownAttachAddon;
+            if (cooldownAddon != null) cooldownAddon->UldManager.UpdateDrawNodeList();
+
             var partyListAddon = UIHelper.PartyListAddon;
             if (partyListAddon != null) partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }

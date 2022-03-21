@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
@@ -80,7 +81,20 @@ namespace JobBars.Helper {
 
         public static void Attach(AtkResNode* rootNode, AtkResNode* child) {
             var lastNode = rootNode->ChildNode;
-            while (lastNode->PrevSiblingNode != null) lastNode = lastNode->PrevSiblingNode;
+            if (lastNode == null) {
+                return;
+            }
+
+            while (lastNode->PrevSiblingNode != null) {
+                if (lastNode == child) {
+                    return;
+                }
+                lastNode = lastNode->PrevSiblingNode;
+            }
+
+            if (lastNode == child) {
+                return;
+            }
 
             Link(lastNode, child);
         }
