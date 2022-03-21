@@ -24,14 +24,8 @@ namespace JobBars {
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element (Requires Restart)", _ID, out var newAttach)) {
+                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Attached UI element (Requires Restart)", _ID, out var newAttach)) {
                     Config.AttachAddon = newAttach;
-                    Config.Save();
-                }
-
-                ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element (Requires Restart)", _ID, out var newCDAttach)) {
-                    Config.CooldownAttachAddon = newCDAttach;
                     Config.Save();
                 }
 

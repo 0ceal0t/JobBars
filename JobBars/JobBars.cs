@@ -62,7 +62,7 @@ namespace JobBars {
         private Hook<IconDimmedDelegate> IconDimmedHook;
 
         private static bool PlayerExists => ClientState?.LocalPlayer != null;
-        private static bool NeedToRecreateUI => Condition[ConditionFlag.CreatingCharacter]; // getting haircut, etc.
+        private static bool RecreateUI => Condition[ConditionFlag.CreatingCharacter]; // getting haircut, etc.
         private bool LoggedOut = true;
 
         private Vector2 LastPosition;
@@ -200,7 +200,7 @@ namespace JobBars {
         private void FrameworkOnUpdate(Framework framework) {
             var addon = UIHelper.BuffGaugeAttachAddon;
 
-            if (!LoggedOut && NeedToRecreateUI) {
+            if (!LoggedOut && RecreateUI) {
                 Logout();
                 return;
             }
@@ -210,7 +210,7 @@ namespace JobBars {
                 return;
             }
 
-            if (addon == null || addon->RootNode == null || addon->RootNode->ChildNode == null || NeedToRecreateUI) return;
+            if (addon == null || addon->RootNode == null || RecreateUI) return;
 
             if (LoggedOut) {
                 Builder.Attach(); // re-attach after addons have been created
