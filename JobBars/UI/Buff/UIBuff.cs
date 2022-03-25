@@ -25,16 +25,6 @@ namespace JobBars.UI {
             RootRes->Y = 0;
             RootRes->ChildCount = 4;
 
-            TextNode = UIBuilder.CreateTextNode();
-            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
-            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
-            TextNode->AlignmentFontType = 4;
-            TextNode->AtkResNode.X = 0;
-            TextNode->AtkResNode.Y = 0;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
-            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
-
             Icon = UIBuilder.CreateImageNode();
             Icon->AtkResNode.X = 0;
             Icon->AtkResNode.Y = 0;
@@ -64,16 +54,26 @@ namespace JobBars.UI {
             Border->LeftOffset = 5;
             Border->RightOffset = 5;
 
+            TextNode = UIBuilder.CreateTextNode();
+            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
+            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
+            TextNode->AlignmentFontType = 4;
+            TextNode->AtkResNode.X = 0;
+            TextNode->AtkResNode.Y = 0;
+            TextNode->AtkResNode.Flags |= 0x10;
+            TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+
             Icon->AtkResNode.ParentNode = RootRes;
             Overlay->AtkResNode.ParentNode = RootRes;
-            TextNode->AtkResNode.ParentNode = RootRes;
             Border->AtkResNode.ParentNode = RootRes;
+            TextNode->AtkResNode.ParentNode = RootRes;
 
-            RootRes->ChildNode = (AtkResNode*)TextNode;
+            RootRes->ChildNode = (AtkResNode*)Icon;
 
-            UIHelper.Link((AtkResNode*)TextNode, (AtkResNode*)Icon);
             UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)Overlay);
             UIHelper.Link((AtkResNode*)Overlay, (AtkResNode*)Border);
+            UIHelper.Link((AtkResNode*)Border, (AtkResNode*)TextNode);
             TextNode->SetText("");
 
             UpdateSize();

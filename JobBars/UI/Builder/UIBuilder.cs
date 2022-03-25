@@ -63,7 +63,7 @@ namespace JobBars.UI {
 
             CooldownRoot->ParentNode = cooldownAddon->RootNode;
 
-            UIHelper.Attach(partyListAddon->AtkUnitBase, CooldownRoot);
+            UIHelper.Attach(cooldownAddon, CooldownRoot);
 
             // ======================
 
