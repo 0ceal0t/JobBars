@@ -12,15 +12,12 @@ namespace JobBars.Helper {
         public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3,  int a4);
         public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public unsafe delegate IntPtr TextureLoadPathDelegate(AtkTexture* texture, string path, uint a3);
         public static TextureLoadPathDelegate TextureLoadPath { get; private set; }
 
-        [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
         public unsafe delegate void* GetResourceSyncDelegate(IntPtr pFileManager, uint* pCategoryId, char* pResourceType, uint* pResourceHash, char* pPath, void* pUnknown);
         public static GetResourceSyncDelegate GetResourceSync { get; private set; }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate IntPtr GetFileManagerDelegate();
         public static GetFileManagerDelegate GetFileManager { get; private set; }
 
