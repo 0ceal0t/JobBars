@@ -22,8 +22,6 @@ namespace JobBars.Cooldowns.Manager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cooldowns Enabled" + _ID, ref JobBars.Config.CooldownsEnabled)) {
                 JobBars.Config.Save();
-                if (JobBars.Config.CooldownsEnabled) JobBars.Builder.ShowCooldowns();
-                else JobBars.Builder.HideCooldowns();
                 ResetUI();
             }
 
@@ -62,9 +60,10 @@ namespace JobBars.Cooldowns.Manager {
             ImGui.Indent();
 
             if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) {
-                if (!JobBars.Config.CooldownsHideOutOfCombat && JobBars.Config.CooldownsEnabled) { // since they might be hidden
-                    JobBars.Builder.ShowCooldowns();
-                }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide Cooldowns When Weapon Sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) {
                 JobBars.Config.Save();
             }
 

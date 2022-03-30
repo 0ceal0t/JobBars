@@ -9,8 +9,6 @@ namespace JobBars.Buffs.Manager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref JobBars.Config.BuffBarEnabled)) {
                 JobBars.Config.Save();
-                if (JobBars.Config.BuffBarEnabled) JobBars.Builder.ShowBuffs();
-                else JobBars.Builder.HideBuffs();
                 ResetUI();
             }
 
@@ -70,9 +68,10 @@ namespace JobBars.Buffs.Manager {
             }
 
             if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
-                if (!JobBars.Config.BuffHideOutOfCombat && JobBars.Config.BuffBarEnabled) { // since they might be hidden
-                    JobBars.Builder.ShowBuffs();
-                }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide Buffs When Weapon Sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) {
                 JobBars.Config.Save();
             }
 

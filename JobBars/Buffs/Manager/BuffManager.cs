@@ -12,10 +12,7 @@ namespace JobBars.Buffs.Manager {
         private Dictionary<uint, BuffPartyMember> ObjectIdToMember = new();
 
         public BuffManager() : base("##JobBars_Buffs") {
-            foreach (var jobEntry in JobToValue)
-                LocalPlayerConfigs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
-
-            if (!JobBars.Config.BuffBarEnabled) JobBars.Builder.HideBuffs();
+            foreach (var jobEntry in JobToValue) LocalPlayerConfigs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
             JobBars.Builder.HideAllBuffs();
         }
 
@@ -36,17 +33,21 @@ namespace JobBars.Buffs.Manager {
             foreach (var member in ObjectIdToMember.Values) member.ProcessAction(action, objectId);
         }
 
-        public void Tick(bool inCombat) {
-            if (!JobBars.Config.BuffBarEnabled) return;
-            if (JobBars.Config.BuffHideOutOfCombat) {
-                if (inCombat) JobBars.Builder.ShowBuffs();
-                else JobBars.Builder.HideBuffs();
+        public void Tick() {
+            if (UIHelper.CalcDoHide(JobBars.Config.BuffBarEnabled, JobBars.Config.BuffHideOutOfCombat, JobBars.Config.BuffHideWeaponSheathed)) {
+                JobBars.Builder.HideBuffs();
+                return;
             }
+            else {
+                JobBars.Builder.ShowBuffs();
+            }
+
+            // ============================
 
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             HashSet<BuffTracker> activeBuffs = new();
 
-            if (JobBars.PartyMembers == null) PluginLog.LogError("PARTYMEMBERS IS NULL");
+            if (JobBars.PartyMembers == null) PluginLog.LogError("PartyMembers is NULL");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];

@@ -14,7 +14,6 @@ namespace JobBars.Gauges.Manager {
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new(new[] { BuffIds.Excog }); // which buffs on party members do we care about?
 
         public GaugeManager() : base("##JobBars_Gauges") {
-            if (!JobBars.Config.GaugesEnabled) JobBars.Builder.HideGauges();
             JobBars.Builder.HideAllGauges();
         }
 
@@ -37,15 +36,18 @@ namespace JobBars.Gauges.Manager {
             foreach (var gauge in CurrentGauges.Where(g => g.Enabled && !g.Disposed)) gauge.ProcessAction(action);
         }
 
-        public void Tick(bool inCombat) {
-            if (!JobBars.Config.GaugesEnabled) return;
-
-            if (JobBars.Config.GaugesHideOutOfCombat) {
-                if (inCombat) JobBars.Builder.ShowGauges();
-                else JobBars.Builder.HideGauges();
+        public void Tick() {
+            if (UIHelper.CalcDoHide(JobBars.Config.GaugesEnabled, JobBars.Config.GaugesHideOutOfCombat, JobBars.Config.GaugesHideWeaponSheathed)) {
+                JobBars.Builder.HideGauges();
+                return;
+            }
+            else {
+                JobBars.Builder.ShowGauges();
             }
 
-            if (CurrentJob == JobIds.SCH && inCombat) { // only need this to catch excog for now
+            // ============================
+
+            if (CurrentJob == JobIds.SCH && !UIHelper.OutOfCombat) { // only need this to catch excog for now
                 JobBars.SearchForPartyMemberStatus((int)JobBars.ClientState.LocalPlayer.ObjectId, UIHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
             }
 

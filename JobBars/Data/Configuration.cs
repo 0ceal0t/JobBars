@@ -54,6 +54,7 @@ namespace JobBars.Data {
 
         public bool GaugesEnabled = true;
         public bool GaugesHideOutOfCombat = false;
+        public bool GaugesHideWeaponSheathed = false;
         public bool GaugeGCDTextVisible = true;
 
         public GaugePositionType GaugePositionType = GaugePositionType.Global;
@@ -94,6 +95,7 @@ namespace JobBars.Data {
         public bool BuffBarEnabled = true;
         public bool BuffPartyListEnabled = true;
         public bool BuffHideOutOfCombat = false;
+        public bool BuffHideWeaponSheathed = false;
         public bool BuffIncludeParty = true;
         public bool BuffOrderByActive = true;
         public float BuffDisplayTimer = 30f;
@@ -115,6 +117,7 @@ namespace JobBars.Data {
 
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
+        public bool CooldownsHideWeaponSheathed = false;
         public bool CooldownsShowBorderWhenActive = true;
         public bool CooldownsHideActiveBuffDuration = false;
         public bool CooldownsShowPartyMembers = true;
@@ -130,6 +133,7 @@ namespace JobBars.Data {
 
         public bool CursorsEnabled = false;
         public bool CursorHideWhenHeld = false;
+        public bool CursorHideWeaponSheathed = false;
         public bool CursorHideOutOfCombat = false;
         public CursorPositionType CursorPosition = CursorPositionType.MouseCursor;
         public Vector2 CursorCustomPosition = new(200, 200);

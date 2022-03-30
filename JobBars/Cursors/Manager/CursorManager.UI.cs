@@ -9,19 +9,17 @@ namespace JobBars.Cursors.Manager {
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cursor Enabled" + _ID, ref JobBars.Config.CursorsEnabled)) {
                 JobBars.Config.Save();
-                if (JobBars.Config.CursorsEnabled) JobBars.Builder.ShowCursor();
-                else JobBars.Builder.HideCursor();
             }
 
             if (ImGui.Checkbox("Hide Cursor when Mouse Held" + _ID, ref JobBars.Config.CursorHideWhenHeld)) {
                 JobBars.Config.Save();
             }
 
-            ImGui.SameLine(250);
             if (ImGui.Checkbox("Hide Cursor When Out Of Combat", ref JobBars.Config.CursorHideOutOfCombat)) {
-                if (!JobBars.Config.CursorHideOutOfCombat && JobBars.Config.CursorsEnabled) { // since they might be hidden
-                    JobBars.Builder.HideCursor();
-                }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide Cursor When Weapon Sheathed", ref JobBars.Config.CursorHideWeaponSheathed)) {
                 JobBars.Config.Save();
             }
 

@@ -68,9 +68,6 @@ namespace JobBars {
         private Vector2 LastPosition;
         private Vector2 LastScale;
 
-        private static bool WatchingCutscene => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78] || Condition[ConditionFlag.BetweenAreas] || Condition[ConditionFlag.BetweenAreas51];
-        public static bool LastCutscene { get; private set; } = false;
-
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
@@ -219,7 +216,6 @@ namespace JobBars {
             }
 
             CheckForJobChange();
-            CheckForCutscene();
             Tick();
             CheckForHUDChange(addon);
         }
@@ -246,35 +242,15 @@ namespace JobBars {
             }
         }
 
-        private void CheckForCutscene() {
-            var currentCutscene = WatchingCutscene;
-            if (currentCutscene != LastCutscene) {
-                if (Config.GaugesEnabled) {
-                    if (currentCutscene) Builder.HideGauges();
-                    else Builder.ShowGauges();
-                }
-                if (Config.BuffBarEnabled) {
-                    if (currentCutscene) Builder.HideBuffs();
-                    else Builder.ShowBuffs();
-                }
-                if (Config.CursorsEnabled) {
-                    if (currentCutscene) Builder.HideCursor();
-                    else Builder.ShowCursor();
-                }
-            }
-            LastCutscene = currentCutscene;
-        }
-
         private void Tick() {
-            var inCombat = Condition[ConditionFlag.InCombat];
             UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
             UIHelper.UpdatePlayerStatus();
 
             UpdatePartyMembers();
-            GaugeManager.Tick(inCombat);
-            BuffManager.Tick(inCombat);
-            CooldownManager.Tick(inCombat);
-            CursorManager.Tick(inCombat);
+            GaugeManager.Tick();
+            BuffManager.Tick();
+            CooldownManager.Tick();
+            CursorManager.Tick();
             IconManager.Tick();
 
             var time = DateTime.Now;

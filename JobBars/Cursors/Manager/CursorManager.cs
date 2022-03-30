@@ -4,6 +4,7 @@ using Dalamud.Interface;
 using JobBars.Data;
 using JobBars.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Helper;
 
 namespace JobBars.Cursors.Manager {
     public unsafe partial class CursorManager : PerJobManager<Cursor> {
@@ -17,23 +18,22 @@ namespace JobBars.Cursors.Manager {
 
             JobBars.Builder.SetCursorInnerColor(InnerColor);
             JobBars.Builder.SetCursorOuterColor(OuterColor);
-            if (JobBars.Config.CursorsEnabled) JobBars.Builder.ShowCursor();
-            else JobBars.Builder.HideCursor();
         }
 
         public void SetJob(JobIds job) {
             CurrentCursor = JobToValue.TryGetValue(job, out var cursor) ? cursor : null;
         }
 
-        public void Tick(bool inCombat) {
-            if (!JobBars.Config.CursorsEnabled) return;
-            if (JobBars.Config.CursorHideOutOfCombat) {
-                if (inCombat) JobBars.Builder.ShowCursor();
-                else {
-                    JobBars.Builder.HideCursor();
-                    return;
-                }
+        public void Tick() {
+            if (UIHelper.CalcDoHide(JobBars.Config.CursorsEnabled, JobBars.Config.CursorHideOutOfCombat, JobBars.Config.CursorHideWeaponSheathed)) {
+                JobBars.Builder.HideCursor();
+                return;
             }
+            else {
+                JobBars.Builder.ShowCursor();
+            }
+
+            // ============================
 
             if (CurrentCursor == null) {
                 JobBars.Builder.SetCursorInnerPercent(0, 1f);

@@ -18,7 +18,6 @@ namespace JobBars.Cooldowns.Manager {
 
         public CooldownManager() : base("##JobBars_Cooldowns") {
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
-            if (!JobBars.Config.CooldownsEnabled) JobBars.Builder.HideCooldowns();
 
             // initialize custom cooldowns
             foreach (var custom in JobBars.Config.CustomCooldown) {
@@ -42,12 +41,16 @@ namespace JobBars.Cooldowns.Manager {
             }
         }
 
-        public void Tick(bool inCombat) {
-            if (!JobBars.Config.CooldownsEnabled) return;
-            if (JobBars.Config.CooldownsHideOutOfCombat) {
-                if (inCombat) JobBars.Builder.ShowCooldowns();
-                else JobBars.Builder.HideCooldowns();
+        public void Tick() {
+            if (UIHelper.CalcDoHide(JobBars.Config.CooldownsEnabled, JobBars.Config.CooldownsHideOutOfCombat, JobBars.Config.CooldownsHideWeaponSheathed)) {
+                JobBars.Builder.HideCooldowns();
+                return;
             }
+            else {
+                JobBars.Builder.ShowCooldowns();
+            }
+
+            // ============================
 
             var time = DateTime.Now;
             int millis = time.Second * 1000 + time.Millisecond;
@@ -55,7 +58,7 @@ namespace JobBars.Cooldowns.Manager {
 
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
-            if (JobBars.PartyMembers == null) PluginLog.LogError("PARTYMEMBERS IS NULL");
+            if (JobBars.PartyMembers == null) PluginLog.LogError("PartyMembers is NULL");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];

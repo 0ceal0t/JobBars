@@ -11,8 +11,6 @@ namespace JobBars.Gauges.Manager {
 
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Gauges Enabled" + _ID, ref JobBars.Config.GaugesEnabled)) {
-                if (JobBars.Config.GaugesEnabled) JobBars.Builder.ShowGauges();
-                else JobBars.Builder.HideGauges();
                 JobBars.Config.Save();
             }
 
@@ -75,9 +73,10 @@ namespace JobBars.Gauges.Manager {
             ImGui.Indent();
 
             if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref JobBars.Config.GaugesHideOutOfCombat)) {
-                if (!JobBars.Config.GaugesHideOutOfCombat && JobBars.Config.GaugesEnabled) { // since they might be hidden
-                    JobBars.Builder.ShowGauges();
-                }
+                JobBars.Config.Save();
+            }
+
+            if (ImGui.Checkbox("Hide Gauges When Weapon Sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) {
                 JobBars.Config.Save();
             }
 

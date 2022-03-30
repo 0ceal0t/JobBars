@@ -74,7 +74,7 @@ namespace JobBars.Helper {
         public static void PlaySoundEffect(int soundEffect) {
             if (soundEffect == 19 || soundEffect == 21) return;
             if (soundEffect <= 0) return;
-            if (JobBars.LastCutscene) return;
+            if (WatchingCutscene) return;
             PlayGameSoundEffect(soundEffect, 0, 0, 0);
         }
 
