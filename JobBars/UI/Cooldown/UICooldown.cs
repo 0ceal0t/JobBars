@@ -83,16 +83,18 @@ namespace JobBars.UI {
             TextNode->SetText(text);
         }
 
-        public void SetOnCD() {
+        public void SetOnCD(float opacity) {
             Icon->AtkResNode.MultiplyBlue = 75;
             Icon->AtkResNode.MultiplyRed = 75;
             Icon->AtkResNode.MultiplyGreen = 75;
+            RootRes->Color.A = (byte)(255 * opacity);
         }
 
         public void SetOffCD() {
             Icon->AtkResNode.MultiplyBlue = 100;
             Icon->AtkResNode.MultiplyRed = 100;
             Icon->AtkResNode.MultiplyGreen = 100;
+            RootRes->Color.A = 255;
         }
 
         public void LoadIcon(ActionIds action) {

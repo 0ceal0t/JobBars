@@ -26,7 +26,6 @@ namespace JobBars.Cooldowns.Manager {
             }
 
             if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
-
             if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
         }
 
@@ -59,26 +58,17 @@ namespace JobBars.Cooldowns.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide Cooldowns When Weapon Sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Show Border When Active" + _ID, ref JobBars.Config.CooldownsShowBorderWhenActive)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide Active Buff Duration (Show Only Cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) {
-                JobBars.Config.Save();
-            }
+            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide Cooldowns When Weapon Sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Show Border When Active" + _ID, ref JobBars.Config.CooldownsShowBorderWhenActive)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide Active Buff Duration (Show Only Cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
 
             if (ImGui.Checkbox("Show Party Members' Cooldowns" + _ID, ref JobBars.Config.CooldownsShowPartyMembers)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
+
+            if (ImGui.InputFloat("Opacity when on Cooldown" + _ID, ref JobBars.Config.CooldownsOnCDOpacity)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }
@@ -110,6 +100,10 @@ namespace JobBars.Cooldowns.Manager {
                 if (ImGui.Button("New Custom Cooldown")) ShowNewCustom = true;
             }
             else {
+                var style = ImGui.GetStyle();
+                var itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;
+                ImGui.BeginChild("##CustomCooldownChild", new Vector2(ImGui.GetContentRegionAvail().X, itemHeight * 9), true);
+
                 if (ImGui.BeginCombo("##CustomCD_4", $"{CustomTriggerType}", ImGuiComboFlags.HeightLargest)) {
                     if (ImGui.Selectable("Action", CustomTriggerType == CustomCooldownType.Action)) CustomTriggerType = CustomCooldownType.Action;
                     if (ImGui.Selectable("Buff", CustomTriggerType == CustomCooldownType.Buff)) CustomTriggerType = CustomCooldownType.Buff;
@@ -130,7 +124,7 @@ namespace JobBars.Cooldowns.Manager {
                 var icon = CustomIcon.GetSelected();
 
                 if (icon.Data.Id != 0 && selected.Data.Id != 0) {
-                    if (ImGui.Button("Add")) {
+                    if (ImGui.Button("+ Add Custom Cooldown")) {
                         var newName = $"{selected.Name} - Custom ({UIHelper.Localize(job)})";
                         var newProps = new CooldownProps {
                             CD = CustomCD,
@@ -147,6 +141,12 @@ namespace JobBars.Cooldowns.Manager {
                         reset = true;
                     }
                 }
+                else {
+                    ImGui.TextColored(new Vector4(1, 0, 0, 1), "Select trigger and icon to continue");
+                }
+
+
+                ImGui.EndChild();
             }
 
             if (reset) ResetUI();

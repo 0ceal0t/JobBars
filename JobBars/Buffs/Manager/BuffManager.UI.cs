@@ -13,7 +13,6 @@ namespace JobBars.Buffs.Manager {
             }
 
             if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
-
             if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
         }
 
@@ -59,21 +58,10 @@ namespace JobBars.Buffs.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Highlight Buffed Party Members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide Buffs When Weapon Sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) {
-                JobBars.Config.Save();
-            }
+            if (ImGui.Checkbox("Highlight Buffed Party Members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide Buffs When Weapon Sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
 
             if (ImGui.Checkbox("Show Party Members' CDs And Buffs", ref JobBars.Config.BuffIncludeParty)) {
                 JobBars.Config.Save();
@@ -84,15 +72,15 @@ namespace JobBars.Buffs.Manager {
                 if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
                 if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
                 JobBars.Config.Save();
-
                 JobBars.Builder.UpdateBuffsTextSize();
             }
 
             if (ImGui.Checkbox("Thin Buff Border", ref JobBars.Config.BuffThinBorder)) {
                 JobBars.Config.Save();
-
                 JobBars.Builder.UpdateBorderThin();
             }
+
+            if (ImGui.InputFloat("Opacity when on Cooldown" + _ID, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }

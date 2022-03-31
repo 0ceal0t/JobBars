@@ -95,7 +95,7 @@ namespace JobBars.Buffs {
                 UI.SetText("");
             }
             else if (State == BuffState.OnCD_Visible) {
-                UI.SetOnCD();
+                UI.SetOnCD(JobBars.Config.BuffOnCDOpacity);
                 UI.SetPercent(Percent);
                 UI.SetText(((int)Math.Round(TimeLeft)).ToString());
             }

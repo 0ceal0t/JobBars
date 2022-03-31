@@ -70,7 +70,7 @@ namespace JobBars.Cooldowns {
                 ui.SetText(((int)Math.Round(TimeLeft)).ToString());
             }
             else if (State == TrackerState.OnCD) {
-                ui.SetOnCD();
+                ui.SetOnCD(JobBars.Config.CooldownsOnCDOpacity);
                 ui.SetNoDash();
                 ui.SetText(((int)Math.Round(TimeLeft)).ToString());
             }

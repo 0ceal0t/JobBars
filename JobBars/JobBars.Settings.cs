@@ -35,6 +35,10 @@ namespace JobBars {
                     Config.Save();
                 }
 
+                ImGui.PushStyleColor(ImGuiCol.Text, RED_COLOR);
+                ImGui.TextWrapped("Choosing UI elements will not work with plugins which hide them (such as Chat2 for Chatbox, DelvUI for PartyList). Also, when selecting PartyList for gauges, make sure to have \"Hide party list when solo\" turned off in Character Configuation > UI Settings > Party List");
+                ImGui.PopStyleColor();
+
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
 
                 // ==========================

@@ -137,16 +137,18 @@ namespace JobBars.UI {
             UIHelper.SetPosition(RootRes, xMod * (WIDTH + 9) * position_x, yMod * (HEIGHT + 7) * position_y);
         }
 
-        public void SetOnCD() {
+        public void SetOnCD(float opacity) {
             RootRes->MultiplyBlue = 75;
             RootRes->MultiplyRed = 75;
             RootRes->MultiplyGreen = 75;
+            RootRes->Color.A = (byte)(255 * opacity);
         }
 
         public void SetOffCD() {
             RootRes->MultiplyBlue = 100;
             RootRes->MultiplyRed = 100;
             RootRes->MultiplyGreen = 100;
+            RootRes->Color.A = 255;
         }
 
         public void SetText(string text) {
