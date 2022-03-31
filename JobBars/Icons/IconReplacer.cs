@@ -109,14 +109,14 @@ namespace JobBars.Icons {
                 JobBars.IconManager.Reset();
             }
 
-            if (JobBars.Config.IconComboType.Draw($"Dash Border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
+            if (JobBars.Config.IconComboType.Draw($"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
                 ComboType = newComboType;
                 CreateIconProps();
                 JobBars.IconManager.Reset();
             }
 
             if (IsTimer) {
-                if (JobBars.Config.IconTimerOffset.Draw($"Time Offset{_ID}", Name, Offset, out var newOffset)) {
+                if (JobBars.Config.IconTimerOffset.Draw($"Time offset{_ID}", Name, Offset, out var newOffset)) {
                     Offset = newOffset;
                 }
             }

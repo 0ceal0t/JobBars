@@ -156,9 +156,10 @@ namespace JobBars.UI {
 
             // =====================
 
-            List<LayoutNode> barNodes = new();
-            barNodes.Add(new LayoutNode(BarSecondaryNode));
-            barNodes.Add(new LayoutNode(BarMainNode));
+            List<LayoutNode> barNodes = new() {
+                new LayoutNode(BarSecondaryNode),
+                new LayoutNode(BarMainNode)
+            };
             foreach (var sep in Separators) {
                 barNodes.Add(new LayoutNode(sep));
             }

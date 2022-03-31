@@ -60,7 +60,7 @@ namespace JobBars.Gauges {
                 newPos = true;
             }
 
-            if (JobBars.Config.GaugeHideInactive.Draw($"Hide When Inactive{id}", Name, HideWhenInactive, out var newHideWhenInactive)) {
+            if (JobBars.Config.GaugeHideInactive.Draw($"Hide when inactive{id}", Name, HideWhenInactive, out var newHideWhenInactive)) {
                 HideWhenInactive = newHideWhenInactive;
             }
 
@@ -71,7 +71,7 @@ namespace JobBars.Gauges {
             }
 
             if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
-                if (JobBars.Config.GaugeSplitPosition.Draw($"Split Position{id}", Name, out var newPosition)) {
+                if (JobBars.Config.GaugeSplitPosition.Draw($"Split position{id}", Name, out var newPosition)) {
                     newPos = true;
                     SetSplitPosition(newPosition);
                 }
@@ -96,7 +96,7 @@ namespace JobBars.Gauges {
             DrawConfig(id, ref newPos, ref newVisual, ref reset);
         }
 
-        protected void DrawSoundEffect(string label = "Progress Sound Effect") {
+        protected void DrawSoundEffect(string label = "Progress sound effect") {
             if (ImGui.Button("Test##SoundEffect")) Helper.UIHelper.PlaySoundEffect(SoundEffect);
             ImGui.SameLine();
 
@@ -115,7 +115,7 @@ namespace JobBars.Gauges {
             ImGui.SameLine();
 
             ImGui.SetNextItemWidth(200f);
-            if (JobBars.Config.GaugeCompletionSoundEffect_2.Draw($"Completion Sound Effect (0 = off)", Name, CompletionSoundEffect, out var newSoundEffect)) {
+            if (JobBars.Config.GaugeCompletionSoundEffect_2.Draw($"Completion sound effect (0 = off)", Name, CompletionSoundEffect, out var newSoundEffect)) {
                 CompletionSoundEffect = newSoundEffect;
             }
             ImGui.SameLine();

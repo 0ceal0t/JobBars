@@ -35,14 +35,14 @@ namespace JobBars.Gauges.Stacks {
                 newVisual = true;
             }
 
-            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
                 CompletionSound = newCompletionSound;
             }
 
             DrawCompletionSoundEffect();
-            DrawSoundEffect("Change Sound Effect");
+            DrawSoundEffect("Change sound effect");
 
-            if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{id}", Name, ReverseFill, out var newReverseFill)) {
+            if (JobBars.Config.GaugeReverseFill.Draw($"Reverse tick fill order{id}", Name, ReverseFill, out var newReverseFill)) {
                 ReverseFill = newReverseFill;
                 newVisual = true;
             }

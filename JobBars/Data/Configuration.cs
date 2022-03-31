@@ -119,7 +119,6 @@ namespace JobBars.Data {
         public bool CooldownsEnabled = true;
         public bool CooldownsHideOutOfCombat = false;
         public bool CooldownsHideWeaponSheathed = false;
-        public bool CooldownsShowBorderWhenActive = true;
         public bool CooldownsHideActiveBuffDuration = false;
         public bool CooldownsShowPartyMembers = true;
         public float CooldownsOnCDOpacity = 1.0f;
@@ -128,6 +127,8 @@ namespace JobBars.Data {
 
         public BoolValueConfig CooldownEnabled = new(true);
         public IntValueConfig CooldownOrder = new(-1);
+        public BoolValueConfig CooldownShowBorderWhenActive = new(true);
+        public BoolValueConfig CooldownShowBorderWhenOffCD = new(false);
 
         public List<CustomCooldownProps> CustomCooldown = new();
 

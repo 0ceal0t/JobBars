@@ -45,7 +45,6 @@ namespace JobBars.Cooldowns {
                 TimeLeft = UIHelper.TimeLeft(JobBars.Config.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) {
                     TimeLeft = 0;
-
                     State = TrackerState.OnCD; // mitigation needs to have a CD
                 }
             }
@@ -61,23 +60,33 @@ namespace JobBars.Cooldowns {
         public void TickUI(UICooldownItem ui, float percent) {
             if (State == TrackerState.None) {
                 ui.SetOffCD();
-                ui.SetNoDash();
                 ui.SetText("");
+                ui.SetNoDash();
             }
             else if (State == TrackerState.Running) {
                 ui.SetOffCD();
-                ui.SetDash(percent);
                 ui.SetText(((int)Math.Round(TimeLeft)).ToString());
+                if (Config.ShowBorderWhenActive) {
+                    ui.SetDash(percent);
+                }
+                else {
+                    ui.SetNoDash();
+                }
             }
             else if (State == TrackerState.OnCD) {
                 ui.SetOnCD(JobBars.Config.CooldownsOnCDOpacity);
-                ui.SetNoDash();
                 ui.SetText(((int)Math.Round(TimeLeft)).ToString());
+                ui.SetNoDash();
             }
             else if (State == TrackerState.OffCD) {
                 ui.SetOffCD();
-                ui.SetNoDash();
                 ui.SetText("");
+                if (Config.ShowBorderWhenOffCD) {
+                    ui.SetDash(percent);
+                }
+                else {
+                    ui.SetNoDash();
+                }
             }
         }
 

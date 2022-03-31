@@ -4,7 +4,7 @@ using JobBars.Data;
 namespace JobBars.Icons.Manager {
     public partial class IconManager {
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Icon Replacement Enabled", ref JobBars.Config.IconsEnabled)) {
+            if (ImGui.Checkbox("Icon replacement enabled", ref JobBars.Config.IconsEnabled)) {
                 JobBars.Config.Save();
                 Reset();
             }

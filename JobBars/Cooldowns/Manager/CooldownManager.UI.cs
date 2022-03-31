@@ -20,7 +20,7 @@ namespace JobBars.Cooldowns.Manager {
         private readonly ItemSelector CustomIcon = new("Icon", "##CustomCD_3", UIHelper.ActionList);
 
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Cooldowns Enabled" + _ID, ref JobBars.Config.CooldownsEnabled)) {
+            if (ImGui.Checkbox("Cooldowns enabled" + _ID, ref JobBars.Config.CooldownsEnabled)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
@@ -32,7 +32,7 @@ namespace JobBars.Cooldowns.Manager {
         private void DrawPositionRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Left-Aligned" + _ID, ref JobBars.Config.CooldownsLeftAligned)) {
+            if (ImGui.Checkbox("Left-aligned" + _ID, ref JobBars.Config.CooldownsLeftAligned)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
@@ -47,7 +47,7 @@ namespace JobBars.Cooldowns.Manager {
                 JobBars.Config.Save();
             }
 
-            if (ImGui.InputFloat("Line Height" + _ID, ref JobBars.Config.CooldownsSpacing)) {
+            if (ImGui.InputFloat("Line height" + _ID, ref JobBars.Config.CooldownsSpacing)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();
             }
@@ -58,17 +58,16 @@ namespace JobBars.Cooldowns.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Hide Cooldowns When Out Of Combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide Cooldowns When Weapon Sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Show Border When Active" + _ID, ref JobBars.Config.CooldownsShowBorderWhenActive)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide Active Buff Duration (Show Only Cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide cooldowns when out of combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide cooldowns when weapon sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide active buff duration (Show only cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
 
-            if (ImGui.Checkbox("Show Party Members' Cooldowns" + _ID, ref JobBars.Config.CooldownsShowPartyMembers)) {
+            if (ImGui.Checkbox("Show party members' cooldowns" + _ID, ref JobBars.Config.CooldownsShowPartyMembers)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
 
-            if (ImGui.InputFloat("Opacity when on Cooldown" + _ID, ref JobBars.Config.CooldownsOnCDOpacity)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Opacity when on cooldown" + _ID, ref JobBars.Config.CooldownsOnCDOpacity)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }
@@ -97,7 +96,7 @@ namespace JobBars.Cooldowns.Manager {
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
 
             if (!ShowNewCustom) { // New custom
-                if (ImGui.Button("New Custom Cooldown")) ShowNewCustom = true;
+                if (ImGui.Button("New custom cooldown")) ShowNewCustom = true;
             }
             else {
                 var style = ImGui.GetStyle();
@@ -124,7 +123,7 @@ namespace JobBars.Cooldowns.Manager {
                 var icon = CustomIcon.GetSelected();
 
                 if (icon.Data.Id != 0 && selected.Data.Id != 0) {
-                    if (ImGui.Button("+ Add Custom Cooldown")) {
+                    if (ImGui.Button("+ Add custom cooldown")) {
                         var newName = $"{selected.Name} - Custom ({UIHelper.Localize(job)})";
                         var newProps = new CooldownProps {
                             CD = CustomCD,

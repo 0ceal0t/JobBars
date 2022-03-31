@@ -85,11 +85,11 @@ namespace JobBars.Gauges.GCD {
                     subGCD.Invert = newInvert;
                 }
 
-                if (JobBars.Config.GaugeCompletionSound.Draw($"Completion Sound{suffix}{id}", subGCD.Name, ValidSoundType, subGCD.CompletionSound, out var newCompletionSound)) {
+                if (JobBars.Config.GaugeCompletionSound.Draw($"Completion sound{suffix}{id}", subGCD.Name, ValidSoundType, subGCD.CompletionSound, out var newCompletionSound)) {
                     subGCD.CompletionSound = newCompletionSound;
                 }
 
-                if (JobBars.Config.GaugeReverseFill.Draw($"Reverse Tick Fill Order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
+                if (JobBars.Config.GaugeReverseFill.Draw($"Reverse tick fill order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
                     subGCD.ReverseFill = newReverseFill;
                     newVisual = true;
                 }

@@ -22,26 +22,26 @@ namespace JobBars.Gauges.Manager {
         private void DrawPositionRow() {
             ImGui.Indent();
 
-            ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
+            ImGui.Checkbox("Position locked" + _ID, ref LOCKED);
 
             if (JobBars.Config.GaugePositionType != GaugePositionType.Split) {
-                if (ImGui.Checkbox("Horizontal Gauges", ref JobBars.Config.GaugeHorizontal)) {
+                if (ImGui.Checkbox("Horizontal gauges", ref JobBars.Config.GaugeHorizontal)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
                 }
 
-                if (ImGui.Checkbox("Bottom-to-Top", ref JobBars.Config.GaugeBottomToTop)) {
+                if (ImGui.Checkbox("Bottom-to-top", ref JobBars.Config.GaugeBottomToTop)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
                 }
 
-                if (ImGui.Checkbox("Align Right", ref JobBars.Config.GaugeAlignRight)) {
+                if (ImGui.Checkbox("Align right", ref JobBars.Config.GaugeAlignRight)) {
                     UpdatePositionScale();
                     JobBars.Config.Save();
                 }
             }
 
-            if (JobBars.DrawCombo(ValidGaugePositionType, JobBars.Config.GaugePositionType, "Gauge Positioning", _ID, out var newPosition)) {
+            if (JobBars.DrawCombo(ValidGaugePositionType, JobBars.Config.GaugePositionType, "Gauge positioning", _ID, out var newPosition)) {
                 JobBars.Config.GaugePositionType = newPosition;
                 JobBars.Config.Save();
 
@@ -72,20 +72,12 @@ namespace JobBars.Gauges.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Hide Gauges When Out Of Combat", ref JobBars.Config.GaugesHideOutOfCombat)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Hide Gauges When Weapon Sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) {
-                JobBars.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Pulse Diamond and Arrow Color", ref JobBars.Config.GaugePulse)) {
-                JobBars.Config.Save();
-            }
+            if (ImGui.Checkbox("Hide gauges when out of combat", ref JobBars.Config.GaugesHideOutOfCombat)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide Gauges when weapon sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Pulse diamond and arrow color", ref JobBars.Config.GaugePulse)) JobBars.Config.Save();
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("Slidecast Seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
+            if (ImGui.InputFloat("Slidecast seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
                 JobBars.Config.Save();
             }
 

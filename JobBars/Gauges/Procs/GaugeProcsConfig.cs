@@ -43,17 +43,17 @@ namespace JobBars.Gauges.Procs {
         public override GaugeTracker GetTracker(int idx) => new GaugeProcsTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
-            if (JobBars.Config.GaugeShowText.Draw($"Show Text{id}", Name, ProcsShowText, out var newProcsShowText)) {
+            if (JobBars.Config.GaugeShowText.Draw($"Show text{id}", Name, ProcsShowText, out var newProcsShowText)) {
                 ProcsShowText = newProcsShowText;
                 newPos = true;
                 newVisual = true;
             }
 
-            if (JobBars.Config.GaugeCompletionSound.Draw($"Proc Sound{id}", Name, ValidSoundType, ProcSound, out var newProcSound)) {
+            if (JobBars.Config.GaugeCompletionSound.Draw($"Proc sound{id}", Name, ValidSoundType, ProcSound, out var newProcSound)) {
                 ProcSound = newProcSound;
             }
 
-            DrawSoundEffect("Proc Sound Effect");
+            DrawSoundEffect("Proc sound effect");
 
             foreach (var proc in Procs) {
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);

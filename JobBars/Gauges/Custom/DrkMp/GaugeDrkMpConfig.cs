@@ -25,7 +25,7 @@ namespace JobBars.Gauges.Custom {
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
             base.DrawConfig(id, ref newPos, ref newVisual, ref reset);
 
-            if (JobBars.Config.GaugeColor.Draw($"Dark Arts Color{id}", Name, Color, out var newDarkArtsColor)) {
+            if (JobBars.Config.GaugeColor.Draw($"Dark Arts color{id}", Name, Color, out var newDarkArtsColor)) {
                 DarkArtsColor = newDarkArtsColor;
                 newVisual = true;
             }

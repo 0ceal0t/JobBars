@@ -28,56 +28,74 @@ namespace JobBars.UI {
         private void InitTextures() {
             PluginLog.Log("LOADING TEXTURES");
 
-            var gaugeBuffLayout = new Dictionary<string, PartStruct[]>();
-            gaugeBuffLayout.Add("ui/uld/Parameter_Gauge.tex", new[] {
-                new PartStruct(0, 100, 160, 20), // GAUGE_BG_PART
-                new PartStruct(0, 0, 160, 20),   // GAUGE_FRAME_PART
-                new PartStruct(10, 3, 10, 5),    // GAUGE_SEPARATOR
-                new PartStruct(6, 40, 148, 20),  // GAUGE_BAR_MAIN
-            });
-
-            gaugeBuffLayout.Add("ui/uld/JobHudNumBg.tex", new[] {
-                new PartStruct(0, 0, 60, 40), // GAUGE_TEXT_BLUR_PART
-            });
-
-            gaugeBuffLayout.Add("ui/uld/JobHudSimple_StackB.tex", new[] {
-                new PartStruct(0, 0, 32, 32),  // ARROW_BG
-                new PartStruct(32, 0, 32, 32), // ARROW_FG
-            });
-
-            gaugeBuffLayout.Add("ui/uld/JobHudSimple_StackA.tex", new[] {
-                new PartStruct(0, 0, 32, 32),  // DIAMOND_BG
-                new PartStruct(32, 0, 32, 32), // DIAMOND_FG
-            });
-
-            gaugeBuffLayout.Add("ui/uld/IconA_Frame.tex", new[] {
-                new PartStruct(252, 12, 47, 47),  // BUFF_BORDER
-                new PartStruct(0, 96, 48, 48),    // BUFF_BORDER_THIN
-                new PartStruct(365, 4, 37, 37),   // BUFF_OVERLAY
-            });
-
-            gaugeBuffLayout.Add("ui/uld/PartyListTargetBase.tex", new[] {
-                new PartStruct(112, 0, 48, 48)  // BUFF_PARTYLIST
-            });
+            var gaugeBuffLayout = new Dictionary<string, PartStruct[]> {
+                {
+                    "ui/uld/Parameter_Gauge.tex",
+                    new[] {
+                        new PartStruct(0, 100, 160, 20), // GAUGE_BG_PART
+                        new PartStruct(0, 0, 160, 20),   // GAUGE_FRAME_PART
+                        new PartStruct(10, 3, 10, 5),    // GAUGE_SEPARATOR
+                        new PartStruct(6, 40, 148, 20),  // GAUGE_BAR_MAIN
+                    }
+                },
+                {
+                    "ui/uld/JobHudNumBg.tex",
+                    new[] {
+                        new PartStruct(0, 0, 60, 40), // GAUGE_TEXT_BLUR_PART
+                    }
+                },
+                {
+                    "ui/uld/JobHudSimple_StackB.tex",
+                    new[] {
+                        new PartStruct(0, 0, 32, 32),  // ARROW_BG
+                        new PartStruct(32, 0, 32, 32), // ARROW_FG
+                    }
+                },
+                {
+                    "ui/uld/JobHudSimple_StackA.tex",
+                    new[] {
+                        new PartStruct(0, 0, 32, 32),  // DIAMOND_BG
+                        new PartStruct(32, 0, 32, 32), // DIAMOND_FG
+                    }
+                },
+                {
+                    "ui/uld/IconA_Frame.tex",
+                    new[] {
+                        new PartStruct(252, 12, 47, 47),  // BUFF_BORDER
+                        new PartStruct(0, 96, 48, 48),    // BUFF_BORDER_THIN
+                        new PartStruct(365, 4, 37, 37),   // BUFF_OVERLAY
+                    }
+                },
+                {
+                    "ui/uld/PartyListTargetBase.tex",
+                    new[] {
+                        new PartStruct(112, 0, 48, 48)  // BUFF_PARTYLIST
+                    }
+                }
+            };
 
             GaugeBuffAssets = UIHelper.LoadLayout(gaugeBuffLayout);
 
             // ===================
 
-            var cdLayout = new Dictionary<string, PartStruct[]>();
-            cdLayout.Add("ui/uld/IconA_Frame.tex", new[] {
-                new PartStruct(0, 96, 48, 48),  // CD_BORDER
+            var cdLayout = new Dictionary<string, PartStruct[]> {
+                {
+                    "ui/uld/IconA_Frame.tex",
+                    new[] {
+                        new PartStruct(0, 96, 48, 48),  // CD_BORDER
 
-                new PartStruct(96, 0, 48, 48),  // CD_DASH_START
-                new PartStruct(144, 0, 48, 48),
-                new PartStruct(192, 0, 48, 48),
+                        new PartStruct(96, 0, 48, 48),  // CD_DASH_START
+                        new PartStruct(144, 0, 48, 48),
+                        new PartStruct(192, 0, 48, 48),
 
-                new PartStruct(96, 48, 48, 48),
-                new PartStruct(144, 48, 48, 48),
-                new PartStruct(192, 48, 48, 48),
+                        new PartStruct(96, 48, 48, 48),
+                        new PartStruct(144, 48, 48, 48),
+                        new PartStruct(192, 48, 48, 48),
 
-                new PartStruct(96, 96, 48, 48),
-            });
+                        new PartStruct(96, 96, 48, 48),
+                    }
+                }
+            };
 
             CooldownAssets = UIHelper.LoadLayout(cdLayout);
 

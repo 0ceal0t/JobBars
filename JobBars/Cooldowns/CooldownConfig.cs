@@ -19,6 +19,8 @@ namespace JobBars.Cooldowns {
 
         public bool Enabled { get; private set; }
         public int Order { get; private set; }
+        public bool ShowBorderWhenActive { get; private set; }
+        public bool ShowBorderWhenOffCD { get; private set; }
 
         public CooldownConfig(string name, CooldownProps props) {
             Name = name;
@@ -28,6 +30,8 @@ namespace JobBars.Cooldowns {
             CD = props.CD;
             Enabled = JobBars.Config.CooldownEnabled.Get(Name);
             Order = JobBars.Config.CooldownOrder.Get(Name);
+            ShowBorderWhenActive = JobBars.Config.CooldownShowBorderWhenActive.Get(Name);
+            ShowBorderWhenOffCD = JobBars.Config.CooldownShowBorderWhenOffCD.Get(Name);
         }
 
         public void Draw(string _id, ref bool reset) {
@@ -41,6 +45,14 @@ namespace JobBars.Cooldowns {
             if (JobBars.Config.CooldownOrder.Draw($"Order{_id}{Name}", Name, Order, out var newOrder)) {
                 Order = newOrder;
                 reset = true;
+            }
+
+            if (JobBars.Config.CooldownShowBorderWhenActive.Draw($"Show border when active{_id}{Name}", Name, ShowBorderWhenActive, out var newShowBorderWhenActive)) {
+                ShowBorderWhenActive = newShowBorderWhenActive;
+            }
+
+            if (JobBars.Config.CooldownShowBorderWhenOffCD.Draw($"Show border when off CD{_id}{Name}", Name, ShowBorderWhenOffCD, out var newShowBorderWhenOffCD)) {
+                ShowBorderWhenOffCD = newShowBorderWhenOffCD;
             }
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);

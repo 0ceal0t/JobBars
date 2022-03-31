@@ -21,7 +21,7 @@ namespace JobBars.Gauges.MP {
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
             if (Segments != null) {
-                if (JobBars.Config.GaugeShowSegments.Draw($"Show Segments{id}", Name, ShowSegments, out var newShowSegments)) {
+                if (JobBars.Config.GaugeShowSegments.Draw($"Show segments{id}", Name, ShowSegments, out var newShowSegments)) {
                     ShowSegments = newShowSegments;
                     reset = true;
                 }

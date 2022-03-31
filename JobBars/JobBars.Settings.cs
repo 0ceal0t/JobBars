@@ -19,18 +19,18 @@ namespace JobBars {
             string _ID = "##JobBars_Settings";
             ImGui.SetNextWindowSize(new Vector2(600, 1000), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
-                if (ImGui.Checkbox("Use 4K Textures (Requires Restart)" + _ID, ref Config.Use4K)) {
+                if (ImGui.Checkbox("Use 4K textures (Requires restart)" + _ID, ref Config.Use4K)) {
                     Config.Save();
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element (Requires Restart)", _ID, out var newAttach)) {
+                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element (Requires restart)", _ID, out var newAttach)) {
                     Config.AttachAddon = newAttach;
                     Config.Save();
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element (Requires Restart)", _ID, out var newCDAttach)) {
+                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element (Requires restart)", _ID, out var newCDAttach)) {
                     Config.CooldownAttachAddon = newCDAttach;
                     Config.Save();
                 }

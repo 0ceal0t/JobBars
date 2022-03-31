@@ -70,7 +70,7 @@ namespace JobBars.Gauges.Timer {
         public override GaugeTracker GetTracker(int idx) => new GaugeTimerTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
-            DrawSoundEffect("Low Warning Sound Effect");
+            DrawSoundEffect("Low warning sound effect");
 
             foreach (var subTimer in SubTimers) {
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
@@ -82,7 +82,7 @@ namespace JobBars.Gauges.Timer {
                     newVisual = true;
                 }
 
-                if (JobBars.Config.GaugeTimerOffset.Draw($"Time Offset{suffix}{id}", subTimer.Name, subTimer.Offset, out var newOffset)) {
+                if (JobBars.Config.GaugeTimerOffset.Draw($"Time offset{suffix}{id}", subTimer.Name, subTimer.Offset, out var newOffset)) {
                     subTimer.Offset = newOffset;
                 }
 
@@ -90,7 +90,7 @@ namespace JobBars.Gauges.Timer {
                     subTimer.Invert = newInvert;
                 }
 
-                if (JobBars.Config.GaugeLowTimerWarning_2.Draw($"Low Warning Time{suffix}{id}", subTimer.Name, subTimer.LowWarningTime, out var newLowWarning)) {
+                if (JobBars.Config.GaugeLowTimerWarning_2.Draw($"Low warning time{suffix}{id}", subTimer.Name, subTimer.LowWarningTime, out var newLowWarning)) {
                     subTimer.LowWarningTime = newLowWarning;
                 }
             }

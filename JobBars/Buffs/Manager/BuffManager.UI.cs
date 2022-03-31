@@ -7,7 +7,7 @@ namespace JobBars.Buffs.Manager {
         private bool LOCKED = true;
 
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Buff Bar Enabled" + _ID, ref JobBars.Config.BuffBarEnabled)) {
+            if (ImGui.Checkbox("Buff bar enabled" + _ID, ref JobBars.Config.BuffBarEnabled)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
@@ -22,22 +22,22 @@ namespace JobBars.Buffs.Manager {
             ImGui.Checkbox("Position Locked" + _ID, ref LOCKED);
 
             ImGui.SetNextItemWidth(25f);
-            if (ImGui.InputInt("Buffs Per Line" + _ID, ref JobBars.Config.BuffHorizontal, 0)) {
+            if (ImGui.InputInt("Buffs per line" + _ID, ref JobBars.Config.BuffHorizontal, 0)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
             }
 
-            if (ImGui.Checkbox("Right-to-Left" + _ID, ref JobBars.Config.BuffRightToLeft)) {
+            if (ImGui.Checkbox("Right-to-left" + _ID, ref JobBars.Config.BuffRightToLeft)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
             }
 
-            if (ImGui.Checkbox("Bottom-to-Top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
+            if (ImGui.Checkbox("Bottom-to-top" + _ID, ref JobBars.Config.BuffBottomToTop)) {
                 JobBars.Config.Save();
                 JobBars.Builder.RefreshBuffLayout();
             }
 
-            if (ImGui.Checkbox("Square Buffs" + _ID, ref JobBars.Config.BuffSquare)) {
+            if (ImGui.Checkbox("Square buffs" + _ID, ref JobBars.Config.BuffSquare)) {
                 JobBars.Config.Save();
                 JobBars.Builder.UpdateBuffsSize();
             }
@@ -58,29 +58,29 @@ namespace JobBars.Buffs.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Highlight Buffed Party Members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
-            if (ImGui.InputFloat("Hide Buffs With Cooldown Above" + _ID, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide Buffs When Out Of Combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide Buffs When Weapon Sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Highlight buffed party members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Hide buffs with cooldown above" + _ID, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide buffs when out of combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide buffs when weapon is sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
 
-            if (ImGui.Checkbox("Show Party Members' CDs And Buffs", ref JobBars.Config.BuffIncludeParty)) {
+            if (ImGui.Checkbox("Show party members' buffs", ref JobBars.Config.BuffIncludeParty)) {
                 JobBars.Config.Save();
                 ResetUI();
             }
 
-            if (ImGui.InputInt("Buff Text Size", ref JobBars.Config.BuffTextSize)) {
+            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize)) {
                 if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
                 if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
                 JobBars.Config.Save();
                 JobBars.Builder.UpdateBuffsTextSize();
             }
 
-            if (ImGui.Checkbox("Thin Buff Border", ref JobBars.Config.BuffThinBorder)) {
+            if (ImGui.Checkbox("Thin buff border", ref JobBars.Config.BuffThinBorder)) {
                 JobBars.Config.Save();
                 JobBars.Builder.UpdateBorderThin();
             }
 
-            if (ImGui.InputFloat("Opacity when on Cooldown" + _ID, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Opacity when on cooldown" + _ID, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }
