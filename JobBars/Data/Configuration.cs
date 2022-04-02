@@ -93,7 +93,6 @@ namespace JobBars.Data {
         public float BuffScale = 1.0f;
 
         public bool BuffBarEnabled = true;
-        public bool BuffPartyListEnabled = true;
         public bool BuffPartyListASTText = true;
         public bool BuffHideOutOfCombat = false;
         public bool BuffHideWeaponSheathed = false;
@@ -105,6 +104,7 @@ namespace JobBars.Data {
         public float BuffOnCDOpacity = 1.0f;
 
         public BoolValueConfig BuffEnabled = new(true);
+        public BoolValueConfig BuffPartyListHighlight = new(true);
 
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;

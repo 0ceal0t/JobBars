@@ -13,8 +13,8 @@ namespace JobBars.Buffs {
             IsPlayer = isPlayer;
         }
 
-        public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember, out bool active, out string partyText) {
-            active = false;
+        public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember, out bool highlight, out string partyText) {
+            highlight = false;
             partyText = "";
 
             if (PartyMemberCurrentJob != partyMember.Job) {
@@ -25,9 +25,11 @@ namespace JobBars.Buffs {
             foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
                 if (tracker.Enabled) trackers.Add(tracker);
-                if (tracker.Active) {
-                    active = true;
-                    if (tracker.ShowPartyText) partyText = tracker.Text;
+                if (tracker.Highlight) {
+                    highlight = true;
+                }
+                if (tracker.Active && tracker.ShowPartyText) {
+                    partyText = tracker.Text;
                 }
             }
         }

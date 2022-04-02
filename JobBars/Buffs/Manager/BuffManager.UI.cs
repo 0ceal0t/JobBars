@@ -88,13 +88,10 @@ namespace JobBars.Buffs.Manager {
         private void DrawPartyListSettings() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Highlight buffed party members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
             if (ImGui.Checkbox("Show card duration when on AST" + _ID, ref JobBars.Config.BuffPartyListASTText)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }
-
-        // ==========================================
 
         protected override void DrawItem(BuffConfig[] item, JobIds _) {
             var reset = false;

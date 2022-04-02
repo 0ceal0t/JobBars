@@ -31,6 +31,7 @@ namespace JobBars.Buffs {
         public uint Id => (uint)Config.Icon;
         public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
         public bool Active => State == BuffState.Running;
+        public bool Highlight => Active && Config.PartyListHighlight;
         public bool ShowPartyText => Config.ShowPartyText;
         public string Text => ((int)Math.Round(TimeLeft)).ToString();
 
