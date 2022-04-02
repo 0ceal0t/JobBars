@@ -51,13 +51,12 @@ namespace JobBars.Gauges {
             };
         }
 
-        public void Draw(string id, out bool newPos, out bool newVisual, out bool reset) {
-            newPos = newVisual = reset = false;
+        public void Draw(string id, out bool newVisual, out bool reset) {
+            newVisual = reset = false;
 
             if (JobBars.Config.GaugeEnabled.Draw($"Enabled{id}", Name, Enabled, out var newEnabled)) {
                 Enabled = newEnabled;
                 newVisual = true;
-                newPos = true;
             }
 
             if (JobBars.Config.GaugeHideInactive.Draw($"Hide when inactive{id}", Name, HideWhenInactive, out var newHideWhenInactive)) {
@@ -67,19 +66,18 @@ namespace JobBars.Gauges {
             if (JobBars.Config.GaugeIndividualScale.Draw($"Scale{id}", Name, out var newScale)) {
                 Scale = Math.Max(0.1f, newScale);
                 newVisual = true;
-                newPos = true;
             }
 
             if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
                 if (JobBars.Config.GaugeSplitPosition.Draw($"Split position{id}", Name, out var newPosition)) {
-                    newPos = true;
                     SetSplitPosition(newPosition);
+                    newVisual = true;
                 }
             }
             else {
                 if (JobBars.Config.GaugeOrder.Draw($"Order{id}", Name, Order, out var newOrder)) {
                     Order = newOrder;
-                    newPos = true;
+                    newVisual = true;
                 }
             }
 
@@ -91,9 +89,9 @@ namespace JobBars.Gauges {
                 }
             }
 
-            TypeConfig.Draw(id, ref newPos, ref newVisual, ref reset);
+            TypeConfig.Draw(id, ref newVisual, ref reset);
 
-            DrawConfig(id, ref newPos, ref newVisual, ref reset);
+            DrawConfig(id, ref newVisual, ref reset);
         }
 
         protected void DrawSoundEffect(string label = "Progress sound effect") {
@@ -146,7 +144,7 @@ namespace JobBars.Gauges {
 
         protected abstract GaugeVisualType[] GetValidGaugeTypes();
 
-        protected abstract void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset);
+        protected abstract void DrawConfig(string id, ref bool newVisual, ref bool reset);
 
         private void SetSplitPosition(Vector2 pos) {
             JobBars.SetWindowPosition(Name + "##GaugePosition", pos);

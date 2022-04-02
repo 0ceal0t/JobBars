@@ -22,8 +22,8 @@ namespace JobBars.Gauges.Custom {
 
         public override GaugeTracker GetTracker(int idx) => new GaugeDrkMPTracker(this, idx);
 
-        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
-            base.DrawConfig(id, ref newPos, ref newVisual, ref reset);
+        protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
+            base.DrawConfig(id, ref newVisual, ref reset);
 
             if (JobBars.Config.GaugeColor.Draw($"Dark Arts color{id}", Name, Color, out var newDarkArtsColor)) {
                 DarkArtsColor = newDarkArtsColor;

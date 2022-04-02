@@ -30,7 +30,9 @@ namespace JobBars.Buffs {
         public BuffState CurrentState => State;
         public uint Id => (uint)Config.Icon;
         public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
-        public bool Highlighted => State == BuffState.Running;
+        public bool Active => State == BuffState.Running;
+        public bool ShowPartyText => Config.ShowPartyText;
+        public string Text => ((int)Math.Round(TimeLeft)).ToString();
 
         public BuffTracker(BuffConfig config) {
             Config = config;
@@ -87,7 +89,7 @@ namespace JobBars.Buffs {
             if (State == BuffState.Running) {
                 UI.SetOffCD();
                 UI.SetPercent(Percent);
-                UI.SetText(((int)Math.Round(TimeLeft)).ToString());
+                UI.SetText(Text);
             }
             else if (State == BuffState.OffCD) {
                 UI.SetOffCD();
@@ -97,7 +99,7 @@ namespace JobBars.Buffs {
             else if (State == BuffState.OnCD_Visible) {
                 UI.SetOnCD(JobBars.Config.BuffOnCDOpacity);
                 UI.SetPercent(Percent);
-                UI.SetText(((int)Math.Round(TimeLeft)).ToString());
+                UI.SetText(Text);
             }
         }
 

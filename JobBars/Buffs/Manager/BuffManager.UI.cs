@@ -14,6 +14,7 @@ namespace JobBars.Buffs.Manager {
 
             if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
             if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
+            if (ImGui.CollapsingHeader("Party list" + _ID + "/Row")) DrawPartyListSettings();
         }
 
         private void DrawPositionRow() {
@@ -58,7 +59,6 @@ namespace JobBars.Buffs.Manager {
         private void DrawSettingsRow() {
             ImGui.Indent();
 
-            if (ImGui.Checkbox("Highlight buffed party members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
             if (ImGui.InputFloat("Hide buffs with cooldown above" + _ID, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide buffs when out of combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide buffs when weapon is sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
@@ -81,6 +81,15 @@ namespace JobBars.Buffs.Manager {
             }
 
             if (ImGui.InputFloat("Opacity when on cooldown" + _ID, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
+
+            ImGui.Unindent();
+        }
+
+        private void DrawPartyListSettings() {
+            ImGui.Indent();
+
+            if (ImGui.Checkbox("Highlight buffed party members" + _ID, ref JobBars.Config.BuffPartyListEnabled)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Show card duration when on AST" + _ID, ref JobBars.Config.BuffPartyListASTText)) JobBars.Config.Save();
 
             ImGui.Unindent();
         }

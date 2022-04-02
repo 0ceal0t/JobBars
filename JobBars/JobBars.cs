@@ -50,7 +50,7 @@ namespace JobBars {
         public string Name => "JobBars";
         public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
 
-        private JobIds CurrentJob = JobIds.OTHER;
+        public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
         private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;

@@ -10,7 +10,7 @@
             Vertical = JobBars.Config.GaugeVertical.Get(Name);
         }
 
-        public override void Draw(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
+        public override void Draw(string id, ref bool newVisual, ref bool reset) {
             if (JobBars.Config.GaugeShowText.Draw($"Show text{id}", Name, ShowText, out var newShowText)) {
                 ShowText = newShowText;
                 newVisual = true;
@@ -24,7 +24,6 @@
             if (JobBars.Config.GaugeVertical.Draw($"Vertical{id}", Name, Vertical, out var newVertical)) {
                 Vertical = newVertical;
                 newVisual = true;
-                newPos = true;
             }
         }
     }

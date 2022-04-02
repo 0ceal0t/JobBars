@@ -79,7 +79,15 @@ namespace JobBars.UI {
             }
         }
 
-        public void SetBuffPartyListVisible(int idx, bool visible) => PartyListBuffs[idx].SetVisibility(visible);
+        public void SetBuffPartyListVisible(int idx, bool visible) => PartyListBuffs[idx].SetHighlightVisibility(visible);
+        public void SetBuffPartyListText(int idx, string text) => PartyListBuffs[idx].SetText(text);
+        public void HideAllBuffPartyList() {
+            foreach(var item in PartyListBuffs) {
+                item.SetHighlightVisibility(false);
+                item.SetText("");
+            }
+        }
+
         public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);
         public void SetBuffScale(float scale) => SetScale(BuffRoot, scale, scale);
         public void ShowBuffs() => UIHelper.Show(BuffRoot);

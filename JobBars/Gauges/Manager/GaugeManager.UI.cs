@@ -120,10 +120,12 @@ namespace JobBars.Gauges.Manager {
         // ==========================================
 
         protected override void DrawItem(GaugeConfig item) {
-            item.Draw(_ID, out bool newPos, out bool newVisual, out bool reset);
+            item.Draw(_ID, out bool newVisual, out bool reset);
             if (SelectedJob != CurrentJob) return;
-            if (newPos) UpdatePositionScale();
-            if (newVisual) UpdateVisuals();
+            if (newVisual) {
+                UpdateVisuals();
+                UpdatePositionScale();
+            }
             if (reset) Reset();
         }
 

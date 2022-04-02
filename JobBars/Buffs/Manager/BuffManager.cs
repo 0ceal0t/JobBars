@@ -56,12 +56,14 @@ namespace JobBars.Buffs.Manager {
                 if (!JobBars.Config.BuffIncludeParty && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) continue;
 
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new BuffPartyMember(partyMember.ObjectId, partyMember.IsPlayer);
-                var highlightMember = member.Tick(activeBuffs, partyMember);
-                JobBars.Builder.SetBuffPartyListVisible(idx, JobBars.Config.BuffPartyListEnabled && highlightMember);
+                member.Tick(activeBuffs, partyMember, out var active, out var partyText);
+                JobBars.Builder.SetBuffPartyListVisible(idx, JobBars.Config.BuffPartyListEnabled && active);
+                JobBars.Builder.SetBuffPartyListText(idx, (JobBars.Config.BuffPartyListASTText && JobBars.CurrentJob == JobIds.AST) ? partyText : "");
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
             for (int idx = JobBars.PartyMembers.Count; idx < 8; idx++) {
                 JobBars.Builder.SetBuffPartyListVisible(idx, false);
+                JobBars.Builder.SetBuffPartyListText(idx, "");
             }
 
             var buffIdx = 0;

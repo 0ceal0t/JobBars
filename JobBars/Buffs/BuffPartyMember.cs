@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JobBars.Buffs {
     public class BuffPartyMember {
-        private JobIds CurrentJob = JobIds.OTHER;
+        private JobIds PartyMemberCurrentJob = JobIds.OTHER;
         private readonly List<BuffTracker> Trackers = new();
         private readonly uint ObjectId;
         private readonly bool IsPlayer;
@@ -13,19 +13,23 @@ namespace JobBars.Buffs {
             IsPlayer = isPlayer;
         }
 
-        public bool Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember) {
-            if (CurrentJob != partyMember.Job) {
-                CurrentJob = partyMember.Job;
+        public void Tick(HashSet<BuffTracker> trackers, CurrentPartyMember partyMember, out bool active, out string partyText) {
+            active = false;
+            partyText = "";
+
+            if (PartyMemberCurrentJob != partyMember.Job) {
+                PartyMemberCurrentJob = partyMember.Job;
                 SetupTrackers();
             }
 
-            var highlightMember = false;
             foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
                 if (tracker.Enabled) trackers.Add(tracker);
-                if (tracker.Highlighted) highlightMember = true;
+                if (tracker.Active) {
+                    active = true;
+                    if (tracker.ShowPartyText) partyText = tracker.Text;
+                }
             }
-            return highlightMember;
         }
 
         public void ProcessAction(Item action, uint objectId) {
@@ -36,7 +40,7 @@ namespace JobBars.Buffs {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.BuffManager.GetBuffConfigs(CurrentJob, IsPlayer);
+            var trackerProps = JobBars.BuffManager.GetBuffConfigs(PartyMemberCurrentJob, IsPlayer);
             foreach (var prop in trackerProps) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new BuffTracker(prop));

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace JobBars.Cooldowns {
     public unsafe class CooldownPartyMember {
-        private JobIds CurrentJob = JobIds.OTHER;
+        private JobIds PartyMemberCurrentJob = JobIds.OTHER;
         private UICooldown UI;
         private readonly List<CooldownTracker> Trackers = new();
         private readonly uint ObjectId;
@@ -15,8 +15,8 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick(UICooldown ui, CurrentPartyMember partyMember, float percent) {
-            if (CurrentJob != partyMember.Job) {
-                CurrentJob = partyMember.Job;
+            if (PartyMemberCurrentJob != partyMember.Job) {
+                PartyMemberCurrentJob = partyMember.Job;
                 UI = ui;
                 SetupTrackers();
                 SetupUI();
@@ -42,7 +42,7 @@ namespace JobBars.Cooldowns {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(CurrentJob);
+            var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(PartyMemberCurrentJob);
             var count = 0;
             foreach (var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;

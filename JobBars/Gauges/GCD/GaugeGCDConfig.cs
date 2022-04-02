@@ -67,7 +67,7 @@ namespace JobBars.Gauges.GCD {
 
         public override GaugeTracker GetTracker(int idx) => new GaugeGCDTracker(this, idx);
 
-        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
+        protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
             DrawSoundEffect();
             DrawCompletionSoundEffect();
 

@@ -39,7 +39,7 @@ namespace JobBars.Gauges.Charges {
 
         public override GaugeTracker GetTracker(int idx) => new GaugeChargesTracker(this, idx);
 
-        protected override void DrawConfig(string id, ref bool newPos, ref bool newVisual, ref bool reset) {
+        protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
             if (JobBars.Config.GaugeColor.Draw($"Color{id}", Name, BarColor, out var newColor)) {
                 BarColor = newColor;
                 newVisual = true;

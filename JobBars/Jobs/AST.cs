@@ -48,42 +48,48 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheBalance,
                 Color = UIColor.Orange,
                 Triggers = new []{ new Item(BuffIds.TheBalance) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheBole), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheBole,
                 Color = UIColor.BrightGreen,
                 Triggers = new []{ new Item(BuffIds.TheBole) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheSpear), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheSpear,
                 Color = UIColor.DarkBlue,
                 Triggers = new []{ new Item(BuffIds.TheSpear) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheSpire), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheSpire,
                 Color = UIColor.Yellow,
                 Triggers = new []{ new Item(BuffIds.TheSpire) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheArrow), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheArrow,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(BuffIds.TheArrow) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheEwer), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheEwer,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(BuffIds.TheEwer) },
-                IsPlayerOnly = true
+                IsPlayerOnly = true,
+                ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.Divination), new BuffProps {
                 CD = 120,
