@@ -42,15 +42,23 @@ namespace JobBars.Gauges.Procs {
             var playSound = false;
             var procActiveCount = 0;
             foreach (var proc in Procs) {
-                bool procActive;
+                bool procActive = false;
+                proc.RemainingTime = 0;
 
-                if (proc.Config.Trigger.Type == ItemType.Buff) {
-                    procActive = UIHelper.PlayerStatus.TryGetValue(proc.Config.Trigger, out var buff);
-                    proc.RemainingTime = procActive ? Math.Max(0, buff.RemainingTime) : 0;
-                }
-                else {
-                    procActive = !UIHelper.GetRecastActive(proc.Config.Trigger.Id, out _);
-                    proc.RemainingTime = 0;
+                foreach(var trigger in proc.Config.Triggers) {
+                    if(trigger.Type == ItemType.Buff) {
+                        if(UIHelper.PlayerStatus.TryGetValue(trigger, out var buff)) {
+                            procActive = true;
+                            proc.RemainingTime = Math.Max(0, buff.RemainingTime);
+                        }
+                    }
+                    else {
+                        if(!UIHelper.GetRecastActive(trigger.Id, out _)) {
+                            procActive = true;
+                        }
+                    }
+
+                    if (procActive) break;
                 }
 
                 if (procActive) procActiveCount++;

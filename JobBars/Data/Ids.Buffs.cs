@@ -3,7 +3,7 @@
 
         // DRK =========
         Delirium = 1972,
-        BloodWeapon = 0x2e6,
+        BloodWeapon = 742,
         LivingDead = 810,
         WalkingDead = 811,
 
@@ -74,9 +74,10 @@
         PowerSurge = 2720,
 
         // NIN =========
-        TrickAttack = 0x27e,
+        TrickAttack = 3254,
         Bunshin = 0x7a2,
         RaijuReady = 2690,
+        Mug = 3183,
 
         // SAM =========
         Meikyo = 1233,
@@ -109,11 +110,13 @@
         // DNC =========
         Devilment = 0x721,
         Improvisation = 1827,
-        FlourishingSymmetry = 2693,
-        FlourishingFlow = 2694,
+        FlourishingSymmetry = 3017,
+        FlourishingFlow = 3018,
         ThreefoldFanDance = 1820,
         FourfoldFanDance = 2699,
         FlourishingStarfall = 2700,
+        SilkenFlow = 2694,
+        SilkenSymmetry = 2693,
 
         // BLM =========
         Firestarter = 165,

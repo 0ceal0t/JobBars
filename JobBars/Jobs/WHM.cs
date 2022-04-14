@@ -21,14 +21,7 @@ namespace JobBars.Jobs {
                         Color = UIColor.LightBlue,
                         SubName = UIHelper.Localize(BuffIds.Dia),
                         Triggers = new []{
-                            new Item(BuffIds.Dia)
-                        }
-                    },
-                    new GaugeSubTimerProps {
-                        MaxDuration = 18,
-                        Color = UIColor.LightBlue,
-                        SubName = UIHelper.Localize(BuffIds.Aero2),
-                        Triggers = new [] {
+                            new Item(BuffIds.Dia),
                             new Item(BuffIds.Aero),
                             new Item(BuffIds.Aero2)
                         }
@@ -82,8 +75,8 @@ namespace JobBars.Jobs {
                     ActionIds.Dia
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero), Duration = 18 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero2), Duration = 18 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero), Duration = 30 },
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero2), Duration = 30 },
                     new IconTriggerStruct { Trigger = new Item(BuffIds.Dia), Duration = 30 }
                 }
             }),

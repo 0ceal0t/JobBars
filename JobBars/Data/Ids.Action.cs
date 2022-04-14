@@ -111,6 +111,7 @@
         // NIN ===========
         TrickAttack = 2258,
         Bunshin = 16493,
+        Mug = 2248,
 
         // SAM ===========
         Higanbana = 7489,

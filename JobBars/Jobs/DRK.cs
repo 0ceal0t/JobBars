@@ -27,13 +27,12 @@ namespace JobBars.Jobs {
                 },
                 Color = UIColor.Red
             }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 10,
-                Color = UIColor.DarkBlue,
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
                 Triggers = new []{
                     new Item(BuffIds.BloodWeapon)
-                }
+                },
+                Color = UIColor.DarkBlue
             })
         };
 
@@ -83,14 +82,7 @@ namespace JobBars.Jobs {
             })
         };
 
-        public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.BloodWeapon), new IconProps {
-                Icons = new [] { ActionIds.BloodWeapon },
-                Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.BloodWeapon), Duration = 10 }
-                }
-            })
-        };
+        public static IconReplacer[] Icons => Array.Empty<IconReplacer>();
 
         // DRK HAS A CUSTOM MP BAR, SO DON'T WORRY ABOUT THIS
         public static bool MP => false;

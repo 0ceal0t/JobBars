@@ -11,16 +11,17 @@ namespace JobBars.Gauges.Procs {
 
     public class ProcConfig {
         public readonly string Name;
-        public readonly Item Trigger;
+        public readonly Item[] Triggers;
 
         public ElementColor Color;
         public int Order;
 
         public ProcConfig(string name, BuffIds buff, ElementColor color) : this(name, new Item(buff), color) { }
         public ProcConfig(string name, ActionIds action, ElementColor color) : this(name, new Item(action), color) { }
-        public ProcConfig(string name, Item trigger, ElementColor color) {
+        public ProcConfig(string name, Item trigger, ElementColor color) : this(name, new[] { trigger }, color) { }
+        public ProcConfig(string name, Item[] triggers, ElementColor color) {
             Name = name;
-            Trigger = trigger;
+            Triggers = triggers;
             Color = JobBars.Config.GaugeProcColor.Get(Name, color);
             Order = JobBars.Config.GaugeProcOrder.Get(Name);
         }

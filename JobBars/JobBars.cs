@@ -120,7 +120,7 @@ namespace JobBars {
 
             InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
 
-            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 18 53 56 57 41 54 41 57 48 81 EC ?? 00 00 00 8B F9");
+            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 57 41 54 41 55 41 56 48 8D 6C 24");
             ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
 

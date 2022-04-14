@@ -54,6 +54,13 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
+            new BuffConfig(UIHelper.Localize(ActionIds.Mug), new BuffProps {
+                CD = 120,
+                Duration = 20,
+                Icon = ActionIds.Mug,
+                Color = UIColor.LightBlue,
+                Triggers = new []{ new Item(ActionIds.Mug) }
+            }),
             new BuffConfig(UIHelper.Localize(ActionIds.TrickAttack), new BuffProps {
                 CD = 60,
                 Duration = 15,
@@ -86,6 +93,12 @@ namespace JobBars.Jobs {
                 Icons = new [] { ActionIds.TrickAttack },
                 Triggers = new[] {
                     new IconTriggerStruct { Trigger = new Item(BuffIds.TrickAttack), Duration = 15 }
+                }
+            }),
+            new IconReplacer(UIHelper.Localize(BuffIds.Mug), new IconProps {
+                Icons = new [] { ActionIds.Mug },
+                Triggers = new[] {
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.Mug), Duration = 20 }
                 }
             })
         };
