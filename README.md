@@ -251,6 +251,8 @@ Feel like something is missing? Open an [issue](https://github.com/0ceal0t/JobBa
 </table>
 
 ## TODO
+- [ ] Update README tables
+- [ ] PVP specific gauges/cooldowns/buffs
 - [ ] Style MP bars like actual MP
 - [ ] Alternate text style
 - [ ] Custom text spacing
