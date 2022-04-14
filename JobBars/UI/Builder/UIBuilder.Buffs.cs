@@ -53,7 +53,7 @@ namespace JobBars.UI {
             for (var i = 0; i < PartyListBuffs.Count; i++) {
                 if (partyListAddon != null) {
                     var partyMember = partyListAddon->PartyMember[i];
-                    PartyListBuffs[i].DetachFrom(partyMember.TargetGlowContainer);
+                    PartyListBuffs[i].DetachFrom(partyMember.TargetGlowContainer, partyMember.IconBottomLeftText);
                     partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
                 }
                 PartyListBuffs[i].Dispose();

@@ -126,6 +126,7 @@ namespace JobBars {
             BuffManager?.ResetTrackers();
             // don't reset CDs on zone change
             UIHelper.ResetTicks();
+            UIHelper.ZoneChanged(e);
         }
 
         private static bool IsPet(int objectId, int ownerId) {

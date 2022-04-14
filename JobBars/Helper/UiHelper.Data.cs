@@ -7,6 +7,7 @@ using Lumina.Excel.GeneratedSheets;
 using JobBars.Data;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Enums;
+using Dalamud.Logging;
 
 namespace JobBars.Helper {
     public struct ItemData {
@@ -43,12 +44,19 @@ namespace JobBars.Helper {
         public static bool OutOfCombat => !JobBars.Condition[ConditionFlag.InCombat];
         public static bool WeaponSheathed => JobBars.ClientState.LocalPlayer != null && !JobBars.ClientState.LocalPlayer.StatusFlags.HasFlag(StatusFlags.WeaponOut);
         public static bool WatchingCutscene => JobBars.Condition[ConditionFlag.OccupiedInCutSceneEvent] || JobBars.Condition[ConditionFlag.WatchingCutscene78] || JobBars.Condition[ConditionFlag.BetweenAreas] || JobBars.Condition[ConditionFlag.BetweenAreas51];
+        public static bool InPvP { get; private set; } = false;
+
         public static bool CalcDoHide( bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed) {
             if (!enabled) return true;
             if (OutOfCombat && hideOutOfCombat) return true;
             if (WeaponSheathed && hideWeaponSheathed) return true;
             if (WatchingCutscene) return true;
+            if (InPvP) return true;
             return false;
+        }
+
+        public static void ZoneChanged(ushort e) {
+            InPvP = JobBars.DataManager.GetExcelSheet<TerritoryType>().GetRow(e)?.IsPvpZone ?? false;
         }
 
         private static readonly HashSet<uint> GCDs = new();
