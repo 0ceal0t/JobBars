@@ -74,11 +74,10 @@ namespace JobBars.Gauges {
                     newVisual = true;
                 }
             }
-            else {
-                if (JobBars.Config.GaugeOrder.Draw($"Order{id}", Name, Order, out var newOrder)) {
-                    Order = newOrder;
-                    newVisual = true;
-                }
+
+            if (JobBars.Config.GaugeOrder.Draw($"Order{id}", Name, Order, out var newOrder)) {
+                Order = newOrder;
+                newVisual = true;
             }
 
             var validTypes = GetValidGaugeTypes();
