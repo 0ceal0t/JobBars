@@ -14,12 +14,12 @@ namespace JobBars.Data {
         private readonly List<ItemData> Data;
         public ImGuiScene.TextureWrap Icon;
 
-        private ItemData Selected = new ItemData {
+        private ItemData Selected = new() {
             Icon = 0,
             Name = "",
             Data = new Item((ActionIds)0)
         };
-        private ItemData SearchSelected = new ItemData {
+        private ItemData SearchSelected = new() {
             Icon = 0,
             Name = "",
             Data = new Item((ActionIds)0)
@@ -49,7 +49,7 @@ namespace JobBars.Data {
                     resetScroll = true;
                 }
 
-                ImGui.BeginChild($"Select{Id}", new Vector2(ImGui.GetWindowContentRegionWidth(), 200), true);
+                ImGui.BeginChild($"Select{Id}", new Vector2(ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 200), true);
 
                 DisplayVisible(Searched.Count, out int preItems, out int showItems, out int postItems, out float itemHeight);
                 if (resetScroll) { ImGui.SetScrollHereY(); };

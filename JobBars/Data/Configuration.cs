@@ -124,6 +124,11 @@ namespace JobBars.Data {
         public bool CooldownsShowPartyMembers = true;
         public float CooldownsOnCDOpacity = 1.0f;
 
+        public bool CooldownsStateShowDefault = true;
+        public bool CooldownsStateShowRunning = true;
+        public bool CooldownsStateShowOnCD = true;
+        public bool CooldownsStateShowOffCD = true;
+
         public bool CooldownsLeftAligned = false;
 
         public BoolValueConfig CooldownEnabled = new(true);

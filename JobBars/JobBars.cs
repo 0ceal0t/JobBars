@@ -154,6 +154,8 @@ namespace JobBars {
         }
 
         public void Dispose() {
+            UIHelper.ClearLoadedTextures();
+
             ReceiveActionEffectHook?.Disable();
             ActorControlSelfHook?.Disable();
             IconDimmedHook?.Disable();

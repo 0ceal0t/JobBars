@@ -120,11 +120,11 @@ namespace JobBars.Data {
             value = currentValue;
             if (ImGui.BeginCombo(id, $"{currentValue}", ImGuiComboFlags.HeightLargest)) {
                 if (ShowSearch) {
-                    ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionWidth() - 50);
+                    ImGui.SetNextItemWidth(ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X - 50);
                     ImGui.InputText("Search##Combo", ref SearchInput, 256);
                 }
 
-                if (ShowSearch) ImGui.BeginChild("Child##Combo", new Vector2(ImGui.GetWindowContentRegionWidth(), 200), true);
+                if (ShowSearch) ImGui.BeginChild("Child##Combo", new Vector2(ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 200), true);
 
                 var idx = 0;
                 foreach (T option in comboOptions) {

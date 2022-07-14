@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace JobBars.Cooldowns {
     public class CooldownTracker {
-        private enum TrackerState {
+        public enum TrackerState {
             None,
             Running,
             OnCD,
@@ -17,12 +17,15 @@ namespace JobBars.Cooldowns {
 
         private readonly CooldownConfig Config;
 
-        public ActionIds Icon => Config.Icon;
-
         private TrackerState State = TrackerState.None;
         private DateTime LastActiveTime;
         private Item LastActiveTrigger;
         private float TimeLeft;
+
+        private UICooldownItem UI;
+
+        public TrackerState CurrentState => State;
+        public ActionIds Icon => Config.Icon;
 
         public CooldownTracker(CooldownConfig config) {
             Config = config;
@@ -58,6 +61,13 @@ namespace JobBars.Cooldowns {
         }
 
         public void TickUI(UICooldownItem ui, float percent) {
+            if (UI != ui || UI?.IconId != Config.Icon) {
+                UI = ui;
+                SetupUI();
+            }
+
+            UI.Show();
+
             if (State == TrackerState.None) {
                 ui.SetOffCD();
                 ui.SetText("");
@@ -88,6 +98,10 @@ namespace JobBars.Cooldowns {
                     ui.SetNoDash();
                 }
             }
+        }
+
+        private void SetupUI() {
+            UI.LoadIcon(Config.Icon);
         }
 
         public void Reset() {

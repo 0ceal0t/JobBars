@@ -60,7 +60,15 @@ namespace JobBars.Cooldowns.Manager {
 
             if (ImGui.Checkbox("Hide cooldowns when out of combat" + _ID, ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide cooldowns when weapon sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide active buff duration (Show only cooldowns)" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide active buff text" + _ID, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
+
+            ImGui.Text("Show icons when:");
+            ImGui.Indent();
+            if (ImGui.Checkbox("Default" + _ID, ref JobBars.Config.CooldownsStateShowDefault)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Active" + _ID, ref JobBars.Config.CooldownsStateShowRunning)) JobBars.Config.Save();
+            if (ImGui.Checkbox("On cooldown" + _ID, ref JobBars.Config.CooldownsStateShowOnCD)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Off cooldown" + _ID, ref JobBars.Config.CooldownsStateShowOffCD)) JobBars.Config.Save();
+            ImGui.Unindent();
 
             if (ImGui.Checkbox("Show party members' cooldowns" + _ID, ref JobBars.Config.CooldownsShowPartyMembers)) {
                 JobBars.Config.Save();

@@ -14,7 +14,7 @@ namespace JobBars.UI {
         private AtkNineGridNode* Border;
 
         private ActionIds LastIconId = 0;
-        public ActionIds Iconid => LastIconId;
+        public ActionIds IconId => LastIconId;
 
         private string CurrentText = "";
         private static int BUFFS_HORIZONTAL => JobBars.Config.BuffHorizontal;

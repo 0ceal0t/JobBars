@@ -14,6 +14,9 @@ namespace JobBars.UI {
         public static readonly ushort WIDTH = 30;
         public static readonly ushort HEIGHT = 30;
 
+        private ActionIds LastIconId = 0;
+        public ActionIds IconId => LastIconId;
+
         public UICooldownItem(AtkUldPartsList* partsList) {
             RootRes = UIBuilder.CreateResNode();
             RootRes->Width = WIDTH;
@@ -98,6 +101,7 @@ namespace JobBars.UI {
         }
 
         public void LoadIcon(ActionIds action) {
+            LastIconId = action;
             var icon = UIHelper.GetIcon(action);
             Icon->LoadIconTexture(icon, 0);
         }
@@ -153,14 +157,6 @@ namespace JobBars.UI {
             RootRes->ChildCount = (ushort)(MAX_ITEMS * (1 + Items[0].RootRes->ChildCount));
             RootRes->ChildNode = Items[0].RootRes;
         }
-
-        public void HideAllItems() {
-            foreach (var item in Items) item.Hide();
-        }
-
-        public void SetVisibility(int idx, bool visible) => Items[idx].SetVisible(visible);
-
-        public void LoadIcon(int idx, ActionIds action) => Items[idx].LoadIcon(action);
 
         public override void Dispose() {
             for (int idx = 0; idx < MAX_ITEMS; idx++) {

@@ -2,11 +2,11 @@
 using JobBars.UI;
 using System.Collections.Generic;
 using System.Linq;
+using static JobBars.Cooldowns.CooldownTracker;
 
 namespace JobBars.Cooldowns {
     public unsafe class CooldownPartyMember {
         private JobIds PartyMemberCurrentJob = JobIds.OTHER;
-        private UICooldown UI;
         private readonly List<CooldownTracker> Trackers = new();
         private readonly uint ObjectId;
 
@@ -17,20 +17,31 @@ namespace JobBars.Cooldowns {
         public void Tick(UICooldown ui, CurrentPartyMember partyMember, float percent) {
             if (PartyMemberCurrentJob != partyMember.Job) {
                 PartyMemberCurrentJob = partyMember.Job;
-                UI = ui;
                 SetupTrackers();
-                SetupUI();
-            }
-            else if (UI != ui) { // same job, different UI element for some reason
-                UI = ui;
-                SetupUI();
             }
 
-            for (int i = 0; i < Trackers.Count; i++) {
-                var tracker = Trackers[i];
-                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
+            var trackerIdx = 0;
+            foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
-                tracker.TickUI(UI.Items[uiIdx], percent);
+
+                if (trackerIdx >= (UICooldown.MAX_ITEMS - 1)) break;
+                // skip if disabled
+                if (!JobBars.Config.CooldownsStateShowDefault && tracker.CurrentState == TrackerState.None || 
+                    !JobBars.Config.CooldownsStateShowRunning && tracker.CurrentState == TrackerState.Running || 
+                    !JobBars.Config.CooldownsStateShowOnCD && tracker.CurrentState == TrackerState.OnCD || 
+                    !JobBars.Config.CooldownsStateShowOffCD && tracker.CurrentState == TrackerState.OffCD
+                ) {
+                    trackerIdx++;
+                    continue;
+                }
+
+                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - trackerIdx : trackerIdx;
+                tracker.TickUI(ui.Items[uiIdx], percent);
+                trackerIdx++;
+            }
+            for (int i = trackerIdx; i < UICooldown.MAX_ITEMS; i++) {
+                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
+                ui.Items[uiIdx].SetVisible(false); // hide unused
             }
         }
 
@@ -39,7 +50,7 @@ namespace JobBars.Cooldowns {
             foreach (var tracker in Trackers) tracker.ProcessAction(action);
         }
 
-        public void SetupTrackers() {
+        private void SetupTrackers() {
             Trackers.Clear();
 
             var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(PartyMemberCurrentJob);
@@ -54,17 +65,6 @@ namespace JobBars.Cooldowns {
 
         public void Reset() {
             foreach (var item in Trackers) item.Reset();
-        }
-
-        public void SetupUI() {
-            UI.HideAllItems();
-
-            for (int i = 0; i < Trackers.Count; i++) {
-                var tracker = Trackers[i];
-                var uiIdx = JobBars.Config.CooldownsLeftAligned ? UICooldown.MAX_ITEMS - 1 - i : i;
-                UI.LoadIcon(uiIdx, tracker.Icon);
-                UI.SetVisibility(uiIdx, true);
-            }
         }
     }
 }

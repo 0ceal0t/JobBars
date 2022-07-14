@@ -79,7 +79,7 @@ namespace JobBars.Buffs {
         }
 
         public void TickUI(UIBuff ui) {
-            if (UI != ui || UI?.Iconid != Config.Icon) {
+            if (UI != ui || UI?.IconId != Config.Icon) {
                 UI = ui;
                 SetupUI();
             }

@@ -83,6 +83,8 @@ namespace JobBars.Helper {
 
         // ==========================
 
+        private static readonly HashSet<IntPtr> LoadedTextures = new();
+
         public static void DisposePartsList(AtkUldPartsList* partsList) {
             var partsCount = partsList->PartCount;
             IMemorySpace.Free(partsList->Parts, (ulong)sizeof(AtkUldPart) * partsCount);
@@ -143,11 +145,23 @@ namespace JobBars.Helper {
 
             var resource = (TextureResourceHandle*) GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
             var resolvedPath = resource->ResourceHandle.FileName.ToString();
-            resource->ResourceHandle.DecRef(); // not actually using this
+            //resource->ResourceHandle.DecRef();
+            LoadedTextures.Add(new IntPtr(resource));
 
-            PluginLog.Log($"RefCount {texPath} {resource->ResourceHandle.RefCount}");
+            PluginLog.Log($"+ RefCount {resolvedPath} {resource->ResourceHandle.RefCount}");
 
             return resolvedPath;
+        }
+
+        public unsafe static void ClearLoadedTextures() {
+            foreach(var tex in LoadedTextures) {
+                var resource = (TextureResourceHandle*)tex;
+                resource->ResourceHandle.DecRef();
+                var resolvedPath = resource->ResourceHandle.FileName.ToString();
+
+                PluginLog.Log($"- RefCount {resolvedPath} {resource->ResourceHandle.RefCount}");
+            }
+            LoadedTextures.Clear();
         }
 
         public unsafe static AtkUldAsset* CreateAssets(uint assetCount) {
