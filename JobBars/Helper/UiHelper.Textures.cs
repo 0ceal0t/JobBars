@@ -214,6 +214,10 @@ namespace JobBars.Helper {
             return partsList;
         }
 
+        public static void UpdatePart(AtkNineGridNode* node, ushort u, ushort v, ushort width, ushort height) => UpdatePart(node->PartsList, 0, u, v, width, height);
+
+        public static void UpdatePart(AtkImageNode* node, ushort u, ushort v, ushort width, ushort height) => UpdatePart(node->PartsList, 0, u, v, width, height);
+
         public static void UpdatePart(AtkUldPartsList* partsList, int partIdx, AtkUldAsset* assets, int assetIdx, ushort u, ushort v, ushort width, ushort height) {
             SetPartAsset(partsList, partIdx, assets, assetIdx);
             UpdatePart(partsList, partIdx, u, v, width, height);

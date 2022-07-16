@@ -44,7 +44,7 @@ namespace JobBars.UI {
             Icon->Flags |= (byte)ImageNodeFlags.AutoFit;
             Icon->WrapMode = 1;
             UIHelper.SetupIcon(Icon, 405);
-            UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
+            UIHelper.UpdatePart(Icon, 0, 0, 44, 46);
 
             Border = UIBuilder.CreateImageNode();
             Border->AtkResNode.Width = 49;
@@ -52,7 +52,7 @@ namespace JobBars.UI {
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
             UIHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
-            UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
+            UIHelper.UpdatePart(Border, 0, 96, 48, 48);
             Border->Flags = 0;
             Border->WrapMode = 1;
             UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
@@ -73,7 +73,7 @@ namespace JobBars.UI {
         }
 
         public void SetNoDash() {
-            UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
+            UIHelper.UpdatePart(Border, 0, 96, 48, 48);
         }
 
         public void SetDash(float percent) {
@@ -85,7 +85,7 @@ namespace JobBars.UI {
             var u = (ushort)(96 + (48 * row));
             var v = (ushort)(48 * column);
 
-            UIHelper.UpdatePart(Border->PartsList, 0, u, v, 48, 48);
+            UIHelper.UpdatePart(Border, u, v, 48, 48);
         }
 
         public void SetText(string text) {

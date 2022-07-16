@@ -44,7 +44,7 @@ namespace JobBars.UI {
                 if (!staticCircle) UIHelper.SetupTexture(node, "ui/uld/CursorLocation.tex");
                 staticCircle = true;
 
-                UIHelper.UpdatePart(node->PartsList, 0, 0, 0, 128, 128);
+                UIHelper.UpdatePart(node, 0, 0, 128, 128);
 
             }
             else {
@@ -57,7 +57,7 @@ namespace JobBars.UI {
                 var u = (ushort)(44 * row);
                 var v = (ushort)(48 * column);
 
-                UIHelper.UpdatePart(node->PartsList, 0, u, v, 44, 46);
+                UIHelper.UpdatePart(node, u, v, 44, 46);
             }
         }
 

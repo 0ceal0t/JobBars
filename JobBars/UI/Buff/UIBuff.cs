@@ -41,7 +41,7 @@ namespace JobBars.UI {
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
             UIHelper.SetupTexture(Overlay, "ui/uld/IconA_Frame.tex");
-            UIHelper.UpdatePart(Overlay->PartsList, 0, 365, 4, 37, 37);
+            UIHelper.UpdatePart(Overlay, 365, 4, 37, 37);
 
             Border = UIBuilder.CreateNineNode();
             Border->AtkResNode.X = -4;
@@ -88,7 +88,7 @@ namespace JobBars.UI {
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
 
-            UIHelper.UpdatePart(Icon->PartsList, 0, (ushort)((40 - WIDTH) / 2), (ushort)((40 - HEIGHT) / 2), WIDTH, HEIGHT);
+            UIHelper.UpdatePart(Icon, (ushort)((40 - WIDTH) / 2), (ushort)((40 - HEIGHT) / 2), WIDTH, HEIGHT);
 
             Overlay->AtkResNode.Width = WIDTH;
 
@@ -187,10 +187,10 @@ namespace JobBars.UI {
 
         public void SetBorderThin(bool thin) {
             if (thin) {
-                UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
+                UIHelper.UpdatePart(Border, 0, 96, 48, 48);
             }
             else {
-                UIHelper.UpdatePart(Border->PartsList, 0, 252, 12, 47, 47);
+                UIHelper.UpdatePart(Border, 252, 12, 47, 47);
             }
         }
     }
