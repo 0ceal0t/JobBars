@@ -32,7 +32,7 @@ namespace JobBars.UI {
             Icon->PartId = 0;
             Icon->Flags = 0;
             Icon->WrapMode = 1;
-            UIHelper.LoadIcon(Icon, 405);
+            UIHelper.SetupIcon(Icon, 405);
 
             Overlay = UIBuilder.CreateImageNode();
             Overlay->AtkResNode.Height = 1;
@@ -40,13 +40,13 @@ namespace JobBars.UI {
             Overlay->AtkResNode.Y = 0;
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
-            UIHelper.LoadTexture(Overlay, "ui/uld/IconA_Frame.tex");
+            UIHelper.SetupTexture(Overlay, "ui/uld/IconA_Frame.tex");
             UIHelper.UpdatePart(Overlay->PartsList, 0, 365, 4, 37, 37);
 
             Border = UIBuilder.CreateNineNode();
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -3;
-            UIHelper.LoadTexture(Border, "ui/uld/IconA_Frame.tex");
+            UIHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
             SetBorderThin(JobBars.Config.BuffThinBorder);
             Border->TopOffset = 5;
             Border->BottomOffset = 5;

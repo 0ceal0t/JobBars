@@ -77,7 +77,7 @@ namespace JobBars.UI {
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
-                UIHelper.LoadTexture(bg, "ui/uld/JobHudSimple_StackA.tex");
+                UIHelper.SetupTexture(bg, "ui/uld/JobHudSimple_StackA.tex");
                 UIHelper.UpdatePart(bg->PartsList, 0, 0, 0, 32, 32);
                 bg->Flags = 0;
                 bg->WrapMode = 1;
@@ -115,7 +115,7 @@ namespace JobBars.UI {
                 selected->AtkResNode.Y = 0;
                 selected->AtkResNode.OriginX = 16;
                 selected->AtkResNode.OriginY = 16;
-                UIHelper.LoadTexture(selected, "ui/uld/JobHudSimple_StackA.tex");
+                UIHelper.SetupTexture(selected, "ui/uld/JobHudSimple_StackA.tex");
                 UIHelper.UpdatePart(selected->PartsList, 0, 32, 0, 32, 32);
                 selected->Flags = 0;
                 selected->WrapMode = 1;

@@ -10,41 +10,38 @@ using System.Text;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
+        private struct TextureToLoadStruct {
+            public bool IsIcon;
+            public string Path;
+            public int IconId;
+            public AtkImageNode* Node;
+        }
+
         private static readonly Dictionary<string, string> ResolvedPaths = new();
+        private static readonly List<TextureToLoadStruct> NodesToLoad = new();
         private static readonly List<IntPtr> NodesToHD = new();
 
-        public static void LoadIcon(AtkImageNode* node, int icon) {
-            SetupTexture(node);
-            node->LoadIconTexture(icon, 0);
+        public static void SetupIcon(AtkImageNode* node, int icon) {
+            AllocatePartList(node);
+            NodesToLoad.Add(new TextureToLoadStruct { // Load this icon in the next framework tick
+                IsIcon = true,
+                IconId = icon,
+                Node = node
+            });
         }
 
-        public static void LoadTexture(AtkImageNode* node, string texture) {
-            SetupTexture(node);
-
-            var version = JobBars.Config.Use4K ? 2u : 1u;
-
-            // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
-            // could also be icon.tex -> icon.tex
-
-            var resolvedPath = texture;
-            if(!ResolvedPaths.TryGetValue(texture, out resolvedPath)) {
-                resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? texture.Replace(".tex", "_hr1.tex") : texture).ToLower();
-                PluginLog.Log($"Resolved {texture} -> {resolvedPath}");
-                ResolvedPaths.Add(texture, resolvedPath);
-            }
-
-            if (Path.IsPathRooted(resolvedPath)) {
-                node->LoadTexture(resolvedPath, 1); // don't want to re-apply _hr1
-                if (JobBars.Config.Use4K) NodesToHD.Add(new IntPtr(node));
-            }
-            else {
-                node->LoadTexture(texture, version); // don't use the resolved path or else we'll end up with _hr1_hr1
-            }
+        public static void SetupTexture(AtkImageNode* node, string texture) {
+            AllocatePartList(node);
+            NodesToLoad.Add(new TextureToLoadStruct { // Load this texture in the next framework tick
+                IsIcon = false,
+                Path = texture,
+                Node = node
+            });
         }
 
-        public static void LoadTexture(AtkNineGridNode* node, string texture) => LoadTexture((AtkImageNode*)node, texture);
+        public static void SetupTexture(AtkNineGridNode* node, string texture) => SetupTexture((AtkImageNode*)node, texture);
 
-        private static void SetupTexture(AtkImageNode* node) {
+        private static void AllocatePartList(AtkImageNode* node) {
             var partsList = CreatePartsList(1);
             var assetList = CreateAssets(1);
             SetPartAsset(partsList, 0, assetList, 0);
@@ -61,10 +58,52 @@ namespace JobBars.Helper {
         public static void UnloadTexture(AtkNineGridNode* node) => UnloadTexture((AtkImageNode*)node);
 
         public static void TickTextures() {
+            if (TickTextureLoad()) return; // Don't bother with the HD stuff if textures are still being loaded
+            TickTexturesHD();
+        }
+
+        private static bool TickTextureLoad() {
+            if (NodesToLoad.Count == 0) return false;
+
+            foreach (var node in NodesToLoad) {
+                if (node.IsIcon) { // Load icon
+                    node.Node->LoadIconTexture(node.IconId, 0);
+                }
+                else { // Load texture path
+                    var imageNode = node.Node;
+                    var path = node.Path;
+
+                    var version = JobBars.Config.Use4K ? 2u : 1u;
+
+                    // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
+                    // could also be icon.tex -> icon.tex
+
+                    var resolvedPath = path;
+                    if (!ResolvedPaths.TryGetValue(path, out resolvedPath)) {
+                        resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path).ToLower();
+                        PluginLog.Log($"Resolved {path} -> {resolvedPath}");
+                        ResolvedPaths.Add(path, resolvedPath);
+                    }
+
+                    if (Path.IsPathRooted(resolvedPath)) {
+                        imageNode->LoadTexture(resolvedPath, 1); // don't want to re-apply _hr1
+                        if (JobBars.Config.Use4K) NodesToHD.Add(new IntPtr(imageNode)); // need to modify texture resource later
+                    }
+                    else {
+                        imageNode->LoadTexture(path, version); // don't use the resolved path or else we'll end up with _hr1_hr1
+                    }
+                }
+            }
+
+            NodesToLoad.Clear();
+            return true;
+        }
+
+        private static void TickTexturesHD() {
             if (NodesToHD.Count == 0) return;
 
             var newNodes = new List<IntPtr>();
-            foreach(var node in NodesToHD) {
+            foreach (var node in NodesToHD) {
                 var imageNode = (AtkImageNode*)node;
                 if (imageNode->PartsList == null) {
                     newNodes.Add(node);
@@ -128,7 +167,7 @@ namespace JobBars.Helper {
             Marshal.Copy(hashBytes, 0, new IntPtr(bHash), hashBytes.Length);
             var pResourceHash = (uint*)bHash;
 
-            var resource = (TextureResourceHandle*) GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
+            var resource = (TextureResourceHandle*)GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
             var resolvedPath = resource->ResourceHandle.FileName.ToString();
             if (resource != null && resource->ResourceHandle.RefCount > 0) resource->ResourceHandle.DecRef();
 

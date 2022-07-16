@@ -12,7 +12,7 @@ namespace JobBars.UI {
             Highlight = UIBuilder.CreateNineNode();
             Highlight->AtkResNode.Width = 320;
             Highlight->AtkResNode.Height = 48;
-            UIHelper.LoadTexture(Highlight, "ui/uld/PartyListTargetBase.tex");
+            UIHelper.SetupTexture(Highlight, "ui/uld/PartyListTargetBase.tex");
             UIHelper.UpdatePart(Highlight->PartsList, 0, 112, 0, 48, 48);
             Highlight->TopOffset = 20;
             Highlight->BottomOffset = 20;

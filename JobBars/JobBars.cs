@@ -121,6 +121,8 @@ namespace JobBars {
 
             // ==========================
 
+            InitializeUI();
+
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 57 41 54 41 55 41 56 48 8D 6C 24");
             ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
@@ -201,10 +203,7 @@ namespace JobBars {
         }
 
         private void FrameworkOnUpdate(Framework framework) {
-            if (!IsLoaded) {
-                InitializeUI();
-                return;
-            }
+            if (!IsLoaded) return;
 
             var addon = UIHelper.BuffGaugeAttachAddon;
 

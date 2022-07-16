@@ -43,7 +43,7 @@ namespace JobBars.UI {
             Icon->PartId = 0;
             Icon->Flags |= (byte)ImageNodeFlags.AutoFit;
             Icon->WrapMode = 1;
-            UIHelper.LoadIcon(Icon, 405);
+            UIHelper.SetupIcon(Icon, 405);
             UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
 
             Border = UIBuilder.CreateImageNode();
@@ -51,7 +51,7 @@ namespace JobBars.UI {
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
-            UIHelper.LoadTexture(Border, "ui/uld/IconA_Frame.tex");
+            UIHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
             UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
             Border->Flags = 0;
             Border->WrapMode = 1;

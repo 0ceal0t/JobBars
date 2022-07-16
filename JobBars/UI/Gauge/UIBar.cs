@@ -52,7 +52,7 @@ namespace JobBars.UI {
             Background->AtkResNode.Y = 0;
             Background->Flags = 0;
             Background->WrapMode = 1;
-            UIHelper.LoadTexture(Background, "ui/uld/Parameter_Gauge.tex");
+            UIHelper.SetupTexture(Background, "ui/uld/Parameter_Gauge.tex");
             UIHelper.UpdatePart(Background->PartsList, 0, 0, 100, 160, 20);
 
             // ========= BAR ============
@@ -67,7 +67,7 @@ namespace JobBars.UI {
             BarMainNode->AtkResNode.Height = 20;
             BarMainNode->AtkResNode.X = 6;
             BarMainNode->AtkResNode.Y = 0;
-            UIHelper.LoadTexture(BarMainNode, "ui/uld/Parameter_Gauge.tex");
+            UIHelper.SetupTexture(BarMainNode, "ui/uld/Parameter_Gauge.tex");
             UIHelper.UpdatePart(BarMainNode->PartsList, 0, 6, 40, 148, 20);
             BarMainNode->TopOffset = 0;
             BarMainNode->BottomOffset = 0;
@@ -79,7 +79,7 @@ namespace JobBars.UI {
             BarSecondaryNode->AtkResNode.Height = 20;
             BarSecondaryNode->AtkResNode.X = 6;
             BarSecondaryNode->AtkResNode.Y = 0;
-            UIHelper.LoadTexture(BarSecondaryNode, "ui/uld/Parameter_Gauge.tex");
+            UIHelper.SetupTexture(BarSecondaryNode, "ui/uld/Parameter_Gauge.tex");
             UIHelper.UpdatePart(BarSecondaryNode->PartsList, 0, 6, 40, 148, 20);
             BarSecondaryNode->TopOffset = 0;
             BarSecondaryNode->BottomOffset = 0;
@@ -95,7 +95,7 @@ namespace JobBars.UI {
                 Separators[i]->AtkResNode.Rotation = (float)(Math.PI / 2f);
                 Separators[i]->AtkResNode.X = 0;
                 Separators[i]->AtkResNode.Y = 5;
-                UIHelper.LoadTexture(Separators[i], "ui/uld/Parameter_Gauge.tex");
+                UIHelper.SetupTexture(Separators[i], "ui/uld/Parameter_Gauge.tex");
                 UIHelper.UpdatePart(Separators[i]->PartsList, 0, 10, 3, 10, 5);
                 Separators[i]->Flags = 0;
                 Separators[i]->WrapMode = 1;
@@ -107,7 +107,7 @@ namespace JobBars.UI {
             Frame->AtkResNode.Height = 20;
             Frame->AtkResNode.X = 0;
             Frame->AtkResNode.Y = 0;
-            UIHelper.LoadTexture(Frame, "ui/uld/Parameter_Gauge.tex");
+            UIHelper.SetupTexture(Frame, "ui/uld/Parameter_Gauge.tex");
             UIHelper.UpdatePart(Frame->PartsList, 0, 0, 0, 160, 20);
             Frame->Flags = 0;
             Frame->WrapMode = 1;
@@ -117,7 +117,7 @@ namespace JobBars.UI {
             Indicator->AtkResNode.Height = 20;
             Indicator->AtkResNode.X = 0;
             Indicator->AtkResNode.Y = 0;
-            UIHelper.LoadTexture(Indicator, "ui/uld/Parameter_Gauge.tex");
+            UIHelper.SetupTexture(Indicator, "ui/uld/Parameter_Gauge.tex");
             UIHelper.UpdatePart(Indicator->PartsList, 0, 0, 0, 160, 20);
             Indicator->TopOffset = 5;
             Indicator->BottomOffset = 5;
@@ -145,7 +145,7 @@ namespace JobBars.UI {
             TextBlurNode->AtkResNode.Y = 0;
             TextBlurNode->AtkResNode.OriginX = 0;
             TextBlurNode->AtkResNode.OriginY = 0;
-            UIHelper.LoadTexture(TextBlurNode, "ui/uld/JobHudNumBg.tex");
+            UIHelper.SetupTexture(TextBlurNode, "ui/uld/JobHudNumBg.tex");
             UIHelper.UpdatePart(TextBlurNode->PartsList, 0, 0, 0, 60, 40);
             TextBlurNode->TopOffset = 0;
             TextBlurNode->BottomOffset = 0;

@@ -41,14 +41,14 @@ namespace JobBars.UI {
 
         private void SetPartId(AtkImageNode* node, int partId, ref bool staticCircle) {
             if (partId == 80) { // Placeholder for static circle
-                if (!staticCircle) UIHelper.LoadTexture(node, "ui/uld/CursorLocation.tex");
+                if (!staticCircle) UIHelper.SetupTexture(node, "ui/uld/CursorLocation.tex");
                 staticCircle = true;
 
                 UIHelper.UpdatePart(node->PartsList, 0, 0, 0, 128, 128);
 
             }
             else {
-                if (staticCircle) UIHelper.LoadTexture(node, "ui/uld/IconA_Recast2.tex");
+                if (staticCircle) UIHelper.SetupTexture(node, "ui/uld/IconA_Recast2.tex");
                 staticCircle = false;
 
                 var row = partId % 9;
