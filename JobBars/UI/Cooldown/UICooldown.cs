@@ -17,7 +17,7 @@ namespace JobBars.UI {
         private ActionIds LastIconId = 0;
         public ActionIds IconId => LastIconId;
 
-        public UICooldownItem(AtkUldPartsList* partsList) {
+        public UICooldownItem() {
             RootRes = UIBuilder.CreateResNode();
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
@@ -43,7 +43,6 @@ namespace JobBars.UI {
             Icon->PartId = 0;
             Icon->Flags |= (byte)ImageNodeFlags.AutoFit;
             Icon->WrapMode = 1;
-
             UIHelper.LoadIcon(Icon, 405);
             UIHelper.UpdatePart(Icon->PartsList, 0, 0, 0, 44, 46);
 
@@ -52,8 +51,8 @@ namespace JobBars.UI {
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
-            Border->PartId = UIBuilder.CD_BORDER;
-            Border->PartsList = partsList;
+            UIHelper.LoadTexture(Border, "ui/uld/IconA_Frame.tex");
+            UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
             Border->Flags = 0;
             Border->WrapMode = 1;
             UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
@@ -74,11 +73,19 @@ namespace JobBars.UI {
         }
 
         public void SetNoDash() {
-            Border->PartId = UIBuilder.CD_BORDER;
+            UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
         }
 
         public void SetDash(float percent) {
-            Border->PartId = (ushort)(UIBuilder.CD_DASH_START + percent * 7);
+            var partId = (int)(percent * 7); // 0 - 6
+
+            var row = partId % 3;
+            var column = (partId - row) / 3;
+
+            var u = (ushort)(96 + (48 * row));
+            var v = (ushort)(48 * column);
+
+            UIHelper.UpdatePart(Border->PartsList, 0, u, v, 48, 48);
         }
 
         public void SetText(string text) {
@@ -113,13 +120,13 @@ namespace JobBars.UI {
             }
 
             if (Icon != null) {
-                UIHelper.UnloadIcon(Icon);
+                UIHelper.UnloadTexture(Icon);
                 Icon->AtkResNode.Destroy(true);
                 Icon = null;
             }
 
             if (Border != null) {
-                Border->UnloadTexture();
+                UIHelper.UnloadTexture(Border);
                 Border->AtkResNode.Destroy(true);
                 Border = null;
             }
@@ -136,7 +143,7 @@ namespace JobBars.UI {
 
         public List<UICooldownItem> Items = new();
 
-        public UICooldown(AtkUldPartsList* partsList) {
+        public UICooldown() {
             RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -145,7 +152,7 @@ namespace JobBars.UI {
 
             UICooldownItem lastItem = null;
             for (var idx = 0; idx < MAX_ITEMS; idx++) {
-                var item = new UICooldownItem(partsList);
+                var item = new UICooldownItem();
                 item.RootRes->ParentNode = RootRes;
                 UIHelper.SetPosition(item.RootRes, -(5 + UICooldownItem.WIDTH) * idx, 0);
                 Items.Add(item);

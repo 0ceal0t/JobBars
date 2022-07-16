@@ -9,7 +9,7 @@ using Dalamud.Logging;
 namespace JobBars {
     public unsafe partial class JobBars {
         private void ReceiveActionEffect(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail) {
-            if (!PlayerExists) {
+            if (!IsLoaded || !PlayerExists) {
                 ReceiveActionEffectHook.Original(sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail);
                 return;
             }
@@ -97,6 +97,7 @@ namespace JobBars {
 
         private void ActorControlSelf(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10) {
             ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
+            if (!IsLoaded) return;
 
             if (entityId > 0 && id == 23) {
                 if (entityId == ClientState?.LocalPlayer?.ObjectId)
@@ -116,11 +117,15 @@ namespace JobBars {
 
         private IntPtr IconDimmedDetour(IntPtr iconUnk, byte dimmed) {
             var icon = IconDimmedHook.Original(iconUnk, dimmed);
+            if (!IsLoaded) return icon;
+
             IconBuilder?.ProcessIconOverride(icon);
             return icon;
         }
 
         private void ZoneChanged(object sender, ushort e) {
+            if (!IsLoaded) return;
+
             GaugeManager?.Reset();
             IconManager?.Reset();
             BuffManager?.ResetTrackers();

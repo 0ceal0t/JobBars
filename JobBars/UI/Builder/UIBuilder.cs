@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
 namespace JobBars.UI {
@@ -8,11 +9,10 @@ namespace JobBars.UI {
 
         public UIBuilder() {
             NodeIdx = NODE_IDX_START;
-            InitTextures(); // init first
-            InitGauges(GaugeBuffAssets.PartsList);
-            InitBuffs(GaugeBuffAssets.PartsList);
-            InitCooldowns(CooldownAssets.PartsList);
-            InitCursor(CursorAssets.PartsList);
+            InitGauges();
+            InitBuffs();
+            InitCooldowns();
+            InitCursor();
 
             UIHelper.Link(GaugeRoot, BuffRoot);
             UIHelper.Link(BuffRoot, CursorRoot);
@@ -26,7 +26,6 @@ namespace JobBars.UI {
             DisposeGauges();
             DisposeBuffs();
             DisposeCursor();
-            DisposeTextures(); // dispose last
 
             var attachAddon = UIHelper.BuffGaugeAttachAddon;
             if (attachAddon != null) attachAddon->UldManager.UpdateDrawNodeList();
@@ -43,6 +42,8 @@ namespace JobBars.UI {
             var cooldownAddon = UIHelper.CooldownAttachAddon;
             var partyListAddon = UIHelper.PartyListAddon;
 
+            PluginLog.Log($"Gauges={buffGaugeAddon != null} PartyList={partyListAddon != null} Cooldowns={cooldownAddon != null}");
+
             // ===== CONTAINERS =========
 
             GaugeRoot->ParentNode = buffGaugeAddon->RootNode;
@@ -50,6 +51,8 @@ namespace JobBars.UI {
             CursorRoot->ParentNode = buffGaugeAddon->RootNode;
 
             UIHelper.Attach(buffGaugeAddon, GaugeRoot);
+
+            PluginLog.Log("Attached Gauges");
 
             // ===== BUFF PARTYLIST ======
 
@@ -59,17 +62,29 @@ namespace JobBars.UI {
                 partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
             }
 
+            PluginLog.Log("Attached PartyList");
+
             // ===== COOLDOWNS =========
 
             CooldownRoot->ParentNode = cooldownAddon->RootNode;
 
             UIHelper.Attach(cooldownAddon, CooldownRoot);
 
+            PluginLog.Log("Attached Cooldowns");
+
             // ======================
 
             buffGaugeAddon->UldManager.UpdateDrawNodeList();
+
+            PluginLog.Log("Updated Gauges");
+
             cooldownAddon->UldManager.UpdateDrawNodeList();
+
+            PluginLog.Log("Updated PartyList");
+
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
+
+            PluginLog.Log("Updated Cooldowns");
         }
 
         public void Tick(float percent) {

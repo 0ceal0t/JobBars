@@ -8,7 +8,7 @@ namespace JobBars.UI {
         public List<UICooldown> Cooldowns = new();
         private AtkResNode* CooldownRoot = null;
 
-        private void InitCooldowns(AtkUldPartsList* partsList) {
+        private void InitCooldowns() {
             CooldownRoot = CreateResNode();
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
@@ -17,7 +17,7 @@ namespace JobBars.UI {
 
             UICooldown lastCooldown = null;
             for (int i = 0; i < 8; i++) {
-                var newItem = new UICooldown(partsList);
+                var newItem = new UICooldown();
 
                 Cooldowns.Add(newItem);
                 newItem.RootRes->ParentNode = CooldownRoot;

@@ -12,7 +12,7 @@ namespace JobBars.UI {
 
         public List<UIBuffPartyList> PartyListBuffs = new();
 
-        private void InitBuffs(AtkUldPartsList* partsList) {
+        private void InitBuffs() {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
@@ -20,7 +20,7 @@ namespace JobBars.UI {
 
             UIBuff lastBuff = null;
             for (var i = 0; i < MAX_BUFFS; i++) {
-                var newBuff = new UIBuff(partsList);
+                var newBuff = new UIBuff();
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;
@@ -35,7 +35,7 @@ namespace JobBars.UI {
             RefreshBuffLayout();
 
             for (var i = 0; i < 8; i++) {
-                PartyListBuffs.Add(new UIBuffPartyList(partsList));
+                PartyListBuffs.Add(new UIBuffPartyList());
             }
         }
 

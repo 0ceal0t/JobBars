@@ -71,6 +71,9 @@ namespace JobBars {
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
+        private bool IsLoaded = false;
+        private DateTime StartTime = DateTime.Now;
+
         public JobBars(
                 DalamudPluginInterface pluginInterface,
                 ClientState clientState,
@@ -118,8 +121,6 @@ namespace JobBars {
 
             // ==========================
 
-            InitializeUI(); // <======= TEXTURES AND UI INITIALIZED HERE
-
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 57 41 54 41 55 41 56 48 8D 6C 24");
             ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
@@ -140,7 +141,7 @@ namespace JobBars {
             SetupCommands();
         }
 
-        private void InitializeUI() { // this only ever gets run ONCE
+        private void InitializeUI() {
             // these are created before the addons are even visible, so they aren't attached yet
             PluginLog.Log("==== INIT ====");
             IconBuilder.Reset();
@@ -151,11 +152,11 @@ namespace JobBars {
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
             IconManager = new IconManager();
+
+            IsLoaded = true;
         }
 
         public void Dispose() {
-            UIHelper.ClearLoadedTextures();
-
             ReceiveActionEffectHook?.Disable();
             ActorControlSelfHook?.Disable();
             IconDimmedHook?.Disable();
@@ -194,9 +195,17 @@ namespace JobBars {
             RemoveCommands();
         }
 
-        private void Animate() => Animation.Tick();
+        private void Animate() {
+            if (!IsLoaded) return;
+            Animation.Tick();
+        }
 
         private void FrameworkOnUpdate(Framework framework) {
+            if (!IsLoaded) {
+                InitializeUI();
+                return;
+            }
+
             var addon = UIHelper.BuffGaugeAttachAddon;
 
             if (!LoggedOut && RecreateUI) {
@@ -212,18 +221,20 @@ namespace JobBars {
             if (addon == null || addon->RootNode == null || RecreateUI) return;
 
             if (LoggedOut) {
+                PluginLog.Log("====== REATTACH =======");
                 Builder.Attach(); // re-attach after addons have been created
                 LoggedOut = false;
                 return;
             }
 
+            UIHelper.TickTextures();
             CheckForJobChange();
             Tick();
             CheckForHUDChange(addon);
         }
 
         private void Logout() {
-            PluginLog.Log("==== LOGOUT ===");
+            PluginLog.Log("==== LOGOUT ====");
             IconBuilder.Reset();
             Animation.Dispose();
 
@@ -245,6 +256,8 @@ namespace JobBars {
         }
 
         private void Tick() {
+            if (!IsLoaded) return;
+
             UIHelper.UpdateMp(ClientState.LocalPlayer.CurrentMp);
             UIHelper.UpdatePlayerStatus();
 
@@ -285,6 +298,7 @@ namespace JobBars {
         }
 
         private void OnOpenConfig() {
+            if (!IsLoaded) return;
             Visible = true;
         }
 

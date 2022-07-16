@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
@@ -19,7 +20,7 @@ namespace JobBars.UI {
         private string CurrentText = "";
         private static int BUFFS_HORIZONTAL => JobBars.Config.BuffHorizontal;
 
-        public UIBuff(AtkUldPartsList* partsList) : base() {
+        public UIBuff() : base() {
             RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -31,24 +32,22 @@ namespace JobBars.UI {
             Icon->PartId = 0;
             Icon->Flags = 0;
             Icon->WrapMode = 1;
-
             UIHelper.LoadIcon(Icon, 405);
 
             Overlay = UIBuilder.CreateImageNode();
             Overlay->AtkResNode.Height = 1;
             Overlay->AtkResNode.X = 0;
             Overlay->AtkResNode.Y = 0;
-            Overlay->PartId = UIBuilder.BUFF_OVERLAY;
-            Overlay->PartsList = partsList;
             Overlay->Flags = 0;
             Overlay->WrapMode = 1;
+            UIHelper.LoadTexture(Overlay, "ui/uld/IconA_Frame.tex");
+            UIHelper.UpdatePart(Overlay->PartsList, 0, 365, 4, 37, 37);
 
             Border = UIBuilder.CreateNineNode();
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -3;
-            Border->PartID = JobBars.Config.BuffThinBorder ? UIBuilder.BUFF_BORDER_THIN : UIBuilder.BUFF_BORDER;
-            Border->PartsList = partsList;
-
+            UIHelper.LoadTexture(Border, "ui/uld/IconA_Frame.tex");
+            SetBorderThin(JobBars.Config.BuffThinBorder);
             Border->TopOffset = 5;
             Border->BottomOffset = 5;
             Border->LeftOffset = 5;
@@ -104,19 +103,19 @@ namespace JobBars.UI {
             }
 
             if (Icon != null) {
-                UIHelper.UnloadIcon(Icon);
+                UIHelper.UnloadTexture(Icon);
                 Icon->AtkResNode.Destroy(true);
                 Icon = null;
             }
 
             if (Overlay != null) {
-                Overlay->UnloadTexture();
+                UIHelper.UnloadTexture(Overlay);
                 Overlay->AtkResNode.Destroy(true);
                 Overlay = null;
             }
 
             if (Border != null) {
-                // TODO
+                UIHelper.UnloadTexture(Border);
                 Border->AtkResNode.Destroy(true);
                 Border = null;
             }
@@ -187,7 +186,12 @@ namespace JobBars.UI {
         }
 
         public void SetBorderThin(bool thin) {
-            Border->PartID = thin ? UIBuilder.BUFF_BORDER_THIN : UIBuilder.BUFF_BORDER;
+            if (thin) {
+                UIHelper.UpdatePart(Border->PartsList, 0, 0, 96, 48, 48);
+            }
+            else {
+                UIHelper.UpdatePart(Border->PartsList, 0, 252, 12, 47, 47);
+            }
         }
     }
 }

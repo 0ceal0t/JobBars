@@ -13,6 +13,7 @@ namespace JobBars {
         public static readonly Vector4 GREEN_COLOR = new(0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f);
 
         private void BuildSettingsUI() {
+            if (!IsLoaded) return;
             if (!PlayerExists) return;
             if (!Visible) return;
 

@@ -11,7 +11,7 @@ namespace JobBars.UI {
         public List<UIArrow> Arrows = new();
         public List<UIDiamond> Diamonds = new();
 
-        private void InitGauges(AtkUldPartsList* partsList) {
+        private void InitGauges() {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
@@ -19,9 +19,9 @@ namespace JobBars.UI {
 
             UIDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
-                var newGauge = new UIBar(partsList);
-                var newArrow = new UIArrow(partsList);
-                var newDiamond = new UIDiamond(partsList);
+                var newGauge = new UIBar();
+                var newArrow = new UIArrow();
+                var newDiamond = new UIDiamond();
 
                 Bars.Add(newGauge);
                 Arrows.Add(newArrow);

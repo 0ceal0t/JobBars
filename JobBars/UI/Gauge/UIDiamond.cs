@@ -20,7 +20,7 @@ namespace JobBars.UI {
                 }
 
                 if (Selected != null) {
-                    Selected->UnloadTexture();
+                    UIHelper.UnloadTexture(Selected);
                     Selected->AtkResNode.Destroy(true);
                     Selected = null;
                 }
@@ -31,7 +31,7 @@ namespace JobBars.UI {
                 }
 
                 if (Background != null) {
-                    Background->UnloadTexture();
+                    UIHelper.UnloadTexture(Background);
                     Background->AtkResNode.Destroy(true);
                     Background = null;
                 }
@@ -55,7 +55,7 @@ namespace JobBars.UI {
         private static readonly int MAX = 12;
         private List<UIDiamondTick> Ticks = new();
 
-        public UIDiamond(AtkUldPartsList* partsList) {
+        public UIDiamond() {
             RootRes = UIBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
@@ -77,8 +77,8 @@ namespace JobBars.UI {
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
-                bg->PartId = UIBuilder.DIAMOND_BG;
-                bg->PartsList = partsList;
+                UIHelper.LoadTexture(bg, "ui/uld/JobHudSimple_StackA.tex");
+                UIHelper.UpdatePart(bg->PartsList, 0, 0, 0, 32, 32);
                 bg->Flags = 0;
                 bg->WrapMode = 1;
 
@@ -115,8 +115,8 @@ namespace JobBars.UI {
                 selected->AtkResNode.Y = 0;
                 selected->AtkResNode.OriginX = 16;
                 selected->AtkResNode.OriginY = 16;
-                selected->PartId = UIBuilder.DIAMOND_FG;
-                selected->PartsList = partsList;
+                UIHelper.LoadTexture(selected, "ui/uld/JobHudSimple_StackA.tex");
+                UIHelper.UpdatePart(selected->PartsList, 0, 32, 0, 32, 32);
                 selected->Flags = 0;
                 selected->WrapMode = 1;
 

@@ -8,12 +8,12 @@ namespace JobBars.UI {
         private AtkNineGridNode* Highlight;
         private AtkTextNode* TextNode;
 
-        public UIBuffPartyList(AtkUldPartsList* partsList) {
+        public UIBuffPartyList() {
             Highlight = UIBuilder.CreateNineNode();
             Highlight->AtkResNode.Width = 320;
             Highlight->AtkResNode.Height = 48;
-            Highlight->PartID = UIBuilder.BUFF_PARTYLIST;
-            Highlight->PartsList = partsList;
+            UIHelper.LoadTexture(Highlight, "ui/uld/PartyListTargetBase.tex");
+            UIHelper.UpdatePart(Highlight->PartsList, 0, 112, 0, 48, 48);
             Highlight->TopOffset = 20;
             Highlight->BottomOffset = 20;
             Highlight->RightOffset = 20;
@@ -51,6 +51,7 @@ namespace JobBars.UI {
             }
 
             if (Highlight != null) {
+                UIHelper.UnloadTexture(Highlight);
                 Highlight->AtkResNode.Destroy(true);
                 Highlight = null;
             }

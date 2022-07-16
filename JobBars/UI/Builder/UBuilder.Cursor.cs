@@ -9,7 +9,10 @@ namespace JobBars.UI {
         private AtkImageNode* CursorInner = null;
         private AtkImageNode* CursorOuter = null;
 
-        private void InitCursor(AtkUldPartsList* partsList) {
+        private bool StaticCircleInner = true;
+        private bool StaticCircleOuter = true;
+
+        private void InitCursor() {
             CursorRoot = CreateResNode();
             CursorRoot->Width = 44;
             CursorRoot->Height = 46;
@@ -18,20 +21,16 @@ namespace JobBars.UI {
             CursorOuter = CreateImageNode();
             CursorOuter->AtkResNode.Width = 44;
             CursorOuter->AtkResNode.Height = 46;
-
             CursorOuter->AtkResNode.ParentNode = CursorRoot;
-            CursorOuter->PartId = 79;
-            CursorOuter->PartsList = partsList;
+            SetPartId(CursorOuter, 79, ref StaticCircleOuter);
             CursorOuter->Flags = 0;
             CursorOuter->WrapMode = 1;
 
             CursorInner = CreateImageNode();
             CursorInner->AtkResNode.Width = 44;
             CursorInner->AtkResNode.Height = 46;
-
             CursorInner->AtkResNode.ParentNode = CursorRoot;
-            CursorInner->PartId = 79;
-            CursorInner->PartsList = partsList;
+            SetPartId(CursorInner, 79, ref StaticCircleInner);
             CursorInner->Flags = 0;
             CursorInner->WrapMode = 1;
 
@@ -40,15 +39,37 @@ namespace JobBars.UI {
             CursorRoot->ChildNode = (AtkResNode*)CursorInner;
         }
 
+        private void SetPartId(AtkImageNode* node, int partId, ref bool staticCircle) {
+            if (partId == 80) { // Placeholder for static circle
+                if (!staticCircle) UIHelper.LoadTexture(node, "ui/uld/CursorLocation.tex");
+                staticCircle = true;
+
+                UIHelper.UpdatePart(node->PartsList, 0, 0, 0, 128, 128);
+
+            }
+            else {
+                if (staticCircle) UIHelper.LoadTexture(node, "ui/uld/IconA_Recast2.tex");
+                staticCircle = false;
+
+                var row = partId % 9;
+                var column = (partId - row) / 9;
+
+                var u = (ushort)(44 * row);
+                var v = (ushort)(48 * column);
+
+                UIHelper.UpdatePart(node->PartsList, 0, u, v, 44, 46);
+            }
+        }
+
         private void DisposeCursor() {
             if (CursorInner != null) {
-                CursorInner->UnloadTexture();
+                UIHelper.UnloadTexture(CursorInner);
                 CursorInner->AtkResNode.Destroy(true);
                 CursorInner = null;
             }
 
             if (CursorOuter != null) {
-                CursorOuter->UnloadTexture();
+                UIHelper.UnloadTexture(CursorOuter);
                 CursorOuter->AtkResNode.Destroy(true);
                 CursorOuter = null;
             }
@@ -67,16 +88,17 @@ namespace JobBars.UI {
         public void ShowCursorOuter() => UIHelper.Show(CursorOuter);
         public void HideCursorOuter() => UIHelper.Hide(CursorOuter);
 
-        public void SetCursorInnerPercent(float percent, float scale) => SetCursorPercent(CursorInner, percent, scale);
-        public void SetCursorOuterPercent(float percent, float scale) => SetCursorPercent(CursorOuter, percent, scale);
+        public void SetCursorInnerPercent(float percent, float scale) => SetCursorPercent(CursorInner, percent, scale, ref StaticCircleInner);
+        public void SetCursorOuterPercent(float percent, float scale) => SetCursorPercent(CursorOuter, percent, scale, ref StaticCircleOuter);
 
-        private void SetCursorPercent(AtkImageNode* node, float percent, float scale) {
+        private void SetCursorPercent(AtkImageNode* node, float percent, float scale, ref bool staticCircle) {
             if (percent == 2) { // whatever, just use this for the solid circle
                 node->AtkResNode.Width = 128;
                 node->AtkResNode.Height = 128;
                 node->AtkResNode.X = -(128f * scale) / 2f;
                 node->AtkResNode.Y = -(128f * scale) / 2f + 2;
-                node->PartId = 80;
+                SetPartId(node, 80, ref staticCircle);
+
                 UIHelper.SetScale((AtkResNode*)node, scale, scale);
             }
             else {
@@ -84,7 +106,8 @@ namespace JobBars.UI {
                 node->AtkResNode.Height = 46;
                 node->AtkResNode.X = -22f * scale;
                 node->AtkResNode.Y = -20f * scale;
-                node->PartId = (ushort)(percent * 79);
+                SetPartId(node, (ushort)(percent * 79), ref staticCircle);
+
                 UIHelper.SetScale((AtkResNode*)node, scale, scale);
             }
         }

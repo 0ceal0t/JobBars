@@ -9,81 +9,90 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace JobBars.Helper {
-    public unsafe struct Asset_PartList {
-        public AtkUldAsset* Asset;
-        public uint AssetCount;
-        public AtkUldPartsList* PartsList;
-    }
-
-    public struct PartStruct {
-        public ushort U;
-        public ushort V;
-        public ushort Width;
-        public ushort Height;
-
-        public PartStruct(ushort u, ushort v, ushort w, ushort h) {
-            U = u;
-            V = v;
-            Width = w;
-            Height = h;
-        }
-    }
-
     public unsafe partial class UIHelper {
+        private static readonly Dictionary<string, string> ResolvedPaths = new();
+        private static readonly List<IntPtr> NodesToHD = new();
+
         public static void LoadIcon(AtkImageNode* node, int icon) {
+            SetupTexture(node);
+            node->LoadIconTexture(icon, 0);
+        }
+
+        public static void LoadTexture(AtkImageNode* node, string texture) {
+            SetupTexture(node);
+
+            var version = JobBars.Config.Use4K ? 2u : 1u;
+
+            // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
+            // could also be icon.tex -> icon.tex
+
+            var resolvedPath = texture;
+            if(!ResolvedPaths.TryGetValue(texture, out resolvedPath)) {
+                resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? texture.Replace(".tex", "_hr1.tex") : texture).ToLower();
+                PluginLog.Log($"Resolved {texture} -> {resolvedPath}");
+                ResolvedPaths.Add(texture, resolvedPath);
+            }
+
+            if (Path.IsPathRooted(resolvedPath)) {
+                node->LoadTexture(resolvedPath, 1); // don't want to re-apply _hr1
+                if (JobBars.Config.Use4K) NodesToHD.Add(new IntPtr(node));
+            }
+            else {
+                node->LoadTexture(texture, version); // don't use the resolved path or else we'll end up with _hr1_hr1
+            }
+        }
+
+        public static void LoadTexture(AtkNineGridNode* node, string texture) => LoadTexture((AtkImageNode*)node, texture);
+
+        private static void SetupTexture(AtkImageNode* node) {
             var partsList = CreatePartsList(1);
             var assetList = CreateAssets(1);
             SetPartAsset(partsList, 0, assetList, 0);
             node->PartsList = partsList;
-            node->LoadIconTexture(icon, 0);
         }
 
-        public static void UnloadIcon(AtkImageNode* node) {
+        public static void UnloadTexture(AtkImageNode* node) {
             node->UnloadTexture();
             DisposeAsset(node->PartsList->Parts[0].UldAsset, 1);
             DisposePartsList(node->PartsList);
             node->PartsList = null;
         }
 
-        // ===========================
+        public static void UnloadTexture(AtkNineGridNode* node) => UnloadTexture((AtkImageNode*)node);
 
-        public static Asset_PartList LoadLayout(Dictionary<string, PartStruct[]> layout) {
-            var ret = new Asset_PartList();
+        public static void TickTextures() {
+            if (NodesToHD.Count == 0) return;
 
-            var partCount = 0;
-            List<string> paths = new();
-            foreach (var entry in layout) {
-                paths.Add(entry.Key);
-                partCount += entry.Value.Length;
-            }
-            ret.AssetCount = (uint)paths.Count;
-            ret.Asset = CreateAssets(paths);
-
-            ret.PartsList = CreatePartsList((uint)partCount);
-            var partIdx = 0;
-            var assetIdx = 0;
-            foreach (var entry in layout) {
-                foreach (var part in entry.Value) {
-                    UpdatePart(ret.PartsList, partIdx, ret.Asset, assetIdx, part.U, part.V, part.Width, part.Height);
-                    partIdx++;
+            var newNodes = new List<IntPtr>();
+            foreach(var node in NodesToHD) {
+                var imageNode = (AtkImageNode*)node;
+                if (imageNode->PartsList == null) {
+                    newNodes.Add(node);
+                    continue;
                 }
-                assetIdx++;
+                if (imageNode->PartsList->Parts == null) {
+                    newNodes.Add(node);
+                    continue;
+                }
+                if (imageNode->PartsList->Parts[0].UldAsset == null) {
+                    newNodes.Add(node);
+                    continue;
+                }
+
+                if (!imageNode->PartsList->Parts[0].UldAsset->AtkTexture.IsTextureReady()) {
+                    newNodes.Add(node);
+                    continue;
+                }
+
+                var tex = imageNode->PartsList->Parts[0].UldAsset->AtkTexture.Resource;
+                Marshal.WriteByte(new IntPtr(tex) + 0x1a, 2);
             }
 
-            return ret;
+            NodesToHD.Clear();
+            NodesToHD.AddRange(newNodes);
         }
 
-        public static void DisposeLayout(Asset_PartList layout) {
-            for (var i = 0; i < layout.AssetCount; i++) {
-                layout.Asset[i].AtkTexture.ReleaseTexture();
-            }
-            DisposeAsset(layout.Asset, layout.AssetCount);
-            DisposePartsList(layout.PartsList);
-        }
-
-        // ==========================
-
-        private static readonly HashSet<IntPtr> LoadedTextures = new();
+        // ===============
 
         public static void DisposePartsList(AtkUldPartsList* partsList) {
             var partsCount = partsList->PartCount;
@@ -93,30 +102,6 @@ namespace JobBars.Helper {
 
         public static void DisposeAsset(AtkUldAsset* assets, uint assetCount) {
             IMemorySpace.Free(assets, (ulong)sizeof(AtkUldAsset) * assetCount);
-        }
-
-        public unsafe static AtkUldAsset* CreateAssets(List<string> paths) {
-            var ret = CreateAssets((uint)paths.Count);
-            for (int i = 0; i < paths.Count; i++) {
-                var hd = JobBars.Config.Use4K ? (byte)2 : (byte)1;
-
-                var tex = (AtkTexture*)(new IntPtr(ret) + 0x20 * i + 0x8);
-                var path = paths[i];
-
-                // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
-                // could also be icon.tex -> icon.tex
-                var resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path);
-                PluginLog.Log($"Resolved {path} -> {resolvedPath}");
-
-                if (Path.IsPathRooted(resolvedPath)) {
-                    TextureLoadPath(tex, resolvedPath, 1); // don't want to re-apply _hr1
-                    Marshal.WriteByte(new IntPtr(tex->Resource) + 0x1a, hd);
-                }
-                else {
-                    TextureLoadPath(tex, path, hd);
-                }
-            }
-            return ret;
         }
 
         private unsafe static string GetResolvedPath(string texPath) {
@@ -145,23 +130,11 @@ namespace JobBars.Helper {
 
             var resource = (TextureResourceHandle*) GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
             var resolvedPath = resource->ResourceHandle.FileName.ToString();
-            //resource->ResourceHandle.DecRef();
-            LoadedTextures.Add(new IntPtr(resource));
+            if (resource != null && resource->ResourceHandle.RefCount > 0) resource->ResourceHandle.DecRef();
 
             PluginLog.Log($"+ RefCount {resolvedPath} {resource->ResourceHandle.RefCount}");
 
             return resolvedPath;
-        }
-
-        public unsafe static void ClearLoadedTextures() {
-            foreach(var tex in LoadedTextures) {
-                var resource = (TextureResourceHandle*)tex;
-                resource->ResourceHandle.DecRef();
-                var resolvedPath = resource->ResourceHandle.FileName.ToString();
-
-                PluginLog.Log($"- RefCount {resolvedPath} {resource->ResourceHandle.RefCount}");
-            }
-            LoadedTextures.Clear();
         }
 
         public unsafe static AtkUldAsset* CreateAssets(uint assetCount) {
