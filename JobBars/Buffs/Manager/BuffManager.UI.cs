@@ -43,13 +43,13 @@ namespace JobBars.Buffs.Manager {
                 JobBars.Builder.UpdateBuffsSize();
             }
 
-            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.BuffScale)) {
+            if (ImGui.DragFloat("Scale" + _ID, ref JobBars.Config.BuffScale,0.05f)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();
             }
 
             var pos = JobBars.Config.BuffPosition;
-            if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+            if (ImGui.DragFloat2("Position" + _ID, ref pos)) {
                 SetBuffPosition(pos);
             }
 

@@ -50,18 +50,21 @@ namespace JobBars.Gauges.Manager {
 
             if (JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING
                 var pos = JobBars.Config.GaugePositionGlobal;
-                if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
+                if(ImGui.DragFloat2("Position" + _ID, ref pos))
+                {
                     SetGaugePositionGlobal(pos);
                 }
             }
             else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) { // PER-JOB POSITIONING
                 var pos = GetPerJobPosition();
-                if (ImGui.InputFloat2($"Position ({CurrentJob})" + _ID, ref pos)) {
+                if (ImGui.DragFloat2($"Position ({CurrentJob})" + _ID, ref pos))
+                {
                     SetGaugePositionPerJob(CurrentJob, pos);
                 }
+
             }
 
-            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.GaugeScale)) {
+            if (ImGui.DragFloat("Scale" + _ID, ref JobBars.Config.GaugeScale,0.05f)) {
                 UpdatePositionScale();
                 JobBars.Config.Save();
             }
