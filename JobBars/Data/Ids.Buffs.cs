@@ -50,6 +50,10 @@
         GiantDominance = 1248,
         Lightspeed = 841,
         HarmonyOfSpirit = 2714,
+        NeutralSect = 1892,
+        Macrocosmos = 2718,
+        Horoscope = 1890,
+        HoroscopeHelios = 1891,
 
         // SGE ============
         EukrasianDosis = 2614,

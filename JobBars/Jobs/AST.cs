@@ -157,7 +157,15 @@ namespace JobBars.Jobs {
                 Triggers = new[] {
                     new IconTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
                 }
-            })
+            }),
+            new IconReplacer(UIHelper.Localize(ActionIds.NeutralSect), new IconProps {
+                Icons = new [] {
+                    ActionIds.NeutralSect
+                },
+                Triggers = new [] {
+                    new IconTriggerStruct { Trigger = new Item(BuffIds.NeutralSect), Duration = 20 }
+                }
+            }),
         };
 
         public static bool MP => true;

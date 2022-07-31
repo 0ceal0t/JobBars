@@ -77,7 +77,9 @@
         Lightspeed = 3606,
         StellarDetonation = 8324,
         Macrocosmos = 25874,
+        Microcosmos = 25875,
         Astrodyne = 25870,
+        Horoscope = 16557,
 
         // SGE ============
         Dosis = 24283,
