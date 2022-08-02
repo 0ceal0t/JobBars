@@ -1,16 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-
+  <Target Name="PostBuildStuff" AfterTargets="ILRepacker">
+    <Exec Command="RD /S /Q $(OutputPath)ref" />
+    <Exec Command="del $(OutputPath)*.pdb" />
+    <Exec Command="del $(OutputPath)*.deps.json" />
+  </Target>
+  
+  <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-        <InputAssemblies Include="../lib/FFXIVClientStructs.Common.dll" />
+      <InputAssemblies Include="../lib/FFXIVClientStructs.Common.dll" />
       <InputAssemblies Include="../lib/FFXIVClientStructs.dll" />
-        <InputAssemblies Include="$(OutputPath)JobBars.dll" />
+      <InputAssemblies Include="$(OutputPath)JobBars.dll" />
     </ItemGroup>
 
     <ItemGroup>
-        <LibraryAssemblies Include="$(OutputPath)" />
-        <LibraryAssemblies Include="$(APPDATA)\XIVLauncher\addon\Hooks\dev" />
+      <LibraryAssemblies Include="$(OutputPath)" />
+      <LibraryAssemblies Include="$(APPDATA)\XIVLauncher\addon\Hooks\dev" />
     </ItemGroup>
 
     <ILRepack
@@ -20,8 +25,8 @@
         InputAssemblies="@(InputAssemblies)"
         LibraryPath="@(LibraryAssemblies)"
         TargetKind="Dll"
-        OutputFile="$(OutputPath)\Output\JobBars.dll"
+        OutputFile="$(OutputPath)\JobBars.dll"
     />
 
-    </Target>
+  </Target>
 </Project>
