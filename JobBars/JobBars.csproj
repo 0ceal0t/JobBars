@@ -67,8 +67,6 @@
   
   <ItemGroup>
     <PackageReference Include="DalamudPackager" Version="2.1.7" />
-    <PackageReference Include="ILRepack" Version="2.1.0-beta1" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
   </ItemGroup>
   
   <ItemGroup>
