@@ -17,9 +17,7 @@ namespace JobBars.Helper {
             public AtkImageNode* Node;
         }
 
-        private static readonly Dictionary<string, string> ResolvedPaths = new();
         private static readonly List<TextureToLoadStruct> NodesToLoad = new();
-        private static readonly List<IntPtr> NodesToHD = new();
 
         public static void SetupIcon(AtkImageNode* node, int icon) {
             AllocatePartList(node);
@@ -59,7 +57,6 @@ namespace JobBars.Helper {
 
         public static void TickTextures() {
             if (TickTextureLoad()) return; // Don't bother with the HD stuff if textures are still being loaded
-            TickTexturesHD();
         }
 
         private static bool TickTextureLoad() {
@@ -74,61 +71,12 @@ namespace JobBars.Helper {
                     var path = node.Path;
 
                     var version = JobBars.Config.Use4K ? 2u : 1u;
-
-                    // get mapping to some file in necessary (icon.tex -> C:/mods/icon.tex)
-                    // could also be icon.tex -> icon.tex
-
-                    var resolvedPath = path;
-                    if (!ResolvedPaths.TryGetValue(path, out resolvedPath)) {
-                        resolvedPath = GetResolvedPath(JobBars.Config.Use4K ? path.Replace(".tex", "_hr1.tex") : path).ToLower();
-                        PluginLog.Log($"Resolved {path} -> {resolvedPath}");
-                        ResolvedPaths.Add(path, resolvedPath);
-                    }
-
-                    if (Path.IsPathRooted(resolvedPath)) {
-                        imageNode->LoadTexture(resolvedPath, 1); // don't want to re-apply _hr1
-                        if (JobBars.Config.Use4K) NodesToHD.Add(new IntPtr(imageNode)); // need to modify texture resource later
-                    }
-                    else {
-                        imageNode->LoadTexture(path, version); // don't use the resolved path or else we'll end up with _hr1_hr1
-                    }
+                    imageNode->LoadTexture(path, version);
                 }
             }
 
             NodesToLoad.Clear();
             return true;
-        }
-
-        private static void TickTexturesHD() {
-            if (NodesToHD.Count == 0) return;
-
-            var newNodes = new List<IntPtr>();
-            foreach (var node in NodesToHD) {
-                var imageNode = (AtkImageNode*)node;
-                if (imageNode->PartsList == null) {
-                    newNodes.Add(node);
-                    continue;
-                }
-                if (imageNode->PartsList->Parts == null) {
-                    newNodes.Add(node);
-                    continue;
-                }
-                if (imageNode->PartsList->Parts[0].UldAsset == null) {
-                    newNodes.Add(node);
-                    continue;
-                }
-
-                if (!imageNode->PartsList->Parts[0].UldAsset->AtkTexture.IsTextureReady()) {
-                    newNodes.Add(node);
-                    continue;
-                }
-
-                var tex = imageNode->PartsList->Parts[0].UldAsset->AtkTexture.Resource;
-                Marshal.WriteByte(new IntPtr(tex) + 0x1a, 2);
-            }
-
-            NodesToHD.Clear();
-            NodesToHD.AddRange(newNodes);
         }
 
         // ===============
@@ -141,39 +89,6 @@ namespace JobBars.Helper {
 
         public static void DisposeAsset(AtkUldAsset* assets, uint assetCount) {
             IMemorySpace.Free(assets, (ulong)sizeof(AtkUldAsset) * assetCount);
-        }
-
-        private unsafe static string GetResolvedPath(string texPath) {
-            var pathBytes = Encoding.ASCII.GetBytes(texPath);
-            var bPath = stackalloc byte[pathBytes.Length + 1];
-            Marshal.Copy(pathBytes, 0, new IntPtr(bPath), pathBytes.Length);
-            var pPath = (char*)bPath;
-
-            var typeBytes = Encoding.ASCII.GetBytes("xet");
-            var bType = stackalloc byte[typeBytes.Length + 1];
-            Marshal.Copy(typeBytes, 0, new IntPtr(bType), typeBytes.Length);
-            var pResourceType = (char*)bType;
-
-            // TODO: might need to change this based on path
-            var categoryBytes = BitConverter.GetBytes((uint)6);
-            var bCategory = stackalloc byte[categoryBytes.Length + 1];
-            Marshal.Copy(categoryBytes, 0, new IntPtr(bCategory), categoryBytes.Length);
-            var pCategoryId = (uint*)bCategory;
-
-            Crc32.Init();
-            Crc32.Update(pathBytes);
-            var hashBytes = BitConverter.GetBytes(Crc32.Checksum);
-            var bHash = stackalloc byte[hashBytes.Length + 1];
-            Marshal.Copy(hashBytes, 0, new IntPtr(bHash), hashBytes.Length);
-            var pResourceHash = (uint*)bHash;
-
-            var resource = (TextureResourceHandle*)GetResourceSync(GetFileManager(), pCategoryId, pResourceType, pResourceHash, pPath, (void*)IntPtr.Zero);
-            var resolvedPath = resource->ResourceHandle.FileName.ToString();
-            if (resource != null && resource->ResourceHandle.RefCount > 0) resource->ResourceHandle.DecRef();
-
-            PluginLog.Log($"+ RefCount {resolvedPath} {resource->ResourceHandle.RefCount}");
-
-            return resolvedPath;
         }
 
         public unsafe static AtkUldAsset* CreateAssets(uint assetCount) {

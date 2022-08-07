@@ -1,4 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+﻿using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
@@ -7,6 +8,7 @@ namespace JobBars.UI {
     public unsafe class UIBuffPartyList {
         private AtkNineGridNode* Highlight;
         private AtkTextNode* TextNode;
+        private bool Attached = false;
 
         public UIBuffPartyList() {
             Highlight = UIBuilder.CreateNineNode();
@@ -58,18 +60,34 @@ namespace JobBars.UI {
         }
 
         public void AttachTo(AtkResNode* targetGlowContainer, AtkTextNode* iconBottomLeftText) {
+            if (Attached) {
+                PluginLog.Error("Already attached");
+                return;
+            }
+            if (targetGlowContainer == null || iconBottomLeftText == null) return;
+
             targetGlowContainer->ChildCount = 4;
             Highlight->AtkResNode.ParentNode = targetGlowContainer;
             UIHelper.Link(targetGlowContainer->ChildNode->PrevSiblingNode->PrevSiblingNode, (AtkResNode*)Highlight);
 
             TextNode->AtkResNode.ParentNode = iconBottomLeftText->AtkResNode.ParentNode;
             UIHelper.Link((AtkResNode*)iconBottomLeftText, (AtkResNode*)TextNode);
+
+            Attached = true;
         }
 
         public void DetachFrom(AtkResNode* targetGlowContainer, AtkTextNode* iconBottomLeftText) {
+            if (!Attached) {
+                PluginLog.Error("Not attached yet");
+                return;
+            }
+            if (targetGlowContainer == null || iconBottomLeftText == null) return;
+
             targetGlowContainer->ChildCount = 3;
             Highlight->AtkResNode.NextSiblingNode->PrevSiblingNode = null;
             TextNode->AtkResNode.NextSiblingNode->PrevSiblingNode = null;
+
+            Attached = false;
         }
 
         public void SetHighlightVisibility(bool visible) => UIHelper.SetVisibility(Highlight, visible);

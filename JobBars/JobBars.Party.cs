@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars {
-
     public class CurrentPartyMember {
         public uint ObjectId;
         public JobIds Job;
