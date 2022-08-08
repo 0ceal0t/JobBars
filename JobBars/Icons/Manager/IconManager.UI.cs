@@ -10,9 +10,11 @@ namespace JobBars.Icons.Manager {
             }
         }
 
+        protected override void DrawSettings() { }
+
         protected override void DrawItem(IconReplacer[] item, JobIds _) {
             foreach (var icon in item) {
-                icon.Draw(_ID, SelectedJob);
+                icon.Draw(Id, SelectedJob);
             }
         }
     }

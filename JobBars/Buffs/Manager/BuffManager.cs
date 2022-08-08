@@ -11,7 +11,7 @@ namespace JobBars.Buffs.Manager {
         private readonly List<BuffConfig> LocalPlayerConfigs = new();
         private Dictionary<uint, BuffPartyMember> ObjectIdToMember = new();
 
-        public BuffManager() : base("##JobBars_Buffs") {
+        public BuffManager() : base("##JobBars_Buffs", true) {
             foreach (var jobEntry in JobToValue) LocalPlayerConfigs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
             JobBars.Builder.HideAllBuffs();
         }

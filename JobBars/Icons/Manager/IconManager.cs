@@ -7,7 +7,7 @@ namespace JobBars.Icons.Manager {
         public JobIds CurrentJob = JobIds.OTHER;
         private IconReplacer[] CurrentIcons => JobToValue.TryGetValue(CurrentJob, out var gauges) ? gauges : JobToValue[JobIds.OTHER];
 
-        public IconManager() : base("##JobBars_Icons") {
+        public IconManager() : base("##JobBars_Icons", false) {
         }
 
         public void SetJob(JobIds job) {

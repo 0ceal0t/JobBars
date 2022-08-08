@@ -101,24 +101,34 @@ namespace JobBars.Icons {
         public void Draw(string id, JobIds _) {
             var _ID = id + Name;
             var type = IsTimer ? "TIMER" : "BUFF";
+            var color = Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1);
 
-            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name} [{type}]");
+            ImGui.PushStyleColor(ImGuiCol.Text, color);
+            if (ImGui.CollapsingHeader($"{Name} [{type}]{_ID}")) {
+                ImGui.PopStyleColor();
+                ImGui.Indent();
 
-            if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
-                Enabled = newEnabled;
-                JobBars.IconManager.Reset();
-            }
-
-            if (JobBars.Config.IconComboType.Draw($"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
-                ComboType = newComboType;
-                CreateIconProps();
-                JobBars.IconManager.Reset();
-            }
-
-            if (IsTimer) {
-                if (JobBars.Config.IconTimerOffset.Draw($"Time offset{_ID}", Name, Offset, out var newOffset)) {
-                    Offset = newOffset;
+                if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
+                    Enabled = newEnabled;
+                    JobBars.IconManager.Reset();
                 }
+
+                if (JobBars.Config.IconComboType.Draw($"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
+                    ComboType = newComboType;
+                    CreateIconProps();
+                    JobBars.IconManager.Reset();
+                }
+
+                if (IsTimer) {
+                    if (JobBars.Config.IconTimerOffset.Draw($"Time offset{_ID}", Name, Offset, out var newOffset)) {
+                        Offset = newOffset;
+                    }
+                }
+
+                ImGui.Unindent();
+            }
+            else {
+                ImGui.PopStyleColor();
             }
         }
     }

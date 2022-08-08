@@ -6,18 +6,18 @@ namespace JobBars.Data {
     public abstract class PerJobManagerNested<T> : PerJobManagerGeneric<T[]> where T : class {
         protected T SettingsItemSelected = null;
 
-        public PerJobManagerNested(string id) : base(id) { }
+        public PerJobManagerNested(string id, bool showSettings) : base(id, showSettings) { }
 
         protected override void DrawLeftColumn() {
             foreach (var entry in JobToValue) {
                 if (entry.Key == JobIds.OTHER) continue;
 
-                var rowId = UIHelper.Localize(entry.Key) + _ID;
+                var rowId = UIHelper.Localize(entry.Key) + Id;
                 if (ImGui.CollapsingHeader(rowId)) {
                     ImGui.Indent();
 
                     foreach (var item in entry.Value) {
-                        var itemId = ItemToString(item) + _ID;
+                        var itemId = ItemToString(item) + Id;
                         var enabled = IsEnabled(item);
 
                         ImGui.PushStyleColor(ImGuiCol.Text, enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1));
@@ -38,7 +38,7 @@ namespace JobBars.Data {
                 ImGui.Text("Select an item...");
             }
             else {
-                ImGui.BeginChild(_ID + "Selected");
+                ImGui.BeginChild(Id + "Selected");
                 DrawItem(SettingsItemSelected);
                 ImGui.EndChild();
             }

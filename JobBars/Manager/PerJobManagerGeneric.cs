@@ -5,10 +5,12 @@ namespace JobBars.Data {
     public abstract class PerJobManagerGeneric<T> {
         protected Dictionary<JobIds, T> JobToValue = new();
         protected JobIds SelectedJob = JobIds.OTHER;
-        protected string _ID;
+        protected string Id;
+        private bool ShowSettings;
 
-        public PerJobManagerGeneric(string id) {
-            _ID = id;
+        public PerJobManagerGeneric(string id, bool showSettings) {
+            Id = id;
+            ShowSettings = showSettings;
             Init();
         }
 
@@ -64,19 +66,15 @@ namespace JobBars.Data {
         protected abstract T GetBLU();
 
         protected abstract void DrawHeader();
+        protected abstract void DrawSettings();
         protected abstract void DrawLeftColumn();
         protected abstract void DrawRightColumn();
 
-        public void Draw() {
-            DrawHeader();
-
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
-
-            ImGui.BeginChild(_ID + "/Child", ImGui.GetContentRegionAvail(), true);
+        protected void DrawJobs() {
             ImGui.Columns(2);
             ImGui.SetColumnWidth(0, 200);
 
-            ImGui.BeginChild(_ID + "Tree");
+            ImGui.BeginChild($"Tree{Id}");
 
             DrawLeftColumn();
 
@@ -86,7 +84,37 @@ namespace JobBars.Data {
             DrawRightColumn();
 
             ImGui.Columns(1);
-            ImGui.EndChild();
+        }
+
+        public void Draw() {
+            DrawHeader();
+
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+
+            if (ImGui.BeginTabBar($"{Id}-TabBar")) {
+                if (ImGui.BeginTabItem($"Jobs{Id}")) {
+                    DrawJobs();
+                    ImGui.EndTabItem();
+                }
+                if (ShowSettings && ImGui.BeginTabItem($"Settings{Id}")) {
+                    ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+
+                    ImGui.BeginChild($"Settings-Child{Id}");
+                    ImGui.Indent(7f);
+                    DrawSettings();
+                    ImGui.Unindent();
+                    ImGui.EndChild();
+
+                    ImGui.EndTabItem();
+                }
+                ImGui.EndTabBar();
+            }
+        }
+
+        protected static void DrawSeparator() {
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+            ImGui.Separator();
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
         }
     }
 }

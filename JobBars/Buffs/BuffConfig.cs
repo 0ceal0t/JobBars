@@ -2,6 +2,7 @@
 using JobBars.Data;
 using JobBars.UI;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace JobBars.Buffs {
     public struct BuffProps {
@@ -43,17 +44,27 @@ namespace JobBars.Buffs {
         }
 
         public void Draw(string _id, ref bool reset) {
-            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name}");
-            if (JobBars.Config.BuffEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
-                Enabled= newEnabled;
-                reset = true;
-            }
+            var color = Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1);
 
-            if (JobBars.Config.BuffPartyListHighlight.Draw($"Highlight party members when active{_id}{Name}", Name, PartyListHighlight, out var newPartyListHighlight)) {
-                PartyListHighlight = newPartyListHighlight;
-            }
+            ImGui.PushStyleColor(ImGuiCol.Text, color);
+            if (ImGui.CollapsingHeader($"{Name}{_id}")) {
+                ImGui.PopStyleColor();
+                ImGui.Indent();
 
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+                if (JobBars.Config.BuffEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
+                    Enabled = newEnabled;
+                    reset = true;
+                }
+
+                if (JobBars.Config.BuffPartyListHighlight.Draw($"Highlight party members when active{_id}{Name}", Name, PartyListHighlight, out var newPartyListHighlight)) {
+                    PartyListHighlight = newPartyListHighlight;
+                }
+
+                ImGui.Unindent();
+            }
+            else {
+                ImGui.PopStyleColor();
+            }
         }
     }
 }

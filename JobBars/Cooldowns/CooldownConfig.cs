@@ -34,28 +34,44 @@ namespace JobBars.Cooldowns {
             ShowBorderWhenOffCD = JobBars.Config.CooldownShowBorderWhenOffCD.Get(Name);
         }
 
-        public void Draw(string _id, ref bool reset) {
-            ImGui.TextColored(Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1), $"{Name}");
+        public bool Draw(string _id, bool isCustom, ref bool reset) {
+            var deleteCustom = false;
+            var color = Enabled ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1);
 
-            if (JobBars.Config.CooldownEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
-                Enabled = newEnabled;
-                reset = true;
+            ImGui.PushStyleColor(ImGuiCol.Text, color);
+            if (ImGui.CollapsingHeader($"{Name}{_id}")) {
+                ImGui.PopStyleColor();
+                ImGui.Indent();
+
+                if (isCustom) {
+                    if (JobBars.RemoveButton($"Delete{_id}", true)) deleteCustom = true;
+                }
+
+                if (JobBars.Config.CooldownEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
+                    Enabled = newEnabled;
+                    reset = true;
+                }
+
+                if (JobBars.Config.CooldownOrder.Draw($"Order{_id}{Name}", Name, Order, out var newOrder)) {
+                    Order = newOrder;
+                    reset = true;
+                }
+
+                if (JobBars.Config.CooldownShowBorderWhenActive.Draw($"Show border when active{_id}{Name}", Name, ShowBorderWhenActive, out var newShowBorderWhenActive)) {
+                    ShowBorderWhenActive = newShowBorderWhenActive;
+                }
+
+                if (JobBars.Config.CooldownShowBorderWhenOffCD.Draw($"Show border when off CD{_id}{Name}", Name, ShowBorderWhenOffCD, out var newShowBorderWhenOffCD)) {
+                    ShowBorderWhenOffCD = newShowBorderWhenOffCD;
+                }
+
+                ImGui.Unindent();
+            }
+            else {
+                ImGui.PopStyleColor();
             }
 
-            if (JobBars.Config.CooldownOrder.Draw($"Order{_id}{Name}", Name, Order, out var newOrder)) {
-                Order = newOrder;
-                reset = true;
-            }
-
-            if (JobBars.Config.CooldownShowBorderWhenActive.Draw($"Show border when active{_id}{Name}", Name, ShowBorderWhenActive, out var newShowBorderWhenActive)) {
-                ShowBorderWhenActive = newShowBorderWhenActive;
-            }
-
-            if (JobBars.Config.CooldownShowBorderWhenOffCD.Draw($"Show border when off CD{_id}{Name}", Name, ShowBorderWhenOffCD, out var newShowBorderWhenOffCD)) {
-                ShowBorderWhenOffCD = newShowBorderWhenOffCD;
-            }
-
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
+            return deleteCustom;
         }
     }
 }

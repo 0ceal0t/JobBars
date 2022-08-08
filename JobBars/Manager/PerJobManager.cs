@@ -3,12 +3,12 @@ using JobBars.Helper;
 
 namespace JobBars.Data {
     public abstract class PerJobManager<T> : PerJobManagerGeneric<T> where T : class {
-        public PerJobManager(string id) : base(id) { }
+        public PerJobManager(string id, bool showSettings) : base(id, showSettings) { }
 
         protected override void DrawLeftColumn() {
             foreach (var job in JobToValue.Keys) {
                 if (job == JobIds.OTHER) continue;
-                if (ImGui.Selectable(UIHelper.Localize(job) + _ID, SelectedJob == job)) {
+                if (ImGui.Selectable(UIHelper.Localize(job) + Id, SelectedJob == job)) {
                     SelectedJob = job;
                 }
             }
@@ -19,7 +19,7 @@ namespace JobBars.Data {
                 ImGui.Text("Select a job...");
             }
             else {
-                ImGui.BeginChild(_ID + "Selected");
+                ImGui.BeginChild(Id + "Selected");
                 DrawItem(JobToValue[SelectedJob], SelectedJob);
                 ImGui.EndChild();
             }

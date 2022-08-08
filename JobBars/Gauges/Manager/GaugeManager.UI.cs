@@ -6,71 +6,67 @@ using System.Numerics;
 
 namespace JobBars.Gauges.Manager {
     public partial class GaugeManager {
-        private bool LOCKED = true;
+        public bool LOCKED = true;
+
         private static readonly GaugePositionType[] ValidGaugePositionType = (GaugePositionType[])Enum.GetValues(typeof(GaugePositionType));
 
+        private readonly InfoBox<GaugeManager> PositionInfoBox = new() {
+            Label = "Position",
+            ContentsAction = (GaugeManager manager) => {
+                ImGui.Checkbox("Position locked" + manager.Id, ref manager.LOCKED);
+
+                if (JobBars.Config.GaugePositionType != GaugePositionType.Split) {
+                    if (ImGui.Checkbox("Horizontal gauges", ref JobBars.Config.GaugeHorizontal)) {
+                        manager.UpdatePositionScale();
+                        JobBars.Config.Save();
+                    }
+
+                    if (ImGui.Checkbox("Bottom-to-top", ref JobBars.Config.GaugeBottomToTop)) {
+                        manager.UpdatePositionScale();
+                        JobBars.Config.Save();
+                    }
+
+                    if (ImGui.Checkbox("Align right", ref JobBars.Config.GaugeAlignRight)) {
+                        manager.UpdatePositionScale();
+                        JobBars.Config.Save();
+                    }
+                }
+
+                if (JobBars.DrawCombo(ValidGaugePositionType, JobBars.Config.GaugePositionType, "Gauge positioning", manager.Id, out var newPosition)) {
+                    JobBars.Config.GaugePositionType = newPosition;
+                    JobBars.Config.Save();
+
+                    manager.UpdatePositionScale();
+                }
+
+                if (JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING
+                    var pos = JobBars.Config.GaugePositionGlobal;
+                    if (ImGui.InputFloat2("Position" + manager.Id, ref pos)) {
+                        SetGaugePositionGlobal(pos);
+                    }
+                }
+                else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) { // PER-JOB POSITIONING
+                    var pos = manager.GetPerJobPosition();
+                    if (ImGui.InputFloat2($"Position ({manager.CurrentJob})" + manager.Id, ref pos)) {
+                        SetGaugePositionPerJob(manager.CurrentJob, pos);
+                    }
+                }
+
+                if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Config.GaugeScale)) {
+                    manager.UpdatePositionScale();
+                    JobBars.Config.Save();
+                }
+            }
+        };
+
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Gauges Enabled" + _ID, ref JobBars.Config.GaugesEnabled)) {
+            if (ImGui.Checkbox("Gauges Enabled" + Id, ref JobBars.Config.GaugesEnabled)) {
                 JobBars.Config.Save();
             }
-
-            if (ImGui.CollapsingHeader("Position" + _ID + "/Row")) DrawPositionRow();
-
-            if (ImGui.CollapsingHeader("Settings" + _ID + "/Row")) DrawSettingsRow();
         }
 
-        private void DrawPositionRow() {
-            ImGui.Indent();
-
-            ImGui.Checkbox("Position locked" + _ID, ref LOCKED);
-
-            if (JobBars.Config.GaugePositionType != GaugePositionType.Split) {
-                if (ImGui.Checkbox("Horizontal gauges", ref JobBars.Config.GaugeHorizontal)) {
-                    UpdatePositionScale();
-                    JobBars.Config.Save();
-                }
-
-                if (ImGui.Checkbox("Bottom-to-top", ref JobBars.Config.GaugeBottomToTop)) {
-                    UpdatePositionScale();
-                    JobBars.Config.Save();
-                }
-
-                if (ImGui.Checkbox("Align right", ref JobBars.Config.GaugeAlignRight)) {
-                    UpdatePositionScale();
-                    JobBars.Config.Save();
-                }
-            }
-
-            if (JobBars.DrawCombo(ValidGaugePositionType, JobBars.Config.GaugePositionType, "Gauge positioning", _ID, out var newPosition)) {
-                JobBars.Config.GaugePositionType = newPosition;
-                JobBars.Config.Save();
-
-                UpdatePositionScale();
-            }
-
-            if (JobBars.Config.GaugePositionType == GaugePositionType.Global) { // GLOBAL POSITIONING
-                var pos = JobBars.Config.GaugePositionGlobal;
-                if (ImGui.InputFloat2("Position" + _ID, ref pos)) {
-                    SetGaugePositionGlobal(pos);
-                }
-            }
-            else if (JobBars.Config.GaugePositionType == GaugePositionType.PerJob) { // PER-JOB POSITIONING
-                var pos = GetPerJobPosition();
-                if (ImGui.InputFloat2($"Position ({CurrentJob})" + _ID, ref pos)) {
-                    SetGaugePositionPerJob(CurrentJob, pos);
-                }
-            }
-
-            if (ImGui.InputFloat("Scale" + _ID, ref JobBars.Config.GaugeScale)) {
-                UpdatePositionScale();
-                JobBars.Config.Save();
-            }
-
-            ImGui.Unindent();
-        }
-
-        private void DrawSettingsRow() {
-            ImGui.Indent();
+        protected override void DrawSettings() {
+            PositionInfoBox.Draw(this);
 
             if (ImGui.Checkbox("Hide gauges when out of combat", ref JobBars.Config.GaugesHideOutOfCombat)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide Gauges when weapon sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) JobBars.Config.Save();
@@ -80,8 +76,6 @@ namespace JobBars.Gauges.Manager {
             if (ImGui.InputFloat("Slidecast seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
                 JobBars.Config.Save();
             }
-
-            ImGui.Unindent();
         }
 
         public void DrawPositionBox() {
@@ -120,7 +114,10 @@ namespace JobBars.Gauges.Manager {
         // ==========================================
 
         protected override void DrawItem(GaugeConfig item) {
-            item.Draw(_ID, out bool newVisual, out bool reset);
+            ImGui.Indent(5);
+            item.Draw(Id, out bool newVisual, out bool reset);
+            ImGui.Unindent();
+
             if (SelectedJob != CurrentJob) return;
             if (newVisual) {
                 UpdateVisuals();

@@ -16,7 +16,7 @@ namespace JobBars.Cooldowns.Manager {
 
         private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = new();
 
-        public CooldownManager() : base("##JobBars_Cooldowns") {
+        public CooldownManager() : base("##JobBars_Cooldowns", true) {
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
 
             // initialize custom cooldowns
@@ -98,6 +98,17 @@ namespace JobBars.Cooldowns.Manager {
 
         public void ResetTrackers() {
             foreach (var item in ObjectIdToMember.Values) item.Reset();
+        }
+
+        public void AddCustomCooldown(JobIds job, string name, CooldownProps props) {
+            if (!CustomCooldowns.ContainsKey(job)) CustomCooldowns[job] = new();
+            CustomCooldowns[job].Add(new CooldownConfig(name, props));
+            JobBars.Config.AddCustomCooldown(name, job, props);
+        }
+
+        public void DeleteCustomCooldown(JobIds job, CooldownConfig custom) {
+            CustomCooldowns[job].Remove(custom);
+            JobBars.Config.RemoveCustomCooldown(custom.Name);
         }
     }
 }

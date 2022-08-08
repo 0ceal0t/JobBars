@@ -7,12 +7,15 @@ namespace JobBars.Cursors.Manager {
         private static readonly CursorPositionType[] ValidCursorPositionType = (CursorPositionType[])Enum.GetValues(typeof(CursorPositionType));
 
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Cursor enabled" + _ID, ref JobBars.Config.CursorsEnabled)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide cursor when mouse held" + _ID, ref JobBars.Config.CursorHideWhenHeld)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Cursor enabled" + Id, ref JobBars.Config.CursorsEnabled)) JobBars.Config.Save();
+        }
+
+        protected override void DrawSettings() {
+            if (ImGui.Checkbox("Hide cursor when mouse held" + Id, ref JobBars.Config.CursorHideWhenHeld)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide cursor when out of combat", ref JobBars.Config.CursorHideOutOfCombat)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide cursor when weapon sheathed", ref JobBars.Config.CursorHideWeaponSheathed)) JobBars.Config.Save();
 
-            if (JobBars.DrawCombo(ValidCursorPositionType, JobBars.Config.CursorPosition, "Cursor positioning", _ID, out var newPosition)) {
+            if (JobBars.DrawCombo(ValidCursorPositionType, JobBars.Config.CursorPosition, "Cursor positioning", Id, out var newPosition)) {
                 JobBars.Config.CursorPosition = newPosition;
                 JobBars.Config.Save();
             }
@@ -23,8 +26,8 @@ namespace JobBars.Cursors.Manager {
                 }
             }
 
-            if (ImGui.InputFloat("Inner scale" + _ID, ref JobBars.Config.CursorInnerScale)) JobBars.Config.Save();
-            if (ImGui.InputFloat("Outer scale" + _ID, ref JobBars.Config.CursorOuterScale)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Inner scale" + Id, ref JobBars.Config.CursorInnerScale)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Outer scale" + Id, ref JobBars.Config.CursorOuterScale)) JobBars.Config.Save();
 
             if (Configuration.DrawColor("Inner color", InnerColor, out var newColorInner)) {
                 InnerColor = newColorInner;
@@ -44,7 +47,7 @@ namespace JobBars.Cursors.Manager {
         }
 
         protected override void DrawItem(Cursor item, JobIds _) {
-            item.Draw(_ID);
+            item.Draw(Id);
         }
     }
 }

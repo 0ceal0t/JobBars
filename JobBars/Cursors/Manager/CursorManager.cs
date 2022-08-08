@@ -12,7 +12,7 @@ namespace JobBars.Cursors.Manager {
         private ElementColor InnerColor;
         private ElementColor OuterColor;
 
-        public CursorManager() : base("##JobBars_Cursor") {
+        public CursorManager() : base("##JobBars_Cursor", true) {
             InnerColor = UIColor.GetColor(JobBars.Config.CursorInnerColor, UIColor.MpPink);
             OuterColor = UIColor.GetColor(JobBars.Config.CursorOuterColor, UIColor.HealthGreen);
 

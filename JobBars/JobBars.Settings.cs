@@ -3,6 +3,7 @@ using ImGuiNET;
 using JobBars.Data;
 using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -12,6 +13,27 @@ namespace JobBars {
         public static readonly Vector4 RED_COLOR = new(0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f);
         public static readonly Vector4 GREEN_COLOR = new(0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f);
 
+        private readonly InfoBox<JobBars> RequiresRestartInfoBox = new() {
+            Label = "Requires Restart",
+            ContentsAction = (JobBars item) => {
+                if (ImGui.Checkbox("Use 4K textures##JobBars_Settings", ref Config.Use4K)) {
+                    Config.Save();
+                }
+
+                ImGui.SetNextItemWidth(200f);
+                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element", "##JobBars_Settings", out var newAttach)) {
+                    Config.AttachAddon = newAttach;
+                    Config.Save();
+                }
+
+                ImGui.SetNextItemWidth(200f);
+                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element", "##JobBars_Settings", out var newCDAttach)) {
+                    Config.CooldownAttachAddon = newCDAttach;
+                    Config.Save();
+                }
+            }
+        };
+
         private void BuildSettingsUI() {
             if (!IsLoaded) return;
             if (!PlayerExists) return;
@@ -20,21 +42,7 @@ namespace JobBars {
             string _ID = "##JobBars_Settings";
             ImGui.SetNextWindowSize(new Vector2(600, 1000), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
-                if (ImGui.Checkbox("Use 4K textures (Requires restart)" + _ID, ref Config.Use4K)) {
-                    Config.Save();
-                }
-
-                ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element (Requires restart)", _ID, out var newAttach)) {
-                    Config.AttachAddon = newAttach;
-                    Config.Save();
-                }
-
-                ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element (Requires restart)", _ID, out var newCDAttach)) {
-                    Config.CooldownAttachAddon = newCDAttach;
-                    Config.Save();
-                }
+                RequiresRestartInfoBox.Draw(this);
 
                 ImGui.PushStyleColor(ImGuiCol.Text, RED_COLOR);
                 ImGui.TextWrapped("Choosing UI elements will not work with plugins which hide them (such as Chat2 for Chatbox, DelvUI for PartyList). Also, when selecting PartyList for gauges, make sure to have \"Hide party list when solo\" turned off in Character Configuation > UI Settings > Party List");
