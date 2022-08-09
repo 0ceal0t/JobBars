@@ -70,6 +70,7 @@ namespace JobBars.UI {
             Highlight->AtkResNode.ParentNode = targetGlowContainer;
             UIHelper.Link(targetGlowContainer->ChildNode->PrevSiblingNode->PrevSiblingNode, (AtkResNode*)Highlight);
 
+            // parent is the component, so don't have to worry about child count
             TextNode->AtkResNode.ParentNode = iconBottomLeftText->AtkResNode.ParentNode;
             UIHelper.Link((AtkResNode*)iconBottomLeftText, (AtkResNode*)TextNode);
 
@@ -84,8 +85,8 @@ namespace JobBars.UI {
             if (targetGlowContainer == null || iconBottomLeftText == null) return;
 
             targetGlowContainer->ChildCount = 3;
-            Highlight->AtkResNode.NextSiblingNode->PrevSiblingNode = null;
-            TextNode->AtkResNode.NextSiblingNode->PrevSiblingNode = null;
+            UIHelper.Detach((AtkResNode*)Highlight);
+            UIHelper.Detach((AtkResNode*)TextNode);
 
             Attached = false;
         }

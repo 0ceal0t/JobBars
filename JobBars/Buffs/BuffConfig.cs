@@ -11,7 +11,7 @@ namespace JobBars.Buffs {
         public ActionIds Icon;
         public ElementColor Color;
         public Item[] Triggers;
-        public bool IsPlayerOnly;
+        public bool ApplyToTarget;
         public bool ShowPartyText;
     }
 
@@ -23,7 +23,7 @@ namespace JobBars.Buffs {
         public readonly ActionIds Icon;
         public readonly ElementColor Color;
         public readonly Item[] Triggers;
-        public readonly bool IsPlayerOnly;
+        public readonly bool ApplyToTarget;
         public readonly bool ShowPartyText;
 
         public bool Enabled { get; private set; }
@@ -36,7 +36,7 @@ namespace JobBars.Buffs {
             Icon = props.Icon;
             Color = props.Color;
             Triggers = props.Triggers;
-            IsPlayerOnly = props.IsPlayerOnly;
+            ApplyToTarget = props.ApplyToTarget;
             ShowPartyText = props.ShowPartyText;
 
             Enabled = JobBars.Config.BuffEnabled.Get(Name);

@@ -24,7 +24,8 @@ namespace JobBars.Buffs {
 
             foreach (var tracker in Trackers) {
                 tracker.Tick(partyMember.BuffDict);
-                if (tracker.Enabled) trackers.Add(tracker);
+                // add the icon if it's active and either a personal buff or on yourself
+                if (tracker.Enabled && (!tracker.ApplyToTarget || IsPlayer)) trackers.Add(tracker);
                 if (tracker.Highlight) {
                     highlight = true;
                 }
@@ -42,7 +43,7 @@ namespace JobBars.Buffs {
         public void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.BuffManager.GetBuffConfigs(PartyMemberCurrentJob, IsPlayer);
+            var trackerProps = JobBars.BuffManager.GetBuffConfigs(PartyMemberCurrentJob);
             foreach (var prop in trackerProps) {
                 if (!prop.Enabled) continue;
                 Trackers.Add(new BuffTracker(prop));

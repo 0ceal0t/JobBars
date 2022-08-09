@@ -21,7 +21,6 @@ namespace JobBars.UI {
             RootRes = UIBuilder.CreateResNode();
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
-            RootRes->ChildCount = 3;
 
             TextNode = UIBuilder.CreateTextNode();
             TextNode->FontSize = 13;
@@ -57,14 +56,14 @@ namespace JobBars.UI {
             Border->WrapMode = 1;
             UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
 
-            TextNode->AtkResNode.ParentNode = RootRes;
-            Icon->AtkResNode.ParentNode = RootRes;
-            Border->AtkResNode.ParentNode = RootRes;
+            var layout = new LayoutNode(RootRes, new[] {
+                new LayoutNode(Icon),
+                new LayoutNode(Border),
+                new LayoutNode(TextNode)
+            });
+            layout.Setup();
+            layout.Cleanup();
 
-            RootRes->ChildNode = (AtkResNode*)Icon;
-
-            UIHelper.Link((AtkResNode*)Icon, (AtkResNode*)Border);
-            UIHelper.Link((AtkResNode*)Border, (AtkResNode*)TextNode);
             TextNode->SetText("");
         }
 

@@ -62,7 +62,7 @@ namespace JobBars.UI {
             RootRes->Width = 160;
             RootRes->Height = 46;
 
-            UIDiamondTick lastTick = null;
+            List<LayoutNode> tickNodes = new();
 
             for (int idx = 0; idx < MAX; idx++) {
                 // ======= TICKS =========
@@ -120,41 +120,26 @@ namespace JobBars.UI {
                 selected->Flags = 0;
                 selected->WrapMode = 1;
 
-                // ======== SELECTED SETUP ========
-                selectedContainer->ChildCount = 2;
-                selectedContainer->ChildNode = (AtkResNode*)selected;
-
-                UIHelper.Link((AtkResNode*)selected, (AtkResNode*)text);
-
-                selected->AtkResNode.ParentNode = selectedContainer;
-                text->AtkResNode.ParentNode = selectedContainer;
-
-                // ======= SETUP TICKS =====
-                tick->ChildCount = 4;
-                tick->ChildNode = (AtkResNode*)bg;
-                tick->ParentNode = RootRes;
-
-                UIHelper.Link((AtkResNode*)bg, selectedContainer);
-
-                bg->AtkResNode.ParentNode = tick;
-                selectedContainer->ParentNode = tick;
-
-                var newTick = new UIDiamondTick {
+                Ticks.Add(new UIDiamondTick {
                     MainTick = tick,
                     Background = bg,
                     Selected = selected,
                     SelectedContainer = selectedContainer,
                     Text = text
-                };
-                Ticks.Add(newTick);
+                });
 
-                if (lastTick != null) UIHelper.Link(lastTick.MainTick, newTick.MainTick);
-                lastTick = newTick;
+                tickNodes.Add(new LayoutNode(tick, new[] {
+                    new LayoutNode(bg),
+                    new LayoutNode(selectedContainer, new[] {
+                        new LayoutNode(selected),
+                        new LayoutNode(text)
+                    })
+                }));
             }
 
-            // ====== SETUP ROOT =======
-            RootRes->ChildNode = Ticks[0].MainTick;
-            RootRes->ChildCount = (ushort)(5 * MAX);
+            var layout = new LayoutNode(RootRes, tickNodes.ToArray());
+            layout.Setup();
+            layout.Cleanup();
         }
 
         public override void Dispose() {

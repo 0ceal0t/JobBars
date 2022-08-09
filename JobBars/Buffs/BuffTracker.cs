@@ -33,6 +33,7 @@ namespace JobBars.Buffs {
         public bool Active => State == BuffState.Running;
         public bool Highlight => Active && Config.PartyListHighlight;
         public bool ShowPartyText => Config.ShowPartyText;
+        public bool ApplyToTarget => Config.ApplyToTarget;
         public string Text => ((int)Math.Round(TimeLeft)).ToString();
 
         public BuffTracker(BuffConfig config) {

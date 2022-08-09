@@ -41,7 +41,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheBalance,
                 Color = UIColor.Orange,
                 Triggers = new []{ new Item(BuffIds.TheBalance) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheBole), new BuffProps {
@@ -49,7 +49,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheBole,
                 Color = UIColor.BrightGreen,
                 Triggers = new []{ new Item(BuffIds.TheBole) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheSpear), new BuffProps {
@@ -57,7 +57,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheSpear,
                 Color = UIColor.DarkBlue,
                 Triggers = new []{ new Item(BuffIds.TheSpear) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheSpire), new BuffProps {
@@ -65,7 +65,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheSpire,
                 Color = UIColor.Yellow,
                 Triggers = new []{ new Item(BuffIds.TheSpire) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheArrow), new BuffProps {
@@ -73,7 +73,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheArrow,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(BuffIds.TheArrow) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(BuffIds.TheEwer), new BuffProps {
@@ -81,7 +81,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.TheEwer,
                 Color = UIColor.LightBlue,
                 Triggers = new []{ new Item(BuffIds.TheEwer) },
-                IsPlayerOnly = true,
+                ApplyToTarget = true,
                 ShowPartyText = true
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.Divination), new BuffProps {

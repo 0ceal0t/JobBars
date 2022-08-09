@@ -105,55 +105,6 @@ namespace JobBars.Helper {
             }
             node->NextSiblingNode = null;
         }
-
-        public static Vector2 CalculateActualDimensions(AtkResNode* container) {
-            if (container == null || !container->IsVisible) return new Vector2(0, 0);
-
-            var maxY = 0f;
-            var minY = 0f;
-            var maxX = 0f;
-            var minX = 0f;
-
-            /*
-                XatTopEdge = w * cs      (AE at the picture)
-                YatRightEdge = h * cs    (DH)
-                XatBottomEdge = h * as   (BG)
-                YatLeftEdge = w * as     (AF)
-
-                 H = w * Abs(Sin(Fi)) + h * Abs(Cos(Fi))
-                 W = w * Abs(Cos(Fi)) + h * Abs(Sin(Fi))
-                 denote 
-                 as = Abs(Sin(Fi))
-                 cs = Abs(Cos(Fi))
-             */
-
-            var node = container->ChildNode;
-            while(node != null) {
-                if (node->IsVisible) {
-                    var angle = node->Rotation;
-                    var width = (float)node->Width;
-                    var height = (float)node->Height;
-                    var x = node->X;
-                    var y = node->Y;
-
-                    var c_s = Math.Abs(Math.Cos(angle));
-                    var a_s = Math.Abs(Math.Sin(angle));
-
-                    var x1 = width * c_s + x;
-                    var y1 = height * c_s + y;
-                    var x2 = height * a_s + x;
-                    var y2 = width * a_s + y;
-
-                    maxX = (float)Math.Max(maxX, Math.Max(x1, x2));
-                    minX = (float)Math.Min(minX, Math.Min(x1, x2));
-
-                    maxY = (float)Math.Max(maxY, Math.Max(y1, y2));
-                    minY = (float)Math.Min(minY, Math.Min(y1, y2));
-                }
-                node = node->PrevSiblingNode;
-            }
-            return new Vector2(Math.Abs(maxX - minX), Math.Abs(maxY - minY));
-        }
     }
 
     public unsafe struct LayoutNode {
@@ -182,7 +133,7 @@ namespace JobBars.Helper {
         }
 
         public int Setup() {
-            if (Childen == null || Childen.Length == 0) return 0; // just the node
+            if (Childen == null || Childen.Length == 0) return Node->ChildCount; // just the node
 
             var count = Childen.Length;
             for (int i = 0; i < Childen.Length; i++) {

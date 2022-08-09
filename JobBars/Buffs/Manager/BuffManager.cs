@@ -8,22 +8,27 @@ using System.Linq;
 
 namespace JobBars.Buffs.Manager {
     public unsafe partial class BuffManager : PerJobManager<BuffConfig[]> {
-        private readonly List<BuffConfig> LocalPlayerConfigs = new();
         private Dictionary<uint, BuffPartyMember> ObjectIdToMember = new();
+        private readonly List<BuffConfig> ApplyToTargetBuffs = new();
+
+        private readonly Dictionary<JobIds, List<BuffConfig>> CustomBuffs = new();
+        private List<BuffConfig> ApplyToTargetCustomBuffs => CustomBuffs.Values.SelectMany(x => x.Where(y => y.ApplyToTarget)).ToList();
 
         public BuffManager() : base("##JobBars_Buffs", true) {
-            foreach (var jobEntry in JobToValue) LocalPlayerConfigs.AddRange(jobEntry.Value.Where(b => b.IsPlayerOnly));
+            ApplyToTargetBuffs.AddRange(JobToValue.Values.SelectMany(x => x.Where(y => y.ApplyToTarget)).ToList());
             JobBars.Builder.HideAllBuffs();
         }
 
-        public BuffConfig[] GetBuffConfigs(JobIds job, bool isLocalPlayer) {
-            var jobBuffs = JobToValue.TryGetValue(job, out var props) ? props : JobToValue[JobIds.OTHER];
-            if (!isLocalPlayer) return jobBuffs;
+        public BuffConfig[] GetBuffConfigs(JobIds job) {
+            List<BuffConfig> configs = new();
 
-            var combinedProps = new List<BuffConfig>();
-            combinedProps.AddRange(LocalPlayerConfigs);
-            combinedProps.AddRange(jobBuffs.Where(x => !x.IsPlayerOnly));
-            return combinedProps.ToArray();
+            configs.AddRange(ApplyToTargetBuffs);
+            if (JobToValue.TryGetValue(job, out var props)) configs.AddRange(props.Where(x => !x.ApplyToTarget)); // avoid double-adding
+
+            configs.AddRange(ApplyToTargetCustomBuffs);
+            if (CustomBuffs.TryGetValue(job, out var customProps)) configs.AddRange(customProps.Where(x => !x.ApplyToTarget));
+
+            return configs.ToArray();
         }
 
         public void PerformAction(Item action, uint objectId) {
