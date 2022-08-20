@@ -31,12 +31,20 @@ namespace JobBars.Cooldowns.Manager {
         };
 
         private readonly InfoBox<CooldownManager> ShowIconInfoBox = new() {
-            Label = "Show Icons When:",
+            Label = "Show Icons When",
             ContentsAction = (CooldownManager manager) => {
                 if (ImGui.Checkbox("Default" + manager.Id, ref JobBars.Config.CooldownsStateShowDefault)) JobBars.Config.Save();
                 if (ImGui.Checkbox("Active" + manager.Id, ref JobBars.Config.CooldownsStateShowRunning)) JobBars.Config.Save();
                 if (ImGui.Checkbox("On cooldown" + manager.Id, ref JobBars.Config.CooldownsStateShowOnCD)) JobBars.Config.Save();
                 if (ImGui.Checkbox("Off cooldown" + manager.Id, ref JobBars.Config.CooldownsStateShowOffCD)) JobBars.Config.Save();
+            }
+        };
+
+        private readonly InfoBox<CooldownManager> HideWhenInfoBox = new() {
+            Label = "Hide When",
+            ContentsAction = (CooldownManager manager) => {
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Weapon sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
             }
         };
 
@@ -54,9 +62,8 @@ namespace JobBars.Cooldowns.Manager {
         protected override void DrawSettings() {
             PositionInfoBox.Draw(this);
             ShowIconInfoBox.Draw(this);
+            HideWhenInfoBox.Draw(this);
 
-            if (ImGui.Checkbox("Hide cooldowns when out of combat" + Id, ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide cooldowns when weapon sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
             if (ImGui.Checkbox("Hide active buff text" + Id, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
 
             if (ImGui.Checkbox("Show party members' cooldowns" + Id, ref JobBars.Config.CooldownsShowPartyMembers)) {
@@ -64,6 +71,7 @@ namespace JobBars.Cooldowns.Manager {
                 ResetUI();
             }
 
+            ImGui.SetNextItemWidth(50f);
             if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Config.CooldownsOnCDOpacity)) JobBars.Config.Save();
         }
 

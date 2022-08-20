@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface;
 using ImGuiNET;
 using JobBars.Data;
+using JobBars.Helper;
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -34,6 +35,26 @@ namespace JobBars {
             }
         };
 
+        private static readonly string Text = "Choosing UI elements will not work with plugins which hide them (such as Chat2 for Chatbox, DelvUI for PartyList). Also, when selecting PartyList for gauges, make sure to have \"Hide party list when solo\" turned off in Character Configuation > UI Settings > Party List.";
+
+        protected static void DisplayWarning() {
+            ImGui.PushStyleColor(ImGuiCol.Border, new Vector4(1, 0, 0, 0.3f));
+            ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(1, 0, 0, 0.1f));
+
+            var textSize = ImGui.CalcTextSize(Text, ImGui.GetContentRegionMax().X - 40);
+
+            ImGui.BeginChild("##AnimationWarning", new Vector2(-1,
+                textSize.Y +
+                ImGui.GetStyle().ItemSpacing.Y * 2 +
+                ImGui.GetStyle().FramePadding.Y * 2 + 5
+            ), true);
+
+            ImGui.TextWrapped(Text);
+
+            ImGui.EndChild();
+            ImGui.PopStyleColor(2);
+        }
+
         private void BuildSettingsUI() {
             if (!IsLoaded) return;
             if (!PlayerExists) return;
@@ -44,9 +65,7 @@ namespace JobBars {
             if (ImGui.Begin("JobBars Settings", ref Visible)) {
                 RequiresRestartInfoBox.Draw(this);
 
-                ImGui.PushStyleColor(ImGuiCol.Text, RED_COLOR);
-                ImGui.TextWrapped("Choosing UI elements will not work with plugins which hide them (such as Chat2 for Chatbox, DelvUI for PartyList). Also, when selecting PartyList for gauges, make sure to have \"Hide party list when solo\" turned off in Character Configuation > UI Settings > Party List");
-                ImGui.PopStyleColor();
+                DisplayWarning();
 
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
 

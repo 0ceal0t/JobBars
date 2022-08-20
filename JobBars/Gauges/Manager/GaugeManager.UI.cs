@@ -59,6 +59,14 @@ namespace JobBars.Gauges.Manager {
             }
         };
 
+        private readonly InfoBox<GaugeManager> HideWhenInfoBox = new() {
+            Label = "Hide When",
+            ContentsAction = (GaugeManager manager) => {
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.GaugesHideOutOfCombat)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Weapon sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) JobBars.Config.Save();
+            }
+        };
+
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Gauges Enabled" + Id, ref JobBars.Config.GaugesEnabled)) {
                 JobBars.Config.Save();
@@ -67,15 +75,12 @@ namespace JobBars.Gauges.Manager {
 
         protected override void DrawSettings() {
             PositionInfoBox.Draw(this);
+            HideWhenInfoBox.Draw(this);
 
-            if (ImGui.Checkbox("Hide gauges when out of combat", ref JobBars.Config.GaugesHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide Gauges when weapon sheathed", ref JobBars.Config.GaugesHideWeaponSheathed)) JobBars.Config.Save();
             if (ImGui.Checkbox("Pulse diamond and arrow color", ref JobBars.Config.GaugePulse)) JobBars.Config.Save();
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("Slidecast seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) {
-                JobBars.Config.Save();
-            }
+            if (ImGui.InputFloat("Slidecast seconds (0 = off)", ref JobBars.Config.GaugeSlidecastTime)) JobBars.Config.Save();
         }
 
         public void DrawPositionBox() {

@@ -6,14 +6,21 @@ namespace JobBars.Cursors.Manager {
     public partial class CursorManager {
         private static readonly CursorPositionType[] ValidCursorPositionType = (CursorPositionType[])Enum.GetValues(typeof(CursorPositionType));
 
+        private readonly InfoBox<CursorManager> HideWhenInfoBox = new() {
+            Label = "Hide When",
+            ContentsAction = (CursorManager manager) => {
+                if (ImGui.Checkbox("Mouse held", ref JobBars.Config.CursorHideWhenHeld)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.CursorHideOutOfCombat)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Weapon sheathed", ref JobBars.Config.CursorHideWeaponSheathed)) JobBars.Config.Save();
+            }
+        };
+
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Cursor enabled" + Id, ref JobBars.Config.CursorsEnabled)) JobBars.Config.Save();
         }
 
         protected override void DrawSettings() {
-            if (ImGui.Checkbox("Hide cursor when mouse held" + Id, ref JobBars.Config.CursorHideWhenHeld)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide cursor when out of combat", ref JobBars.Config.CursorHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide cursor when weapon sheathed", ref JobBars.Config.CursorHideWeaponSheathed)) JobBars.Config.Save();
+            HideWhenInfoBox.Draw(this);
 
             if (JobBars.DrawCombo(ValidCursorPositionType, JobBars.Config.CursorPosition, "Cursor positioning", Id, out var newPosition)) {
                 JobBars.Config.CursorPosition = newPosition;

@@ -16,6 +16,7 @@ namespace JobBars.Buffs.Manager {
 
         public BuffManager() : base("##JobBars_Buffs", true) {
             ApplyToTargetBuffs.AddRange(JobToValue.Values.SelectMany(x => x.Where(y => y.ApplyToTarget)).ToList());
+            JobBars.Builder.HideAllBuffPartyList();
             JobBars.Builder.HideAllBuffs();
         }
 
@@ -40,6 +41,7 @@ namespace JobBars.Buffs.Manager {
 
         public void Tick() {
             if (UIHelper.CalcDoHide(JobBars.Config.BuffBarEnabled, JobBars.Config.BuffHideOutOfCombat, JobBars.Config.BuffHideWeaponSheathed)) {
+                JobBars.Builder.HideAllBuffPartyList();
                 JobBars.Builder.HideBuffs();
                 return;
             }

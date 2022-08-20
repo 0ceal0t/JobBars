@@ -51,6 +51,14 @@ namespace JobBars.Buffs.Manager {
             }
         };
 
+        private readonly InfoBox<BuffManager> HideWhenInfoBox = new() {
+            Label = "Hide When",
+            ContentsAction = (BuffManager manager) => {
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Weapon is sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
+            }
+        };
+
         protected override void DrawHeader() {
             if (ImGui.Checkbox("Buff bar enabled" + Id, ref JobBars.Config.BuffBarEnabled)) {
                 JobBars.Config.Save();
@@ -61,21 +69,14 @@ namespace JobBars.Buffs.Manager {
         protected override void DrawSettings() {
             PositionInfoBox.Draw(this);
             PartyListInfoBox.Draw(this);
+            HideWhenInfoBox.Draw(this);
 
+            ImGui.SetNextItemWidth(50f);
             if (ImGui.InputFloat("Hide buffs with cooldown above" + Id, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide buffs when out of combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
-            if (ImGui.Checkbox("Hide buffs when weapon is sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
 
             if (ImGui.Checkbox("Show party members' buffs", ref JobBars.Config.BuffIncludeParty)) {
                 JobBars.Config.Save();
                 ResetUI();
-            }
-
-            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize)) {
-                if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
-                if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
-                JobBars.Config.Save();
-                JobBars.Builder.UpdateBuffsTextSize();
             }
 
             if (ImGui.Checkbox("Thin buff border", ref JobBars.Config.BuffThinBorder)) {
@@ -83,7 +84,16 @@ namespace JobBars.Buffs.Manager {
                 JobBars.Builder.UpdateBorderThin();
             }
 
+            ImGui.SetNextItemWidth(50f);
             if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
+
+            ImGui.SetNextItemWidth(100f);
+            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize)) {
+                if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
+                if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
+                JobBars.Config.Save();
+                JobBars.Builder.UpdateBuffsTextSize();
+            }
         }
 
         protected override void DrawItem(BuffConfig[] item, JobIds _) {
