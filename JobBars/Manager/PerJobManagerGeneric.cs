@@ -6,11 +6,9 @@ namespace JobBars.Data {
         protected Dictionary<JobIds, T> JobToValue = new();
         protected JobIds SelectedJob = JobIds.OTHER;
         protected string Id;
-        private bool ShowSettings;
 
-        public PerJobManagerGeneric(string id, bool showSettings) {
+        public PerJobManagerGeneric(string id) {
             Id = id;
-            ShowSettings = showSettings;
             Init();
         }
 
@@ -96,7 +94,7 @@ namespace JobBars.Data {
                     DrawJobs();
                     ImGui.EndTabItem();
                 }
-                if (ShowSettings && ImGui.BeginTabItem($"Settings{Id}")) {
+                if (ImGui.BeginTabItem($"Settings{Id}")) {
                     ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 5);
 
                     ImGui.BeginChild($"Settings-Child{Id}");

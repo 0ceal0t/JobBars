@@ -3,7 +3,7 @@ using JobBars.Helper;
 
 namespace JobBars.Data {
     public abstract class PerJobManager<T> : PerJobManagerGeneric<T> where T : class {
-        public PerJobManager(string id, bool showSettings) : base(id, showSettings) { }
+        public PerJobManager(string id) : base(id) { }
 
         protected override void DrawLeftColumn() {
             foreach (var job in JobToValue.Keys) {

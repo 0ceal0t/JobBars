@@ -69,7 +69,7 @@ namespace JobBars.UI {
 
         public void UpdateBuffsTextSize() {
             foreach(var buff in Buffs) {
-                buff.SetTextSize(JobBars.Config.BuffTextSize);
+                buff.SetTextSize(JobBars.Config.BuffTextSize_v2);
             }
         }
 

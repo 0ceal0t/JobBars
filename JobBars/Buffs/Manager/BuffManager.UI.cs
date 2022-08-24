@@ -88,9 +88,9 @@ namespace JobBars.Buffs.Manager {
             if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
 
             ImGui.SetNextItemWidth(100f);
-            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize)) {
-                if (JobBars.Config.BuffTextSize <= 0) JobBars.Config.BuffTextSize = 1;
-                if (JobBars.Config.BuffTextSize > 255) JobBars.Config.BuffTextSize = 255;
+            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize_v2)) {
+                if (JobBars.Config.BuffTextSize_v2 <= 0) JobBars.Config.BuffTextSize_v2 = 1;
+                if (JobBars.Config.BuffTextSize_v2 > 255) JobBars.Config.BuffTextSize_v2 = 255;
                 JobBars.Config.Save();
                 JobBars.Builder.UpdateBuffsTextSize();
             }

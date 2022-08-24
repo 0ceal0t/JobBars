@@ -109,7 +109,7 @@ namespace JobBars.Data {
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
         public bool BuffBottomToTop = false;
-        public int BuffTextSize = 18;
+        public int BuffTextSize_v2 = 23;
 
         // ===== COOLDOWNS ======
 
@@ -158,6 +158,8 @@ namespace JobBars.Data {
         // ===== ICONS ===========
 
         public bool IconsEnabled = true;
+        public bool IconBuffLarge = true;
+        public bool IconTimerLarge = false;
         public BoolValueConfig IconEnabled = new(true);
         public ComboValueConfig<UIIconComboType> IconComboType = new();
         public FloatValueConfig IconTimerOffset = new(0f);

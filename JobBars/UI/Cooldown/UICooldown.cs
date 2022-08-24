@@ -23,16 +23,16 @@ namespace JobBars.UI {
             RootRes->Height = HEIGHT;
 
             TextNode = UIBuilder.CreateTextNode();
-            TextNode->FontSize = 13;
+            TextNode->FontSize = 21;
             TextNode->LineSpacing = (byte)HEIGHT;
-            TextNode->AlignmentFontType = 20;
+            TextNode->AlignmentFontType = 52;
             TextNode->AtkResNode.Width = WIDTH;
             TextNode->AtkResNode.Height = HEIGHT;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
-            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+            TextNode->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
 
             Icon = UIBuilder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
@@ -88,7 +88,7 @@ namespace JobBars.UI {
         }
 
         public void SetText(string text) {
-            SetTextSize(text.Length > 2 ? (byte)9 : (byte)13);
+            SetTextSize(text.Length > 2 ? (byte)17 : (byte)21);
             TextNode->SetText(text);
         }
 

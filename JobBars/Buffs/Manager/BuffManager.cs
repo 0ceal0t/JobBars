@@ -14,7 +14,7 @@ namespace JobBars.Buffs.Manager {
         private readonly Dictionary<JobIds, List<BuffConfig>> CustomBuffs = new();
         private List<BuffConfig> ApplyToTargetCustomBuffs => CustomBuffs.Values.SelectMany(x => x.Where(y => y.ApplyToTarget)).ToList();
 
-        public BuffManager() : base("##JobBars_Buffs", true) {
+        public BuffManager() : base("##JobBars_Buffs") {
             ApplyToTargetBuffs.AddRange(JobToValue.Values.SelectMany(x => x.Where(y => y.ApplyToTarget)).ToList());
             JobBars.Builder.HideAllBuffPartyList();
             JobBars.Builder.HideAllBuffs();

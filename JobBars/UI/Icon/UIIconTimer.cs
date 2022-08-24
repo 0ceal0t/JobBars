@@ -61,19 +61,10 @@ namespace JobBars.UI {
             Text->Ctor();
             Text->AtkResNode.NodeID = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.X = OriginalText->AtkResNode.X;
-            Text->AtkResNode.Y = OriginalText->AtkResNode.Y;
-            Text->AtkResNode.Width = OriginalText->AtkResNode.Width;
-            Text->AtkResNode.Height = OriginalText->AtkResNode.Height;
             Text->AtkResNode.Flags = 8243;
             Text->AtkResNode.Flags_2 = 1;
             Text->AtkResNode.Flags_2 |= 4;
-            Text->LineSpacing = OriginalText->LineSpacing;
-            Text->AlignmentFontType = OriginalText->AlignmentFontType;
-            Text->FontSize = OriginalText->FontSize;
-            Text->TextFlags = 8;
-            Text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
-            Text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+            RefreshVisuals();
             Text->SetText("");
 
             Text->AtkResNode.ParentNode = OriginalText->AtkResNode.ParentNode;
@@ -193,6 +184,19 @@ namespace JobBars.UI {
             OriginalText = null;
             OriginalRecastContainer = null;
             OriginalImage = null;
+        }
+
+        public override void RefreshVisuals() {
+            if (JobBars.Config.IconTimerLarge) {
+                Text->AtkResNode.X = 5;
+                Text->AtkResNode.Y = 7;
+                SetTextLarge(Text);
+            }
+            else {
+                Text->AtkResNode.X = 3;
+                Text->AtkResNode.Y = 37;
+                SetTextSmall(Text);
+            }
         }
     }
 }

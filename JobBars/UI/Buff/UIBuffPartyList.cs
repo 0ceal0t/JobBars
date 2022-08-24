@@ -31,8 +31,8 @@ namespace JobBars.UI {
             UIHelper.Hide(Highlight);
 
             TextNode = UIBuilder.CreateTextNode();
-            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
-            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
+            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize_v2;
+            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize_v2;
             TextNode->AlignmentFontType = 20;
             TextNode->FontSize = 14;
             TextNode->TextColor = new ByteColor { R = 232, G = 255, B = 254, A = 255 };

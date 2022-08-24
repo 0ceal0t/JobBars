@@ -72,7 +72,6 @@ namespace JobBars {
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
         private bool IsLoaded = false;
-        private DateTime StartTime = DateTime.Now;
 
         public JobBars(
                 DalamudPluginInterface pluginInterface,
@@ -123,7 +122,7 @@ namespace JobBars {
 
             InitializeUI();
 
-            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 57 41 54 41 55 41 56 48 8D 6C 24");
+            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 41 54 41 55 41 56");
             ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
 

@@ -6,7 +6,7 @@ namespace JobBars.Data {
     public abstract class PerJobManagerNested<T> : PerJobManagerGeneric<T[]> where T : class {
         protected T SettingsItemSelected = null;
 
-        public PerJobManagerNested(string id, bool showSettings) : base(id, showSettings) { }
+        public PerJobManagerNested(string id) : base(id) { }
 
         protected override void DrawLeftColumn() {
             foreach (var entry in JobToValue) {

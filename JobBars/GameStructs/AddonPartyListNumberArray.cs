@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace JobBars.GameStructs {
-    [StructLayout(LayoutKind.Sequential, Size = 710 * 4)]
+    [StructLayout(LayoutKind.Sequential, Size = 727 * 4)]
     public unsafe struct AddonPartyListIntArray {
         public int Unknown000;
         public int Unknown001;
@@ -18,7 +18,7 @@ namespace JobBars.GameStructs {
     }
 
 
-    [StructLayout(LayoutKind.Sequential, Size = 41 * 4 * 8)]
+    [StructLayout(LayoutKind.Sequential, Size = 42 * 4 * 8)]
     public unsafe struct AddonPartyListMembersIntArray {
         public AddonPartyListMemberIntArray Member0;
         public AddonPartyListMemberIntArray Member1;
@@ -42,7 +42,7 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout(LayoutKind.Sequential, Size = 41 * 4)]
+    [StructLayout(LayoutKind.Sequential, Size = 42 * 4)]
     public unsafe struct AddonPartyListMemberIntArray {
         public int Level;
         public int ClassJobIcon;
@@ -80,6 +80,7 @@ namespace JobBars.GameStructs {
         public int CastingPercent;
         public int CastingTargetIcon;
         public int Unknown36;
+        public int Unknown37;
         public int ObjectID;
     }
 }

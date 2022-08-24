@@ -53,14 +53,14 @@ namespace JobBars.UI {
             Border->RightOffset = 5;
 
             TextNode = UIBuilder.CreateTextNode();
-            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize;
-            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize;
-            TextNode->AlignmentFontType = 4;
+            TextNode->FontSize = (byte)JobBars.Config.BuffTextSize_v2;
+            TextNode->LineSpacing = (byte)JobBars.Config.BuffTextSize_v2;
+            TextNode->AlignmentFontType = 52;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
             TextNode->AtkResNode.Flags |= 0x10;
             TextNode->AtkResNode.Flags_2 = 1;
-            TextNode->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+            TextNode->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
 
             var layout = new LayoutNode(RootRes, new[] {
                 new LayoutNode(Icon),

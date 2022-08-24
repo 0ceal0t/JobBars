@@ -15,7 +15,7 @@ namespace JobBars.Cooldowns.Manager {
         private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
         private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = new();
 
-        public CooldownManager() : base("##JobBars_Cooldowns", true) {
+        public CooldownManager() : base("##JobBars_Cooldowns") {
             JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
 
             // initialize custom cooldowns

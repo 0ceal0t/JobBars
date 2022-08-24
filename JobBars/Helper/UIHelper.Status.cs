@@ -58,9 +58,9 @@ namespace JobBars.Helper {
                 Id = status.StatusId,
                 Type = ItemType.Buff
             }] = new Status {
-                Param = status.Param,
+                Param = (byte)status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                SourceID = status.SourceID,
+                SourceID = status.SourceId,
                 StackCount = status.StackCount,
                 StatusID = (ushort)status.StatusId
             };
@@ -70,7 +70,7 @@ namespace JobBars.Helper {
             if (actor == null) return;
             if (actor is BattleChara charaActor) {
                 foreach (var status in charaActor.StatusList) {
-                    if (status.SourceID != ownerId && !StatusIgnoreSource.Contains(status.StatusId)) continue;
+                    if (status.SourceId != ownerId && !StatusIgnoreSource.Contains(status.StatusId)) continue;
                     StatusToBuffItem(buffDict, status);
                 }
             }

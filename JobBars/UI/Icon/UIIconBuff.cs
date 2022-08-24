@@ -35,19 +35,10 @@ namespace JobBars.UI {
             BigText->Ctor();
             BigText->AtkResNode.NodeID = NodeIdx++;
             BigText->AtkResNode.Type = NodeType.Text;
-            BigText->AtkResNode.X = 2;
-            BigText->AtkResNode.Y = 3;
-            BigText->AtkResNode.Width = 40;
-            BigText->AtkResNode.Height = 40;
             BigText->AtkResNode.Flags = 8243;
             BigText->AtkResNode.Flags_2 = 1;
             BigText->AtkResNode.Flags_2 |= 4;
-            BigText->LineSpacing = 40;
-            BigText->AlignmentFontType = 20;
-            BigText->FontSize = 16;
-            BigText->TextFlags = 16;
-            BigText->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
-            BigText->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
+            RefreshVisuals();
             BigText->SetText("");
 
             var rootNode = (AtkResNode*)Component;
@@ -85,7 +76,8 @@ namespace JobBars.UI {
         }
 
         public override void Tick(float dashPercent, bool border) {
-            var showBorder = CalcShowBorder(State == IconState.BuffRunning, border);
+            // avoid doubling up on borders if combo_or_active
+            var showBorder = CalcShowBorder(State == IconState.BuffRunning, false);
             Combo->PartId = !showBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
             UIHelper.SetVisibility(Combo, showBorder);
         }
@@ -106,6 +98,19 @@ namespace JobBars.UI {
 
             UIHelper.Show(OriginalOverlay);
             OriginalOverlay = null;
+        }
+
+        public override void RefreshVisuals() {
+            if (JobBars.Config.IconBuffLarge) {
+                BigText->AtkResNode.X = 2;
+                BigText->AtkResNode.Y = 7;
+                SetTextLarge(BigText);
+            }
+            else {
+                BigText->AtkResNode.X = 0;
+                BigText->AtkResNode.Y = 37;
+                SetTextSmall(BigText);
+            }
         }
     }
 }

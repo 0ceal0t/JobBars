@@ -210,6 +210,10 @@ namespace JobBars.UI {
             }
         }
 
+        public void RefreshVisuals() {
+            foreach (var icon in Icons) icon.RefreshVisuals();
+        }
+
         public void Reset() {
             IconConfigs.Clear();
             Icons.ForEach(x => x.Dispose());
