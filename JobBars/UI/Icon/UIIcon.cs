@@ -16,6 +16,7 @@ namespace JobBars.UI {
     public struct UIIconProps {
         public bool IsTimer;
         public UIIconComboType ComboType;
+        public bool ShowRing;
     }
 
     public unsafe abstract class UIIcon {
@@ -34,6 +35,7 @@ namespace JobBars.UI {
         public AtkComponentIcon* IconComponent;
 
         protected readonly UIIconComboType ComboType;
+        protected readonly bool ShowRing;
 
         protected IconState State = IconState.None;
 
@@ -43,6 +45,7 @@ namespace JobBars.UI {
 
         public UIIcon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
             ComboType = props.ComboType;
+            ShowRing = props.ShowRing;
 
             AdjustedId = adjustedId;
             SlotId = slotId;

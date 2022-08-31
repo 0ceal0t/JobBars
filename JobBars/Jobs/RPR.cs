@@ -95,11 +95,11 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new IconReplacer[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.DeathsDesign), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.DeathsDesign), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.ShadowOfDeath },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.DeathsDesign), Duration = 60 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DeathsDesign), Duration = 60 }
                 }
             })
         };

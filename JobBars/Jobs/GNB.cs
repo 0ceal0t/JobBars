@@ -50,10 +50,10 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.NoMercy), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
                 Icons = new [] { ActionIds.NoMercy },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
                 }
             })
         };

@@ -24,6 +24,12 @@ namespace JobBars.Icons.Manager {
             if (job == CurrentJob) Reset();
         }
 
+        public void PerformAction(Item action) {
+            if (!JobBars.Config.IconsEnabled) return;
+
+            foreach (var icon in CurrentIcons.Where(i => i.Enabled)) icon.ProcessAction(action);
+        }
+
         public void Tick() {
             if (!JobBars.Config.IconsEnabled) return;
             foreach (var icon in CurrentIcons.Where(i => i.Enabled)) {

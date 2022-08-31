@@ -78,18 +78,18 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.BluBleed), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.BluBleed), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.SongOfTorment },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.BluBleed), Duration = 60 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BluBleed), Duration = 60 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Poison), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Poison), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.BadBreath },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Poison), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Poison), Duration = 15 }
                 }
             })
         };

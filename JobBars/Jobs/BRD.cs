@@ -109,44 +109,44 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.RagingStrikes), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.RagingStrikes), new IconBuffProps {
                 Icons = new [] { ActionIds.RagingStrikes },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.BattleVoice), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.BattleVoice), new IconBuffProps {
                 Icons = new [] { ActionIds.BattleVoice },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.RadiantFinale), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.RadiantFinale), new IconBuffProps {
                 Icons = new [] { ActionIds.RadiantFinale },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.VenomousBite), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.VenomousBite), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.CausticBite,
                     ActionIds.VenomousBite,
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.CausticBite), Duration = 45 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.VenomousBite), Duration = 45 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.CausticBite), Duration = 45 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.VenomousBite), Duration = 45 },
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Stormbite), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Stormbite), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Windbite,
                     ActionIds.Stormbite,
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Windbite), Duration = 45 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Stormbite), Duration = 45 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Windbite), Duration = 45 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Stormbite), Duration = 45 },
                 }
             })
         };

@@ -34,6 +34,7 @@ namespace JobBars {
 
             if (!isParty) { // don't let party members affect our gauge
                 GaugeManager?.PerformAction(actionItem);
+                IconManager?.PerformAction(actionItem);
             }
             if (!isPet) {
                 BuffManager?.PerformAction(actionItem, (uint)sourceId);
@@ -88,7 +89,10 @@ namespace JobBars {
                         Type = ItemType.Buff
                     };
 
-                    if (!isParty) GaugeManager?.PerformAction(buffItem); // more accurate than using the status list
+                    if (!isParty) { // more accurate than using the status list
+                        GaugeManager?.PerformAction(buffItem);
+                        IconManager?.PerformAction(buffItem);
+                    }
                 }
             }
 
@@ -106,7 +110,7 @@ namespace JobBars {
                     UIHelper.UpdateDoTTick(entityId);
             }
 
-            if (arg1 == 0x40000010) {
+            if (arg1 == 0x4000000F) {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
                 BuffManager?.ResetTrackers();

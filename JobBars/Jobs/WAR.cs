@@ -76,11 +76,11 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.SurgingTempest), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.SurgingTempest), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.StormsEye },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.SurgingTempest), Duration = 60 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.SurgingTempest), Duration = 60 }
                 }
             })
         };

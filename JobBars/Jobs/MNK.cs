@@ -107,24 +107,24 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.RiddleOfFire), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.RiddleOfFire), new IconBuffProps {
                 Icons = new [] { ActionIds.RiddleOfFire },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RiddleOfFire), Duration = 20 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RiddleOfFire), Duration = 20 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.DisciplinedFist), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.DisciplinedFist), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.TwinSnakes },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.DisciplinedFist), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DisciplinedFist), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Demolish), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Demolish), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Demolish },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Demolish), Duration = 18 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Demolish), Duration = 18 }
                 }
             })
         };

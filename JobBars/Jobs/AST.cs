@@ -121,8 +121,8 @@ namespace JobBars.Jobs {
             })
         };
 
-        public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Combust3), new IconProps {
+        public static IconReplacer[] Icons => new IconReplacer[] {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Combust3), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Combust1,
@@ -130,33 +130,43 @@ namespace JobBars.Jobs {
                     ActionIds.Combust3
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Combust), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Combust2), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Combust3), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust2), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust3), Duration = 30 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Lightspeed), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Lightspeed), new IconBuffProps {
                 Icons = new [] { ActionIds.Lightspeed },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(ActionIds.EarthlyStar), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(ActionIds.EarthlyStar), new IconBuffProps {
                 Icons = new [] {
                     ActionIds.EarthlyStar,
                     ActionIds.StellarDetonation
                 },
                 Triggers = new [] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(ActionIds.Astrodyne), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(ActionIds.Astrodyne), new IconBuffProps {
                 Icons = new [] {
                     ActionIds.Astrodyne
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
                 }
+            }),
+            new IconCooldownReplacer(UIHelper.Localize(ActionIds.MinorArcana), new IconCooldownProps {
+                Icons = new[] {
+                    ActionIds.LordOfCrowns,
+                    ActionIds.LadyOfCrowns
+                },
+                Triggers = new[] {
+                    new Item(ActionIds.MinorArcana)
+                },
+                Cooldown = 60
             })
         };
 

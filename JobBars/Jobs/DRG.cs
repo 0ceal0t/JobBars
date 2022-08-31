@@ -100,35 +100,35 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.LanceCharge), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.LanceCharge), new IconBuffProps {
                 Icons = new [] { ActionIds.LanceCharge },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.RightEye), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.RightEye), new IconBuffProps {
                 Icons = new [] { ActionIds.DragonSight },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye), Duration = 20 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RightEye), Duration = 20 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.PowerSurge), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.PowerSurge), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Disembowel },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 24 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 24 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.ChaosThrust), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.ChaosThrust), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.ChaosThrust,
                     ActionIds.ChaoticSpring
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 24 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChaoticSpring), Duration = 24 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChaosThrust), Duration = 24 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChaoticSpring), Duration = 24 }
                 }
             })
         };

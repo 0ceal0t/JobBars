@@ -78,6 +78,9 @@
         StellarDetonation = 8324,
         Macrocosmos = 25874,
         Astrodyne = 25870,
+        MinorArcana = 7443,
+        LordOfCrowns = 7444,
+        LadyOfCrowns = 7445,
 
         // SGE ============
         Dosis = 24283,

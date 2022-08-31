@@ -70,13 +70,13 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(ActionIds.ChainStratagem), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(ActionIds.ChainStratagem), new IconBuffProps {
                 Icons = new [] { ActionIds.ChainStratagem },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 15 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Biolysis), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Biolysis), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.SchBio,
@@ -84,9 +84,9 @@ namespace JobBars.Jobs {
                     ActionIds.Biolysis
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ArcBio), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.ArcBio2), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Biolysis), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArcBio), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArcBio2), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Biolysis), Duration = 30 }
                 }
             })
         };

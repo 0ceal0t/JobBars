@@ -67,38 +67,38 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Thunder3), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Thunder3), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Thunder,
                     ActionIds.Thunder3
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 21 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 21 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Thunder4), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Thunder4), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Thunder2,
                     ActionIds.Thunder4
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder2), Duration = 18 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder2), Duration = 18 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.LeyLines), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.LeyLines), new IconBuffProps {
                 Icons = new [] { ActionIds.LeyLines },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Sharpcast), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Sharpcast), new IconBuffProps {
                 Icons = new [] { ActionIds.Sharpcast },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 30 }
                 }
             })
         };

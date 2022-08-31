@@ -106,8 +106,10 @@ namespace JobBars.UI {
             UIHelper.Show(Text);
             Text->SetText(((int)Math.Round(current)).ToString());
 
-            UIHelper.Show(Ring);
-            Ring->PartId = (ushort)(80 - (float)(current / max) * 80);
+            if (ShowRing) {
+                UIHelper.Show(Ring);
+                Ring->PartId = (ushort)(80 - (float)(current / max) * 80);
+            }
 
             JobBars.IconBuilder.AddIconOverride(new IntPtr(OriginalImage));
             SetDimmed(true);

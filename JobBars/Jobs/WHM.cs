@@ -67,7 +67,7 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Dia), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Dia), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Aero,
@@ -75,15 +75,15 @@ namespace JobBars.Jobs {
                     ActionIds.Dia
                 },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Aero2), Duration = 30 },
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Dia), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Aero), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Aero2), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Dia), Duration = 30 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.PresenceOfMind), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.PresenceOfMind), new IconBuffProps {
                 Icons = new [] { ActionIds.PresenceOfMind },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.PresenceOfMind), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PresenceOfMind), Duration = 15 }
                 }
             })
         };

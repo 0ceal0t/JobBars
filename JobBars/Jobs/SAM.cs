@@ -89,18 +89,18 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconReplacer(UIHelper.Localize(BuffIds.Fugetsu), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Fugetsu), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Jinpu },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Fugetsu), Duration = 40 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Fugetsu), Duration = 40 }
                 }
             }),
-            new IconReplacer(UIHelper.Localize(BuffIds.Fuka), new IconProps {
+            new IconBuffReplacer(UIHelper.Localize(BuffIds.Fuka), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Shifu },
                 Triggers = new[] {
-                    new IconTriggerStruct { Trigger = new Item(BuffIds.Fuka), Duration = 40 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Fuka), Duration = 40 }
                 }
             })
         };
