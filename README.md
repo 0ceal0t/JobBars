@@ -1,6 +1,6 @@
+# JobBars
 [![Download count](https://img.shields.io/endpoint?url=https%3A%2F%2Fvz32sgcoal.execute-api.us-east-1.amazonaws.com%2FJobBars)](https://github.com/0ceal0t/JobBars)
 
-# JobBars
 A plugin for [XIVQuickLauncher](https://github.com/goatcorp/FFXIVQuickLauncher) which provides extra job gauges, a party buff tracker, and more.
 
 - Number of GCDs under buffs (Fight or Flight, Inner Release)
