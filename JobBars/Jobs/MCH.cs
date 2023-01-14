@@ -6,6 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
 using JobBars.UI;
@@ -14,17 +15,12 @@ using System;
 namespace JobBars.Jobs {
     public static class MCH {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeGCDConfig(UIHelper.Localize(ActionIds.Hypercharge), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 5,
-                MaxDuration = 9,
-                Color = UIColor.Orange,
-                Increment = new []{
-                    new Item(ActionIds.AutoCrossbow),
-                    new Item(ActionIds.HeatBlast)
+            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Overheated), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 5,
+                Triggers = new[] {
+                    new Item(BuffIds.Overheated)
                 },
-                Triggers = new []{
-                    new Item(ActionIds.Hypercharge)
-                }
+                Color = UIColor.Orange,
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 6,
@@ -80,6 +76,12 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.Tactician) }
+            }),
+            new CooldownConfig(UIHelper.Localize(ActionIds.Dismantle), new CooldownProps {
+                Icon = ActionIds.Dismantle,
+                Duration = 10,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Dismantle) }
             })
         };
 

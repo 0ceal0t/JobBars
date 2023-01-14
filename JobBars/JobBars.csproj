@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <LangVersion>preview</LangVersion>
     <AssemblyTitle>JobBars</AssemblyTitle>
     <Company></Company>
     <Product>JobBars</Product>
     <Copyright>Copyright © 2020</Copyright>
-    <AssemblyVersion>1.2.3.1</AssemblyVersion>
-    <FileVersion>1.2.3.1</FileVersion>
+    <AssemblyVersion>1.2.3.2</AssemblyVersion>
+    <FileVersion>1.2.3.2</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -30,11 +30,11 @@
 
   <ItemGroup>
     <Reference Include="FFXIVClientStructs">
-      <Private>false</Private>
+      <Private>true</Private>
       <HintPath>..\lib\FFXIVClientStructs.dll</HintPath>
     </Reference>
     <Reference Include="FFXIVClientStructs.Common">
-      <Private>false</Private>
+      <Private>true</Private>
       <HintPath>..\lib\FFXIVClientStructs.Common.dll</HintPath>
     </Reference>
     <Reference Include="Dalamud">
@@ -66,7 +66,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.7" />
+    <PackageReference Include="DalamudPackager" Version="2.1.10" />
   </ItemGroup>
   
   <ItemGroup>

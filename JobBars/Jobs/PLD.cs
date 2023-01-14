@@ -5,6 +5,7 @@ using JobBars.Data;
 
 using JobBars.Gauges;
 using JobBars.Gauges.GCD;
+using JobBars.Gauges.Procs;
 using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
@@ -15,8 +16,14 @@ using System;
 namespace JobBars.Jobs {
     public static class PLD {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
+            new GaugeProcsConfig(UIHelper.Localize(BuffIds.DivineMight), GaugeVisualType.Diamond, new GaugeProcProps{
+                ShowText = true,
+                Procs = new []{
+                    new ProcConfig(UIHelper.Localize(BuffIds.DivineMight), BuffIds.DivineMight, UIColor.DarkBlue)
+                }
+            }),
             new GaugeStacksConfig(UIHelper.Localize(BuffIds.Requiescat), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 5,
+                MaxStacks = 4,
                 Triggers = new []{
                     new Item(BuffIds.Requiescat)
                 },
@@ -30,41 +37,22 @@ namespace JobBars.Jobs {
                 Color = UIColor.BlueGreen
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new GaugeSubGCDProps {
-                MaxCounter = 11,
-                MaxDuration = 25,
+                MaxCounter = 9,
+                MaxDuration = 20,
                 Color = UIColor.Red,
-                Increment = new []{
-                    new Item(ActionIds.ShieldLob),
-                    new Item(ActionIds.RageOfHalone),
-                    new Item(ActionIds.FastBlade),
-                    new Item(ActionIds.RiotBlade),
-                    new Item(ActionIds.RoyalAuthority),
-                    new Item(ActionIds.Atonement),
-                    new Item(ActionIds.GoringBlade),
-                    new Item(ActionIds.TotalEclipse),
-                    new Item(ActionIds.Prominence)
-                },
                 Triggers = new[] {
                     new Item(BuffIds.FightOrFlight)
-                }
-            }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.GoringBlade), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 21,
-                Color = UIColor.Orange,
-                Triggers = new []{
-                    new Item(BuffIds.GoringBlade),
-                    new Item(BuffIds.BladeOfValor)
                 }
             })
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.Requiescat), new BuffProps {
+            new BuffConfig(UIHelper.Localize(BuffIds.Requiescat), new BuffProps {
                 CD = 60,
                 Duration = 30,
                 Icon = ActionIds.Requiescat,
                 Color = UIColor.LightBlue,
-                Triggers = new []{ new Item(ActionIds.Requiescat) }
+                Triggers = new []{ new Item(BuffIds.Requiescat) }
             })
         };
 
@@ -101,15 +89,7 @@ namespace JobBars.Jobs {
             new IconBuffReplacer(UIHelper.Localize(BuffIds.FightOrFlight), new IconBuffProps {
                 Icons = new [] { ActionIds.FightOrFlight },
                 Triggers = new[] {
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 25 }
-                }
-            }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.GoringBlade), new IconBuffProps {
-                IsTimer = true,
-                Icons = new [] { ActionIds.GoringBlade },
-                Triggers = new[] {
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GoringBlade), Duration = 21 },
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BladeOfValor), Duration = 21 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 20 }
                 }
             })
         };

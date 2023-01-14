@@ -12,6 +12,7 @@ using JobBars.Cursors.Manager;
 using JobBars.Icons.Manager;
 using JobBars.Gauges.Manager;
 
+using FFXIVClientStructs;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 using Dalamud.Plugin;
@@ -24,6 +25,7 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Data;
+using System.IO;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -94,7 +96,8 @@ namespace JobBars {
             DataManager = dataManager;
             JobGauges = jobGauges;
 
-            if (!FFXIVClientStructs.Resolver.Initialized) FFXIVClientStructs.Resolver.Initialize();
+            FFXIVClientStructs.Interop.Resolver.GetInstance.SetupSearchSpace(SigScanner.SearchBase);
+            FFXIVClientStructs.Interop.Resolver.GetInstance.Resolve();
 
             UIHelper.Setup();
             UIColor.SetupColors();
@@ -122,16 +125,16 @@ namespace JobBars {
 
             InitializeUI();
 
-            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText("4C 89 44 24 ?? 55 56 41 54 41 55 41 56");
-            ReceiveActionEffectHook = new Hook<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
+            IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText(Constants.ReceiveActionEffectSig);
+            ReceiveActionEffectHook = Hook<ReceiveActionEffectDelegate>.FromAddress(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
 
-            IntPtr actorControlSelfPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64");
-            ActorControlSelfHook = new Hook<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
+            IntPtr actorControlSelfPtr = SigScanner.ScanText(Constants.ActorControlSig);
+            ActorControlSelfHook = Hook<ActorControlSelfDelegate>.FromAddress(actorControlSelfPtr, ActorControlSelf);
             ActorControlSelfHook.Enable();
 
-            IntPtr iconDimmedPtr = SigScanner.ScanText("E8 ?? ?? ?? ?? 49 8D 4D 10 FF C6");
-            IconDimmedHook = new Hook<IconDimmedDelegate>(iconDimmedPtr, IconDimmedDetour);
+            IntPtr iconDimmedPtr = SigScanner.ScanText(Constants.IconDimmedSig);
+            IconDimmedHook = Hook<IconDimmedDelegate>.FromAddress(iconDimmedPtr, IconDimmedDetour);
             IconDimmedHook.Enable();
 
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;

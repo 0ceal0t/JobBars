@@ -17,7 +17,7 @@ namespace JobBars.Helper {
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
-            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText("E8 ?? ?? ?? ?? 4D 39 BE ?? ?? ?? ??"));
+            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText(Constants.PlaySoundSig));
             SetupSheets();
 
             Crc32 = new Crc32();
@@ -95,7 +95,7 @@ namespace JobBars.Helper {
         public static GameObject PreviousEnemyTarget => GetPreviousEnemyTarget();
 
         private static GameObject GetPreviousEnemyTarget() {
-            var actorAddress = Marshal.ReadIntPtr(new IntPtr(TargetSystem.Instance()) + 0xF0);
+            var actorAddress = Marshal.ReadIntPtr(new IntPtr(TargetSystem.Instance()) + Constants.PreviousTargetOffset);
             if (actorAddress == IntPtr.Zero) return null;
 
             return JobBars.Objects.CreateObjectReference(actorAddress);

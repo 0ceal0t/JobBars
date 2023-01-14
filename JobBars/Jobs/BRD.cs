@@ -103,7 +103,7 @@ namespace JobBars.Jobs {
             new CooldownConfig(UIHelper.Localize(ActionIds.NaturesMinne), new CooldownProps {
                 Icon = ActionIds.NaturesMinne,
                 Duration = 15,
-                CD = 90,
+                CD = 120,
                 Triggers = new []{ new Item(ActionIds.NaturesMinne) }
             })
         };

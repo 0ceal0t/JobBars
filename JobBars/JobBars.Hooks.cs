@@ -103,14 +103,14 @@ namespace JobBars {
             ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
             if (!IsLoaded) return;
 
-            if (entityId > 0 && id == 23) {
-                if (entityId == ClientState?.LocalPlayer?.ObjectId)
-                    UIHelper.UpdateActorTick();
-                else
-                    UIHelper.UpdateDoTTick(entityId);
+            if (entityId > 0 && id == Constants.ActorControlSelfId && entityId == ClientState?.LocalPlayer?.ObjectId) {
+                UIHelper.UpdateActorTick();
+            }
+            else if( entityId > 0 && id == Constants.ActorControlOtherId ) {
+                UIHelper.UpdateDoTTick(entityId);
             }
 
-            if (arg1 == 0x4000000F) {
+            if (arg1 == Constants.WipeArg1 ) {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
                 BuffManager?.ResetTrackers();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// https://github.com/Caraxi/PartyListLayout/blob/ef40b191cd9e08349e1a0e9899aa252d580ff2ac/GameStructs/NumberArray/AddonPartyListNumberArray.cs
 namespace JobBars.GameStructs {
     [StructLayout(LayoutKind.Sequential, Size = 727 * 4)]
     public unsafe struct AddonPartyListIntArray {

@@ -14,11 +14,10 @@
         // PLD =========
         FightOrFlight = 0x4c,
         Requiescat = 1368,
-        GoringBlade = 725,
-        BladeOfValor = 2721,
         SwordOath = 1902,
         DivineVeil = 726,
         PassageOfArms = 1175,
+        DivineMight = 2673,
 
         // GNB =========
         NoMercy = 0x727,
@@ -106,6 +105,7 @@
 
         // MCH =========
         Wildfire = 0x79a,
+        Overheated = 2688,
 
         // DNC =========
         Devilment = 0x721,

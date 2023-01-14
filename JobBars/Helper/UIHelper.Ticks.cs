@@ -59,7 +59,7 @@ namespace JobBars.Helper {
         }
 
         public static float GetGCD(out float timeElapsed, out float total) {
-            var recast = GetRecastActiveAndTotal((uint)Data.ActionIds.GoringBlade, out timeElapsed, out total);
+            var recast = GetRecastActiveAndTotal((uint)Data.ActionIds.Demolish, out timeElapsed, out total);
             if (!recast || total == 0) return 0;
             return timeElapsed / total;
         }

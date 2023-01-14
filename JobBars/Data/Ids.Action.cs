@@ -143,12 +143,10 @@
 
         // MCH ===========
         Wildfire = 2878,
-        Hypercharge = 0x4339,
-        HeatBlast = 0x1CF2,
-        AutoCrossbow = 0x4071,
         GaussRound = 2874,
         Ricochet = 2890,
         Tactician = 16889,
+        Dismantle = 2887,
 
         // DNC ===========
         QuadTechFinish = 16196,
