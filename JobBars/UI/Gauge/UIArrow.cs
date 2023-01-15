@@ -47,7 +47,7 @@ namespace JobBars.UI {
             }
         }
 
-        private static readonly int MAX = 12;
+        public static readonly int MAX = 12;
         private List<UIArrowTick> Ticks = new();
 
         public UIArrow() : base() {

@@ -37,7 +37,7 @@ namespace JobBars.Jobs {
                 Color = UIColor.BlueGreen
             }),
             new GaugeGCDConfig(UIHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new GaugeSubGCDProps {
-                MaxCounter = 9,
+                MaxCounter = 8,
                 MaxDuration = 20,
                 Color = UIColor.Red,
                 Triggers = new[] {

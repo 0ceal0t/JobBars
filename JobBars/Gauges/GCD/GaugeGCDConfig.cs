@@ -22,10 +22,10 @@ namespace JobBars.Gauges.GCD {
             public readonly string Name;
 
             public readonly string SubName;
-            public readonly int MaxCounter;
             public readonly float MaxDuration;
             public readonly Item[] Triggers;
             public readonly Item[] Increment;
+            public int MaxCounter;
             public ElementColor Color;
             public bool Invert;
             public GaugeCompleteSoundType CompletionSound;
@@ -35,10 +35,10 @@ namespace JobBars.Gauges.GCD {
                 Name = name;
 
                 SubName = props.SubName;
-                MaxCounter = props.MaxCounter;
                 MaxDuration = props.MaxDuration;
                 Triggers = props.Triggers;
                 Increment = props.Increment;
+                MaxCounter = JobBars.Config.GaugeMaxGcds.Get(Name, props.MaxCounter);
                 Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
                 Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
                 CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
@@ -78,6 +78,13 @@ namespace JobBars.Gauges.GCD {
 
                 if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{id}", subGCD.Name, subGCD.Color, out var newColor)) {
                     subGCD.Color = newColor;
+                    newVisual = true;
+                }
+
+                if (JobBars.Config.GaugeMaxGcds.Draw($"Maximum GCDs{suffix}{id}", subGCD.Name, subGCD.MaxCounter, out var newMax)) {
+                    if (newMax <= 0) newMax = 1;
+                    if (newMax > UIArrow.MAX ) newMax = UIArrow.MAX;
+                    subGCD.MaxCounter = newMax;
                     newVisual = true;
                 }
 

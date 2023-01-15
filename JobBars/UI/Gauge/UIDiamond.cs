@@ -52,7 +52,7 @@ namespace JobBars.UI {
             }
         }
 
-        private static readonly int MAX = 12;
+        public static readonly int MAX = 12;
         private List<UIDiamondTick> Ticks = new();
 
         public UIDiamond() {

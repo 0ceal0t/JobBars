@@ -79,6 +79,7 @@ namespace JobBars.Data {
         public FloatValueConfig GaugeTimerOffset = new(0f);
         public ComboValueConfig<GaugeGCDRollingType> GaugeGCDRolling = new();
         public float GaugeSlidecastTime = 0.5f;
+        public IntValueConfig GaugeMaxGcds = new(1);
 
         public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges
         public FloatValueConfig GaugeLowTimerWarning_2 = new(4.0f);
