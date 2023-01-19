@@ -46,7 +46,7 @@ namespace JobBars.Jobs {
             }),
             new BuffConfig(UIHelper.Localize(ActionIds.LivingShadow), new BuffProps {
                 CD = 120,
-                Duration = 24,
+                Duration = 20,
                 Icon = ActionIds.LivingShadow,
                 Color = UIColor.Purple,
                 Triggers = new []{ new Item(ActionIds.LivingShadow) }
