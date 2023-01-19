@@ -48,6 +48,7 @@ namespace JobBars.Icons {
 
         public void Setup() {
             State = IconState.Inactive;
+            if (!Enabled) return;
             JobBars.IconBuilder.Setup(Icons, IconProps);
         }
 
