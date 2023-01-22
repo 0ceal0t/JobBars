@@ -6,14 +6,16 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "FFXIVClientStructs/1.0.0": {
+      "FFXIVClientStructs/0.1.0-ci.1675": {
         "dependencies": {
+          "GitVersion.MsBuild": "5.7.0",
           "Serilog": "2.11.0"
         },
         "runtime": {
           "FFXIVClientStructs.dll": {}
         }
       },
+      "GitVersion.MsBuild/5.7.0": {},
       "Serilog/2.11.0": {
         "runtime": {
           "lib/net5.0/Serilog.dll": {
@@ -25,10 +27,17 @@
     }
   },
   "libraries": {
-    "FFXIVClientStructs/1.0.0": {
+    "FFXIVClientStructs/0.1.0-ci.1675": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "GitVersion.MsBuild/5.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GkU83uopX2vjuNkVpfWdoZSPwxVJ2V6JGLbu4lfh9ucD9xKLuekYx11Ksy1lhbv4hWlrq1xZ0cH0PaPf4UOyqA==",
+      "path": "gitversion.msbuild/5.7.0",
+      "hashPath": "gitversion.msbuild.5.7.0.nupkg.sha512"
     },
     "Serilog/2.11.0": {
       "type": "package",

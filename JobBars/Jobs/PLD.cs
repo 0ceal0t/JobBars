@@ -75,7 +75,7 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.DivineVeil,
                 Duration = 30,
                 CD = 90,
-                Triggers = new []{ new Item(BuffIds.DivineVeil) }
+                Triggers = new []{ new Item(ActionIds.DivineVeil) }
             }),
             new CooldownConfig(UIHelper.Localize(ActionIds.PassageOfArms), new CooldownProps {
                 Icon = ActionIds.PassageOfArms,

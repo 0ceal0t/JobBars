@@ -15,7 +15,6 @@
         FightOrFlight = 0x4c,
         Requiescat = 1368,
         SwordOath = 1902,
-        DivineVeil = 726,
         PassageOfArms = 1175,
         DivineMight = 2673,
 
