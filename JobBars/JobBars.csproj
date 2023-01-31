@@ -6,8 +6,8 @@
     <Company></Company>
     <Product>JobBars</Product>
     <Copyright>Copyright © 2020</Copyright>
-    <AssemblyVersion>1.2.3.4</AssemblyVersion>
-    <FileVersion>1.2.3.4</FileVersion>
+    <AssemblyVersion>1.2.3.5</AssemblyVersion>
+    <FileVersion>1.2.3.5</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -45,17 +45,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="FFXIVClientStructs">
-      <Private>true</Private>
-      <HintPath>..\lib\FFXIVClientStructs.dll</HintPath>
-    </Reference>
-    <Reference Include="FFXIVClientStructs.Common">
-      <Private>true</Private>
-      <HintPath>..\lib\FFXIVClientStructs.Common.dll</HintPath>
-    </Reference>
     <Reference Include="Dalamud">
       <Private>false</Private>
       <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+    </Reference>
+    <Reference Include="FFXIVClientStructs">
+      <Private>false</Private>
+      <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET">
       <Private>false</Private>

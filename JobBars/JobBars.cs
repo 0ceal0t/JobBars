@@ -12,9 +12,6 @@ using JobBars.Cursors.Manager;
 using JobBars.Icons.Manager;
 using JobBars.Gauges.Manager;
 
-using FFXIVClientStructs;
-using FFXIVClientStructs.FFXIV.Component.GUI;
-
 using Dalamud.Plugin;
 using Dalamud.Hooking;
 using Dalamud.Logging;
@@ -26,6 +23,7 @@ using Dalamud.Game.Command;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Data;
 using System.IO;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -95,9 +93,6 @@ namespace JobBars {
             SigScanner = sigScanner;
             DataManager = dataManager;
             JobGauges = jobGauges;
-
-            FFXIVClientStructs.Interop.Resolver.GetInstance.SetupSearchSpace(SigScanner.SearchBase);
-            FFXIVClientStructs.Interop.Resolver.GetInstance.Resolve();
 
             UIHelper.Setup();
             UIColor.SetupColors();
