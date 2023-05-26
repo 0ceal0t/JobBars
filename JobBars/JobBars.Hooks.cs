@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using JobBars.GameStructs;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using JobBars.Data;
-using Dalamud.Game.ClientState.Objects.Types;
+using JobBars.GameStructs;
 using JobBars.Helper;
-using Dalamud.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -106,11 +105,11 @@ namespace JobBars {
             if (entityId > 0 && id == Constants.ActorControlSelfId && entityId == ClientState?.LocalPlayer?.ObjectId) {
                 UIHelper.UpdateActorTick();
             }
-            else if( entityId > 0 && id == Constants.ActorControlOtherId ) {
+            else if (entityId > 0 && id == Constants.ActorControlOtherId) {
                 UIHelper.UpdateDoTTick(entityId);
             }
 
-            if (arg1 == Constants.WipeArg1 ) {
+            if (arg1 == Constants.WipeArg1) {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
                 BuffManager?.ResetTrackers();

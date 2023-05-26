@@ -1,33 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
-using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
-using Lumina.Excel.GeneratedSheets;
-using JobBars.Data;
-using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Logging;
+using JobBars.Data;
+using Lumina.Excel.GeneratedSheets;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Status = FFXIVClientStructs.FFXIV.Client.Game.Status;
 
 namespace JobBars.Helper {
     public struct ItemData {
         public string Name;
         public Item Data;
-        public ushort Icon;
+        public uint Icon;
 
-        public override string ToString() {
+        public override readonly string ToString() {
             return Name;
         }
 
-        public override bool Equals(object obj) {
+        public override readonly bool Equals(object obj) {
             return obj is ItemData overrides && Equals(overrides);
         }
 
-        public bool Equals(ItemData other) {
+        public readonly bool Equals(ItemData other) {
             return Data.Id == other.Data.Id;
         }
 
-        public override int GetHashCode() {
+        public override readonly int GetHashCode() {
             return HashCode.Combine(Name, Data);
         }
 
@@ -46,7 +45,7 @@ namespace JobBars.Helper {
         public static bool WatchingCutscene => JobBars.Condition[ConditionFlag.OccupiedInCutSceneEvent] || JobBars.Condition[ConditionFlag.WatchingCutscene78] || JobBars.Condition[ConditionFlag.BetweenAreas] || JobBars.Condition[ConditionFlag.BetweenAreas51];
         public static bool InPvP { get; private set; } = false;
 
-        public static bool CalcDoHide( bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed) {
+        public static bool CalcDoHide(bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed) {
             if (!enabled) return true;
             if (OutOfCombat && hideOutOfCombat) return true;
             if (WeaponSheathed && hideWeaponSheathed) return true;

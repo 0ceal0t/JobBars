@@ -1,7 +1,7 @@
-﻿using System;
-using System.Numerics;
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using ImGuiNET;
+using System;
+using System.Numerics;
 
 namespace JobBars {
     // Adapted from DailyDuty: https://github.com/MidoriKami/DailyDuty/blob/master/DailyDuty/Graphical/InfoBox.cs
@@ -43,7 +43,7 @@ namespace JobBars {
                     X = ImGui.GetContentRegionAvail().X - 5f,
                     Y = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y + CurveRadius * 2.0f + PaddingBefore.Y + PaddingAfter.Y
                 };
-                
+
             }
 
             if (AutoResizeY) {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {

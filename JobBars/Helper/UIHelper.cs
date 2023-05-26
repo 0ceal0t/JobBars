@@ -1,7 +1,5 @@
-﻿using System;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Numerics;
-using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
     public static unsafe partial class UIHelper {

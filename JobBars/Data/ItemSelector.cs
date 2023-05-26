@@ -1,13 +1,10 @@
-﻿using Dalamud.Logging;
-using ImGuiNET;
+﻿using ImGuiNET;
 using JobBars.Helper;
 using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBars.Data {
     public class ItemSelector {
@@ -89,7 +86,7 @@ namespace JobBars.Data {
             return ret;
         }
 
-        private void LoadIcon(ushort iconId) {
+        private void LoadIcon(uint iconId) {
             Icon?.Dispose();
             Icon = null;
             if (iconId > 0) {

@@ -1,5 +1,4 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Data;
 using JobBars.Helper;
 using System.Collections.Generic;
 using System.Numerics;
@@ -68,13 +67,13 @@ namespace JobBars.UI {
         }
 
         public void UpdateBuffsTextSize() {
-            foreach(var buff in Buffs) {
+            foreach (var buff in Buffs) {
                 buff.SetTextSize(JobBars.Config.BuffTextSize_v2);
             }
         }
 
         public void UpdateBorderThin() {
-            foreach(var buff in Buffs) {
+            foreach (var buff in Buffs) {
                 buff.SetBorderThin(JobBars.Config.BuffThinBorder);
             }
         }
@@ -82,7 +81,7 @@ namespace JobBars.UI {
         public void SetBuffPartyListVisible(int idx, bool visible) => PartyListBuffs[idx].SetHighlightVisibility(visible);
         public void SetBuffPartyListText(int idx, string text) => PartyListBuffs[idx].SetText(text);
         public void HideAllBuffPartyList() {
-            foreach(var item in PartyListBuffs) {
+            foreach (var item in PartyListBuffs) {
                 item.SetHighlightVisibility(false);
                 item.SetText("");
             }

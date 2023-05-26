@@ -1,12 +1,8 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
-using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {

@@ -56,7 +56,7 @@ namespace JobBars.UI {
 
             // ===== BUFF PARTYLIST ======
 
-            for(var i = 0; i < PartyListBuffs.Count; i++) {
+            for (var i = 0; i < PartyListBuffs.Count; i++) {
                 var partyMember = partyListAddon->PartyMember[i];
                 PartyListBuffs[i].AttachTo(partyMember.TargetGlowContainer, partyMember.IconBottomLeftText);
                 partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();

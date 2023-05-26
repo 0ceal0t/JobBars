@@ -1,15 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
+using System;
+using System.Runtime.InteropServices;
 
 namespace JobBars.Helper {
     public unsafe partial class UIHelper {
-        public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3,  int a4);
+        public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3, int a4);
         public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
 
         private static Crc32 Crc32;
