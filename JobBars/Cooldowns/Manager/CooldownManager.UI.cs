@@ -10,7 +10,7 @@ namespace JobBars.Cooldowns.Manager {
             ContentsAction = (CooldownManager manager) => {
                 if (ImGui.Checkbox("Left-aligned" + manager.Id, ref JobBars.Config.CooldownsLeftAligned)) {
                     JobBars.Config.Save();
-                    manager.ResetUI();
+                    manager.ResetUi();
                 }
 
                 if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Config.CooldownScale)) {
@@ -55,7 +55,7 @@ namespace JobBars.Cooldowns.Manager {
 
             if (ImGui.Checkbox("Cooldowns enabled" + Id, ref JobBars.Config.CooldownsEnabled)) {
                 JobBars.Config.Save();
-                ResetUI();
+                ResetUi();
             }
         }
 
@@ -68,7 +68,7 @@ namespace JobBars.Cooldowns.Manager {
 
             if (ImGui.Checkbox("Show party members' cooldowns" + Id, ref JobBars.Config.CooldownsShowPartyMembers)) {
                 JobBars.Config.Save();
-                ResetUI();
+                ResetUi();
             }
 
             ImGui.SetNextItemWidth(50f);
@@ -93,7 +93,7 @@ namespace JobBars.Cooldowns.Manager {
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 10);
             if (ImGui.Button($"+ Add Custom Cooldown{Id}")) CustomCooldownDialog.Show(job);
 
-            if (reset) ResetUI();
+            if (reset) ResetUi();
         }
     }
 }

@@ -2,7 +2,6 @@
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,6 +67,7 @@ namespace JobBars.Buffs.Manager {
                 JobBars.Builder.SetBuffPartyListText(idx, (JobBars.Config.BuffPartyListASTText && JobBars.CurrentJob == JobIds.AST) ? partyText : "");
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
+
             for (int idx = JobBars.PartyMembers.Count; idx < 8; idx++) {
                 JobBars.Builder.SetBuffPartyListVisible(idx, false);
                 JobBars.Builder.SetBuffPartyListText(idx, "");

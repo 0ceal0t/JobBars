@@ -1,29 +1,24 @@
-﻿using System;
-using System.Numerics;
-using System.Reflection;
-using System.Threading;
-
-using JobBars.Helper;
-using JobBars.UI;
-using JobBars.Data;
+﻿using Dalamud.Data;
+using Dalamud.Game;
+using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.Command;
+using Dalamud.Hooking;
+using Dalamud.Logging;
+using Dalamud.Plugin;
 using JobBars.Buffs.Manager;
 using JobBars.Cooldowns.Manager;
 using JobBars.Cursors.Manager;
-using JobBars.Icons.Manager;
+using JobBars.Data;
 using JobBars.Gauges.Manager;
-
-using Dalamud.Plugin;
-using Dalamud.Hooking;
-using Dalamud.Logging;
-using Dalamud.Game;
-using Dalamud.Game.ClientState.JobGauge;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.Command;
-using Dalamud.Game.ClientState.Objects;
-using Dalamud.Data;
-using System.IO;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Helper;
+using JobBars.Icons.Manager;
+using JobBars.UI;
+using System;
+using System.Reflection;
+using System.Threading;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -64,9 +59,6 @@ namespace JobBars {
         private static bool PlayerExists => ClientState?.LocalPlayer != null;
         private static bool RecreateUI => Condition[ConditionFlag.CreatingCharacter]; // getting haircut, etc.
         private bool LoggedOut = true;
-
-        private Vector2 LastPosition;
-        private Vector2 LastScale;
 
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
@@ -226,7 +218,10 @@ namespace JobBars {
             UIHelper.TickTextures();
             CheckForJobChange();
             Tick();
-            CheckForHUDChange(addon);
+
+            GaugeManager.UpdatePositionScale();
+            BuffManager.UpdatePositionScale();
+            CooldownManager.UpdatePositionScale();
         }
 
         private void Logout() {
@@ -268,20 +263,7 @@ namespace JobBars {
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = (float)(millis % 1000) / 1000;
 
-            Builder.Tick( Config.GaugePulse ? percent : 0f );
-        }
-
-        private void CheckForHUDChange(AtkUnitBase* addon) {
-            var currentPosition = UIHelper.GetNodePosition(addon->RootNode);
-            var currentScale = UIHelper.GetNodeScale(addon->RootNode);
-
-            if (currentPosition != LastPosition || currentScale != LastScale) {
-                GaugeManager.UpdatePositionScale();
-                BuffManager.UpdatePositionScale();
-                CooldownManager.UpdatePositionScale();
-            }
-            LastPosition = currentPosition;
-            LastScale = currentScale;
+            Builder.Tick(Config.GaugePulse ? percent : 0f);
         }
 
         // ======= COMMANDS ============

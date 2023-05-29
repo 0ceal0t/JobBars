@@ -69,7 +69,7 @@ namespace JobBars.Cooldowns {
                         Triggers = new[] { selected.Data }
                     };
                     Manager.AddCustomCooldown(SelectedJob, newName, newProps);
-                    Manager.ResetUI();
+                    Manager.ResetUi();
                 }
             }
             else {

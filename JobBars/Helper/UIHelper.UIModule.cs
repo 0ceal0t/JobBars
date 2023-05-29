@@ -1,5 +1,4 @@
-﻿using System;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
+﻿using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
@@ -30,6 +29,13 @@ namespace JobBars.Helper {
         public static AtkUnitBase* ParameterAddon => GetAddon("_ParameterWidget");
 
         public static AddonPartyList* PartyListAddon => (AddonPartyList*)GetAddon("_PartyList");
+
+        public static float PartyListOffset() {
+            var partyList = PartyListAddon;
+            if (partyList == null) return 0;
+
+            return partyList->AtkUnitBase.UldManager.NodeList[3]->Y;
+        }
 
         public static AtkUnitBase* BuffGaugeAttachAddon => GetAddon(JobBars.AttachAddon);
 

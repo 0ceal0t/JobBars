@@ -3,6 +3,7 @@ using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace JobBars.Cooldowns.Manager {
     public struct CooldownPartyMemberStruct {
@@ -78,6 +79,7 @@ namespace JobBars.Cooldowns.Manager {
 
                 JobBars.Builder.SetCooldownRowVisible(idx, true);
             }
+
             for (int idx = JobBars.PartyMembers.Count; idx < 8; idx++) { // hide remaining slots
                 JobBars.Builder.SetCooldownRowVisible(idx, false);
             }
@@ -86,14 +88,12 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition + new Vector2(0, UIHelper.PartyListOffset()));
             JobBars.Builder.SetCooldownScale(JobBars.Config.CooldownScale);
             JobBars.Builder.RefreshCooldownsLayout();
         }
 
-        public void ResetUI() {
-            ObjectIdToMember.Clear();
-        }
+        public void ResetUi() => ObjectIdToMember.Clear();
 
         public void ResetTrackers() {
             foreach (var item in ObjectIdToMember.Values) item.Reset();
