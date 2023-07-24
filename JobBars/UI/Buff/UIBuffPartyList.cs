@@ -20,10 +20,10 @@ namespace JobBars.UI {
             Highlight->RightOffset = 20;
             Highlight->LeftOffset = 20;
             Highlight->PartsTypeRenderType = 220;
-            Highlight->AtkResNode.NodeID = 31;
+            Highlight->AtkResNode.NodeID = 23;
             Highlight->AtkResNode.Flags_2 = 0;
             Highlight->AtkResNode.DrawFlags = 0;
-            Highlight->AtkResNode.Flags = 8243;
+            Highlight->AtkResNode.NodeFlags = (NodeFlags)19;
             Highlight->AtkResNode.MultiplyBlue = 50;
             Highlight->AtkResNode.MultiplyRed = 150;
             UIHelper.SetPosition(Highlight, 47, 21);
@@ -38,9 +38,10 @@ namespace JobBars.UI {
             TextNode->EdgeColor = new ByteColor { R = 8, G = 80, B = 152, A = 255 };
             TextNode->AtkResNode.X = 30;
             TextNode->AtkResNode.Y = 20;
-            TextNode->AtkResNode.Flags |= 0x10;
+            TextNode->AtkResNode.NodeFlags = (NodeFlags)19;
             TextNode->AtkResNode.Flags_2 = 1;
             TextNode->AtkResNode.Priority = 0;
+            TextNode->AtkResNode.NodeID = 24;
             TextNode->SetText("");
             UIHelper.Hide(TextNode);
         }

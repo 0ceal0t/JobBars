@@ -33,6 +33,8 @@ namespace JobBars.Helper {
         public static float PartyListOffset() {
             var partyList = PartyListAddon;
             if (partyList == null) return 0;
+            if (partyList->AtkUnitBase.UldManager.NodeList == null) return 0;
+            if (partyList->AtkUnitBase.UldManager.NodeList[3] == null) return 0;
 
             return partyList->AtkUnitBase.UldManager.NodeList[3]->Y;
         }
