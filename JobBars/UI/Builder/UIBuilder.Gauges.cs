@@ -15,7 +15,6 @@ namespace JobBars.UI {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
-            // GaugeRoot->Flags = 9395;
             GaugeRoot->DrawFlags = 9395;
 
             UIDiamond lastDiamond = null;

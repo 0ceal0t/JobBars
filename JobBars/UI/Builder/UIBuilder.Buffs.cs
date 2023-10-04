@@ -15,7 +15,6 @@ namespace JobBars.UI {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
-            //BuffRoot->Flags = 9395;
             BuffRoot->DrawFlags = 9395;
 
             UIBuff lastBuff = null;
