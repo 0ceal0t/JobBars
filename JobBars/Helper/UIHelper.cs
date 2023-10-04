@@ -25,17 +25,25 @@ namespace JobBars.Helper {
         }
 
         public static void Hide(AtkResNode* node) {
-            node->Flags &= ~0x10;
-            node->Flags_2 |= 0x1;
+            //node->Flags &= ~0x10;
+            var nodeValue = ~0x10;
+            node->NodeFlags &= (NodeFlags) nodeValue;
+
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Show(AtkResNode* node) {
-            node->Flags |= 0x10;
-            node->Flags_2 |= 0x1;
+            //node->Flags |= 0x10;
+            node->NodeFlags |= (NodeFlags) 0x10;
+
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Update(AtkResNode* node) {
-            node->Flags_2 |= 0x1;
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetVisibility(AtkResNode* node, bool visiblity) {
@@ -46,25 +54,30 @@ namespace JobBars.Helper {
         public static void SetSize(AtkResNode* node, int? width, int? height) {
             if (width != null && width >= ushort.MinValue && width <= ushort.MaxValue) node->Width = (ushort)width.Value;
             if (height != null && height >= ushort.MinValue && height <= ushort.MaxValue) node->Height = (ushort)height.Value;
-            node->Flags_2 |= 0x1;
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetPosition(AtkResNode* node, float? x, float? y) {
             if (x != null) node->X = x.Value;
             if (y != null) node->Y = y.Value;
-            node->Flags_2 |= 0x1;
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetScale(AtkResNode* atkUnitBase, float? scaleX, float? scaleY) {
             atkUnitBase->ScaleX = scaleX.Value;
             atkUnitBase->ScaleY = scaleY.Value;
-            atkUnitBase->Flags_2 |= 0x1;
-            atkUnitBase->Flags_2 |= 0x4;
+            //atkUnitBase->Flags_2 |= 0x1;
+            //atkUnitBase->Flags_2 |= 0x4;
+            atkUnitBase->DrawFlags |= 0x1;
+            atkUnitBase->DrawFlags |= 0x4;
         }
 
         public static void SetRotation(AtkResNode* node, float rotation) {
             node->Rotation = rotation;
-            node->Flags_2 |= 0x1;
+            //node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Link(AtkResNode* next, AtkResNode* prev) {

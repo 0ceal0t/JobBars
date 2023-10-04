@@ -12,7 +12,8 @@ namespace JobBars.UI {
             CooldownRoot = CreateResNode();
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
-            CooldownRoot->Flags = 9395;
+            //CooldownRoot->Flags = 9395;
+            CooldownRoot->DrawFlags = 9395;
             UIHelper.SetPosition(CooldownRoot, -40, 40);
 
             UICooldown lastCooldown = null;

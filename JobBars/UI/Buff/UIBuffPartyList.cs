@@ -21,7 +21,7 @@ namespace JobBars.UI {
             Highlight->LeftOffset = 20;
             Highlight->PartsTypeRenderType = 220;
             Highlight->AtkResNode.NodeID = 23;
-            Highlight->AtkResNode.Flags_2 = 0;
+            //Highlight->AtkResNode.Flags_2 = 0;
             Highlight->AtkResNode.DrawFlags = 0;
             Highlight->AtkResNode.NodeFlags = (NodeFlags)19;
             Highlight->AtkResNode.MultiplyBlue = 50;
@@ -39,7 +39,8 @@ namespace JobBars.UI {
             TextNode->AtkResNode.X = 30;
             TextNode->AtkResNode.Y = 20;
             TextNode->AtkResNode.NodeFlags = (NodeFlags)19;
-            TextNode->AtkResNode.Flags_2 = 1;
+            //TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->AtkResNode.DrawFlags = 1;
             TextNode->AtkResNode.Priority = 0;
             TextNode->AtkResNode.NodeID = 24;
             TextNode->SetText("");

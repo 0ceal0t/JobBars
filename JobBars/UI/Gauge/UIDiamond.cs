@@ -99,8 +99,9 @@ namespace JobBars.UI {
                 text->AtkResNode.Height = 32;
                 text->AtkResNode.Y = 20;
                 text->AtkResNode.X = 0;
-                text->AtkResNode.Flags |= 0x10;
-                text->AtkResNode.Flags_2 = 1;
+                //text->AtkResNode.Flags |= 0x10;
+                text->AtkResNode.DrawFlags |= 0x10;
+                //text->AtkResNode.Flags_2 = 1;
                 text->EdgeColor = new FFXIVClientStructs.FFXIV.Client.Graphics.ByteColor {
                     R = 40,
                     G = 40,

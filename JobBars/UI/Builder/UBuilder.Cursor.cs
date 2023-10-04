@@ -15,7 +15,14 @@ namespace JobBars.UI {
             CursorRoot = CreateResNode();
             CursorRoot->Width = 44;
             CursorRoot->Height = 46;
-            CursorRoot->Flags = 9395;
+            //CursorRoot->Flags = 9395;
+            CursorRoot->NodeFlags = (NodeFlags) 9395;
+            //CursorRoot->NodeFlags = NodeFlags.EmitsEvents;
+            //CursorRoot->NodeFlags &= NodeFlags.Focusable;
+            //CursorRoot->NodeFlags &= NodeFlags.Visible;
+            //CursorRoot->NodeFlags &= NodeFlags.AnchorTop;
+            //CursorRoot->NodeFlags &= NodeFlags.AnchorLeft;
+            //CursorRoot->NodeFlags &= NodeFlags.Enabled;
 
             CursorOuter = CreateImageNode();
             CursorOuter->AtkResNode.Width = 44;

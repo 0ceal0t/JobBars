@@ -8,5 +8,5 @@
   "Tags": [ "UI", "Bars" ],
   "RepoUrl": "https://github.com/0ceal0t/JobBars",
   "ApplicableVersion": "any",
-  "DalamudApiLevel": 8
+  "DalamudApiLevel": 9
 }

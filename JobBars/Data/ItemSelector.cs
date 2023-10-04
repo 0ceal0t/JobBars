@@ -1,6 +1,10 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface.Internal;
+using ImGuiNET;
 using JobBars.Helper;
+using Lumina;
+using Lumina.Data;
 using Lumina.Data.Files;
+using Lumina.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +13,8 @@ using System.Numerics;
 namespace JobBars.Data {
     public class ItemSelector {
         private readonly List<ItemData> Data;
-        public ImGuiScene.TextureWrap Icon;
+        //public ImGuiScene.TextureWrap Icon;
+        public IDalamudTextureWrap Icon;
 
         private ItemData Selected = new() {
             Icon = 0,
@@ -89,15 +94,20 @@ namespace JobBars.Data {
         private void LoadIcon(uint iconId) {
             Icon?.Dispose();
             Icon = null;
+
             if (iconId > 0) {
                 TexFile tex;
                 try {
-                    tex = JobBars.DataManager.GetIcon(iconId);
+                    //tex = JobBars.DataManager.GetIcon(iconId);
+                    Icon = JobBars.TextureProvider.GetIcon(iconId);
                 }
                 catch (Exception) {
-                    tex = JobBars.DataManager.GetIcon(0);
+                    //tex = JobBars.DataManager.GetIcon(0);
+                    Icon = JobBars.TextureProvider.GetIcon(0);
                 }
-                Icon = JobBars.PluginInterface.UiBuilder.LoadImageRaw(BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4);
+
+                //Icon =
+                //   JobBars.PluginInterface.UiBuilder.LoadImageRaw(BGRA_to_RGBA(tex.ImageData),tex.Header.Width, tex.Header.Height, 4);
             }
         }
 
