@@ -8,6 +8,7 @@ using Dalamud.Game.Command;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using JobBars.Buffs.Manager;
 using JobBars.Cooldowns.Manager;
 using JobBars.Cursors.Manager;
@@ -23,14 +24,15 @@ using System.Threading;
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public static DalamudPluginInterface PluginInterface { get; private set; }
-        public static ClientState ClientState { get; private set; }
-        public static JobGauges JobGauges { get; private set; }
-        public static Framework Framework { get; private set; }
-        public static Condition Condition { get; private set; }
-        public static CommandManager CommandManager { get; private set; }
-        public static ObjectTable Objects { get; private set; }
-        public static SigScanner SigScanner { get; private set; }
-        public static DataManager DataManager { get; private set; }
+        public static IClientState ClientState { get; private set; }
+        public static IJobGauges JobGauges { get; private set; }
+        public static IFramework Framework { get; private set; }
+        public static ICondition Condition { get; private set; }
+        public static ICommandManager CommandManager { get; private set; }
+        public static IObjectTable Objects { get; private set; }
+        public static ISigScanner SigScanner { get; private set; }
+        public static IDataManager DataManager { get; private set; }
+        public static ITextureProvider TextureProvider { get; private set; }
 
         public static Configuration Config { get; private set; }
         public static UIBuilder Builder { get; private set; }
@@ -67,24 +69,27 @@ namespace JobBars {
 
         public JobBars(
                 DalamudPluginInterface pluginInterface,
-                ClientState clientState,
-                CommandManager commandManager,
-                Condition condition,
-                Framework framework,
-                ObjectTable objects,
-                SigScanner sigScanner,
-                DataManager dataManager,
-                JobGauges jobGauges
+                IClientState clientState,
+                ICommandManager commandManager,
+                ICondition condition,
+                IFramework framework,
+                IObjectTable objects,
+                ISigScanner sigScanner,
+                IDataManager dataManager,
+                IJobGauges jobGauges,
+                IGameInteropProvider gameInteropProvider,
+                ITextureProvider textureProvider
             ) {
             PluginInterface = pluginInterface;
-            ClientState = clientState;
-            Framework = framework;
-            Condition = condition;
-            CommandManager = commandManager;
-            Objects = objects;
-            SigScanner = sigScanner;
-            DataManager = dataManager;
-            JobGauges = jobGauges;
+            ClientState     = clientState;
+            Framework       = framework;
+            Condition       = condition;
+            CommandManager  = commandManager;
+            Objects         = objects;
+            SigScanner      = sigScanner;
+            DataManager     = dataManager;
+            JobGauges       = jobGauges;
+            TextureProvider = textureProvider;
 
             UIHelper.Setup();
             UIColor.SetupColors();
@@ -113,15 +118,15 @@ namespace JobBars {
             InitializeUI();
 
             IntPtr receiveActionEffectFuncPtr = SigScanner.ScanText(Constants.ReceiveActionEffectSig);
-            ReceiveActionEffectHook = Hook<ReceiveActionEffectDelegate>.FromAddress(receiveActionEffectFuncPtr, ReceiveActionEffect);
+            ReceiveActionEffectHook = gameInteropProvider.HookFromAddress<ReceiveActionEffectDelegate>(receiveActionEffectFuncPtr, ReceiveActionEffect);
             ReceiveActionEffectHook.Enable();
 
             IntPtr actorControlSelfPtr = SigScanner.ScanText(Constants.ActorControlSig);
-            ActorControlSelfHook = Hook<ActorControlSelfDelegate>.FromAddress(actorControlSelfPtr, ActorControlSelf);
+            ActorControlSelfHook = gameInteropProvider.HookFromAddress<ActorControlSelfDelegate>(actorControlSelfPtr, ActorControlSelf);
             ActorControlSelfHook.Enable();
 
             IntPtr iconDimmedPtr = SigScanner.ScanText(Constants.IconDimmedSig);
-            IconDimmedHook = Hook<IconDimmedDelegate>.FromAddress(iconDimmedPtr, IconDimmedDetour);
+            IconDimmedHook = gameInteropProvider.HookFromAddress<IconDimmedDelegate>(iconDimmedPtr, IconDimmedDetour);
             IconDimmedHook.Enable();
 
             PluginInterface.UiBuilder.Draw += BuildSettingsUI;
@@ -191,7 +196,7 @@ namespace JobBars {
             Animation.Tick();
         }
 
-        private void FrameworkOnUpdate(Framework framework) {
+        private void FrameworkOnUpdate(IFramework framework) {
             if (!IsLoaded) return;
 
             var addon = UIHelper.BuffGaugeAttachAddon;

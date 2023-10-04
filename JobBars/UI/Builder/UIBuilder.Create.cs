@@ -21,9 +21,9 @@ namespace JobBars.UI {
             node->ChildCount = 0;
             node->PrevSiblingNode = null;
             node->NextSiblingNode = null;
-            node->Flags = 8243;
-            node->Flags_2 = 1;
-            node->Flags_2 |= 4;
+            node->DrawFlags = 8243;
+            node->DrawFlags = 1;
+            node->DrawFlags |= 4;
 
             return node;
         }
@@ -47,9 +47,7 @@ namespace JobBars.UI {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8250;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags) 8250;
             node->AtkResNode.DrawFlags = 8;
 
             node->TextId = 0;
@@ -93,9 +91,9 @@ namespace JobBars.UI {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8243;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            node->AtkResNode.DrawFlags = 1;
+            node->AtkResNode.DrawFlags |= 4;
 
             return node;
         }
@@ -121,9 +119,9 @@ namespace JobBars.UI {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8243;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            node->AtkResNode.DrawFlags = 1;
+            node->AtkResNode.DrawFlags |= 4;
             node->AtkResNode.DrawFlags = 8;
 
             return node;

@@ -24,9 +24,9 @@ namespace JobBars.UI {
             Combo->AtkResNode.X = -2;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.Flags = 8243;
-            Combo->AtkResNode.Flags_2 = 1;
-            Combo->AtkResNode.Flags_2 |= 4;
+            Combo->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            Combo->AtkResNode.DrawFlags = 1;
+            Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
             Combo->PartId = 0;
             Combo->PartsList = originalBorder->PartsList;
@@ -35,9 +35,9 @@ namespace JobBars.UI {
             BigText->Ctor();
             BigText->AtkResNode.NodeID = NodeIdx++;
             BigText->AtkResNode.Type = NodeType.Text;
-            BigText->AtkResNode.Flags = 8243;
-            BigText->AtkResNode.Flags_2 = 1;
-            BigText->AtkResNode.Flags_2 |= 4;
+            BigText->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            BigText->AtkResNode.DrawFlags = 1;
+            BigText->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();
             BigText->SetText("");
 

@@ -46,19 +46,19 @@ namespace JobBars.UI {
         public unsafe static void SetColor(AtkImageNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkResNode* node, ElementColor color) => SetColor(node, color.AddRed, color.AddGreen, color.AddBlue, color.MultiplyRed, color.MultiplyGreen, color.MultiplyBlue);
         public unsafe static void SetColor(AtkResNode* node, short addRed, short addGreen, short addBlue, byte multRed, byte multGreen, byte multBlue) {
-            node->AddRed = (ushort)addRed;
-            node->AddGreen = (ushort)addGreen;
-            node->AddBlue = (ushort)addBlue;
-            node->AddRed_2 = (ushort)addRed;
-            node->AddGreen_2 = (ushort)addGreen;
-            node->AddBlue_2 = (ushort)addBlue;
+            node->AddRed     = addRed;
+            node->AddGreen   = addGreen;
+            node->AddBlue    = addBlue;
+            node->AddRed_2   = addRed;
+            node->AddGreen_2 = addGreen;
+            node->AddBlue_2  = addBlue;
 
-            node->MultiplyRed = multRed;
-            node->MultiplyGreen = multGreen;
-            node->MultiplyBlue = multBlue;
-            node->MultiplyRed_2 = multRed;
+            node->MultiplyRed     = multRed;
+            node->MultiplyGreen   = multGreen;
+            node->MultiplyBlue    = multBlue;
+            node->MultiplyRed_2   = multRed;
             node->MultiplyGreen_2 = multGreen;
-            node->MultiplyBlue_2 = multBlue;
+            node->MultiplyBlue_2  = multBlue;
         }
         public unsafe static void SetColorPulse(AtkResNode* node, ElementColor color, float percent) {
             // 0 = color

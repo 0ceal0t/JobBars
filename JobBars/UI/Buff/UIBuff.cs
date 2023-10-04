@@ -1,6 +1,7 @@
 ﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using ImGuiNET;
 using JobBars.Data;
 using JobBars.Helper;
 
@@ -58,8 +59,8 @@ namespace JobBars.UI {
             TextNode->AlignmentFontType = 52;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->AtkResNode.NodeFlags = NodeFlags.Visible;
+            TextNode->AtkResNode.DrawFlags = 1;
             TextNode->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
 
             var layout = new LayoutNode(RootRes, new[] {

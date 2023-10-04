@@ -30,8 +30,7 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Height = HEIGHT;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->AtkResNode.DrawFlags |= 0x10;
             TextNode->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
 
             Icon = UIBuilder.CreateImageNode();

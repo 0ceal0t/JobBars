@@ -134,11 +134,11 @@ namespace JobBars.UI {
             TextNode = UIBuilder.CreateTextNode();
             TextNode->AtkResNode.X = 14;
             TextNode->AtkResNode.Y = 5;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->AtkResNode.NodeFlags |= (NodeFlags) 0x10;
+            TextNode->AtkResNode.DrawFlags = 1;
 
             TextBlurNode = UIBuilder.CreateNineNode();
-            TextBlurNode->AtkResNode.Flags = 8371;
+            TextBlurNode->AtkResNode.NodeFlags = (NodeFlags) 8371;
             TextBlurNode->AtkResNode.Width = 47;
             TextBlurNode->AtkResNode.Height = 40;
             TextBlurNode->AtkResNode.X = 0;

@@ -126,7 +126,7 @@ namespace JobBars {
             return icon;
         }
 
-        private void ZoneChanged(object sender, ushort e) {
+        private void ZoneChanged(ushort e) {
             if (!IsLoaded) return;
 
             GaugeManager?.Reset();

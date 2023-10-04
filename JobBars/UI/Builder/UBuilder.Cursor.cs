@@ -15,7 +15,7 @@ namespace JobBars.UI {
             CursorRoot = CreateResNode();
             CursorRoot->Width = 44;
             CursorRoot->Height = 46;
-            CursorRoot->Flags = 9395;
+            CursorRoot->NodeFlags = (NodeFlags) 9395;
 
             CursorOuter = CreateImageNode();
             CursorOuter->AtkResNode.Width = 44;

@@ -42,9 +42,9 @@ namespace JobBars.UI {
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.Flags = 8243;
-            Combo->AtkResNode.Flags_2 = 1;
-            Combo->AtkResNode.Flags_2 |= 4;
+            Combo->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            Combo->AtkResNode.DrawFlags = 1;
+            Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
             Combo->PartId = 0;
             Combo->PartsList = OriginalCombo->PartsList;
@@ -61,9 +61,9 @@ namespace JobBars.UI {
             Text->Ctor();
             Text->AtkResNode.NodeID = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.Flags = 8243;
-            Text->AtkResNode.Flags_2 = 1;
-            Text->AtkResNode.Flags_2 |= 4;
+            Text->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            Text->AtkResNode.DrawFlags = 1;
+            Text->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();
             Text->SetText("");
 
@@ -82,9 +82,9 @@ namespace JobBars.UI {
             Ring->AtkResNode.Y = 2;
             Ring->AtkResNode.Width = 44;
             Ring->AtkResNode.Height = 46;
-            Ring->AtkResNode.Flags = 8243;
-            Ring->AtkResNode.Flags_2 = 1;
-            Ring->AtkResNode.Flags_2 |= 4;
+            Ring->AtkResNode.NodeFlags = (NodeFlags) 8243;
+            Ring->AtkResNode.DrawFlags = 1;
+            Ring->AtkResNode.DrawFlags |= 4;
             Ring->WrapMode = 1;
             Ring->PartId = 0;
             Ring->PartsList = originalRing->PartsList;
