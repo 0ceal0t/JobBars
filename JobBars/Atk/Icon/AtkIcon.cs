@@ -4,7 +4,7 @@ using JobBars.Helper;
 using System;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace JobBars.UI {
+namespace JobBars.Atk {
     public enum UIIconComboType {
         Combo_Or_Active,
         Combo_And_Active,
@@ -19,7 +19,7 @@ namespace JobBars.UI {
         public bool ShowRing;
     }
 
-    public unsafe abstract class UIIcon {
+    public unsafe abstract class AtkIcon {
         protected enum IconState {
             None,
             TimerRunning,
@@ -43,7 +43,7 @@ namespace JobBars.UI {
 
         protected uint NodeIdx = 200;
 
-        public UIIcon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
+        public AtkIcon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
             ComboType = props.ComboType;
             ShowRing = props.ShowRing;
 

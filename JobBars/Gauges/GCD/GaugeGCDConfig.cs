@@ -1,5 +1,5 @@
 ﻿using ImGuiNET;
-using JobBars.UI;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.GCD {
     public struct GaugeSubGCDProps {
@@ -38,11 +38,11 @@ namespace JobBars.Gauges.GCD {
                 MaxDuration = props.MaxDuration;
                 Triggers = props.Triggers;
                 Increment = props.Increment;
-                MaxCounter = JobBars.Config.GaugeMaxGcds.Get(Name, props.MaxCounter);
-                Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
-                Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
-                CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
-                ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
+                MaxCounter = JobBars.Configuration.GaugeMaxGcds.Get(Name, props.MaxCounter);
+                Color = JobBars.Configuration.GaugeColor.Get(Name, props.Color);
+                Invert = JobBars.Configuration.GaugeInvert.Get(Name, props.Invert);
+                CompletionSound = JobBars.Configuration.GaugeCompletionSound.Get(Name, props.CompletionSound);
+                ReverseFill = JobBars.Configuration.GaugeReverseFill.Get(Name, false);
             }
         }
 
@@ -76,27 +76,27 @@ namespace JobBars.Gauges.GCD {
 
                 var suffix = string.IsNullOrEmpty(subGCD.SubName) ? "" : $" ({subGCD.SubName})";
 
-                if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{id}", subGCD.Name, subGCD.Color, out var newColor)) {
+                if (JobBars.Configuration.GaugeColor.Draw($"Color{suffix}{id}", subGCD.Name, subGCD.Color, out var newColor)) {
                     subGCD.Color = newColor;
                     newVisual = true;
                 }
 
-                if (JobBars.Config.GaugeMaxGcds.Draw($"Maximum GCDs{suffix}{id}", subGCD.Name, subGCD.MaxCounter, out var newMax)) {
+                if (JobBars.Configuration.GaugeMaxGcds.Draw($"Maximum GCDs{suffix}{id}", subGCD.Name, subGCD.MaxCounter, out var newMax)) {
                     if (newMax <= 0) newMax = 1;
-                    if (newMax > UIArrow.MAX ) newMax = UIArrow.MAX;
+                    if (newMax > AtkArrow.MAX ) newMax = AtkArrow.MAX;
                     subGCD.MaxCounter = newMax;
                     newVisual = true;
                 }
 
-                if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{id}", subGCD.Name, subGCD.Invert, out var newInvert)) {
+                if (JobBars.Configuration.GaugeInvert.Draw($"Invert{suffix}{id}", subGCD.Name, subGCD.Invert, out var newInvert)) {
                     subGCD.Invert = newInvert;
                 }
 
-                if (JobBars.Config.GaugeCompletionSound.Draw($"Completion sound{suffix}{id}", subGCD.Name, ValidSoundType, subGCD.CompletionSound, out var newCompletionSound)) {
+                if (JobBars.Configuration.GaugeCompletionSound.Draw($"Completion sound{suffix}{id}", subGCD.Name, ValidSoundType, subGCD.CompletionSound, out var newCompletionSound)) {
                     subGCD.CompletionSound = newCompletionSound;
                 }
 
-                if (JobBars.Config.GaugeReverseFill.Draw($"Reverse tick fill order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
+                if (JobBars.Configuration.GaugeReverseFill.Draw($"Reverse tick fill order{suffix}{id}", subGCD.Name, subGCD.ReverseFill, out var newReverseFill)) {
                     subGCD.ReverseFill = newReverseFill;
                     newVisual = true;
                 }

@@ -1,48 +1,47 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
-namespace JobBars.UI {
-    public unsafe partial class UIBuilder {
+namespace JobBars.Atk {
+    public unsafe partial class AtkBuilder {
         private static readonly uint NODE_IDX_START = 89990001;
         private static uint NodeIdx = NODE_IDX_START;
 
-        public UIBuilder() {
+        public AtkBuilder() {
             NodeIdx = NODE_IDX_START;
             InitGauges();
             InitBuffs();
             InitCooldowns();
             InitCursor();
 
-            UIHelper.Link(GaugeRoot, BuffRoot);
-            UIHelper.Link(BuffRoot, CursorRoot);
+            AtkHelper.Link(GaugeRoot, BuffRoot);
+            AtkHelper.Link(BuffRoot, CursorRoot);
         }
 
         public void Dispose() {
-            UIHelper.Detach(GaugeRoot);
-            UIHelper.Detach(CooldownRoot);
+            AtkHelper.Detach(GaugeRoot);
+            AtkHelper.Detach(CooldownRoot);
 
             DisposeCooldowns();
             DisposeGauges();
             DisposeBuffs();
             DisposeCursor();
 
-            var attachAddon = UIHelper.BuffGaugeAttachAddon;
+            var attachAddon = AtkHelper.BuffGaugeAttachAddon;
             if (attachAddon != null) attachAddon->UldManager.UpdateDrawNodeList();
 
-            var cooldownAddon = UIHelper.CooldownAttachAddon;
+            var cooldownAddon = AtkHelper.CooldownAttachAddon;
             if (cooldownAddon != null) cooldownAddon->UldManager.UpdateDrawNodeList();
 
-            var partyListAddon = UIHelper.PartyListAddon;
+            var partyListAddon = AtkHelper.PartyListAddon;
             if (partyListAddon != null) partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
         }
 
         public void Attach() {
-            var buffGaugeAddon = UIHelper.BuffGaugeAttachAddon;
-            var cooldownAddon = UIHelper.CooldownAttachAddon;
-            var partyListAddon = UIHelper.PartyListAddon;
+            var buffGaugeAddon = AtkHelper.BuffGaugeAttachAddon;
+            var cooldownAddon = AtkHelper.CooldownAttachAddon;
+            var partyListAddon = AtkHelper.PartyListAddon;
 
-            PluginLog.Log($"Gauges={buffGaugeAddon != null} PartyList={partyListAddon != null} Cooldowns={cooldownAddon != null}");
+            Dalamud.Log($"Gauges={buffGaugeAddon != null} PartyList={partyListAddon != null} Cooldowns={cooldownAddon != null}");
 
             // ===== CONTAINERS =========
 
@@ -50,9 +49,9 @@ namespace JobBars.UI {
             BuffRoot->ParentNode = buffGaugeAddon->RootNode;
             CursorRoot->ParentNode = buffGaugeAddon->RootNode;
 
-            UIHelper.Attach(buffGaugeAddon, GaugeRoot);
+            AtkHelper.Attach(buffGaugeAddon, GaugeRoot);
 
-            PluginLog.Log("Attached Gauges");
+            Dalamud.Log("Attached Gauges");
 
             // ===== BUFF PARTYLIST ======
 
@@ -62,29 +61,29 @@ namespace JobBars.UI {
                 partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
             }
 
-            PluginLog.Log("Attached PartyList");
+            Dalamud.Log("Attached PartyList");
 
             // ===== COOLDOWNS =========
 
             CooldownRoot->ParentNode = cooldownAddon->RootNode;
 
-            UIHelper.Attach(cooldownAddon, CooldownRoot);
+            AtkHelper.Attach(cooldownAddon, CooldownRoot);
 
-            PluginLog.Log("Attached Cooldowns");
+            Dalamud.Log("Attached Cooldowns");
 
             // ======================
 
             buffGaugeAddon->UldManager.UpdateDrawNodeList();
 
-            PluginLog.Log("Updated Gauges");
+            Dalamud.Log("Updated Gauges");
 
             cooldownAddon->UldManager.UpdateDrawNodeList();
 
-            PluginLog.Log("Updated PartyList");
+            Dalamud.Log("Updated PartyList");
 
             partyListAddon->AtkUnitBase.UldManager.UpdateDrawNodeList();
 
-            PluginLog.Log("Updated Cooldowns");
+            Dalamud.Log("Updated Cooldowns");
         }
 
         public void Tick(float percent) {
@@ -95,18 +94,18 @@ namespace JobBars.UI {
         // ==== HELPER FUNCTIONS ============
 
         private void SetPosition(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.BuffGaugeAttachAddon;
+            var addon = AtkHelper.BuffGaugeAttachAddon;
             if (addon == null) return;
-            var p = UIHelper.GetNodePosition(addon->RootNode);
-            var pScale = UIHelper.GetNodeScale(addon->RootNode);
-            UIHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
+            var p = AtkHelper.GetNodePosition(addon->RootNode);
+            var pScale = AtkHelper.GetNodeScale(addon->RootNode);
+            AtkHelper.SetPosition(node, (X - p.X) / pScale.X, (Y - p.Y) / pScale.Y);
         }
 
         private void SetScale(AtkResNode* node, float X, float Y) {
-            var addon = UIHelper.BuffGaugeAttachAddon;
+            var addon = AtkHelper.BuffGaugeAttachAddon;
             if (addon == null) return;
-            var p = UIHelper.GetNodeScale(addon->RootNode);
-            UIHelper.SetScale(node, X / p.X, Y / p.Y);
+            var p = AtkHelper.GetNodeScale(addon->RootNode);
+            AtkHelper.SetScale(node, X / p.X, Y / p.Y);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 using System;
 
 namespace JobBars.Gauges.Rolling {
@@ -17,20 +17,20 @@ namespace JobBars.Gauges.Rolling {
         public GaugeGCDRollingType RollingType { get; private set; }
 
         public GaugeRollingConfig(string name, GaugeVisualType type) : base(name, type) {
-            Enabled = JobBars.Config.GaugeEnabled.Get(Name, false); // default disabled
-            Color = JobBars.Config.GaugeColor.Get(Name, UIColor.Yellow);
-            RollingType = JobBars.Config.GaugeGCDRolling.Get(Name, GaugeGCDRollingType.GCD);
+            Enabled = JobBars.Configuration.GaugeEnabled.Get(Name, false); // default disabled
+            Color = JobBars.Configuration.GaugeColor.Get(Name, AtkColor.Yellow);
+            RollingType = JobBars.Configuration.GaugeGCDRolling.Get(Name, GaugeGCDRollingType.GCD);
         }
 
         public override GaugeTracker GetTracker(int idx) => new GaugeRollingTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
-            if (JobBars.Config.GaugeGCDRolling.Draw($"Data type{id}", Name, ValidRollingType, RollingType, out var newRollingType)) {
+            if (JobBars.Configuration.GaugeGCDRolling.Draw($"Data type{id}", Name, ValidRollingType, RollingType, out var newRollingType)) {
                 RollingType = newRollingType;
                 newVisual = true;
             }
 
-            if (JobBars.Config.GaugeColor.Draw($"Color{id}", Name, Color, out var newColor)) {
+            if (JobBars.Configuration.GaugeColor.Draw($"Color{id}", Name, Color, out var newColor)) {
                 Color = newColor;
                 newVisual = true;
             }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
 
@@ -40,7 +40,7 @@ namespace JobBars.Gauges.Timer {
             }
 
             public void Tick() {
-                var currentTimeLeft = UIHelper.TimeLeft(Config.DefaultDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime) - Config.Offset;
+                var currentTimeLeft = AtkHelper.TimeLeft(Config.DefaultDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime) - Config.Offset;
                 if (currentTimeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
                     State = GaugeState.Active;
                 }

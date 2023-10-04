@@ -1,5 +1,4 @@
-﻿using Dalamud.Logging;
-using JobBars.Data;
+﻿using JobBars.Data;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -17,10 +16,10 @@ namespace JobBars.Cooldowns.Manager {
         private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = new();
 
         public CooldownManager() : base("##JobBars_Cooldowns") {
-            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition);
+            JobBars.Builder.SetCooldownPosition(JobBars.Configuration.CooldownPosition);
 
             // initialize custom cooldowns
-            foreach (var custom in JobBars.Config.CustomCooldown) {
+            foreach (var custom in JobBars.Configuration.CustomCooldown) {
                 if (!CustomCooldowns.ContainsKey(custom.Job)) CustomCooldowns[custom.Job] = new();
                 CustomCooldowns[custom.Job].Add(new CooldownConfig(custom.Name, custom.Props));
             }
@@ -34,7 +33,7 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void PerformAction(Item action, uint objectId) {
-            if (!JobBars.Config.CooldownsEnabled) return;
+            if (!JobBars.Configuration.CooldownsEnabled) return;
 
             foreach (var member in ObjectIdToMember.Values) {
                 member.ProcessAction(action, objectId);
@@ -42,7 +41,7 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void Tick() {
-            if (UIHelper.CalcDoHide(JobBars.Config.CooldownsEnabled, JobBars.Config.CooldownsHideOutOfCombat, JobBars.Config.CooldownsHideWeaponSheathed)) {
+            if (AtkHelper.CalcDoHide(JobBars.Configuration.CooldownsEnabled, JobBars.Configuration.CooldownsHideOutOfCombat, JobBars.Configuration.CooldownsHideWeaponSheathed)) {
                 JobBars.Builder.HideCooldowns();
                 return;
             }
@@ -58,7 +57,7 @@ namespace JobBars.Cooldowns.Manager {
 
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
-            if (JobBars.PartyMembers == null) PluginLog.LogError("PartyMembers is NULL");
+            if (JobBars.PartyMembers == null) Dalamud.LogError("PartyMembers is null");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];
@@ -68,7 +67,7 @@ namespace JobBars.Cooldowns.Manager {
                     continue;
                 }
 
-                if (!JobBars.Config.CooldownsShowPartyMembers && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) {
+                if (!JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Dalamud.ClientState.LocalPlayer.ObjectId) {
                     JobBars.Builder.SetCooldownRowVisible(idx, false);
                     continue;
                 }
@@ -88,8 +87,8 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetCooldownPosition(JobBars.Config.CooldownPosition + new Vector2(0, UIHelper.PartyListOffset()));
-            JobBars.Builder.SetCooldownScale(JobBars.Config.CooldownScale);
+            JobBars.Builder.SetCooldownPosition(JobBars.Configuration.CooldownPosition + new Vector2(0, AtkHelper.PartyListOffset()));
+            JobBars.Builder.SetCooldownScale(JobBars.Configuration.CooldownScale);
             JobBars.Builder.RefreshCooldownsLayout();
         }
 
@@ -102,12 +101,12 @@ namespace JobBars.Cooldowns.Manager {
         public void AddCustomCooldown(JobIds job, string name, CooldownProps props) {
             if (!CustomCooldowns.ContainsKey(job)) CustomCooldowns[job] = new();
             CustomCooldowns[job].Add(new CooldownConfig(name, props));
-            JobBars.Config.AddCustomCooldown(name, job, props);
+            JobBars.Configuration.AddCustomCooldown(name, job, props);
         }
 
         public void DeleteCustomCooldown(JobIds job, CooldownConfig custom) {
             CustomCooldowns[job].Remove(custom);
-            JobBars.Config.RemoveCustomCooldown(custom.Name);
+            JobBars.Configuration.RemoveCustomCooldown(custom.Name);
         }
     }
 }

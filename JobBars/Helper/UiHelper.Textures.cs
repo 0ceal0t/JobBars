@@ -1,11 +1,10 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.System.Memory;
+﻿using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
 
 namespace JobBars.Helper {
-    public unsafe partial class UIHelper {
+    public unsafe partial class AtkHelper {
         private struct TextureToLoadStruct {
             public bool IsIcon;
             public string Path;
@@ -66,7 +65,7 @@ namespace JobBars.Helper {
                     var imageNode = node.Node;
                     var path = node.Path;
 
-                    var version = JobBars.Config.Use4K ? 2u : 1u;
+                    var version = JobBars.Configuration.Use4K ? 2u : 1u;
                     imageNode->LoadTexture(path, version);
                 }
             }
@@ -100,7 +99,7 @@ namespace JobBars.Helper {
         public static AtkUldPartsList* CreatePartsList(uint partCount) {
             var partsList = Alloc<AtkUldPartsList>();
             if (partsList == null) {
-                PluginLog.Debug("Failed to allocate memory for parts list");
+                Dalamud.LogError("Failed to allocate memory for parts list");
             }
 
             partsList->Id = 1;
@@ -108,7 +107,7 @@ namespace JobBars.Helper {
 
             var part = (AtkUldPart*)Alloc((ulong)sizeof(AtkUldPart) * partCount);
             if (part == null) {
-                PluginLog.Debug("Failed to allocate memory for part");
+                Dalamud.LogError("Failed to allocate memory for part");
                 IMemorySpace.Free(partsList, (ulong)sizeof(AtkUldPartsList));
                 return null;
             }

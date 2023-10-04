@@ -1,10 +1,8 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Interface.Utility;
 using ImGuiNET;
 using JobBars.Data;
-using JobBars.Helper;
 using System;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace JobBars {
     public unsafe partial class JobBars {
@@ -17,20 +15,20 @@ namespace JobBars {
         private readonly InfoBox<JobBars> RequiresRestartInfoBox = new() {
             Label = "Requires Restart",
             ContentsAction = (JobBars item) => {
-                if (ImGui.Checkbox("Use 4K textures##JobBars_Settings", ref Config.Use4K)) {
-                    Config.Save();
+                if (ImGui.Checkbox("Use 4K textures##JobBars_Settings", ref Configuration.Use4K)) {
+                    Configuration.Save();
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.AttachAddon, "Gauge/Buff/Cursor UI element", "##JobBars_Settings", out var newAttach)) {
-                    Config.AttachAddon = newAttach;
-                    Config.Save();
+                if (DrawCombo(ValidAttachTypes, Configuration.AttachAddon, "Gauge/Buff/Cursor UI element", "##JobBars_Settings", out var newAttach)) {
+                    Configuration.AttachAddon = newAttach;
+                    Configuration.Save();
                 }
 
                 ImGui.SetNextItemWidth(200f);
-                if (DrawCombo(ValidAttachTypes, Config.CooldownAttachAddon, "Cooldown UI element", "##JobBars_Settings", out var newCDAttach)) {
-                    Config.CooldownAttachAddon = newCDAttach;
-                    Config.Save();
+                if (DrawCombo(ValidAttachTypes, Configuration.CooldownAttachAddon, "Cooldown UI element", "##JobBars_Settings", out var newCDAttach)) {
+                    Configuration.CooldownAttachAddon = newCDAttach;
+                    Configuration.Save();
                 }
             }
         };
@@ -55,7 +53,7 @@ namespace JobBars {
             ImGui.PopStyleColor(2);
         }
 
-        private void BuildSettingsUI() {
+        private void BuildSettingsUi() {
             if (!IsLoaded) return;
             if (!PlayerExists) return;
             if (!Visible) return;

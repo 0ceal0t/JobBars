@@ -9,28 +9,28 @@ using JobBars.Gauges.GCD;
 using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class NIN {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.RaijuReady), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.RaijuReady), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.RaijuReady)
                 },
-                Color = UIColor.PurplePink
+                Color = AtkColor.PurplePink
             }),
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = new []{
                     new Item(BuffIds.Bunshin)
                 },
-                Color = UIColor.Red
+                Color = AtkColor.Red
             }),
-            new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = UIColor.NoColor,
+            new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = AtkColor.NoColor,
                 SameColor = true,
                 Parts = new []{
                     new GaugesChargesPartProps {
@@ -54,25 +54,25 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.Mug), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.Mug), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.Mug,
-                Color = UIColor.LightBlue,
+                Color = AtkColor.LightBlue,
                 Triggers = new []{ new Item(ActionIds.Mug) }
             }),
-            new BuffConfig(UIHelper.Localize(ActionIds.TrickAttack), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.TrickAttack), new BuffProps {
                 CD = 60,
                 Duration = 15,
                 Icon = ActionIds.TrickAttack,
-                Color = UIColor.Yellow,
+                Color = AtkColor.Yellow,
                 Triggers = new []{ new Item(ActionIds.TrickAttack) }
             }),
-            new BuffConfig(UIHelper.Localize(BuffIds.Bunshin), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(BuffIds.Bunshin), new BuffProps {
                 CD = 90,
                 Duration = 30,
                 Icon = ActionIds.Bunshin,
-                Color = UIColor.Orange,
+                Color = AtkColor.Orange,
                 Triggers = new []{ new Item(BuffIds.Bunshin) }
             })
         };
@@ -80,7 +80,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.NIN, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.NIN)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.NIN)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 10,
                 CD = 90,
@@ -89,13 +89,13 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.TrickAttack), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.TrickAttack), new IconBuffProps {
                 Icons = new [] { ActionIds.TrickAttack },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.TrickAttack), Duration = 15 }
                 }
             }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Mug), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Mug), new IconBuffProps {
                 Icons = new [] { ActionIds.Mug },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Mug), Duration = 20 }

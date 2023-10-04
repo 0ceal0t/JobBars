@@ -11,7 +11,5 @@
         public static readonly int ActorControlSelfId = 1539;
         public static readonly int ActorControlOtherId = 1540;
         public static readonly int WipeArg1 = 0x4000000F;
-
-        public static readonly int PartyMemberSize = 0x230;
     }
 }

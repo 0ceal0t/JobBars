@@ -8,24 +8,24 @@ namespace JobBars.Cooldowns.Manager {
         private readonly InfoBox<CooldownManager> PositionInfoBox = new() {
             Label = "Position",
             ContentsAction = (CooldownManager manager) => {
-                if (ImGui.Checkbox("Left-aligned" + manager.Id, ref JobBars.Config.CooldownsLeftAligned)) {
-                    JobBars.Config.Save();
+                if (ImGui.Checkbox("Left-aligned" + manager.Id, ref JobBars.Configuration.CooldownsLeftAligned)) {
+                    JobBars.Configuration.Save();
                     manager.ResetUi();
                 }
 
-                if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Config.CooldownScale)) {
+                if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Configuration.CooldownScale)) {
                     manager.UpdatePositionScale();
-                    JobBars.Config.Save();
+                    JobBars.Configuration.Save();
                 }
 
-                if (ImGui.InputFloat2("Position" + manager.Id, ref JobBars.Config.CooldownPosition)) {
+                if (ImGui.InputFloat2("Position" + manager.Id, ref JobBars.Configuration.CooldownPosition)) {
                     manager.UpdatePositionScale();
-                    JobBars.Config.Save();
+                    JobBars.Configuration.Save();
                 }
 
-                if (ImGui.InputFloat("Line height" + manager.Id, ref JobBars.Config.CooldownsSpacing)) {
+                if (ImGui.InputFloat("Line height" + manager.Id, ref JobBars.Configuration.CooldownsSpacing)) {
                     manager.UpdatePositionScale();
-                    JobBars.Config.Save();
+                    JobBars.Configuration.Save();
                 }
             }
         };
@@ -33,18 +33,18 @@ namespace JobBars.Cooldowns.Manager {
         private readonly InfoBox<CooldownManager> ShowIconInfoBox = new() {
             Label = "Show Icons When",
             ContentsAction = (CooldownManager manager) => {
-                if (ImGui.Checkbox("Default" + manager.Id, ref JobBars.Config.CooldownsStateShowDefault)) JobBars.Config.Save();
-                if (ImGui.Checkbox("Active" + manager.Id, ref JobBars.Config.CooldownsStateShowRunning)) JobBars.Config.Save();
-                if (ImGui.Checkbox("On cooldown" + manager.Id, ref JobBars.Config.CooldownsStateShowOnCD)) JobBars.Config.Save();
-                if (ImGui.Checkbox("Off cooldown" + manager.Id, ref JobBars.Config.CooldownsStateShowOffCD)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Default" + manager.Id, ref JobBars.Configuration.CooldownsStateShowDefault)) JobBars.Configuration.Save();
+                if (ImGui.Checkbox("Active" + manager.Id, ref JobBars.Configuration.CooldownsStateShowRunning)) JobBars.Configuration.Save();
+                if (ImGui.Checkbox("On cooldown" + manager.Id, ref JobBars.Configuration.CooldownsStateShowOnCD)) JobBars.Configuration.Save();
+                if (ImGui.Checkbox("Off cooldown" + manager.Id, ref JobBars.Configuration.CooldownsStateShowOffCD)) JobBars.Configuration.Save();
             }
         };
 
         private readonly InfoBox<CooldownManager> HideWhenInfoBox = new() {
             Label = "Hide When",
             ContentsAction = (CooldownManager manager) => {
-                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.CooldownsHideOutOfCombat)) JobBars.Config.Save();
-                if (ImGui.Checkbox("Weapon sheathed", ref JobBars.Config.CooldownsHideWeaponSheathed)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Configuration.CooldownsHideOutOfCombat)) JobBars.Configuration.Save();
+                if (ImGui.Checkbox("Weapon sheathed", ref JobBars.Configuration.CooldownsHideWeaponSheathed)) JobBars.Configuration.Save();
             }
         };
 
@@ -53,8 +53,8 @@ namespace JobBars.Cooldowns.Manager {
         protected override void DrawHeader() {
             CustomCooldownDialog.Draw();
 
-            if (ImGui.Checkbox("Cooldowns enabled" + Id, ref JobBars.Config.CooldownsEnabled)) {
-                JobBars.Config.Save();
+            if (ImGui.Checkbox("Cooldowns enabled" + Id, ref JobBars.Configuration.CooldownsEnabled)) {
+                JobBars.Configuration.Save();
                 ResetUi();
             }
         }
@@ -64,15 +64,15 @@ namespace JobBars.Cooldowns.Manager {
             ShowIconInfoBox.Draw(this);
             HideWhenInfoBox.Draw(this);
 
-            if (ImGui.Checkbox("Hide active buff text" + Id, ref JobBars.Config.CooldownsHideActiveBuffDuration)) JobBars.Config.Save();
+            if (ImGui.Checkbox("Hide active buff text" + Id, ref JobBars.Configuration.CooldownsHideActiveBuffDuration)) JobBars.Configuration.Save();
 
-            if (ImGui.Checkbox("Show party members' cooldowns" + Id, ref JobBars.Config.CooldownsShowPartyMembers)) {
-                JobBars.Config.Save();
+            if (ImGui.Checkbox("Show party members' cooldowns" + Id, ref JobBars.Configuration.CooldownsShowPartyMembers)) {
+                JobBars.Configuration.Save();
                 ResetUi();
             }
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Config.CooldownsOnCDOpacity)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Configuration.CooldownsOnCDOpacity)) JobBars.Configuration.Save();
         }
 
         protected override void DrawItem(CooldownConfig[] item, JobIds job) {

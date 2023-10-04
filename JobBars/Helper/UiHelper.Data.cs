@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Enums;
 using JobBars.Data;
 using Lumina.Excel.GeneratedSheets;
@@ -39,10 +40,10 @@ namespace JobBars.Helper {
         }
     }
 
-    public unsafe partial class UIHelper {
-        public static bool OutOfCombat => !JobBars.Condition[ConditionFlag.InCombat];
-        public static bool WeaponSheathed => JobBars.ClientState.LocalPlayer != null && !JobBars.ClientState.LocalPlayer.StatusFlags.HasFlag(StatusFlags.WeaponOut);
-        public static bool WatchingCutscene => JobBars.Condition[ConditionFlag.OccupiedInCutSceneEvent] || JobBars.Condition[ConditionFlag.WatchingCutscene78] || JobBars.Condition[ConditionFlag.BetweenAreas] || JobBars.Condition[ConditionFlag.BetweenAreas51];
+    public unsafe partial class AtkHelper {
+        public static bool OutOfCombat => !Dalamud.Condition[ConditionFlag.InCombat];
+        public static bool WeaponSheathed => Dalamud.ClientState.LocalPlayer != null && !Dalamud.ClientState.LocalPlayer.StatusFlags.HasFlag(StatusFlags.WeaponOut);
+        public static bool WatchingCutscene => Dalamud.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Dalamud.Condition[ConditionFlag.WatchingCutscene78] || Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51];
         public static bool InPvP { get; private set; } = false;
 
         public static bool CalcDoHide(bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed) {
@@ -55,7 +56,7 @@ namespace JobBars.Helper {
         }
 
         public static void ZoneChanged(ushort e) {
-            InPvP = JobBars.DataManager.GetExcelSheet<TerritoryType>().GetRow(e)?.IsPvpZone ?? false;
+            InPvP = Dalamud.DataManager.GetExcelSheet<TerritoryType>().GetRow(e)?.IsPvpZone ?? false;
         }
 
         private static readonly HashSet<uint> GCDs = new();
@@ -89,11 +90,11 @@ namespace JobBars.Helper {
             }
         }
 
-        public static string ProcText => JobBars.ClientState.ClientLanguage switch {
-            Dalamud.ClientLanguage.Japanese => "Procs",
-            Dalamud.ClientLanguage.English => "Procs",
-            Dalamud.ClientLanguage.German => "Procs",
-            Dalamud.ClientLanguage.French => "Procs",
+        public static string ProcText => Dalamud.ClientState.ClientLanguage switch {
+            ClientLanguage.Japanese => "Procs",
+            ClientLanguage.English => "Procs",
+            ClientLanguage.German => "Procs",
+            ClientLanguage.French => "Procs",
             _ => "触发"
         };
 
@@ -136,7 +137,7 @@ namespace JobBars.Helper {
             ActionList.Clear();
             StatusList.Clear();
 
-            ActionSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
+            ActionSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
             foreach (var item in ActionSheet) {
@@ -159,7 +160,7 @@ namespace JobBars.Helper {
                 });
             }
 
-            StatusSheet = JobBars.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
+            StatusSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where(x => !string.IsNullOrEmpty(x.Name));
             foreach (var item in StatusSheet) {
                 StatusList.Add(new ItemData {
                     Name = item.Name,
@@ -171,7 +172,7 @@ namespace JobBars.Helper {
                 });
             }
 
-            JobSheet = JobBars.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
+            JobSheet = Dalamud.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
         }
 
         public static float TimeLeft(float defaultDuration, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {

@@ -2,7 +2,7 @@
 using System.Numerics;
 
 namespace JobBars.Helper {
-    public static unsafe partial class UIHelper {
+    public static unsafe partial class AtkHelper {
         public static unsafe Vector2 GetNodePosition(AtkResNode* node) {
             var pos = new Vector2(node->X, node->Y);
             var par = node->ParentNode;
@@ -25,17 +25,17 @@ namespace JobBars.Helper {
         }
 
         public static void Hide(AtkResNode* node) {
-            node->Flags &= ~0x10;
-            node->Flags_2 |= 0x1;
+            node->NodeFlags &= ~NodeFlags.Visible;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Show(AtkResNode* node) {
-            node->Flags |= 0x10;
-            node->Flags_2 |= 0x1;
+            node->NodeFlags |= NodeFlags.Visible;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Update(AtkResNode* node) {
-            node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetVisibility(AtkResNode* node, bool visiblity) {
@@ -46,25 +46,25 @@ namespace JobBars.Helper {
         public static void SetSize(AtkResNode* node, int? width, int? height) {
             if (width != null && width >= ushort.MinValue && width <= ushort.MaxValue) node->Width = (ushort)width.Value;
             if (height != null && height >= ushort.MinValue && height <= ushort.MaxValue) node->Height = (ushort)height.Value;
-            node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetPosition(AtkResNode* node, float? x, float? y) {
             if (x != null) node->X = x.Value;
             if (y != null) node->Y = y.Value;
-            node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void SetScale(AtkResNode* atkUnitBase, float? scaleX, float? scaleY) {
             atkUnitBase->ScaleX = scaleX.Value;
             atkUnitBase->ScaleY = scaleY.Value;
-            atkUnitBase->Flags_2 |= 0x1;
-            atkUnitBase->Flags_2 |= 0x4;
+            atkUnitBase->DrawFlags |= 0x1;
+            atkUnitBase->DrawFlags |= 0x4;
         }
 
         public static void SetRotation(AtkResNode* node, float rotation) {
             node->Rotation = rotation;
-            node->Flags_2 |= 0x1;
+            node->DrawFlags |= 0x1;
         }
 
         public static void Link(AtkResNode* next, AtkResNode* prev) {
@@ -137,7 +137,7 @@ namespace JobBars.Helper {
             for (int i = 0; i < Childen.Length; i++) {
                 Childen[i].Node->ParentNode = Node;
                 count += Childen[i].Setup();
-                if (i < Childen.Length - 1) UIHelper.Link(Childen[i].Node, Childen[i + 1].Node);
+                if (i < Childen.Length - 1) AtkHelper.Link(Childen[i].Node, Childen[i + 1].Node);
             }
             Node->ChildNode = Childen[0].Node;
             Node->ChildCount = (ushort)count;

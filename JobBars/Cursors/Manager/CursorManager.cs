@@ -1,10 +1,10 @@
-﻿using System;
-using ImGuiNET;
-using Dalamud.Interface;
-using JobBars.Data;
-using JobBars.UI;
+﻿using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using ImGuiNET;
+using JobBars.Data;
 using JobBars.Helper;
+using JobBars.Atk;
+using System;
 
 namespace JobBars.Cursors.Manager {
     public unsafe partial class CursorManager : PerJobManager<Cursor> {
@@ -13,8 +13,8 @@ namespace JobBars.Cursors.Manager {
         private ElementColor OuterColor;
 
         public CursorManager() : base("##JobBars_Cursor") {
-            InnerColor = UIColor.GetColor(JobBars.Config.CursorInnerColor, UIColor.MpPink);
-            OuterColor = UIColor.GetColor(JobBars.Config.CursorOuterColor, UIColor.HealthGreen);
+            InnerColor = AtkColor.GetColor(JobBars.Configuration.CursorInnerColor, AtkColor.MpPink);
+            OuterColor = AtkColor.GetColor(JobBars.Configuration.CursorOuterColor, AtkColor.HealthGreen);
 
             JobBars.Builder.SetCursorInnerColor(InnerColor);
             JobBars.Builder.SetCursorOuterColor(OuterColor);
@@ -25,7 +25,7 @@ namespace JobBars.Cursors.Manager {
         }
 
         public void Tick() {
-            if (UIHelper.CalcDoHide(JobBars.Config.CursorsEnabled, JobBars.Config.CursorHideOutOfCombat, JobBars.Config.CursorHideWeaponSheathed)) {
+            if (AtkHelper.CalcDoHide(JobBars.Configuration.CursorsEnabled, JobBars.Configuration.CursorHideOutOfCombat, JobBars.Configuration.CursorHideWeaponSheathed)) {
                 JobBars.Builder.HideCursor();
                 return;
             }
@@ -43,12 +43,12 @@ namespace JobBars.Cursors.Manager {
 
             var viewport = ImGuiHelpers.MainViewport;
 
-            if (JobBars.Config.CursorPosition == CursorPositionType.MouseCursor) {
+            if (JobBars.Configuration.CursorPosition == CursorPositionType.MouseCursor) {
                 var pos = ImGui.GetMousePos() - viewport.Pos;
                 var atkStage = AtkStage.GetSingleton();
 
                 var dragging = *((byte*)new IntPtr(atkStage) + 0x137);
-                if (JobBars.Config.CursorHideWhenHeld && dragging != 1) {
+                if (JobBars.Configuration.CursorHideWhenHeld && dragging != 1) {
                     JobBars.Builder.HideCursor();
                     return;
                 }
@@ -60,13 +60,13 @@ namespace JobBars.Cursors.Manager {
             }
             else {
                 JobBars.Builder.ShowCursor();
-                JobBars.Builder.SetCursorPosition(JobBars.Config.CursorPosition == CursorPositionType.Middle ? viewport.Size / 2 : JobBars.Config.CursorCustomPosition);
+                JobBars.Builder.SetCursorPosition(JobBars.Configuration.CursorPosition == CursorPositionType.Middle ? viewport.Size / 2 : JobBars.Configuration.CursorCustomPosition);
             }
 
             var inner = CurrentCursor.GetInner();
             var outer = CurrentCursor.GetOuter();
-            JobBars.Builder.SetCursorInnerPercent(inner, JobBars.Config.CursorInnerScale);
-            JobBars.Builder.SetCursorOuterPercent(outer, JobBars.Config.CursorOuterScale);
+            JobBars.Builder.SetCursorInnerPercent(inner, JobBars.Configuration.CursorInnerScale);
+            JobBars.Builder.SetCursorOuterPercent(outer, JobBars.Configuration.CursorOuterScale);
         }
     }
 }

@@ -2,7 +2,7 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace JobBars.Buffs {
         private float TimeLeft;
         private float Percent;
 
-        private UIBuff UI;
+        private AtkBuff UI;
 
         public BuffState CurrentState => State;
         public uint Id => (uint)Config.Icon;
@@ -51,16 +51,16 @@ namespace JobBars.Buffs {
         }
 
         public void Tick(Dictionary<Item, Status> buffDict) {
-            if (State != BuffState.Running && UIHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
+            if (State != BuffState.Running && AtkHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
 
             if (State == BuffState.Running) {
-                TimeLeft = UIHelper.TimeLeft(Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = AtkHelper.TimeLeft(Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if (TimeLeft <= 0) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;
 
                     State = Config.CD <= 0 ? BuffState.None : // doesn't have a cooldown, just make it invisible
-                        Config.CD <= JobBars.Config.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
+                        Config.CD <= JobBars.Configuration.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
                 }
                 else { // Still running
                     Percent = 1.0f - (float)(TimeLeft / Config.Duration);
@@ -72,14 +72,14 @@ namespace JobBars.Buffs {
                 if (TimeLeft <= 0) {
                     State = BuffState.OffCD;
                 }
-                else if (TimeLeft <= JobBars.Config.BuffDisplayTimer) { // CD low enough to be visible
+                else if (TimeLeft <= JobBars.Configuration.BuffDisplayTimer) { // CD low enough to be visible
                     State = BuffState.OnCD_Visible;
                     Percent = TimeLeft / Config.CD;
                 }
             }
         }
 
-        public void TickUI(UIBuff ui) {
+        public void TickUI(AtkBuff ui) {
             if (UI != ui || UI?.IconId != Config.Icon) {
                 UI = ui;
                 SetupUI();
@@ -99,7 +99,7 @@ namespace JobBars.Buffs {
                 UI.SetText("");
             }
             else if (State == BuffState.OnCD_Visible) {
-                UI.SetOnCD(JobBars.Config.BuffOnCDOpacity);
+                UI.SetOnCD(JobBars.Configuration.BuffOnCDOpacity);
                 UI.SetPercent(Percent);
                 UI.SetText(Text);
             }

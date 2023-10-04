@@ -1,6 +1,5 @@
-﻿using Dalamud.Logging;
-using JobBars.Gauges.Types.Bar;
-using JobBars.UI;
+﻿using JobBars.Gauges.Types.Bar;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.MP {
     public class GaugeMPTracker : GaugeTracker, IGaugeBarInterface {
@@ -25,7 +24,7 @@ namespace JobBars.Gauges.MP {
         public override void ProcessAction(Item action) { }
 
         protected override void TickTracker() {
-            var mp = JobBars.ClientState.LocalPlayer.CurrentMp;
+            var mp = Dalamud.ClientState.LocalPlayer.CurrentMp;
             Value = mp / 10000f;
             TextValue = ((int)(mp / 100)).ToString();
         }

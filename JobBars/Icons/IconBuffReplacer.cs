@@ -26,7 +26,7 @@ namespace JobBars.Icons {
             var timeLeft = -1f;
             var maxDuration = 1f;
             foreach (var trigger in Triggers) {
-                if (UIHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
+                if (AtkHelper.PlayerStatus.TryGetValue(trigger.Trigger, out var value)) {
                     timeLeft = value.RemainingTime - Offset;
                     maxDuration = trigger.Duration - Offset;
                     break;

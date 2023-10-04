@@ -1,5 +1,5 @@
 ﻿using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using JobBars.Gauges.Types.Diamond;
 using System;
 using System.Collections.Generic;
@@ -47,13 +47,13 @@ namespace JobBars.Gauges.Procs {
 
                 foreach(var trigger in proc.Config.Triggers) {
                     if(trigger.Type == ItemType.Buff) {
-                        if(UIHelper.PlayerStatus.TryGetValue(trigger, out var buff)) {
+                        if(AtkHelper.PlayerStatus.TryGetValue(trigger, out var buff)) {
                             procActive = true;
                             proc.RemainingTime = Math.Max(0, buff.RemainingTime);
                         }
                     }
                     else {
-                        if(!UIHelper.GetRecastActive(trigger.Id, out _)) {
+                        if(!AtkHelper.GetRecastActive(trigger.Id, out _)) {
                             procActive = true;
                         }
                     }

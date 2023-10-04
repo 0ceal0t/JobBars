@@ -1,11 +1,10 @@
-﻿using JobBars.UI;
-using JobBars.Gauges.Types.Bar;
-using JobBars.Gauges.Types.Arrow;
-using JobBars.Gauges.Types.Diamond;
-using JobBars.Gauges.Types.BarDiamondCombo;
-using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using JobBars.Gauges.MP;
-using Dalamud.Logging;
+using JobBars.Gauges.Types.Arrow;
+using JobBars.Gauges.Types.Bar;
+using JobBars.Gauges.Types.BarDiamondCombo;
+using JobBars.Gauges.Types.Diamond;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Custom {
     public class GaugeDrkMPTracker : GaugeMPTracker, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
@@ -28,7 +27,7 @@ namespace JobBars.Gauges.Custom {
         protected override void TickTracker() {
             base.TickTracker();
 
-            var drkGauge = JobBars.JobGauges.Get<DRKGauge>();
+            var drkGauge = Dalamud.JobGauges.Get<DRKGauge>();
             DarkArts = drkGauge != null && drkGauge.HasDarkArts;
         }
 

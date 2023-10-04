@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
@@ -60,7 +60,7 @@ namespace JobBars.Gauges.GCD {
 
             public void Tick() {
                 if (State == GaugeState.Active) {
-                    float timeLeft = UIHelper.TimeLeft(Config.MaxDuration, UIHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
+                    float timeLeft = AtkHelper.TimeLeft(Config.MaxDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime);
                     if (timeLeft < 0) {
                         State = GaugeState.Finished;
                         StopTime = DateTime.Now;

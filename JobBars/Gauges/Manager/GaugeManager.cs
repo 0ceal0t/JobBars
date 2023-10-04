@@ -31,13 +31,13 @@ namespace JobBars.Gauges.Manager {
         }
 
         public void PerformAction(Item action) {
-            if (!JobBars.Config.GaugesEnabled) return;
+            if (!JobBars.Configuration.GaugesEnabled) return;
 
             foreach (var gauge in CurrentGauges.Where(g => g.Enabled && !g.Disposed)) gauge.ProcessAction(action);
         }
 
         public void Tick() {
-            if (UIHelper.CalcDoHide(JobBars.Config.GaugesEnabled, JobBars.Config.GaugesHideOutOfCombat, JobBars.Config.GaugesHideWeaponSheathed)) {
+            if (AtkHelper.CalcDoHide(JobBars.Configuration.GaugesEnabled, JobBars.Configuration.GaugesHideOutOfCombat, JobBars.Configuration.GaugesHideWeaponSheathed)) {
                 JobBars.Builder.HideGauges();
                 return;
             }
@@ -47,33 +47,33 @@ namespace JobBars.Gauges.Manager {
 
             // ============================
 
-            if (CurrentJob == JobIds.SCH && !UIHelper.OutOfCombat) { // only need this to catch excog for now
-                JobBars.SearchForPartyMemberStatus((int)JobBars.ClientState.LocalPlayer.ObjectId, UIHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
+            if (CurrentJob == JobIds.SCH && !AtkHelper.OutOfCombat) { // only need this to catch excog for now
+                JobBars.SearchForPartyMemberStatus((int)Dalamud.ClientState.LocalPlayer.ObjectId, AtkHelper.PlayerStatus, GaugeBuffsOnPartyMembers);
             }
 
             foreach (var gauge in CurrentGauges.Where(g => g.Enabled && !g.Disposed)) gauge.Tick();
         }
 
-        private Vector2 GetPerJobPosition() => JobBars.Config.GaugePerJobPosition.Get($"{CurrentJob}");
+        private Vector2 GetPerJobPosition() => JobBars.Configuration.GaugePerJobPosition.Get($"{CurrentJob}");
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetGaugePosition(JobBars.Config.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Config.GaugePositionGlobal);
-            JobBars.Builder.SetGaugeScale(JobBars.Config.GaugeScale);
+            JobBars.Builder.SetGaugePosition(JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal);
+            JobBars.Builder.SetGaugeScale(JobBars.Configuration.GaugeScale);
 
             var position = 0;
             foreach (var gauge in CurrentGauges.OrderBy(g => g.Order).Where(g => g.Enabled)) {
-                if (JobBars.Config.GaugePositionType == GaugePositionType.Split) {
+                if (JobBars.Configuration.GaugePositionType == GaugePositionType.Split) {
                     gauge.UpdateSplitPosition();
                 }
                 else {
-                    var x = JobBars.Config.GaugeHorizontal ? position :
-                        (JobBars.Config.GaugeAlignRight ? 160 - gauge.Width : 0);
+                    var x = JobBars.Configuration.GaugeHorizontal ? position :
+                        (JobBars.Configuration.GaugeAlignRight ? 160 - gauge.Width : 0);
 
-                    var y = JobBars.Config.GaugeHorizontal ? gauge.YOffset :
-                        (JobBars.Config.GaugeBottomToTop ? position - gauge.Height : position);
+                    var y = JobBars.Configuration.GaugeHorizontal ? gauge.YOffset :
+                        (JobBars.Configuration.GaugeBottomToTop ? position - gauge.Height : position);
 
-                    var posChange = JobBars.Config.GaugeHorizontal ? gauge.Width :
-                        (JobBars.Config.GaugeBottomToTop ? -1 * gauge.Height : gauge.Height);
+                    var posChange = JobBars.Configuration.GaugeHorizontal ? gauge.Width :
+                        (JobBars.Configuration.GaugeBottomToTop ? -1 * gauge.Height : gauge.Height);
 
                     gauge.SetPosition(new Vector2(x, y));
                     position += posChange;

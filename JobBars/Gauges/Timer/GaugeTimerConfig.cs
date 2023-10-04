@@ -1,4 +1,4 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 using ImGuiNET;
 
 namespace JobBars.Gauges.Timer {
@@ -41,10 +41,10 @@ namespace JobBars.Gauges.Timer {
                 NoRefresh = props.NoRefresh;
                 Triggers = props.Triggers;
                 HideLowWarning = props.HideLowWarning;
-                Color = JobBars.Config.GaugeColor.Get(Name, props.Color);
-                Invert = JobBars.Config.GaugeInvert.Get(Name, props.Invert);
-                Offset = JobBars.Config.GaugeTimerOffset.Get(Name);
-                LowWarningTime = JobBars.Config.GaugeLowTimerWarning_2.Get(Name);
+                Color = JobBars.Configuration.GaugeColor.Get(Name, props.Color);
+                Invert = JobBars.Configuration.GaugeInvert.Get(Name, props.Invert);
+                Offset = JobBars.Configuration.GaugeTimerOffset.Get(Name);
+                LowWarningTime = JobBars.Configuration.GaugeLowTimerWarning_2.Get(Name);
             }
         }
 
@@ -77,20 +77,20 @@ namespace JobBars.Gauges.Timer {
 
                 var suffix = string.IsNullOrEmpty(subTimer.SubName) ? "" : $" ({subTimer.SubName})";
 
-                if (JobBars.Config.GaugeColor.Draw($"Color{suffix}{id}", subTimer.Name, subTimer.Color, out var newColor)) {
+                if (JobBars.Configuration.GaugeColor.Draw($"Color{suffix}{id}", subTimer.Name, subTimer.Color, out var newColor)) {
                     subTimer.Color = newColor;
                     newVisual = true;
                 }
 
-                if (JobBars.Config.GaugeTimerOffset.Draw($"Time offset{suffix}{id}", subTimer.Name, subTimer.Offset, out var newOffset)) {
+                if (JobBars.Configuration.GaugeTimerOffset.Draw($"Time offset{suffix}{id}", subTimer.Name, subTimer.Offset, out var newOffset)) {
                     subTimer.Offset = newOffset;
                 }
 
-                if (JobBars.Config.GaugeInvert.Draw($"Invert{suffix}{id}", subTimer.Name, subTimer.Invert, out var newInvert)) {
+                if (JobBars.Configuration.GaugeInvert.Draw($"Invert{suffix}{id}", subTimer.Name, subTimer.Invert, out var newInvert)) {
                     subTimer.Invert = newInvert;
                 }
 
-                if (JobBars.Config.GaugeLowTimerWarning_2.Draw($"Low warning time{suffix}{id}", subTimer.Name, subTimer.LowWarningTime, out var newLowWarning)) {
+                if (JobBars.Configuration.GaugeLowTimerWarning_2.Draw($"Low warning time{suffix}{id}", subTimer.Name, subTimer.LowWarningTime, out var newLowWarning)) {
                     subTimer.LowWarningTime = newLowWarning;
                 }
             }

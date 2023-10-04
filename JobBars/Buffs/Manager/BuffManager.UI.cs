@@ -12,32 +12,32 @@ namespace JobBars.Buffs.Manager {
                 ImGui.Checkbox("Position Locked" + manager.Id, ref manager.LOCKED);
 
                 ImGui.SetNextItemWidth(25f);
-                if (ImGui.InputInt("Buffs per line" + manager.Id, ref JobBars.Config.BuffHorizontal, 0)) {
-                    JobBars.Config.Save();
+                if (ImGui.InputInt("Buffs per line" + manager.Id, ref JobBars.Configuration.BuffHorizontal, 0)) {
+                    JobBars.Configuration.Save();
                     JobBars.Builder.RefreshBuffLayout();
                 }
 
-                if (ImGui.Checkbox("Right-to-left" + manager.Id, ref JobBars.Config.BuffRightToLeft)) {
-                    JobBars.Config.Save();
+                if (ImGui.Checkbox("Right-to-left" + manager.Id, ref JobBars.Configuration.BuffRightToLeft)) {
+                    JobBars.Configuration.Save();
                     JobBars.Builder.RefreshBuffLayout();
                 }
 
-                if (ImGui.Checkbox("Bottom-to-top" + manager.Id, ref JobBars.Config.BuffBottomToTop)) {
-                    JobBars.Config.Save();
+                if (ImGui.Checkbox("Bottom-to-top" + manager.Id, ref JobBars.Configuration.BuffBottomToTop)) {
+                    JobBars.Configuration.Save();
                     JobBars.Builder.RefreshBuffLayout();
                 }
 
-                if (ImGui.Checkbox("Square buffs" + manager.Id, ref JobBars.Config.BuffSquare)) {
-                    JobBars.Config.Save();
+                if (ImGui.Checkbox("Square buffs" + manager.Id, ref JobBars.Configuration.BuffSquare)) {
+                    JobBars.Configuration.Save();
                     JobBars.Builder.UpdateBuffsSize();
                 }
 
-                if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Config.BuffScale)) {
+                if (ImGui.InputFloat("Scale" + manager.Id, ref JobBars.Configuration.BuffScale)) {
                     manager.UpdatePositionScale();
-                    JobBars.Config.Save();
+                    JobBars.Configuration.Save();
                 }
 
-                var pos = JobBars.Config.BuffPosition;
+                var pos = JobBars.Configuration.BuffPosition;
                 if (ImGui.InputFloat2("Position" + manager.Id, ref pos)) {
                     SetBuffPosition(pos);
                 }
@@ -47,21 +47,21 @@ namespace JobBars.Buffs.Manager {
         private readonly InfoBox<BuffManager> PartyListInfoBox = new() {
             Label = "Party List",
             ContentsAction = (BuffManager manager) => {
-                if (ImGui.Checkbox("Show card duration when on AST" + manager.Id, ref JobBars.Config.BuffPartyListASTText)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Show card duration when on AST" + manager.Id, ref JobBars.Configuration.BuffPartyListASTText)) JobBars.Configuration.Save();
             }
         };
 
         private readonly InfoBox<BuffManager> HideWhenInfoBox = new() {
             Label = "Hide When",
             ContentsAction = (BuffManager manager) => {
-                if (ImGui.Checkbox("Out of combat", ref JobBars.Config.BuffHideOutOfCombat)) JobBars.Config.Save();
-                if (ImGui.Checkbox("Weapon is sheathed", ref JobBars.Config.BuffHideWeaponSheathed)) JobBars.Config.Save();
+                if (ImGui.Checkbox("Out of combat", ref JobBars.Configuration.BuffHideOutOfCombat)) JobBars.Configuration.Save();
+                if (ImGui.Checkbox("Weapon is sheathed", ref JobBars.Configuration.BuffHideWeaponSheathed)) JobBars.Configuration.Save();
             }
         };
 
         protected override void DrawHeader() {
-            if (ImGui.Checkbox("Buff bar enabled" + Id, ref JobBars.Config.BuffBarEnabled)) {
-                JobBars.Config.Save();
+            if (ImGui.Checkbox("Buff bar enabled" + Id, ref JobBars.Configuration.BuffBarEnabled)) {
+                JobBars.Configuration.Save();
                 ResetUI();
             }
         }
@@ -72,26 +72,26 @@ namespace JobBars.Buffs.Manager {
             HideWhenInfoBox.Draw(this);
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("Hide buffs with cooldown above" + Id, ref JobBars.Config.BuffDisplayTimer)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Hide buffs with cooldown above" + Id, ref JobBars.Configuration.BuffDisplayTimer)) JobBars.Configuration.Save();
 
-            if (ImGui.Checkbox("Show party members' buffs", ref JobBars.Config.BuffIncludeParty)) {
-                JobBars.Config.Save();
+            if (ImGui.Checkbox("Show party members' buffs", ref JobBars.Configuration.BuffIncludeParty)) {
+                JobBars.Configuration.Save();
                 ResetUI();
             }
 
-            if (ImGui.Checkbox("Thin buff border", ref JobBars.Config.BuffThinBorder)) {
-                JobBars.Config.Save();
+            if (ImGui.Checkbox("Thin buff border", ref JobBars.Configuration.BuffThinBorder)) {
+                JobBars.Configuration.Save();
                 JobBars.Builder.UpdateBorderThin();
             }
 
             ImGui.SetNextItemWidth(50f);
-            if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Config.BuffOnCDOpacity)) JobBars.Config.Save();
+            if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Configuration.BuffOnCDOpacity)) JobBars.Configuration.Save();
 
             ImGui.SetNextItemWidth(100f);
-            if (ImGui.InputInt("Buff text size", ref JobBars.Config.BuffTextSize_v2)) {
-                if (JobBars.Config.BuffTextSize_v2 <= 0) JobBars.Config.BuffTextSize_v2 = 1;
-                if (JobBars.Config.BuffTextSize_v2 > 255) JobBars.Config.BuffTextSize_v2 = 255;
-                JobBars.Config.Save();
+            if (ImGui.InputInt("Buff text size", ref JobBars.Configuration.BuffTextSize_v2)) {
+                if (JobBars.Configuration.BuffTextSize_v2 <= 0) JobBars.Configuration.BuffTextSize_v2 = 1;
+                if (JobBars.Configuration.BuffTextSize_v2 > 255) JobBars.Configuration.BuffTextSize_v2 = 255;
+                JobBars.Configuration.Save();
                 JobBars.Builder.UpdateBuffsTextSize();
             }
         }
@@ -105,15 +105,15 @@ namespace JobBars.Buffs.Manager {
         public void DrawPositionBox() {
             if (LOCKED) return;
 
-            if (JobBars.DrawPositionView("Buff Bar##BuffPosition", JobBars.Config.BuffPosition, out var pos)) {
+            if (JobBars.DrawPositionView("Buff Bar##BuffPosition", JobBars.Configuration.BuffPosition, out var pos)) {
                 SetBuffPosition(pos);
             }
         }
 
         private static void SetBuffPosition(Vector2 pos) {
             JobBars.SetWindowPosition("Buff Bar##BuffPosition", pos);
-            JobBars.Config.BuffPosition = pos;
-            JobBars.Config.Save();
+            JobBars.Configuration.BuffPosition = pos;
+            JobBars.Configuration.Save();
             JobBars.Builder.SetBuffPosition(pos);
         }
     }

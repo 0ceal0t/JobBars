@@ -1,7 +1,7 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Arrow {
-    public class GaugeArrow<T> : Gauge<UIArrow, T> where T : GaugeTracker, IGaugeArrowInterface {
+    public class GaugeArrow<T> : Gauge<AtkArrow, T> where T : GaugeTracker, IGaugeArrowInterface {
         private readonly int MaxStacks;
 
         public GaugeArrow(T tracker, int idx) {

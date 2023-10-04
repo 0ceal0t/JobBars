@@ -3,7 +3,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
 
-namespace JobBars.UI {
+namespace JobBars.Atk {
     public struct ElementColor {
         public string Name;
 
@@ -26,7 +26,7 @@ namespace JobBars.UI {
         }
     }
 
-    public class UIColor {
+    public class AtkColor {
         public static readonly ByteColor BYTE_White = new() {
             R = 255,
             G = 255,
@@ -46,12 +46,12 @@ namespace JobBars.UI {
         public unsafe static void SetColor(AtkImageNode* node, ElementColor color) => SetColor((AtkResNode*)node, color);
         public unsafe static void SetColor(AtkResNode* node, ElementColor color) => SetColor(node, color.AddRed, color.AddGreen, color.AddBlue, color.MultiplyRed, color.MultiplyGreen, color.MultiplyBlue);
         public unsafe static void SetColor(AtkResNode* node, short addRed, short addGreen, short addBlue, byte multRed, byte multGreen, byte multBlue) {
-            node->AddRed = (ushort)addRed;
-            node->AddGreen = (ushort)addGreen;
-            node->AddBlue = (ushort)addBlue;
-            node->AddRed_2 = (ushort)addRed;
-            node->AddGreen_2 = (ushort)addGreen;
-            node->AddBlue_2 = (ushort)addBlue;
+            node->AddRed = addRed;
+            node->AddGreen = addGreen;
+            node->AddBlue = addBlue;
+            node->AddRed_2 = addRed;
+            node->AddGreen_2 = addGreen;
+            node->AddBlue_2 = addBlue;
 
             node->MultiplyRed = multRed;
             node->MultiplyGreen = multGreen;

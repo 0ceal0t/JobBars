@@ -1,7 +1,7 @@
 ﻿using JobBars.Data;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,10 +42,10 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick(Dictionary<Item, Status> buffDict) {
-            if (State != TrackerState.Running && UIHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
+            if (State != TrackerState.Running && AtkHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
 
             if (State == TrackerState.Running) {
-                TimeLeft = UIHelper.TimeLeft(JobBars.Config.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
+                TimeLeft = AtkHelper.TimeLeft(JobBars.Configuration.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
                 if(TimeLeft <= 0) {
                     TimeLeft = 0;
                     State = TrackerState.OnCD; // mitigation needs to have a CD
@@ -84,7 +84,7 @@ namespace JobBars.Cooldowns {
                 }
             }
             else if (State == TrackerState.OnCD) {
-                ui.SetOnCD(JobBars.Config.CooldownsOnCDOpacity);
+                ui.SetOnCD(JobBars.Configuration.CooldownsOnCDOpacity);
                 ui.SetText(((int)Math.Round(TimeLeft)).ToString());
                 ui.SetNoDash();
             }

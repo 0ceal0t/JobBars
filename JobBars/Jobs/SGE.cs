@@ -8,15 +8,15 @@ using JobBars.Gauges.Procs;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class SGE {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.EukrasianDosis), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.EukrasianDosis), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 30,
-                Color = UIColor.MpPink,
+                Color = AtkColor.MpPink,
                 Triggers = new []{
                     new Item(BuffIds.EukrasianDosis),
                     new Item(BuffIds.EukrasianDosis2),
@@ -31,24 +31,24 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.SGE, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new CooldownConfig[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.Pneuma), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Pneuma), new CooldownProps {
                 Icon = ActionIds.Pneuma,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Pneuma) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Holos), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Holos), new CooldownProps {
                 Icon = ActionIds.Holos,
                 CD = 120,
                 Duration = 20,
                 Triggers = new []{ new Item(ActionIds.Holos) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Panhaima), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Panhaima), new CooldownProps {
                 Icon = ActionIds.Panhaima,
                 Duration = 15,
                 CD = 120,
                 Triggers = new []{ new Item(ActionIds.Panhaima) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Swiftcast)} ({UIHelper.Localize(JobIds.SGE)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SGE)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.Swiftcast) }
@@ -56,7 +56,7 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new IconReplacer[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.EukrasianDosis), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.EukrasianDosis), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.EukrasianDosis,

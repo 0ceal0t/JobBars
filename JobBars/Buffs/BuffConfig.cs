@@ -1,6 +1,6 @@
 ﻿using ImGuiNET;
 using JobBars.Data;
-using JobBars.UI;
+using JobBars.Atk;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -39,8 +39,8 @@ namespace JobBars.Buffs {
             ApplyToTarget = props.ApplyToTarget;
             ShowPartyText = props.ShowPartyText;
 
-            Enabled = JobBars.Config.BuffEnabled.Get(Name);
-            PartyListHighlight = JobBars.Config.BuffPartyListHighlight.Get(Name);
+            Enabled = JobBars.Configuration.BuffEnabled.Get(Name);
+            PartyListHighlight = JobBars.Configuration.BuffPartyListHighlight.Get(Name);
         }
 
         public void Draw(string _id, ref bool reset) {
@@ -51,12 +51,12 @@ namespace JobBars.Buffs {
                 ImGui.PopStyleColor();
                 ImGui.Indent();
 
-                if (JobBars.Config.BuffEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
+                if (JobBars.Configuration.BuffEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
                     Enabled = newEnabled;
                     reset = true;
                 }
 
-                if (JobBars.Config.BuffPartyListHighlight.Draw($"Highlight party members when active{_id}{Name}", Name, PartyListHighlight, out var newPartyListHighlight)) {
+                if (JobBars.Configuration.BuffPartyListHighlight.Draw($"Highlight party members when active{_id}{Name}", Name, PartyListHighlight, out var newPartyListHighlight)) {
                     PartyListHighlight = newPartyListHighlight;
                 }
 

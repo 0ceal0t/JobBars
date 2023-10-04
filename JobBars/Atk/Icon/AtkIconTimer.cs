@@ -1,11 +1,9 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Graphics;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
 
-namespace JobBars.UI {
-    public unsafe class UIIconTimer : UIIcon {
+namespace JobBars.Atk {
+    public unsafe class AtkIconTimer : AtkIcon {
         private AtkImageNode* OriginalImage;
 
         private bool Dimmed = false;
@@ -20,7 +18,7 @@ namespace JobBars.UI {
         private AtkTextNode* Text;
         private AtkImageNode* Combo;
 
-        public UIIconTimer(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) :
+        public AtkIconTimer(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) :
             base(adjustedId, slotId, hotbarIdx, slotIdx, component, props) {
 
             var nodeList = Component->Component->UldManager.NodeList;
@@ -35,16 +33,16 @@ namespace JobBars.UI {
 
             OriginalText = (AtkTextNode*)IconComponent->UnknownImageNode;
 
-            Combo = UIHelper.CleanAlloc<AtkImageNode>();
+            Combo = AtkHelper.CleanAlloc<AtkImageNode>();
             Combo->Ctor();
             Combo->AtkResNode.NodeID = NodeIdx++;
             Combo->AtkResNode.Type = NodeType.Image;
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.Flags = 8243;
-            Combo->AtkResNode.Flags_2 = 1;
-            Combo->AtkResNode.Flags_2 |= 4;
+            Combo->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Combo->AtkResNode.DrawFlags = 1;
+            Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
             Combo->PartId = 0;
             Combo->PartsList = OriginalCombo->PartsList;
@@ -52,29 +50,29 @@ namespace JobBars.UI {
 
             Combo->AtkResNode.ParentNode = OriginalComboContainer->ParentNode;
 
-            UIHelper.Link(OriginalPreCombo, (AtkResNode*)Combo);
-            UIHelper.Link((AtkResNode*)Combo, OriginalComboContainer->PrevSiblingNode);
-            
+            AtkHelper.Link(OriginalPreCombo, (AtkResNode*)Combo);
+            AtkHelper.Link((AtkResNode*)Combo, OriginalComboContainer->PrevSiblingNode);
+
             // ========================
 
-            Text = UIHelper.CleanAlloc<AtkTextNode>();
+            Text = AtkHelper.CleanAlloc<AtkTextNode>();
             Text->Ctor();
             Text->AtkResNode.NodeID = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.Flags = 8243;
-            Text->AtkResNode.Flags_2 = 1;
-            Text->AtkResNode.Flags_2 |= 4;
+            Text->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Text->AtkResNode.DrawFlags = 1;
+            Text->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();
             Text->SetText("");
 
             Text->AtkResNode.ParentNode = OriginalText->AtkResNode.ParentNode;
 
-            UIHelper.Link(OriginalText->AtkResNode.NextSiblingNode, (AtkResNode*)Text);
-            UIHelper.Link((AtkResNode*)Text, OriginalText->AtkResNode.PrevSiblingNode);
+            AtkHelper.Link(OriginalText->AtkResNode.NextSiblingNode, (AtkResNode*)Text);
+            AtkHelper.Link((AtkResNode*)Text, OriginalText->AtkResNode.PrevSiblingNode);
 
             // ==========================
 
-            Ring = UIHelper.CleanAlloc<AtkImageNode>(); // for timer
+            Ring = AtkHelper.CleanAlloc<AtkImageNode>(); // for timer
             Ring->Ctor();
             Ring->AtkResNode.NodeID = NodeIdx++;
             Ring->AtkResNode.Type = NodeType.Image;
@@ -82,9 +80,9 @@ namespace JobBars.UI {
             Ring->AtkResNode.Y = 2;
             Ring->AtkResNode.Width = 44;
             Ring->AtkResNode.Height = 46;
-            Ring->AtkResNode.Flags = 8243;
-            Ring->AtkResNode.Flags_2 = 1;
-            Ring->AtkResNode.Flags_2 |= 4;
+            Ring->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Ring->AtkResNode.DrawFlags = 1;
+            Ring->AtkResNode.DrawFlags |= 4;
             Ring->WrapMode = 1;
             Ring->PartId = 0;
             Ring->PartsList = originalRing->PartsList;
@@ -94,20 +92,20 @@ namespace JobBars.UI {
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            UIHelper.Show(Combo);
-            UIHelper.Hide(Text);
-            UIHelper.Hide(Ring);
+            AtkHelper.Show(Combo);
+            AtkHelper.Hide(Text);
+            AtkHelper.Hide(Ring);
         }
 
         public override void SetProgress(float current, float max) {
             if (State == IconState.TimerDone && current <= 0) return;
             State = IconState.TimerRunning;
 
-            UIHelper.Show(Text);
+            AtkHelper.Show(Text);
             Text->SetText(((int)Math.Round(current)).ToString());
 
             if (ShowRing) {
-                UIHelper.Show(Ring);
+                AtkHelper.Show(Ring);
                 Ring->PartId = (ushort)(80 - (float)(current / max) * 80);
             }
 
@@ -117,9 +115,9 @@ namespace JobBars.UI {
 
         public override void SetDone() {
             State = IconState.TimerDone;
-            UIHelper.Hide(Text);
+            AtkHelper.Hide(Text);
 
-            UIHelper.Hide(Ring);
+            AtkHelper.Hide(Ring);
 
             JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
             SetDimmed(false);
@@ -189,7 +187,7 @@ namespace JobBars.UI {
         }
 
         public override void RefreshVisuals() {
-            if (JobBars.Config.IconTimerLarge) {
+            if (JobBars.Configuration.IconTimerLarge) {
                 Text->AtkResNode.X = 5;
                 Text->AtkResNode.Y = 7;
                 SetTextLarge(Text);

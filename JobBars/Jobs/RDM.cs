@@ -9,40 +9,40 @@ using JobBars.Gauges.Procs;
 using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class RDM {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeProcsConfig($"{UIHelper.Localize(JobIds.RDM)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig($"{AtkHelper.Localize(JobIds.RDM)} {AtkHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = new []{
-                    new ProcConfig(UIHelper.Localize(BuffIds.VerstoneReady), BuffIds.VerstoneReady, UIColor.NoColor),
-                    new ProcConfig(UIHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, UIColor.Red)
+                    new ProcConfig(AtkHelper.Localize(BuffIds.VerstoneReady), BuffIds.VerstoneReady, AtkColor.NoColor),
+                    new ProcConfig(AtkHelper.Localize(BuffIds.VerfireReady), BuffIds.VerfireReady, AtkColor.Red)
                 }
             }),
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Manafication), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Manafication), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 6,
                 Triggers = new []{
                     new Item(BuffIds.Manafication)
                 },
-                Color = UIColor.DarkBlue
+                Color = AtkColor.DarkBlue
             })
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.Manafication), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.Manafication), new BuffProps {
                 CD = 110,
                 Duration = 15,
                 Icon = ActionIds.Manafication,
-                Color = UIColor.DarkBlue,
+                Color = AtkColor.DarkBlue,
                 Triggers = new []{ new Item(ActionIds.Manafication) }
             }),
-            new BuffConfig(UIHelper.Localize(ActionIds.Embolden), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.Embolden), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.Embolden,
-                Color = UIColor.White,
+                Color = AtkColor.White,
                 Triggers = new []{ new Item(ActionIds.Embolden) }
             })
         };
@@ -50,13 +50,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.RDM, CursorType.None, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.RDM)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.RDM)})", new CooldownProps {
                 Icon = ActionIds.Addle,
                 Duration = 10,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.Addle) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.MagickBarrier), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.MagickBarrier), new CooldownProps {
                 Icon = ActionIds.MagickBarrier,
                 Duration = 10,
                 CD = 120,

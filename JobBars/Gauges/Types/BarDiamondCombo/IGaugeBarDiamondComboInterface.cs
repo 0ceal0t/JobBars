@@ -1,4 +1,4 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.BarDiamondCombo {
     public interface IGaugeBarDiamondComboInterface {

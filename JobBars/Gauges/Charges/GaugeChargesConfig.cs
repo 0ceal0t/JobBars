@@ -1,4 +1,4 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 
 namespace JobBars.Gauges.Charges {
     public struct GaugeChargesProps {
@@ -32,27 +32,27 @@ namespace JobBars.Gauges.Charges {
         public GaugeChargesConfig(string name, GaugeVisualType type, GaugeChargesProps props) : base(name, type) {
             Parts = props.Parts;
             SameColor = props.SameColor;
-            BarColor = JobBars.Config.GaugeColor.Get(Name, props.BarColor);
-            CompletionSound = JobBars.Config.GaugeCompletionSound.Get(Name, props.CompletionSound);
-            ReverseFill = JobBars.Config.GaugeReverseFill.Get(Name, false);
+            BarColor = JobBars.Configuration.GaugeColor.Get(Name, props.BarColor);
+            CompletionSound = JobBars.Configuration.GaugeCompletionSound.Get(Name, props.CompletionSound);
+            ReverseFill = JobBars.Configuration.GaugeReverseFill.Get(Name, false);
         }
 
         public override GaugeTracker GetTracker(int idx) => new GaugeChargesTracker(this, idx);
 
         protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
-            if (JobBars.Config.GaugeColor.Draw($"Color{id}", Name, BarColor, out var newColor)) {
+            if (JobBars.Configuration.GaugeColor.Draw($"Color{id}", Name, BarColor, out var newColor)) {
                 BarColor = newColor;
                 newVisual = true;
             }
 
-            if (JobBars.Config.GaugeCompletionSound.Draw($"Completion sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
+            if (JobBars.Configuration.GaugeCompletionSound.Draw($"Completion sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
                 CompletionSound = newCompletionSound;
             }
 
             DrawCompletionSoundEffect();
             DrawSoundEffect();
 
-            if (JobBars.Config.GaugeReverseFill.Draw($"Reverse tick fill order{id}", Name, ReverseFill, out var newReverseFill)) {
+            if (JobBars.Configuration.GaugeReverseFill.Draw($"Reverse tick fill order{id}", Name, ReverseFill, out var newReverseFill)) {
                 ReverseFill = newReverseFill;
                 newVisual = true;
             }

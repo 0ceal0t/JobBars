@@ -1,14 +1,13 @@
 ﻿using Dalamud.Configuration;
 using ImGuiNET;
-using System;
-using System.Numerics;
-using System.Linq;
-using JobBars.Gauges;
-using JobBars.UI;
-using JobBars.Cursors;
-using JobBars.Gauges.Rolling;
-using System.Collections.Generic;
 using JobBars.Cooldowns;
+using JobBars.Cursors;
+using JobBars.Gauges;
+using JobBars.Gauges.Rolling;
+using JobBars.Atk;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace JobBars.Data {
     public enum GaugePositionType {
@@ -149,8 +148,8 @@ namespace JobBars.Data {
         public Vector2 CursorCustomPosition = new(200, 200);
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
-        public string CursorInnerColor = UIColor.MpPink.Name;
-        public string CursorOuterColor = UIColor.HealthGreen.Name;
+        public string CursorInnerColor = AtkColor.MpPink.Name;
+        public string CursorOuterColor = AtkColor.HealthGreen.Name;
 
         public ComboValueConfig<CursorType> CursorType = new();
         public ComboValueConfig<Helper.ItemData> CursorStatus = new(true);
@@ -183,13 +182,13 @@ namespace JobBars.Data {
         }
 
         public void Save() {
-            JobBars.PluginInterface.SavePluginConfig(this);
+            Dalamud.PluginInterface.SavePluginConfig(this);
         }
 
         public static bool DrawColor(string id, ElementColor currentValue, out ElementColor value) {
             value = currentValue;
             if (ImGui.BeginCombo(id, value.Name)) {
-                foreach (var entry in UIColor.AllColors) {
+                foreach (var entry in AtkColor.AllColors) {
                     if (ImGui.Selectable($"{entry.Key}##Combo", value.Name == entry.Key)) {
                         value = entry.Value;
                         ImGui.EndCombo();

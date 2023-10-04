@@ -9,32 +9,32 @@ using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class BLM {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeProcsConfig($"{UIHelper.Localize(JobIds.BLM)} {UIHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig($"{AtkHelper.Localize(JobIds.BLM)} {AtkHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 ShowText = true,
                 Procs = new []{
-                    new ProcConfig(UIHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, UIColor.Orange),
-                    new ProcConfig(UIHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, UIColor.LightBlue)
+                    new ProcConfig(AtkHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, AtkColor.Orange),
+                    new ProcConfig(AtkHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, AtkColor.LightBlue)
                 }
             }),
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Triplecast), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Triplecast), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.Triplecast)
                 },
-                Color = UIColor.MpPink
+                Color = AtkColor.MpPink
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Thunder3), GaugeVisualType.Bar, new GaugeTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Thunder3), GaugeVisualType.Bar, new GaugeTimerProps {
                 SubTimers = new[] {
                     new GaugeSubTimerProps {
                         MaxDuration = 30,
-                        Color = UIColor.DarkBlue,
-                        SubName = UIHelper.Localize(BuffIds.Thunder3),
+                        Color = AtkColor.DarkBlue,
+                        SubName = AtkHelper.Localize(BuffIds.Thunder3),
                         Triggers = new []{
                             new Item(BuffIds.Thunder3),
                             new Item(BuffIds.Thunder)
@@ -42,8 +42,8 @@ namespace JobBars.Jobs {
                     },
                     new GaugeSubTimerProps {
                         MaxDuration = 18,
-                        Color = UIColor.Purple,
-                        SubName = UIHelper.Localize(BuffIds.Thunder4),
+                        Color = AtkColor.Purple,
+                        SubName = AtkHelper.Localize(BuffIds.Thunder4),
                         Triggers = new []{
                             new Item(BuffIds.Thunder4),
                             new Item(BuffIds.Thunder2)
@@ -58,7 +58,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.BLM, CursorType.MpTick, CursorType.CastTime);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Addle)} ({UIHelper.Localize(JobIds.BLM)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.BLM)})", new CooldownProps {
                 Icon = ActionIds.Addle,
                 Duration = 10,
                 CD = 90,
@@ -67,7 +67,7 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Thunder3), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Thunder3), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Thunder,
@@ -78,7 +78,7 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
                 }
             }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Thunder4), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Thunder4), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] {
                     ActionIds.Thunder2,
@@ -89,13 +89,13 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
                 }
             }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.LeyLines), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.LeyLines), new IconBuffProps {
                 Icons = new [] { ActionIds.LeyLines },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
                 }
             }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Sharpcast), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Sharpcast), new IconBuffProps {
                 Icons = new [] { ActionIds.Sharpcast },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 30 }

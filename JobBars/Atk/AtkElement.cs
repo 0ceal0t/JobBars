@@ -2,8 +2,8 @@
 using JobBars.Helper;
 using System.Numerics;
 
-namespace JobBars.UI {
-    public abstract unsafe class UIElement {
+namespace JobBars.Atk {
+    public abstract unsafe class AtkElement {
         public AtkResNode* RootRes;
 
         public void SetVisible(bool value) {
@@ -12,19 +12,19 @@ namespace JobBars.UI {
         }
 
         public virtual void Hide() {
-            UIHelper.Hide(RootRes);
+            AtkHelper.Hide(RootRes);
         }
 
         public virtual void Show() {
-            UIHelper.Show(RootRes);
+            AtkHelper.Show(RootRes);
         }
 
         public virtual void SetPosition(Vector2 pos) {
-            UIHelper.SetPosition(RootRes, pos.X, pos.Y);
+            AtkHelper.SetPosition(RootRes, pos.X, pos.Y);
         }
 
         public virtual void SetScale(float scale) {
-            UIHelper.SetScale(RootRes, scale, scale);
+            AtkHelper.SetScale(RootRes, scale, scale);
         }
 
         public abstract void Dispose();

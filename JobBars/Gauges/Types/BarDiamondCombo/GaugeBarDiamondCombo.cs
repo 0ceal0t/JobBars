@@ -1,12 +1,12 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.BarDiamondCombo {
-    public class GaugeBarDiamondCombo<T> : Gauge<UIBarDiamondCombo, T> where T : GaugeTracker, IGaugeBarDiamondComboInterface {
+    public class GaugeBarDiamondCombo<T> : Gauge<AtkBarDiamondCombo, T> where T : GaugeTracker, IGaugeBarDiamondComboInterface {
         public GaugeBarDiamondCombo(T tracker, int idx) {
             Tracker = tracker;
-            UI = new UIBarDiamondCombo(JobBars.Builder.Bars[idx], JobBars.Builder.Diamonds[idx]);
+            UI = new AtkBarDiamondCombo(JobBars.Builder.Bars[idx], JobBars.Builder.Diamonds[idx]);
             UI.SetSegments(Tracker.GetBarSegments());
-            UI.SetTextColor(Tracker.GetBarDanger() ? UIColor.Red : UIColor.NoColor);
+            UI.SetTextColor(Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor);
             UI.SetPercent(0);
             UI.SetText("0");
 
@@ -25,7 +25,7 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
         private int Index(int i) => Reverse ? (Size - i - 1) : i;
 
         protected override void TickGauge() {
-            UI.SetTextColor(Tracker.GetBarDanger() ? UIColor.Red : UIColor.NoColor);
+            UI.SetTextColor(Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor);
             UI.SetText(Tracker.GetBarText());
             UI.SetPercent(Tracker.GetBarPercent());
 

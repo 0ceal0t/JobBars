@@ -1,7 +1,7 @@
 ﻿using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace JobBars.Helper {
-    public static unsafe partial class UIHelper {
+    public static unsafe partial class AtkHelper {
         public static void Hide<T>(T* node) where T : unmanaged => Hide((AtkResNode*)node);
         public static void Show<T>(T* node) where T : unmanaged => Show((AtkResNode*)node);
         public static void Update<T>(T* node) where T : unmanaged => Update((AtkResNode*)node);

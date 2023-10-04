@@ -2,10 +2,10 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
-namespace JobBars.UI {
-    public unsafe partial class UIBuilder {
+namespace JobBars.Atk {
+    public unsafe partial class AtkBuilder {
         public static AtkResNode* CreateResNode() {
-            var node = UIHelper.CleanAlloc<AtkResNode>();
+            var node = AtkHelper.CleanAlloc<AtkResNode>();
             node->Ctor();
 
             node->NodeID = (NodeIdx++);
@@ -15,21 +15,21 @@ namespace JobBars.UI {
             node->Rotation = 0;
             node->Depth = 0;
             node->Depth_2 = 0;
-            node->Color = UIColor.BYTE_White;
+            node->Color = AtkColor.BYTE_White;
             node->ParentNode = null;
             node->ChildNode = null;
             node->ChildCount = 0;
             node->PrevSiblingNode = null;
             node->NextSiblingNode = null;
-            node->Flags = 8243;
-            node->Flags_2 = 1;
-            node->Flags_2 |= 4;
+            node->NodeFlags = (NodeFlags)8243;
+            node->DrawFlags = 1;
+            node->DrawFlags |= 4;
 
             return node;
         }
 
         public static AtkTextNode* CreateTextNode() {
-            var node = UIHelper.CleanAlloc<AtkTextNode>();
+            var node = AtkHelper.CleanAlloc<AtkTextNode>();
             node->Ctor();
 
             node->AtkResNode.NodeID = (NodeIdx++);
@@ -41,26 +41,26 @@ namespace JobBars.UI {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = UIColor.BYTE_White;
+            node->AtkResNode.Color = AtkColor.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8250;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags)8250;
+            node->AtkResNode.DrawFlags = 1;
+            node->AtkResNode.DrawFlags |= 4;
             node->AtkResNode.DrawFlags = 8;
 
             node->TextId = 0;
-            node->TextColor = UIColor.BYTE_White;
+            node->TextColor = AtkColor.BYTE_White;
             node->EdgeColor = new ByteColor {
                 R = 157,
                 G = 131,
                 B = 91,
                 A = 255
             };
-            node->BackgroundColor = UIColor.BYTE_Transparent;
+            node->BackgroundColor = AtkColor.BYTE_Transparent;
             node->LineSpacing = 18;
             node->AlignmentFontType = 21;
             node->FontSize = 18;
@@ -73,7 +73,7 @@ namespace JobBars.UI {
         }
 
         public static AtkImageNode* CreateImageNode() {
-            var node = UIHelper.CleanAlloc<AtkImageNode>();
+            var node = AtkHelper.CleanAlloc<AtkImageNode>();
             node->Ctor();
 
             node->WrapMode = 1;
@@ -87,21 +87,21 @@ namespace JobBars.UI {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = UIColor.BYTE_White;
+            node->AtkResNode.Color = AtkColor.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8243;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags)8243;
+            node->AtkResNode.DrawFlags = 1;
+            node->AtkResNode.DrawFlags |= 4;
 
             return node;
         }
 
         public static AtkNineGridNode* CreateNineNode() {
-            var node = UIHelper.CleanAlloc<AtkNineGridNode>();
+            var node = AtkHelper.CleanAlloc<AtkNineGridNode>();
             node->Ctor();
 
             node->PartsTypeRenderType = 128;
@@ -115,15 +115,15 @@ namespace JobBars.UI {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = UIColor.BYTE_White;
+            node->AtkResNode.Color = AtkColor.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.Flags = 8243;
-            node->AtkResNode.Flags_2 = 1;
-            node->AtkResNode.Flags_2 |= 4;
+            node->AtkResNode.NodeFlags = (NodeFlags)8243;
+            node->AtkResNode.DrawFlags = 1;
+            node->AtkResNode.DrawFlags |= 4;
             node->AtkResNode.DrawFlags = 8;
 
             return node;

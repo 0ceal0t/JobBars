@@ -1,6 +1,6 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface.Internal;
+using ImGuiNET;
 using JobBars.Helper;
-using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Numerics;
 namespace JobBars.Data {
     public class ItemSelector {
         private readonly List<ItemData> Data;
-        public ImGuiScene.TextureWrap Icon;
+        public IDalamudTextureWrap Icon;
 
         private ItemData Selected = new() {
             Icon = 0,
@@ -57,7 +57,12 @@ namespace JobBars.Data {
                     if (idx < preItems || idx > (preItems + showItems)) { idx++; continue; }
                     if (ImGui.Selectable($"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data)) {
                         SearchSelected = item;
-                        LoadIcon(item.Icon);
+                        try {
+                            Icon = Dalamud.TextureProvider.GetIcon(item.Icon > 0 ? item.Icon : 0);
+                        }
+                        catch (Exception) {
+                            Icon = Dalamud.TextureProvider.GetIcon(0);
+                        }
                     }
                     idx++;
                 }
@@ -83,33 +88,6 @@ namespace JobBars.Data {
             ImGui.SameLine();
             ImGui.Text(Label);
 
-            return ret;
-        }
-
-        private void LoadIcon(uint iconId) {
-            Icon?.Dispose();
-            Icon = null;
-            if (iconId > 0) {
-                TexFile tex;
-                try {
-                    tex = JobBars.DataManager.GetIcon(iconId);
-                }
-                catch (Exception) {
-                    tex = JobBars.DataManager.GetIcon(0);
-                }
-                Icon = JobBars.PluginInterface.UiBuilder.LoadImageRaw(BGRA_to_RGBA(tex.ImageData), tex.Header.Width, tex.Header.Height, 4);
-            }
-        }
-
-        private static byte[] BGRA_to_RGBA(byte[] data) {
-            byte[] ret = new byte[data.Length];
-            for (int i = 0; i < data.Length / 4; i++) {
-                var idx = i * 4;
-                ret[idx + 0] = data[idx + 2];
-                ret[idx + 1] = data[idx + 1];
-                ret[idx + 2] = data[idx + 0];
-                ret[idx + 3] = data[idx + 3];
-            }
             return ret;
         }
 

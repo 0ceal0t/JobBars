@@ -16,7 +16,7 @@ namespace JobBars {
             uint id = *((uint*)effectHeader.ToPointer() + 0x2);
             byte type = *((byte*)effectHeader.ToPointer() + 0x1F); // 1 = action
 
-            var selfId = (int)ClientState.LocalPlayer.ObjectId;
+            var selfId = (int)Dalamud.ClientState.LocalPlayer.ObjectId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && (GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH) && IsPet(sourceId, selfId);
             var isParty = !isSelf && !isPet && IsInParty((uint)sourceId);
@@ -28,7 +28,7 @@ namespace JobBars {
 
             var actionItem = new Item {
                 Id = id,
-                Type = (UIHelper.IsGCD(id) ? ItemType.GCD : ItemType.OGCD)
+                Type = (AtkHelper.IsGCD(id) ? ItemType.GCD : ItemType.OGCD)
             };
 
             if (!isParty) { // don't let party members affect our gauge
@@ -102,11 +102,11 @@ namespace JobBars {
             ActorControlSelfHook.Original(entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10);
             if (!IsLoaded) return;
 
-            if (entityId > 0 && id == Constants.ActorControlSelfId && entityId == ClientState?.LocalPlayer?.ObjectId) {
-                UIHelper.UpdateActorTick();
+            if (entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.ObjectId) {
+                AtkHelper.UpdateActorTick();
             }
             else if (entityId > 0 && id == Constants.ActorControlOtherId) {
-                UIHelper.UpdateDoTTick(entityId);
+                AtkHelper.UpdateDoTTick(entityId);
             }
 
             if (arg1 == Constants.WipeArg1) {
@@ -114,7 +114,7 @@ namespace JobBars {
                 IconManager?.Reset();
                 BuffManager?.ResetTrackers();
                 CooldownManager?.ResetTrackers();
-                UIHelper.ResetTicks();
+                AtkHelper.ResetTicks();
             }
         }
 
@@ -126,20 +126,20 @@ namespace JobBars {
             return icon;
         }
 
-        private void ZoneChanged(object sender, ushort e) {
+        private void ZoneChanged(ushort data) {
             if (!IsLoaded) return;
 
             GaugeManager?.Reset();
             IconManager?.Reset();
             BuffManager?.ResetTrackers();
             // don't reset CDs on zone change
-            UIHelper.ResetTicks();
-            UIHelper.ZoneChanged(e);
+            AtkHelper.ResetTicks();
+            AtkHelper.ZoneChanged(data);
         }
 
         private static bool IsPet(int objectId, int ownerId) {
             if (objectId == 0) return false;
-            foreach (var actor in Objects) {
+            foreach (var actor in Dalamud.Objects) {
                 if (actor == null) continue;
                 if (actor.ObjectId == objectId) {
                     if (actor is BattleNpc npc) {

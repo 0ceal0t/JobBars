@@ -3,26 +3,26 @@ using JobBars.Helper;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace JobBars.UI {
-    public unsafe partial class UIBuilder {
-        public List<UICooldown> Cooldowns = new();
+namespace JobBars.Atk {
+    public unsafe partial class AtkBuilder {
+        public List<AtkCooldown> Cooldowns = new();
         private AtkResNode* CooldownRoot = null;
 
         private void InitCooldowns() {
             CooldownRoot = CreateResNode();
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
-            CooldownRoot->Flags = 9395;
-            UIHelper.SetPosition(CooldownRoot, -40, 40);
+            CooldownRoot->NodeFlags = (NodeFlags)9395;
+            AtkHelper.SetPosition(CooldownRoot, -40, 40);
 
-            UICooldown lastCooldown = null;
+            AtkCooldown lastCooldown = null;
             for (int i = 0; i < 8; i++) {
-                var newItem = new UICooldown();
+                var newItem = new AtkCooldown();
 
                 Cooldowns.Add(newItem);
                 newItem.RootRes->ParentNode = CooldownRoot;
 
-                if (lastCooldown != null) UIHelper.Link(lastCooldown.RootRes, newItem.RootRes);
+                if (lastCooldown != null) AtkHelper.Link(lastCooldown.RootRes, newItem.RootRes);
                 lastCooldown = newItem;
             }
 
@@ -34,7 +34,7 @@ namespace JobBars.UI {
 
         public void RefreshCooldownsLayout() {
             for (int i = 0; i < Cooldowns.Count; i++) {
-                UIHelper.SetPosition(Cooldowns[i].RootRes, 0, JobBars.Config.CooldownsSpacing * i);
+                AtkHelper.SetPosition(Cooldowns[i].RootRes, 0, JobBars.Configuration.CooldownsSpacing * i);
             }
         }
 
@@ -46,10 +46,10 @@ namespace JobBars.UI {
             CooldownRoot = null;
         }
 
-        public void SetCooldownPosition(Vector2 pos) => UIHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
-        public void SetCooldownScale(float scale) => UIHelper.SetScale(CooldownRoot, scale, scale);
-        public void SetCooldownRowVisible(int idx, bool visible) => UIHelper.SetVisibility(Cooldowns[idx].RootRes, visible);
-        public void ShowCooldowns() => UIHelper.Show(CooldownRoot);
-        public void HideCooldowns() => UIHelper.Hide(CooldownRoot);
+        public void SetCooldownPosition(Vector2 pos) => AtkHelper.SetPosition(CooldownRoot, pos.X, pos.Y);
+        public void SetCooldownScale(float scale) => AtkHelper.SetScale(CooldownRoot, scale, scale);
+        public void SetCooldownRowVisible(int idx, bool visible) => AtkHelper.SetVisibility(Cooldowns[idx].RootRes, visible);
+        public void ShowCooldowns() => AtkHelper.Show(CooldownRoot);
+        public void HideCooldowns() => AtkHelper.Hide(CooldownRoot);
     }
 }

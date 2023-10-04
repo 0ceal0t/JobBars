@@ -22,11 +22,11 @@ namespace JobBars {
             Type = ItemType.Buff;
         }
 
-        public override bool Equals(object obj) {
+        public override readonly bool Equals(object obj) {
             return obj is Item overrides && Equals(overrides);
         }
 
-        public bool Equals(Item other) {
+        public readonly bool Equals(Item other) {
             return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
         }
 
@@ -38,7 +38,7 @@ namespace JobBars {
             return !(left == right);
         }
 
-        public override int GetHashCode() {
+        public override readonly int GetHashCode() {
             int hash = 13;
             hash = (hash * 7) + Id.GetHashCode();
             hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();

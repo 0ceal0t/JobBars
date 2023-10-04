@@ -9,29 +9,29 @@ using JobBars.Gauges.GCD;
 using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class MCH {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Overheated), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Overheated), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = new[] {
                     new Item(BuffIds.Overheated)
                 },
-                Color = UIColor.Orange,
+                Color = AtkColor.Orange,
             }),
-            new GaugeGCDConfig(UIHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
+            new GaugeGCDConfig(AtkHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 6,
                 MaxDuration = 10,
-                Color = UIColor.Red,
+                Color = AtkColor.Red,
                 Triggers = new []{
                     new Item(BuffIds.Wildfire)
                 }
             }),
-            new GaugeChargesConfig(UIHelper.Localize(ActionIds.GaussRound), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = UIColor.Red,
+            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.GaussRound), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = AtkColor.Red,
                 SameColor = true,
                 Parts = new []{
                     new GaugesChargesPartProps {
@@ -43,8 +43,8 @@ namespace JobBars.Jobs {
                     }
                 }
             }),
-            new GaugeChargesConfig(UIHelper.Localize(ActionIds.Ricochet), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = UIColor.LightBlue,
+            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.Ricochet), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = AtkColor.LightBlue,
                 SameColor = true,
                 Parts = new []{
                     new GaugesChargesPartProps {
@@ -59,11 +59,11 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.Wildfire), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.Wildfire), new BuffProps {
                 CD = 120,
                 Duration = 10,
                 Icon = ActionIds.Wildfire,
-                Color = UIColor.Orange,
+                Color = AtkColor.Orange,
                 Triggers = new []{ new Item(ActionIds.Wildfire) }
             })
         };
@@ -71,13 +71,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.MCH, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.Tactician), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Tactician), new CooldownProps {
                 Icon = ActionIds.Tactician,
                 Duration = 15,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.Tactician) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Dismantle), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Dismantle), new CooldownProps {
                 Icon = ActionIds.Dismantle,
                 Duration = 10,
                 CD = 120,
@@ -86,7 +86,7 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Wildfire), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Wildfire), new IconBuffProps {
                 Icons = new [] { ActionIds.Wildfire },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Wildfire), Duration = 10 }

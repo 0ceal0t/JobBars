@@ -1,7 +1,6 @@
-﻿using Dalamud.Logging;
+﻿using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
-using JobBars.UI;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,14 +31,14 @@ namespace JobBars.Buffs.Manager {
         }
 
         public void PerformAction(Item action, uint objectId) {
-            if (!JobBars.Config.BuffBarEnabled) return;
-            if (!JobBars.Config.BuffIncludeParty && objectId != JobBars.ClientState.LocalPlayer.ObjectId) return;
+            if (!JobBars.Configuration.BuffBarEnabled) return;
+            if (!JobBars.Configuration.BuffIncludeParty && objectId != Dalamud.ClientState.LocalPlayer.ObjectId) return;
 
             foreach (var member in ObjectIdToMember.Values) member.ProcessAction(action, objectId);
         }
 
         public void Tick() {
-            if (UIHelper.CalcDoHide(JobBars.Config.BuffBarEnabled, JobBars.Config.BuffHideOutOfCombat, JobBars.Config.BuffHideWeaponSheathed)) {
+            if (AtkHelper.CalcDoHide(JobBars.Configuration.BuffBarEnabled, JobBars.Configuration.BuffHideOutOfCombat, JobBars.Configuration.BuffHideWeaponSheathed)) {
                 JobBars.Builder.HideAllBuffPartyList();
                 JobBars.Builder.HideBuffs();
                 return;
@@ -53,18 +52,18 @@ namespace JobBars.Buffs.Manager {
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             HashSet<BuffTracker> activeBuffs = new();
 
-            if (JobBars.PartyMembers == null) PluginLog.LogError("PartyMembers is NULL");
+            if (JobBars.PartyMembers == null) Dalamud.LogError("PartyMembers is NULL");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];
 
                 if (partyMember == null || partyMember?.Job == JobIds.OTHER || partyMember?.ObjectId == 0) continue;
-                if (!JobBars.Config.BuffIncludeParty && partyMember.ObjectId != JobBars.ClientState.LocalPlayer.ObjectId) continue;
+                if (!JobBars.Configuration.BuffIncludeParty && partyMember.ObjectId != Dalamud.ClientState.LocalPlayer.ObjectId) continue;
 
                 var member = ObjectIdToMember.TryGetValue(partyMember.ObjectId, out var _member) ? _member : new BuffPartyMember(partyMember.ObjectId, partyMember.IsPlayer);
                 member.Tick(activeBuffs, partyMember, out var highlight, out var partyText);
                 JobBars.Builder.SetBuffPartyListVisible(idx, highlight);
-                JobBars.Builder.SetBuffPartyListText(idx, (JobBars.Config.BuffPartyListASTText && JobBars.CurrentJob == JobIds.AST) ? partyText : "");
+                JobBars.Builder.SetBuffPartyListText(idx, (JobBars.Configuration.BuffPartyListASTText && JobBars.CurrentJob == JobIds.AST) ? partyText : "");
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
 
@@ -74,15 +73,15 @@ namespace JobBars.Buffs.Manager {
             }
 
             var buffIdx = 0;
-            foreach (var buff in JobBars.Config.BuffOrderByActive ?
+            foreach (var buff in JobBars.Configuration.BuffOrderByActive ?
                 activeBuffs.OrderBy(b => b.CurrentState) :
                 activeBuffs.OrderBy(b => b.Id)
             ) {
-                if (buffIdx >= (UIBuilder.MAX_BUFFS - 1)) break;
+                if (buffIdx >= (AtkBuilder.MAX_BUFFS - 1)) break;
                 buff.TickUI(JobBars.Builder.Buffs[buffIdx]);
                 buffIdx++;
             }
-            for (int i = buffIdx; i < UIBuilder.MAX_BUFFS; i++) {
+            for (int i = buffIdx; i < AtkBuilder.MAX_BUFFS; i++) {
                 JobBars.Builder.Buffs[i].Hide(); // hide unused
             }
 
@@ -90,8 +89,8 @@ namespace JobBars.Buffs.Manager {
         }
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetBuffPosition(JobBars.Config.BuffPosition);
-            JobBars.Builder.SetBuffScale(JobBars.Config.BuffScale);
+            JobBars.Builder.SetBuffPosition(JobBars.Configuration.BuffPosition);
+            JobBars.Builder.SetBuffScale(JobBars.Configuration.BuffScale);
         }
 
         public void ResetUI() {

@@ -1,4 +1,4 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 using System.Numerics;
 
 namespace JobBars.Gauges {
@@ -33,7 +33,7 @@ namespace JobBars.Gauges {
         public abstract void SetSplitPosition(Vector2 position);
     }
 
-    public abstract class Gauge<T, S> : Gauge where T : UIGauge where S : GaugeTracker {
+    public abstract class Gauge<T, S> : Gauge where T : AtkGauge where S : GaugeTracker {
         protected T UI;
         protected S Tracker;
 

@@ -14,7 +14,7 @@ namespace JobBars.Icons.Manager {
             JobBars.IconBuilder.Reset();
             CurrentJob = job;
 
-            if (!JobBars.Config.IconsEnabled) return;
+            if (!JobBars.Configuration.IconsEnabled) return;
             foreach (var icon in CurrentIcons) icon.Setup();
         }
 
@@ -25,13 +25,13 @@ namespace JobBars.Icons.Manager {
         }
 
         public void PerformAction(Item action) {
-            if (!JobBars.Config.IconsEnabled) return;
+            if (!JobBars.Configuration.IconsEnabled) return;
 
             foreach (var icon in CurrentIcons.Where(i => i.Enabled)) icon.ProcessAction(action);
         }
 
         public void Tick() {
-            if (!JobBars.Config.IconsEnabled) return;
+            if (!JobBars.Configuration.IconsEnabled) return;
             foreach (var icon in CurrentIcons.Where(i => i.Enabled)) {
                 icon.Tick();
             }

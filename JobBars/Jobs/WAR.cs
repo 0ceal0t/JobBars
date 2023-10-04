@@ -9,23 +9,23 @@ using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class WAR {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.InnerRelease), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.InnerRelease), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.InnerRelease)
                 },
-                Color = UIColor.Orange
+                Color = AtkColor.Orange
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.SurgingTempest), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.SurgingTempest), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 60,
                 DefaultDuration = 30,
-                Color = UIColor.Red,
+                Color = AtkColor.Red,
                 Triggers = new []{
                     new Item(BuffIds.SurgingTempest)
                 }
@@ -33,11 +33,11 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(BuffIds.InnerRelease), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(BuffIds.InnerRelease), new BuffProps {
                 Duration = 15,
                 CD = 60,
                 Icon = ActionIds.InnerRelease,
-                Color = UIColor.Orange,
+                Color = AtkColor.Orange,
                 Triggers = new []{ new Item(BuffIds.InnerRelease) }
             })
         };
@@ -45,25 +45,25 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.WAR, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig(UIHelper.Localize(ActionIds.Holmgang), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Holmgang), new CooldownProps {
                 Icon = ActionIds.Holmgang,
                 Duration = 10,
                 CD = 240,
                 Triggers = new []{ new Item(ActionIds.Holmgang) }
             }),
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Reprisal)} ({UIHelper.Localize(JobIds.WAR)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.WAR)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
                 Duration = 10,
                 CD = 60,
                 Triggers = new []{ new Item(ActionIds.Reprisal) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.ShakeItOff), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.ShakeItOff), new CooldownProps {
                 Icon = ActionIds.ShakeItOff,
                 Duration = 15,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.ShakeItOff) }
             }),
-            new CooldownConfig(UIHelper.Localize(ActionIds.Bloodwhetting), new CooldownProps {
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Bloodwhetting), new CooldownProps {
                 Icon = ActionIds.Bloodwhetting,
                 Duration = 6,
                 CD = 25,
@@ -76,7 +76,7 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.SurgingTempest), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.SurgingTempest), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.StormsEye },
                 Triggers = new[] {

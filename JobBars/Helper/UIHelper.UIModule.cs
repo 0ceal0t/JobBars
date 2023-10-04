@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
 
 namespace JobBars.Helper {
-    public unsafe partial class UIHelper {
+    public unsafe partial class AtkHelper {
         public unsafe static AddonPartyListIntArray* GetPartyUI() {
             var uiModule = Framework.Instance()->GetUiModule();
             if (uiModule == null) return null;

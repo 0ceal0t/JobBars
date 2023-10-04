@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Gauges.Types.Diamond;
@@ -46,7 +46,7 @@ namespace JobBars.Gauges.Charges {
                 var diamondFound = false;
                 foreach (var trigger in part.Triggers) {
                     if (trigger.Type == ItemType.Buff) {
-                        var buffExists = UIHelper.PlayerStatus.TryGetValue(trigger, out var buff);
+                        var buffExists = AtkHelper.PlayerStatus.TryGetValue(trigger, out var buff);
                         var buffValue = buffExists ? buff.StackCount : 0;
 
                         if (part.Bar && !barAssigned && buffExists) {
@@ -64,7 +64,7 @@ namespace JobBars.Gauges.Charges {
                         }
                     }
                     else {
-                        var recastActive = UIHelper.GetRecastActive(trigger.Id, out var timeElapsed);
+                        var recastActive = AtkHelper.GetRecastActive(trigger.Id, out var timeElapsed);
                         var actionValue = recastActive ? (int)Math.Floor(timeElapsed / part.CD) : part.MaxCharges;
 
                         if (part.Bar && !barAssigned && recastActive) {
@@ -146,7 +146,7 @@ namespace JobBars.Gauges.Charges {
                 if (idx < endIdx) return part.Color;
                 startIdx = endIdx;
             }
-            return UIColor.NoColor;
+            return AtkColor.NoColor;
         }
 
         public bool GetDiamondTextVisible() => false;

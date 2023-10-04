@@ -9,42 +9,42 @@ using JobBars.Gauges.Stacks;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 
 namespace JobBars.Jobs {
     public static class SAM {
         public static GaugeConfig[] Gauges => new GaugeConfig[] {
-            new GaugeStacksConfig(UIHelper.Localize(BuffIds.Meikyo), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Meikyo), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = new []{
                     new Item(BuffIds.Meikyo)
                 },
-                Color = UIColor.BlueGreen
+                Color = AtkColor.BlueGreen
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Fugetsu), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Fugetsu), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
-                Color = UIColor.DarkBlue,
+                Color = AtkColor.DarkBlue,
                 Triggers = new []{
                     new Item(BuffIds.Fugetsu)
                 }
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Fuka), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Fuka), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
-                Color = UIColor.Red,
+                Color = AtkColor.Red,
                 Triggers = new []{
                     new Item(BuffIds.Fuka)
                 }
             }),
-            new GaugeTimerConfig(UIHelper.Localize(BuffIds.Higanbana), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Higanbana), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 60,
-                Color = UIColor.Orange,
+                Color = AtkColor.Orange,
                 Triggers = new []{
                     new Item(BuffIds.Higanbana)
                 }
             }),
-            new GaugeChargesConfig($"{UIHelper.Localize(ActionIds.TrueNorth)} ({UIHelper.Localize(JobIds.SAM)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = UIColor.NoColor,
+            new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.SAM)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = AtkColor.NoColor,
                 SameColor = true,
                 Parts = new []{
                     new GaugesChargesPartProps {
@@ -68,11 +68,11 @@ namespace JobBars.Jobs {
         };
 
         public static BuffConfig[] Buffs => new[] {
-            new BuffConfig(UIHelper.Localize(ActionIds.OgiNamikiri), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.OgiNamikiri), new BuffProps {
                 CD = 120,
                 Duration = 30,
                 Icon = ActionIds.OgiNamikiri,
-                Color = UIColor.Red,
+                Color = AtkColor.Red,
                 Triggers = new []{ new Item(BuffIds.OgiNamikiri) }
             })
         };
@@ -80,7 +80,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new(JobIds.SAM, CursorType.None, CursorType.GCD);
 
         public static CooldownConfig[] Cooldowns => new[] {
-            new CooldownConfig($"{UIHelper.Localize(ActionIds.Feint)} ({UIHelper.Localize(JobIds.SAM)})", new CooldownProps {
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.SAM)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 10,
                 CD = 90,
@@ -89,14 +89,14 @@ namespace JobBars.Jobs {
         };
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Fugetsu), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Fugetsu), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Jinpu },
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Fugetsu), Duration = 40 }
                 }
             }),
-            new IconBuffReplacer(UIHelper.Localize(BuffIds.Fuka), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Fuka), new IconBuffProps {
                 IsTimer = true,
                 Icons = new [] { ActionIds.Shifu },
                 Triggers = new[] {

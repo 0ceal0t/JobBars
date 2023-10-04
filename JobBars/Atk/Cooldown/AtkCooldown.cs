@@ -2,11 +2,10 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
-using System;
 using System.Collections.Generic;
 
-namespace JobBars.UI {
-    public unsafe class UICooldownItem : UIElement {
+namespace JobBars.Atk {
+    public unsafe class UICooldownItem : AtkElement {
         private AtkImageNode* Icon;
         private AtkTextNode* TextNode;
         private AtkImageNode* Border;
@@ -18,11 +17,11 @@ namespace JobBars.UI {
         public ActionIds IconId => LastIconId;
 
         public UICooldownItem() {
-            RootRes = UIBuilder.CreateResNode();
+            RootRes = AtkBuilder.CreateResNode();
             RootRes->Width = WIDTH;
             RootRes->Height = HEIGHT;
 
-            TextNode = UIBuilder.CreateTextNode();
+            TextNode = AtkBuilder.CreateTextNode();
             TextNode->FontSize = 21;
             TextNode->LineSpacing = (byte)HEIGHT;
             TextNode->AlignmentFontType = 52;
@@ -30,11 +29,11 @@ namespace JobBars.UI {
             TextNode->AtkResNode.Height = HEIGHT;
             TextNode->AtkResNode.X = 0;
             TextNode->AtkResNode.Y = 0;
-            TextNode->AtkResNode.Flags |= 0x10;
-            TextNode->AtkResNode.Flags_2 = 1;
+            TextNode->AtkResNode.NodeFlags |= NodeFlags.Visible;
+            TextNode->AtkResNode.DrawFlags = 1;
             TextNode->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
 
-            Icon = UIBuilder.CreateImageNode();
+            Icon = AtkBuilder.CreateImageNode();
             Icon->AtkResNode.Width = WIDTH;
             Icon->AtkResNode.Height = HEIGHT;
             Icon->AtkResNode.X = 0;
@@ -42,19 +41,19 @@ namespace JobBars.UI {
             Icon->PartId = 0;
             Icon->Flags |= (byte)ImageNodeFlags.AutoFit;
             Icon->WrapMode = 1;
-            UIHelper.SetupIcon(Icon, 405);
-            UIHelper.UpdatePart(Icon, 0, 0, 44, 46);
+            AtkHelper.SetupIcon(Icon, 405);
+            AtkHelper.UpdatePart(Icon, 0, 0, 44, 46);
 
-            Border = UIBuilder.CreateImageNode();
+            Border = AtkBuilder.CreateImageNode();
             Border->AtkResNode.Width = 49;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
-            UIHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
-            UIHelper.UpdatePart(Border, 0, 96, 48, 48);
+            AtkHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
+            AtkHelper.UpdatePart(Border, 0, 96, 48, 48);
             Border->Flags = 0;
             Border->WrapMode = 1;
-            UIHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
+            AtkHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
 
             var layout = new LayoutNode(RootRes, new[] {
                 new LayoutNode(Icon),
@@ -72,7 +71,7 @@ namespace JobBars.UI {
         }
 
         public void SetNoDash() {
-            UIHelper.UpdatePart(Border, 0, 96, 48, 48);
+            AtkHelper.UpdatePart(Border, 0, 96, 48, 48);
         }
 
         public void SetDash(float percent) {
@@ -84,7 +83,7 @@ namespace JobBars.UI {
             var u = (ushort)(96 + (48 * row));
             var v = (ushort)(48 * column);
 
-            UIHelper.UpdatePart(Border, u, v, 48, 48);
+            AtkHelper.UpdatePart(Border, u, v, 48, 48);
         }
 
         public void SetText(string text) {
@@ -108,7 +107,7 @@ namespace JobBars.UI {
 
         public void LoadIcon(ActionIds action) {
             LastIconId = action;
-            var icon = UIHelper.GetIcon(action);
+            var icon = AtkHelper.GetIcon(action);
             Icon->LoadIconTexture(icon, 0);
         }
 
@@ -119,13 +118,13 @@ namespace JobBars.UI {
             }
 
             if (Icon != null) {
-                UIHelper.UnloadTexture(Icon);
+                AtkHelper.UnloadTexture(Icon);
                 Icon->AtkResNode.Destroy(true);
                 Icon = null;
             }
 
             if (Border != null) {
-                UIHelper.UnloadTexture(Border);
+                AtkHelper.UnloadTexture(Border);
                 Border->AtkResNode.Destroy(true);
                 Border = null;
             }
@@ -137,13 +136,13 @@ namespace JobBars.UI {
         }
     }
 
-    public unsafe class UICooldown : UIElement {
+    public unsafe class AtkCooldown : AtkElement {
         public static readonly int MAX_ITEMS = 10;
 
         public List<UICooldownItem> Items = new();
 
-        public UICooldown() {
-            RootRes = UIBuilder.CreateResNode();
+        public AtkCooldown() {
+            RootRes = AtkBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
             RootRes->Width = (ushort)((3 + UICooldownItem.WIDTH) * MAX_ITEMS); // with padding
@@ -153,10 +152,10 @@ namespace JobBars.UI {
             for (var idx = 0; idx < MAX_ITEMS; idx++) {
                 var item = new UICooldownItem();
                 item.RootRes->ParentNode = RootRes;
-                UIHelper.SetPosition(item.RootRes, -(5 + UICooldownItem.WIDTH) * idx, 0);
+                AtkHelper.SetPosition(item.RootRes, -(5 + UICooldownItem.WIDTH) * idx, 0);
                 Items.Add(item);
 
-                if (lastItem != null) UIHelper.Link(lastItem.RootRes, item.RootRes);
+                if (lastItem != null) AtkHelper.Link(lastItem.RootRes, item.RootRes);
                 lastItem = item;
             }
 

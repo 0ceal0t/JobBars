@@ -8,7 +8,7 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace JobBars.Helper {
-    public unsafe partial class UIHelper {
+    public unsafe partial class AtkHelper {
         public delegate long PlaySoundEffectDelegate(int a1, long a2, long a3, int a4);
         public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
 
@@ -17,7 +17,7 @@ namespace JobBars.Helper {
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
-            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(JobBars.SigScanner.ScanText(Constants.PlaySoundSig));
+            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>(Dalamud.SigScanner.ScanText(Constants.PlaySoundSig));
             SetupSheets();
 
             Crc32 = new Crc32();
@@ -67,12 +67,12 @@ namespace JobBars.Helper {
         }
 
         public static bool GetCurrentCast(out float currentTime, out float totalTime) {
-            currentTime = JobBars.ClientState.LocalPlayer.CurrentCastTime;
-            totalTime = JobBars.ClientState.LocalPlayer.TotalCastTime;
-            return JobBars.ClientState.LocalPlayer.IsCasting;
+            currentTime = Dalamud.ClientState.LocalPlayer.CurrentCastTime;
+            totalTime = Dalamud.ClientState.LocalPlayer.TotalCastTime;
+            return Dalamud.ClientState.LocalPlayer.IsCasting;
         }
 
-        public static bool GetRecastActive(uint actionId, out float timeElapsed, ActionType actionType = ActionType.Spell) {
+        public static bool GetRecastActive(uint actionId, out float timeElapsed, ActionType actionType = ActionType.Action) {
             var actionManager = ActionManager.Instance();
             var adjustedId = actionManager->GetAdjustedActionId(actionId);
             timeElapsed = actionManager->GetRecastTimeElapsed(actionType, adjustedId);
@@ -84,7 +84,7 @@ namespace JobBars.Helper {
             return actionManager->GetAdjustedActionId(actionId);
         }
 
-        public static bool GetRecastActiveAndTotal(uint actionId, out float timeElapsed, out float timeTotal, ActionType actionType = ActionType.Spell) {
+        public static bool GetRecastActiveAndTotal(uint actionId, out float timeElapsed, out float timeTotal, ActionType actionType = ActionType.Action) {
             var actionManager = ActionManager.Instance();
             var adjustedId = actionManager->GetAdjustedActionId(actionId);
             timeElapsed = actionManager->GetRecastTimeElapsed(actionType, adjustedId);
@@ -98,7 +98,7 @@ namespace JobBars.Helper {
             var actorAddress = Marshal.ReadIntPtr(new IntPtr(TargetSystem.Instance()) + Constants.PreviousTargetOffset);
             if (actorAddress == IntPtr.Zero) return null;
 
-            return JobBars.Objects.CreateObjectReference(actorAddress);
+            return Dalamud.Objects.CreateObjectReference(actorAddress);
         }
     }
 }

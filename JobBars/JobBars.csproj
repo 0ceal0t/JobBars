@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AssemblyTitle>JobBars</AssemblyTitle>
     <Company></Company>
     <Product>JobBars</Product>
     <Copyright>Copyright © 2020</Copyright>
-    <AssemblyVersion>1.2.3.8</AssemblyVersion>
-    <FileVersion>1.2.3.8</FileVersion>
+    <AssemblyVersion>1.2.4.0</AssemblyVersion>
+    <FileVersion>1.2.4.0</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -78,7 +78,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.10" />
+    <PackageReference Include="DalamudPackager" Version="2.1.12" />
   </ItemGroup>
   
   <ItemGroup>

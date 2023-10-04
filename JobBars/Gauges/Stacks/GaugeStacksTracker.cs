@@ -1,5 +1,5 @@
 ﻿using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
@@ -28,7 +28,7 @@ namespace JobBars.Gauges.Stacks {
         protected override void TickTracker() {
             int currentValue = 0;
             foreach (var trigger in Config.Triggers) {
-                var value = UIHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
+                var value = AtkHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
                 currentValue = value > currentValue ? value : currentValue;
             }
 

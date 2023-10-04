@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using UIIconComboType = JobBars.UI.UIIconComboType;
-using UIIconProps = JobBars.UI.UIIconProps;
+using UIIconComboType = JobBars.Atk.UIIconComboType;
+using UIIconProps = JobBars.Atk.UIIconProps;
 
 namespace JobBars.Icons {
     public abstract class IconReplacer {
@@ -31,10 +31,10 @@ namespace JobBars.Icons {
             Name = name;
             IsTimer = isTimer;
             Icons = new List<ActionIds>(icons).Select(x => (uint)x).ToList();
-            Enabled = JobBars.Config.IconEnabled.Get(Name);
-            ComboType = JobBars.Config.IconComboType.Get(Name);
-            Offset = JobBars.Config.IconTimerOffset.Get(Name);
-            ShowRing = JobBars.Config.IconTimerRing.Get(Name);
+            Enabled = JobBars.Configuration.IconEnabled.Get(Name);
+            ComboType = JobBars.Configuration.IconComboType.Get(Name);
+            Offset = JobBars.Configuration.IconTimerOffset.Get(Name);
+            ShowRing = JobBars.Configuration.IconTimerRing.Get(Name);
             CreateIconProps();
         }
 
@@ -70,23 +70,23 @@ namespace JobBars.Icons {
                 ImGui.PopStyleColor();
                 ImGui.Indent();
 
-                if (JobBars.Config.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
+                if (JobBars.Configuration.IconEnabled.Draw($"Enabled{_ID}", Name, Enabled, out var newEnabled)) {
                     Enabled = newEnabled;
                     JobBars.IconManager.Reset();
                 }
 
-                if (JobBars.Config.IconComboType.Draw($"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
+                if (JobBars.Configuration.IconComboType.Draw($"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType)) {
                     ComboType = newComboType;
                     CreateIconProps();
                     JobBars.IconManager.Reset();
                 }
 
                 if (IsTimer) {
-                    if (JobBars.Config.IconTimerOffset.Draw($"Time offset{_ID}", Name, Offset, out var newOffset)) {
+                    if (JobBars.Configuration.IconTimerOffset.Draw($"Time offset{_ID}", Name, Offset, out var newOffset)) {
                         Offset = newOffset;
                     }
 
-                    if (JobBars.Config.IconTimerRing.Draw($"Display Ring{_ID}", Name, Enabled, out var newRing)) {
+                    if (JobBars.Configuration.IconTimerRing.Draw($"Display Ring{_ID}", Name, Enabled, out var newRing)) {
                         ShowRing = newRing;
                         CreateIconProps();
                         JobBars.IconManager.Reset();

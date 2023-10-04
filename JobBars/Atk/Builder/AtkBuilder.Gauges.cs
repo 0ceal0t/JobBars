@@ -3,25 +3,25 @@ using JobBars.Helper;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace JobBars.UI {
-    public unsafe partial class UIBuilder {
+namespace JobBars.Atk {
+    public unsafe partial class AtkBuilder {
         public AtkResNode* GaugeRoot = null;
         private static readonly int MAX_GAUGES = 7;
-        public List<UIBar> Bars = new();
-        public List<UIArrow> Arrows = new();
-        public List<UIDiamond> Diamonds = new();
+        public List<AtkBar> Bars = new();
+        public List<AtkArrow> Arrows = new();
+        public List<AtkDiamond> Diamonds = new();
 
         private void InitGauges() {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
-            GaugeRoot->Flags = 9395;
+            GaugeRoot->NodeFlags = (NodeFlags)9395;
 
-            UIDiamond lastDiamond = null;
+            AtkDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {
-                var newGauge = new UIBar();
-                var newArrow = new UIArrow();
-                var newDiamond = new UIDiamond();
+                var newGauge = new AtkBar();
+                var newArrow = new AtkArrow();
+                var newDiamond = new AtkDiamond();
 
                 Bars.Add(newGauge);
                 Arrows.Add(newArrow);
@@ -31,10 +31,10 @@ namespace JobBars.UI {
                 newArrow.RootRes->ParentNode = GaugeRoot;
                 newDiamond.RootRes->ParentNode = GaugeRoot;
 
-                UIHelper.Link(newGauge.RootRes, newArrow.RootRes);
-                UIHelper.Link(newArrow.RootRes, newDiamond.RootRes);
+                AtkHelper.Link(newGauge.RootRes, newArrow.RootRes);
+                AtkHelper.Link(newArrow.RootRes, newDiamond.RootRes);
 
-                if (lastDiamond != null) UIHelper.Link(lastDiamond.RootRes, newGauge.RootRes);
+                if (lastDiamond != null) AtkHelper.Link(lastDiamond.RootRes, newGauge.RootRes);
                 lastDiamond = newDiamond;
             }
 
@@ -62,8 +62,8 @@ namespace JobBars.UI {
 
         public void SetGaugePosition(Vector2 pos) => SetPosition(GaugeRoot, pos.X, pos.Y);
         public void SetGaugeScale(float scale) => SetScale(GaugeRoot, scale, scale);
-        public void ShowGauges() => UIHelper.Show(GaugeRoot);
-        public void HideGauges() => UIHelper.Hide(GaugeRoot);
+        public void ShowGauges() => AtkHelper.Show(GaugeRoot);
+        public void HideGauges() => AtkHelper.Hide(GaugeRoot);
 
         public void HideAllGauges() {
             Bars.ForEach(x => x.Hide());

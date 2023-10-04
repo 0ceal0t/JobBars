@@ -3,28 +3,28 @@ using JobBars.Helper;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace JobBars.UI {
-    public unsafe partial class UIBuilder {
+namespace JobBars.Atk {
+    public unsafe partial class AtkBuilder {
         private AtkResNode* BuffRoot = null;
-        public List<UIBuff> Buffs = new();
+        public List<AtkBuff> Buffs = new();
         public static readonly int MAX_BUFFS = 20;
 
-        public List<UIBuffPartyList> PartyListBuffs = new();
+        public List<AtkBuffPartyList> PartyListBuffs = new();
 
         private void InitBuffs() {
             BuffRoot = CreateResNode();
             BuffRoot->Width = 256;
             BuffRoot->Height = 100;
-            BuffRoot->Flags = 9395;
+            BuffRoot->DrawFlags = 9395;
 
-            UIBuff lastBuff = null;
+            AtkBuff lastBuff = null;
             for (var i = 0; i < MAX_BUFFS; i++) {
-                var newBuff = new UIBuff();
+                var newBuff = new AtkBuff();
 
                 Buffs.Add(newBuff);
                 newBuff.RootRes->ParentNode = BuffRoot;
 
-                if (lastBuff != null) UIHelper.Link(lastBuff.RootRes, newBuff.RootRes);
+                if (lastBuff != null) AtkHelper.Link(lastBuff.RootRes, newBuff.RootRes);
                 lastBuff = newBuff;
             }
 
@@ -34,7 +34,7 @@ namespace JobBars.UI {
             RefreshBuffLayout();
 
             for (var i = 0; i < 8; i++) {
-                PartyListBuffs.Add(new UIBuffPartyList());
+                PartyListBuffs.Add(new AtkBuffPartyList());
             }
         }
 
@@ -47,7 +47,7 @@ namespace JobBars.UI {
 
             // ========= PARTYLIST =============
 
-            var partyListAddon = UIHelper.PartyListAddon;
+            var partyListAddon = AtkHelper.PartyListAddon;
 
             for (var i = 0; i < PartyListBuffs.Count; i++) {
                 if (partyListAddon != null) {
@@ -68,13 +68,13 @@ namespace JobBars.UI {
 
         public void UpdateBuffsTextSize() {
             foreach (var buff in Buffs) {
-                buff.SetTextSize(JobBars.Config.BuffTextSize_v2);
+                buff.SetTextSize(JobBars.Configuration.BuffTextSize_v2);
             }
         }
 
         public void UpdateBorderThin() {
             foreach (var buff in Buffs) {
-                buff.SetBorderThin(JobBars.Config.BuffThinBorder);
+                buff.SetBorderThin(JobBars.Configuration.BuffThinBorder);
             }
         }
 
@@ -89,8 +89,8 @@ namespace JobBars.UI {
 
         public void SetBuffPosition(Vector2 pos) => SetPosition(BuffRoot, pos.X, pos.Y);
         public void SetBuffScale(float scale) => SetScale(BuffRoot, scale, scale);
-        public void ShowBuffs() => UIHelper.Show(BuffRoot);
-        public void HideBuffs() => UIHelper.Hide(BuffRoot);
+        public void ShowBuffs() => AtkHelper.Show(BuffRoot);
+        public void HideBuffs() => AtkHelper.Hide(BuffRoot);
         public void HideAllBuffs() => Buffs.ForEach(x => x.Hide());
         public void UpdateBuffsSize() => Buffs.ForEach(x => x.UpdateSize());
     }

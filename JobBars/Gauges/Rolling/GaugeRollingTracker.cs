@@ -1,6 +1,6 @@
 ﻿using JobBars.Gauges.Types.Bar;
 using JobBars.Helper;
-using JobBars.UI;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Rolling {
     public class GaugeRollingTracker : GaugeTracker, IGaugeBarInterface {
@@ -26,13 +26,13 @@ namespace JobBars.Gauges.Rolling {
 
         protected override void TickTracker() {
             if (Config.RollingType == GaugeGCDRollingType.GCD) {
-                Value = UIHelper.GetGCD(out var timeElapsed, out var total);
+                Value = AtkHelper.GetGCD(out var timeElapsed, out var total);
                 IndicatorValue = 0f;
                 TextValue = (total - timeElapsed).ToString("0.00");
             }
             else if (Config.RollingType == GaugeGCDRollingType.CastTime) {
-                Value = UIHelper.GetCastTime(out var timeElapsed, out var total);
-                IndicatorValue = (JobBars.Config.GaugeSlidecastTime > 0f && total > 0f) ? JobBars.Config.GaugeSlidecastTime / total : 0f;
+                Value = AtkHelper.GetCastTime(out var timeElapsed, out var total);
+                IndicatorValue = (JobBars.Configuration.GaugeSlidecastTime > 0f && total > 0f) ? JobBars.Configuration.GaugeSlidecastTime / total : 0f;
                 TextValue = (total - timeElapsed).ToString("0.00");
             }
         }

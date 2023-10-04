@@ -1,5 +1,5 @@
 ﻿using ImGuiNET;
-using JobBars.UI;
+using JobBars.Atk;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -24,7 +24,7 @@ namespace JobBars.Data {
         public T Get(string name, T defaultValue) => Values.TryGetValue(name, out var val) ? val : defaultValue;
         public void Set(string name, T value) {
             Values[name] = value;
-            JobBars.Config.Save();
+            JobBars.Configuration.Save();
         }
 
         public bool Draw(string id, string name) => Draw(id, name, Default, out var _);
@@ -155,11 +155,11 @@ namespace JobBars.Data {
         public Dictionary<string, string> Color = new();
 
         public ElementColor Get(string name, ElementColor defaultColor) => Color.TryGetValue(name, out var val) ?
-            UIColor.GetColor(val, defaultColor) : defaultColor;
+            AtkColor.GetColor(val, defaultColor) : defaultColor;
 
         public void Set(string name, ElementColor color) {
             Color[name] = color.Name;
-            JobBars.Config.Save();
+            JobBars.Configuration.Save();
         }
 
         public bool Draw(string id, string name, ElementColor defaultValue, out ElementColor value) {

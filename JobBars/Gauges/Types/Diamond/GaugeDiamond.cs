@@ -1,7 +1,7 @@
-﻿using JobBars.UI;
+﻿using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Diamond {
-    public class GaugeDiamond<T> : Gauge<UIDiamond, T> where T : GaugeTracker, IGaugeDiamondInterface {
+    public class GaugeDiamond<T> : Gauge<AtkDiamond, T> where T : GaugeTracker, IGaugeDiamondInterface {
         private readonly int MaxStacks;
 
         public GaugeDiamond(T tracker, int idx) {

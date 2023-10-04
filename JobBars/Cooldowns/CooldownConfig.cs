@@ -28,10 +28,10 @@ namespace JobBars.Cooldowns {
             Triggers = props.Triggers;
             Duration = props.Duration;
             CD = props.CD;
-            Enabled = JobBars.Config.CooldownEnabled.Get(Name);
-            Order = JobBars.Config.CooldownOrder.Get(Name);
-            ShowBorderWhenActive = JobBars.Config.CooldownShowBorderWhenActive.Get(Name);
-            ShowBorderWhenOffCD = JobBars.Config.CooldownShowBorderWhenOffCD.Get(Name);
+            Enabled = JobBars.Configuration.CooldownEnabled.Get(Name);
+            Order = JobBars.Configuration.CooldownOrder.Get(Name);
+            ShowBorderWhenActive = JobBars.Configuration.CooldownShowBorderWhenActive.Get(Name);
+            ShowBorderWhenOffCD = JobBars.Configuration.CooldownShowBorderWhenOffCD.Get(Name);
         }
 
         public bool Draw(string _id, bool isCustom, ref bool reset) {
@@ -47,21 +47,21 @@ namespace JobBars.Cooldowns {
                     if (JobBars.RemoveButton($"Delete{_id}", true)) deleteCustom = true;
                 }
 
-                if (JobBars.Config.CooldownEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
+                if (JobBars.Configuration.CooldownEnabled.Draw($"Enabled{_id}{Name}", Name, Enabled, out var newEnabled)) {
                     Enabled = newEnabled;
                     reset = true;
                 }
 
-                if (JobBars.Config.CooldownOrder.Draw($"Order{_id}{Name}", Name, Order, out var newOrder)) {
+                if (JobBars.Configuration.CooldownOrder.Draw($"Order{_id}{Name}", Name, Order, out var newOrder)) {
                     Order = newOrder;
                     reset = true;
                 }
 
-                if (JobBars.Config.CooldownShowBorderWhenActive.Draw($"Show border when active{_id}{Name}", Name, ShowBorderWhenActive, out var newShowBorderWhenActive)) {
+                if (JobBars.Configuration.CooldownShowBorderWhenActive.Draw($"Show border when active{_id}{Name}", Name, ShowBorderWhenActive, out var newShowBorderWhenActive)) {
                     ShowBorderWhenActive = newShowBorderWhenActive;
                 }
 
-                if (JobBars.Config.CooldownShowBorderWhenOffCD.Draw($"Show border when off CD{_id}{Name}", Name, ShowBorderWhenOffCD, out var newShowBorderWhenOffCD)) {
+                if (JobBars.Configuration.CooldownShowBorderWhenOffCD.Draw($"Show border when off CD{_id}{Name}", Name, ShowBorderWhenOffCD, out var newShowBorderWhenOffCD)) {
                     ShowBorderWhenOffCD = newShowBorderWhenOffCD;
                 }
 
