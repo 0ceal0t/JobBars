@@ -22,7 +22,7 @@ namespace JobBars.Atk {
             Combo->AtkResNode.X = -2;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Combo->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Combo->AtkResNode.DrawFlags = 1;
             Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
@@ -33,7 +33,7 @@ namespace JobBars.Atk {
             BigText->Ctor();
             BigText->AtkResNode.NodeID = NodeIdx++;
             BigText->AtkResNode.Type = NodeType.Text;
-            BigText->AtkResNode.NodeFlags = (NodeFlags)8243;
+            BigText->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             BigText->AtkResNode.DrawFlags = 1;
             BigText->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();

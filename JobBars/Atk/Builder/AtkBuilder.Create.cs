@@ -21,7 +21,7 @@ namespace JobBars.Atk {
             node->ChildCount = 0;
             node->PrevSiblingNode = null;
             node->NextSiblingNode = null;
-            node->NodeFlags = (NodeFlags)8243;
+            node->NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             node->DrawFlags = 1;
             node->DrawFlags |= 4;
 
@@ -47,9 +47,7 @@ namespace JobBars.Atk {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.NodeFlags = (NodeFlags)8250;
-            node->AtkResNode.DrawFlags = 1;
-            node->AtkResNode.DrawFlags |= 4;
+            node->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorRight;
             node->AtkResNode.DrawFlags = 8;
 
             node->TextId = 0;
@@ -93,7 +91,7 @@ namespace JobBars.Atk {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.NodeFlags = (NodeFlags)8243;
+            node->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             node->AtkResNode.DrawFlags = 1;
             node->AtkResNode.DrawFlags |= 4;
 
@@ -121,9 +119,7 @@ namespace JobBars.Atk {
             node->AtkResNode.ChildCount = 0;
             node->AtkResNode.PrevSiblingNode = null;
             node->AtkResNode.NextSiblingNode = null;
-            node->AtkResNode.NodeFlags = (NodeFlags)8243;
-            node->AtkResNode.DrawFlags = 1;
-            node->AtkResNode.DrawFlags |= 4;
+            node->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             node->AtkResNode.DrawFlags = 8;
 
             return node;

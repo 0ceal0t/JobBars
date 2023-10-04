@@ -40,7 +40,7 @@ namespace JobBars.Atk {
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Combo->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Combo->AtkResNode.DrawFlags = 1;
             Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
@@ -59,7 +59,7 @@ namespace JobBars.Atk {
             Text->Ctor();
             Text->AtkResNode.NodeID = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Text->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Text->AtkResNode.DrawFlags = 1;
             Text->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();
@@ -80,7 +80,7 @@ namespace JobBars.Atk {
             Ring->AtkResNode.Y = 2;
             Ring->AtkResNode.Width = 44;
             Ring->AtkResNode.Height = 46;
-            Ring->AtkResNode.NodeFlags = (NodeFlags)8243;
+            Ring->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Ring->AtkResNode.DrawFlags = 1;
             Ring->AtkResNode.DrawFlags |= 4;
             Ring->WrapMode = 1;

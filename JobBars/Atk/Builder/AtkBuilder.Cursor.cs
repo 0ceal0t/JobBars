@@ -15,7 +15,7 @@ namespace JobBars.Atk {
             CursorRoot = CreateResNode();
             CursorRoot->Width = 44;
             CursorRoot->Height = 46;
-            CursorRoot->NodeFlags = (NodeFlags)9395;
+            CursorRoot->NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
 
             CursorOuter = CreateImageNode();
             CursorOuter->AtkResNode.Width = 44;

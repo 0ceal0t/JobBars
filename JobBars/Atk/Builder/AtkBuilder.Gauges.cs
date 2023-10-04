@@ -15,7 +15,7 @@ namespace JobBars.Atk {
             GaugeRoot = CreateResNode();
             GaugeRoot->Width = 256;
             GaugeRoot->Height = 100;
-            GaugeRoot->NodeFlags = (NodeFlags)9395;
+            GaugeRoot->NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
 
             AtkDiamond lastDiamond = null;
             for (int idx = 0; idx < MAX_GAUGES; idx++) {

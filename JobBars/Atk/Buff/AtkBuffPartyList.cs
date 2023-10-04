@@ -21,8 +21,7 @@ namespace JobBars.Atk {
             Highlight->PartsTypeRenderType = 220;
             Highlight->AtkResNode.NodeID = 23;
             Highlight->AtkResNode.DrawFlags = 0;
-            Highlight->AtkResNode.DrawFlags = 0;
-            Highlight->AtkResNode.NodeFlags = (NodeFlags)19;
+            Highlight->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Highlight->AtkResNode.MultiplyBlue = 50;
             Highlight->AtkResNode.MultiplyRed = 150;
             AtkHelper.SetPosition(Highlight, 47, 21);
@@ -37,7 +36,7 @@ namespace JobBars.Atk {
             TextNode->EdgeColor = new ByteColor { R = 8, G = 80, B = 152, A = 255 };
             TextNode->AtkResNode.X = 30;
             TextNode->AtkResNode.Y = 20;
-            TextNode->AtkResNode.NodeFlags = (NodeFlags)19;
+            TextNode->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             TextNode->AtkResNode.DrawFlags = 1;
             TextNode->AtkResNode.Priority = 0;
             TextNode->AtkResNode.NodeID = 24;

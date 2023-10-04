@@ -137,7 +137,7 @@ namespace JobBars.Atk {
             TextNode->AtkResNode.DrawFlags = 1;
 
             TextBlurNode = AtkBuilder.CreateNineNode();
-            TextBlurNode->AtkResNode.NodeFlags = (NodeFlags)8371;
+            TextBlurNode->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             TextBlurNode->AtkResNode.Width = 47;
             TextBlurNode->AtkResNode.Height = 40;
             TextBlurNode->AtkResNode.X = 0;
