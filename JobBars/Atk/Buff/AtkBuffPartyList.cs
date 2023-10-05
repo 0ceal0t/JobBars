@@ -59,7 +59,7 @@ namespace JobBars.Atk {
 
         public void AttachTo(AtkResNode* targetGlowContainer, AtkResNode* emnityBarContainer) {
             if (Attached) {
-                Dalamud.LogError("Already attached");
+                Dalamud.Error("Already attached");
                 return;
             }
             if (targetGlowContainer == null || emnityBarContainer == null) return;
@@ -77,7 +77,7 @@ namespace JobBars.Atk {
 
         public void DetachFrom(AtkResNode* targetGlowContainer, AtkResNode* emnityBarContainer) {
             if (!Attached) {
-                Dalamud.LogError("Not attached yet");
+                Dalamud.Error("Not attached yet");
                 return;
             }
             if (targetGlowContainer == null || emnityBarContainer == null) return;

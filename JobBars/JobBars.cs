@@ -60,7 +60,7 @@ namespace JobBars {
                 Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             }
             catch (Exception e) {
-                Dalamud.LogError(e, "Error loading config");
+                Dalamud.Error(e, "Error loading config");
                 Configuration = new Configuration();
                 Configuration.Save();
             }

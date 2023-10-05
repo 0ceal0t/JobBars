@@ -19,9 +19,9 @@ namespace JobBars {
         [PluginService] public static IPluginLog PluginLog { get; private set; } = null;
         [PluginService] public static IGameInteropProvider Hooks { get; private set; } = null;
 
-        public static void LogError(Exception e, string message) => PluginLog.Error(e, message);
+        public static void Error(Exception e, string message) => PluginLog.Error(e, message);
 
-        public static void LogError(string message) => PluginLog.Error(message);
+        public static void Error(string message) => PluginLog.Error(message);
 
         public static void Log(string messages) => PluginLog.Info(messages);
     }

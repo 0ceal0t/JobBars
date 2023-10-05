@@ -57,7 +57,7 @@ namespace JobBars.Cooldowns.Manager {
 
             Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
 
-            if (JobBars.PartyMembers == null) Dalamud.LogError("PartyMembers is null");
+            if (JobBars.PartyMembers == null) Dalamud.Error("PartyMembers is null");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];

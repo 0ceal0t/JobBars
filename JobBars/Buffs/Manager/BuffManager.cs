@@ -52,7 +52,7 @@ namespace JobBars.Buffs.Manager {
             Dictionary<uint, BuffPartyMember> newObjectIdToMember = new();
             HashSet<BuffTracker> activeBuffs = new();
 
-            if (JobBars.PartyMembers == null) Dalamud.LogError("PartyMembers is NULL");
+            if (JobBars.PartyMembers == null) Dalamud.Error("PartyMembers is NULL");
 
             for (int idx = 0; idx < JobBars.PartyMembers.Count; idx++) {
                 var partyMember = JobBars.PartyMembers[idx];

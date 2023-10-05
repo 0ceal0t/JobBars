@@ -99,7 +99,7 @@ namespace JobBars.Helper {
         public static AtkUldPartsList* CreatePartsList(uint partCount) {
             var partsList = Alloc<AtkUldPartsList>();
             if (partsList == null) {
-                Dalamud.LogError("Failed to allocate memory for parts list");
+                Dalamud.Error("Failed to allocate memory for parts list");
             }
 
             partsList->Id = 1;
@@ -107,7 +107,7 @@ namespace JobBars.Helper {
 
             var part = (AtkUldPart*)Alloc((ulong)sizeof(AtkUldPart) * partCount);
             if (part == null) {
-                Dalamud.LogError("Failed to allocate memory for part");
+                Dalamud.Error("Failed to allocate memory for part");
                 IMemorySpace.Free(partsList, (ulong)sizeof(AtkUldPartsList));
                 return null;
             }
