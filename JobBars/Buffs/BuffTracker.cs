@@ -1,8 +1,6 @@
-﻿using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
-using JobBars.Data;
-using JobBars.Helper;
+﻿using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Atk;
+using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +15,7 @@ namespace JobBars.Buffs {
             OnCD_Visible // dark, show countdown
         }
 
-        private readonly BuffConfig Config;
+        public readonly BuffConfig Config;
 
         private BuffState State = BuffState.None;
         private DateTime LastActiveTime;

@@ -57,7 +57,7 @@ namespace JobBars.Atk {
 
             for (var i = 0; i < PartyListBuffs.Count; i++) {
                 var partyMember = partyListAddon->PartyMember[i];
-                PartyListBuffs[i].AttachTo(partyMember.TargetGlowContainer, partyMember.IconBottomLeftText);
+                PartyListBuffs[i].AttachTo(partyMember.TargetGlowContainer, partyMember.EmnityBarContainer);
                 partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
             }
 

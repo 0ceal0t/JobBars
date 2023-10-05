@@ -34,11 +34,11 @@ namespace JobBars.Atk {
             TextNode->FontSize = 14;
             TextNode->TextColor = new ByteColor { R = 232, G = 255, B = 254, A = 255 };
             TextNode->EdgeColor = new ByteColor { R = 8, G = 80, B = 152, A = 255 };
-            TextNode->AtkResNode.X = 30;
-            TextNode->AtkResNode.Y = 20;
+            TextNode->AtkResNode.X = 5;
+            TextNode->AtkResNode.Y = -15;
             TextNode->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             TextNode->AtkResNode.DrawFlags = 1;
-            TextNode->AtkResNode.Priority = 0;
+            TextNode->AtkResNode.Priority = 1;
             TextNode->AtkResNode.NodeID = 24;
             TextNode->SetText("");
             AtkHelper.Hide(TextNode);
@@ -57,33 +57,35 @@ namespace JobBars.Atk {
             }
         }
 
-        public void AttachTo(AtkResNode* targetGlowContainer, AtkTextNode* iconBottomLeftText) {
+        public void AttachTo(AtkResNode* targetGlowContainer, AtkResNode* emnityBarContainer) {
             if (Attached) {
                 Dalamud.LogError("Already attached");
                 return;
             }
-            if (targetGlowContainer == null || iconBottomLeftText == null) return;
+            if (targetGlowContainer == null || emnityBarContainer == null) return;
 
             targetGlowContainer->ChildCount = 4;
             Highlight->AtkResNode.ParentNode = targetGlowContainer;
             AtkHelper.Link(targetGlowContainer->ChildNode->PrevSiblingNode->PrevSiblingNode, (AtkResNode*)Highlight);
 
-            // parent is the component, so don't have to worry about child count
-            TextNode->AtkResNode.ParentNode = iconBottomLeftText->AtkResNode.ParentNode;
-            AtkHelper.Link((AtkResNode*)iconBottomLeftText, (AtkResNode*)TextNode);
+            emnityBarContainer->ChildCount = 3;
+            TextNode->AtkResNode.ParentNode = emnityBarContainer;
+            AtkHelper.Link(emnityBarContainer->ChildNode->PrevSiblingNode, (AtkResNode*)TextNode);
 
             Attached = true;
         }
 
-        public void DetachFrom(AtkResNode* targetGlowContainer, AtkTextNode* iconBottomLeftText) {
+        public void DetachFrom(AtkResNode* targetGlowContainer, AtkResNode* emnityBarContainer) {
             if (!Attached) {
                 Dalamud.LogError("Not attached yet");
                 return;
             }
-            if (targetGlowContainer == null || iconBottomLeftText == null) return;
+            if (targetGlowContainer == null || emnityBarContainer == null) return;
 
             targetGlowContainer->ChildCount = 3;
             AtkHelper.Detach((AtkResNode*)Highlight);
+
+            emnityBarContainer->ChildCount = 2;
             AtkHelper.Detach((AtkResNode*)TextNode);
 
             Attached = false;
