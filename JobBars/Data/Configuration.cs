@@ -1,12 +1,13 @@
-﻿using Dalamud.Configuration;
+using Dalamud.Configuration;
 using ImGuiNET;
+using JobBars.Atk;
 using JobBars.Cooldowns;
 using JobBars.Cursors;
 using JobBars.Gauges;
 using JobBars.Gauges.Rolling;
-using JobBars.Atk;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace JobBars.Data {
@@ -30,8 +31,11 @@ namespace JobBars.Data {
 
     public struct CustomCooldownProps {
         public string Name;
+        public string Id;
         public JobIds Job;
         public CooldownProps Props;
+
+        public readonly string GetNameId() => string.IsNullOrEmpty( Id ) ? Name : Name + Id;
     }
 
     [Serializable]
@@ -57,39 +61,39 @@ namespace JobBars.Data {
         public bool GaugeGCDTextVisible = true;
 
         public GaugePositionType GaugePositionType = GaugePositionType.Global;
-        public Vector2 GaugePositionGlobal = new(200, 200); // global
-        public VectorValueConfig GaugePerJobPosition = new(new Vector2(200, 200)); // per job
-        public VectorValueConfig GaugeSplitPosition = new(new Vector2(200, 200)); // split
+        public Vector2 GaugePositionGlobal = new( 200, 200 ); // global
+        public VectorValueConfig GaugePerJobPosition = new( new Vector2( 200, 200 ) ); // per job
+        public VectorValueConfig GaugeSplitPosition = new( new Vector2( 200, 200 ) ); // split
 
-        public FloatValueConfig GaugeIndividualScale = new(1.0f);
-        public BoolValueConfig GaugeEnabled = new(true);
-        public IntValueConfig GaugeOrder = new(-1);
-        public BoolValueConfig GaugeVertical = new(false);
-        public IntValueConfig GaugeProcOrder = new(-1);
+        public FloatValueConfig GaugeIndividualScale = new( 1.0f );
+        public BoolValueConfig GaugeEnabled = new( true );
+        public IntValueConfig GaugeOrder = new( -1 );
+        public BoolValueConfig GaugeVertical = new( false );
+        public IntValueConfig GaugeProcOrder = new( -1 );
         public ColorConfig GaugeProcColor = new();
-        public BoolValueConfig GaugeHideInactive = new(false);
-        public BoolValueConfig GaugeInvert = new(false);
-        public BoolValueConfig GaugeShowSegments = new(true);
-        public BoolValueConfig GaugeReverseFill = new(false);
+        public BoolValueConfig GaugeHideInactive = new( false );
+        public BoolValueConfig GaugeInvert = new( false );
+        public BoolValueConfig GaugeShowSegments = new( true );
+        public BoolValueConfig GaugeReverseFill = new( false );
         public ColorConfig GaugeColor = new();
         public ComboValueConfig<GaugeVisualType> GaugeType = new();
-        public BoolValueConfig GaugeShowText = new(true);
-        public BoolValueConfig GaugeSwapText = new(false);
-        public FloatValueConfig GaugeTimerOffset = new(0f);
+        public BoolValueConfig GaugeShowText = new( true );
+        public BoolValueConfig GaugeSwapText = new( false );
+        public FloatValueConfig GaugeTimerOffset = new( 0f );
         public ComboValueConfig<GaugeGCDRollingType> GaugeGCDRolling = new();
         public float GaugeSlidecastTime = 0.5f;
-        public IntValueConfig GaugeMaxGcds = new(1);
+        public IntValueConfig GaugeMaxGcds = new( 1 );
 
         public ComboValueConfig<GaugeCompleteSoundType> GaugeCompletionSound = new(); // GCD, stacks, charges
-        public FloatValueConfig GaugeLowTimerWarning_2 = new(4.0f);
-        public IntValueConfig GaugeSoundEffect_2 = new(0);
-        public IntValueConfig GaugeCompletionSoundEffect_2 = new(78);
+        public FloatValueConfig GaugeLowTimerWarning_2 = new( 4.0f );
+        public IntValueConfig GaugeSoundEffect_2 = new( 0 );
+        public IntValueConfig GaugeCompletionSoundEffect_2 = new( 78 );
 
         public bool GaugePulse = true;
 
         // ===== BUFFS ======
 
-        public Vector2 BuffPosition = new(200, 200);
+        public Vector2 BuffPosition = new( 200, 200 );
         public float BuffScale = 1.0f;
 
         public bool BuffBarEnabled = true;
@@ -103,8 +107,8 @@ namespace JobBars.Data {
         public bool BuffSquare = false;
         public float BuffOnCDOpacity = 1.0f;
 
-        public BoolValueConfig BuffEnabled = new(true);
-        public BoolValueConfig BuffPartyListHighlight = new(true);
+        public BoolValueConfig BuffEnabled = new( true );
+        public BoolValueConfig BuffPartyListHighlight = new( true );
 
         public int BuffHorizontal = 5;
         public bool BuffRightToLeft = false;
@@ -113,7 +117,7 @@ namespace JobBars.Data {
 
         // ===== COOLDOWNS ======
 
-        public Vector2 CooldownPosition = new(-40, 40);
+        public Vector2 CooldownPosition = new( -40, 40 );
         public float CooldownScale = 1.0f;
         public float CooldownsSpacing = 40f;
 
@@ -131,10 +135,10 @@ namespace JobBars.Data {
 
         public bool CooldownsLeftAligned = false;
 
-        public BoolValueConfig CooldownEnabled = new(true);
-        public IntValueConfig CooldownOrder = new(-1);
-        public BoolValueConfig CooldownShowBorderWhenActive = new(true);
-        public BoolValueConfig CooldownShowBorderWhenOffCD = new(false);
+        public BoolValueConfig CooldownEnabled = new( true );
+        public IntValueConfig CooldownOrder = new( -1 );
+        public BoolValueConfig CooldownShowBorderWhenActive = new( true );
+        public BoolValueConfig CooldownShowBorderWhenOffCD = new( false );
 
         public List<CustomCooldownProps> CustomCooldown = new();
 
@@ -145,51 +149,61 @@ namespace JobBars.Data {
         public bool CursorHideWeaponSheathed = false;
         public bool CursorHideOutOfCombat = false;
         public CursorPositionType CursorPosition = CursorPositionType.MouseCursor;
-        public Vector2 CursorCustomPosition = new(200, 200);
+        public Vector2 CursorCustomPosition = new( 200, 200 );
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
         public string CursorInnerColor = AtkColor.MpPink.Name;
         public string CursorOuterColor = AtkColor.HealthGreen.Name;
 
         public ComboValueConfig<CursorType> CursorType = new();
-        public ComboValueConfig<Helper.ItemData> CursorStatus = new(true);
-        public FloatValueConfig CursorStatusDuration = new(5f);
+        public ComboValueConfig<Helper.ItemData> CursorStatus = new( true );
+        public FloatValueConfig CursorStatusDuration = new( 5f );
 
         // ===== ICONS ===========
 
         public bool IconsEnabled = true;
         public bool IconBuffLarge = true;
         public bool IconTimerLarge = false;
-        public BoolValueConfig IconEnabled = new(true);
+        public BoolValueConfig IconEnabled = new( true );
         public ComboValueConfig<UIIconComboType> IconComboType = new();
-        public FloatValueConfig IconTimerOffset = new(0f);
-        public BoolValueConfig IconTimerRing = new(true);
+        public FloatValueConfig IconTimerOffset = new( 0f );
+        public BoolValueConfig IconTimerRing = new( true );
 
         // =====================
 
-        public void RemoveCustomCooldown(string name) {
-            CustomCooldown.RemoveAll(x => x.Name == name);
+        [NonSerialized]
+        private static readonly Random random = new();
+
+        private static string RandomString( int length ) => new( Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[random.Next( x.Length )] ).ToArray() );
+
+        public void RemoveCustomCooldown( string nameId ) {
+            CustomCooldown.RemoveAll( x => x.GetNameId() == nameId );
             Save();
         }
 
-        public void AddCustomCooldown(string name, JobIds job, CooldownProps props) {
-            CustomCooldown.Add(new CustomCooldownProps {
+        public CustomCooldownProps AddCustomCooldown( string name, JobIds job, CooldownProps props ) {
+            var newCustom = new CustomCooldownProps {
                 Job = job,
                 Name = name,
-                Props = props
-            });
+                Props = props,
+                Id = RandomString( 5 )
+            };
+
+            CustomCooldown.Add( newCustom );
             Save();
+
+            return newCustom;
         }
 
         public void Save() {
-            Dalamud.PluginInterface.SavePluginConfig(this);
+            Dalamud.PluginInterface.SavePluginConfig( this );
         }
 
-        public static bool DrawColor(string id, ElementColor currentValue, out ElementColor value) {
+        public static bool DrawColor( string id, ElementColor currentValue, out ElementColor value ) {
             value = currentValue;
-            if (ImGui.BeginCombo(id, value.Name)) {
-                foreach (var entry in AtkColor.AllColors) {
-                    if (ImGui.Selectable($"{entry.Key}##Combo", value.Name == entry.Key)) {
+            if( ImGui.BeginCombo( id, value.Name ) ) {
+                foreach( var entry in AtkColor.AllColors ) {
+                    if( ImGui.Selectable( $"{entry.Key}##Combo", value.Name == entry.Key ) ) {
                         value = entry.Value;
                         ImGui.EndCombo();
                         return true;
