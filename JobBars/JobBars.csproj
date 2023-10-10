@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -6,8 +6,8 @@
     <Company></Company>
     <Product>JobBars</Product>
     <Copyright>Copyright © 2020</Copyright>
-    <AssemblyVersion>1.2.4.1</AssemblyVersion>
-    <FileVersion>1.2.4.1</FileVersion>
+    <AssemblyVersion>1.2.4.2</AssemblyVersion>
+    <FileVersion>1.2.4.2</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
