@@ -46,6 +46,7 @@
         Combust2 = 843,
         Combust3 = 0x759,
         GiantDominance = 1248,
+        Divination = 1878,
         Lightspeed = 841,
         HarmonyOfSpirit = 2714,
 

@@ -135,6 +135,12 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust3), Duration = 30 }
                 }
             }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Divination), new IconBuffProps {
+                Icons = new [] { ActionIds.Divination },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Divination), Duration = 15 }
+                }
+            }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Lightspeed), new IconBuffProps {
                 Icons = new [] { ActionIds.Lightspeed },
                 Triggers = new[] {
