@@ -35,6 +35,30 @@ namespace JobBars.Jobs {
                 CD = 360,
                 Triggers = new []{ new Item(ActionIds.Superbolide) }
             }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Nebula), new CooldownProps {
+                Icon = ActionIds.Nebula,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Nebula) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.GNB)})", new CooldownProps {
+                Icon = ActionIds.Rampart,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Rampart) }
+            }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Camouflage), new CooldownProps {
+                Icon = ActionIds.Camouflage,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Camouflage) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.GNB)})", new CooldownProps {
+                Icon = ActionIds.ArmsLength,
+                Duration = 6,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ArmsLength) }
+            }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.GNB)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
                 Duration = 10,
@@ -46,6 +70,15 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 CD = 90,
                 Triggers = new []{ new Item(ActionIds.HeartOfLight) }
+            }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.HeartOfCorundum), new CooldownProps {
+                Icon = ActionIds.HeartOfCorundum,
+                Duration = 8,
+                CD = 25,
+                Triggers = new []{
+                    new Item(ActionIds.HeartOfCorundum),
+                    new Item(ActionIds.HeartOfStone)
+                }
             })
         };
 

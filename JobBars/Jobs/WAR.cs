@@ -51,6 +51,24 @@ namespace JobBars.Jobs {
                 CD = 240,
                 Triggers = new []{ new Item(ActionIds.Holmgang) }
             }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Vengeance), new CooldownProps {
+                Icon = ActionIds.Vengeance,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.Vengeance) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.Rampart,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Rampart) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.WAR)})", new CooldownProps {
+                Icon = ActionIds.ArmsLength,
+                Duration = 6,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ArmsLength) }
+            }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.WAR)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
                 Duration = 10,
@@ -65,12 +83,12 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig(AtkHelper.Localize(ActionIds.Bloodwhetting), new CooldownProps {
                 Icon = ActionIds.Bloodwhetting,
-                Duration = 6,
+                Duration = 8,
                 CD = 25,
                 Triggers = new []{
-                    new Item(ActionIds.NascentFlash),
+                    new Item(ActionIds.Bloodwhetting),
                     new Item(ActionIds.RawIntuition),
-                    new Item(ActionIds.Bloodwhetting)
+                    new Item(ActionIds.NascentFlash)
                 }
             })
         };
