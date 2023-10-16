@@ -55,6 +55,48 @@ namespace JobBars.Jobs {
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
                 }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+                Icons = new [] { ActionIds.Rampart },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Nebula), new IconBuffProps {
+                Icons = new [] { ActionIds.Nebula },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Nebula), Duration = 15 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Camouflage), new IconBuffProps {
+                Icons = new [] { ActionIds.Camouflage },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Camouflage), Duration = 20 }
+                }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+                Icons = new [] { ActionIds.ArmsLength },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Superbolide), new IconBuffProps {
+                Icons = new [] { ActionIds.Superbolide },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Superbolide), Duration = 10 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HeartOfStone), new IconBuffProps {
+                Icons = new [] { ActionIds.HeartOfStone },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HeartOfStone), Duration = 7 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HeartOfCorundum), new IconBuffProps {
+                Icons = new [] { ActionIds.HeartOfCorundum },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HeartOfCorundum), Duration = 8 }
+                }
             })
         };
 

@@ -82,6 +82,48 @@ namespace JobBars.Jobs {
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.SurgingTempest), Duration = 60 }
                 }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.WAR)})", new IconBuffProps {
+                Icons = new [] { ActionIds.Rampart },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Vengeance), new IconBuffProps {
+                Icons = new [] { ActionIds.Vengeance },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Vengeance), Duration = 15 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.RawIntuition), new IconBuffProps {
+                Icons = new [] { ActionIds.RawIntuition },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RawIntuition), Duration = 6 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Bloodwhetting), new IconBuffProps {
+                Icons = new [] { ActionIds.Bloodwhetting },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Bloodwhetting), Duration = 8 }
+                }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.WAR)})", new IconBuffProps {
+                Icons = new [] { ActionIds.ArmsLength },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Holmgang), new IconBuffProps {
+                Icons = new [] { ActionIds.Holmgang },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Holmgang), Duration = 10 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.ThrillOfBattle), new IconBuffProps {
+                Icons = new [] { ActionIds.ThrillOfBattle },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ThrillOfBattle), Duration = 10 }
+                }
             })
         };
 

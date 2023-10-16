@@ -2,13 +2,17 @@
     public enum ActionIds : uint {
 
         // DRK =========
+        Rampart = 7531, // All tanks
         Reprisal = 7535, // All tanks
+        ArmsLength = 7548, // All tanks
         DarkMissionary = 16471,
         LivingDead = 3638,
         Delirium = 7390,
         LivingShadow = 0x4058,
         TheBlackestNight = 7393,
         BloodWeapon = 3625,
+        ShadowWall = 3636,
+        DarkMind = 3634,
 
         // WAR ==========
         InnerRelease = 7389,
@@ -18,6 +22,8 @@
         RawIntuition = 3551,
         StormsEye = 45,
         Bloodwhetting = 25751,
+        Vengeance = 44,
+        ThrillOfBattle = 40,
 
         // PLD ===========
         Requiescat = 7383,
@@ -34,11 +40,17 @@
         DivineVeil = 3540,
         PassageOfArms = 7385,
         FightOrFlight = 20,
+        Sentinel = 17,
+        Bulwark = 22,
 
         // GNB ===========
         NoMercy = 16138,
         HeartOfLight = 16160,
         Superbolide = 16152,
+        Nebula = 16148,
+        Camouflage = 16140,
+        HeartOfStone = 16161,
+        HeartOfCorundum = 25758,
 
         // SCH ===========
         Swiftcast = 7561, // all healers and casters

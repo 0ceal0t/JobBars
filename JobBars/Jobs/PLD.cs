@@ -91,6 +91,36 @@ namespace JobBars.Jobs {
                 Triggers = new[] {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 20 }
                 }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.PLD)})", new IconBuffProps {
+                Icons = new [] { ActionIds.Rampart },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Sentinel), new IconBuffProps {
+                Icons = new [] { ActionIds.Sentinel },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sentinel), Duration = 15 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Bulwark), new IconBuffProps {
+                Icons = new [] { ActionIds.Bulwark },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Bulwark), Duration = 10 }
+                }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.PLD)})", new IconBuffProps {
+                Icons = new [] { ActionIds.ArmsLength },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HallowedGround), new IconBuffProps {
+                Icons = new [] { ActionIds.HallowedGround },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HallowedGround), Duration = 10 }
+                }
             })
         };
 

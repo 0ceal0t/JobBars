@@ -82,7 +82,38 @@ namespace JobBars.Jobs {
             })
         };
 
-        public static IconReplacer[] Icons => Array.Empty<IconReplacer>();
+        public static IconReplacer[] Icons => new[] {
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.DRK)})", new IconBuffProps {
+                Icons = new [] { ActionIds.Rampart },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.ShadowWall), new IconBuffProps {
+                Icons = new [] { ActionIds.ShadowWall },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ShadowWall), Duration = 15 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.DarkMind), new IconBuffProps {
+                Icons = new [] { ActionIds.DarkMind },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DarkMind), Duration = 10 }
+                }
+            }),
+            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.DRK)})", new IconBuffProps {
+                Icons = new [] { ActionIds.ArmsLength },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
+                }
+            }),
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.LivingDead), new IconBuffProps {
+                Icons = new [] { ActionIds.LivingDead },
+                Triggers = new[] {
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LivingDead), Duration = 10 }
+                }
+            })
+        };
 
         // DRK HAS A CUSTOM MP BAR, SO DON'T WORRY ABOUT THIS
         public static bool MP => false;
