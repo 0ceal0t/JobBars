@@ -7,6 +7,7 @@ using static JobBars.Cooldowns.CooldownTracker;
 namespace JobBars.Cooldowns {
     public unsafe class CooldownPartyMember {
         private JobIds PartyMemberCurrentJob = JobIds.OTHER;
+        private byte PartyMemberLevel = 0;
         private readonly List<CooldownTracker> Trackers = new();
         private readonly uint ObjectId;
 
@@ -15,8 +16,9 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick(AtkCooldown ui, CurrentPartyMember partyMember, float percent) {
-            if (PartyMemberCurrentJob != partyMember.Job) {
+            if (PartyMemberCurrentJob != partyMember.Job || PartyMemberLevel != partyMember.Level) {
                 PartyMemberCurrentJob = partyMember.Job;
+                PartyMemberLevel = partyMember.Level;
                 SetupTrackers();
             }
 
@@ -53,7 +55,7 @@ namespace JobBars.Cooldowns {
         private void SetupTrackers() {
             Trackers.Clear();
 
-            var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(PartyMemberCurrentJob);
+            var trackerProps = JobBars.CooldownManager.GetCooldownConfigs(PartyMemberCurrentJob, PartyMemberLevel);
             var count = 0;
             foreach (var prop in trackerProps.OrderBy(x => x.Order)) {
                 if (!prop.Enabled) continue;

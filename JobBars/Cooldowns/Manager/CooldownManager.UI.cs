@@ -71,6 +71,11 @@ namespace JobBars.Cooldowns.Manager {
                 ResetUi();
             }
 
+            if (ImGui.Checkbox("Hide cooldowns of unavailable actions" + Id, ref JobBars.Configuration.CooldownsHideUnavailableActions)) {
+                JobBars.Configuration.Save();
+                ResetUi();
+            }
+
             ImGui.SetNextItemWidth(50f);
             if (ImGui.InputFloat("Opacity when on cooldown" + Id, ref JobBars.Configuration.CooldownsOnCDOpacity)) JobBars.Configuration.Save();
         }

@@ -126,6 +126,7 @@ namespace JobBars.Data {
         public bool CooldownsHideWeaponSheathed = false;
         public bool CooldownsHideActiveBuffDuration = false;
         public bool CooldownsShowPartyMembers = true;
+        public bool CooldownsHideUnavailableActions = true;
         public float CooldownsOnCDOpacity = 1.0f;
 
         public bool CooldownsStateShowDefault = true;
