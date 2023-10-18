@@ -62,6 +62,30 @@ namespace JobBars.Jobs {
                 CD = 300,
                 Triggers = new []{ new Item(BuffIds.LivingDead) }
             }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.ShadowWall), new CooldownProps {
+                Icon = ActionIds.ShadowWall,
+                Duration = 15,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ShadowWall) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.DRK)})", new CooldownProps {
+                Icon = ActionIds.Rampart,
+                Duration = 20,
+                CD = 90,
+                Triggers = new []{ new Item(ActionIds.Rampart) }
+            }),
+            new CooldownConfig(AtkHelper.Localize(ActionIds.DarkMind), new CooldownProps {
+                Icon = ActionIds.DarkMind,
+                Duration = 10,
+                CD = 60,
+                Triggers = new []{ new Item(ActionIds.DarkMind) }
+            }),
+            new CooldownConfig($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.DRK)})", new CooldownProps {
+                Icon = ActionIds.ArmsLength,
+                Duration = 6,
+                CD = 120,
+                Triggers = new []{ new Item(ActionIds.ArmsLength) }
+            }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.DRK)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
                 Duration = 10,
