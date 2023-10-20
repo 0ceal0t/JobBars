@@ -43,7 +43,10 @@ namespace JobBars.Helper {
     public unsafe partial class AtkHelper {
         public static bool OutOfCombat => !Dalamud.Condition[ConditionFlag.InCombat];
         public static bool WeaponSheathed => Dalamud.ClientState.LocalPlayer != null && !Dalamud.ClientState.LocalPlayer.StatusFlags.HasFlag(StatusFlags.WeaponOut);
-        public static bool WatchingCutscene => Dalamud.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Dalamud.Condition[ConditionFlag.WatchingCutscene78] || Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51];
+        public static bool WatchingCutscene =>
+            Dalamud.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Dalamud.Condition[ConditionFlag.WatchingCutscene78] ||
+            Dalamud.Condition[ConditionFlag.OccupiedInEvent] || Dalamud.Condition[ConditionFlag.OccupiedInQuestEvent] ||
+            Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51];
         public static bool InPvP { get; private set; } = false;
 
         public static bool CalcDoHide(bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed) {
