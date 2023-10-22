@@ -93,9 +93,12 @@ namespace JobBars.Helper {
         public static bool IsActionAvailableAtLevel(ActionIds action, byte level) => IsActionAvailableAtLevel((uint)action, level);
         public static bool IsActionAvailableAtLevel(uint action, byte level) {
             if (level == 0) return true;
-            if (ClassJobActionIdToInfo.GetValueOrDefault(action).IsRoleAction) return true;
-            if (!ClassJobActionToLevelRange.TryGetValue(action, out var levelRange)) return true;
-            return level >= levelRange.MinLevel && (levelRange.ReplacedLevel == 0 || level < levelRange.ReplacedLevel);
+            var actionInfo = ClassJobActionIdToInfo.GetValueOrDefault(action);
+            if (actionInfo.IsRoleAction) return true;
+            if (ClassJobActionToLevelRange.TryGetValue(action, out var levelRange)) {
+                return level >= levelRange.MinLevel && (levelRange.ReplacedLevel == 0 || level < levelRange.ReplacedLevel);
+            }
+            return level >= actionInfo.Level;
         }
 
         public static JobIds IdToJob(uint job) => job < 19 ? JobIds.OTHER : (JobIds)job;
