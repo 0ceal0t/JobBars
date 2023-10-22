@@ -11,6 +11,7 @@ namespace JobBars {
     public class CurrentPartyMember {
         public uint ObjectId;
         public JobIds Job;
+        public byte Level;
         public uint CurrentHP;
         public uint MaxHP;
         public Dictionary<Item, Status> BuffDict;
@@ -55,6 +56,7 @@ namespace JobBars {
                     ObjectId = localPlayer.ObjectId,
                     CurrentHP = localPlayer.CurrentHp,
                     MaxHP = localPlayer.MaxHp,
+                    Level = localPlayer.Level,
                     Job = AtkHelper.IdToJob(localPlayer.ClassJob.Id),
                     BuffDict = new()
                 };
@@ -76,6 +78,7 @@ namespace JobBars {
                     ObjectId = info->ObjectID,
                     CurrentHP = info->CurrentHP,
                     MaxHP = info->MaxHP,
+                    Level = info->Level,
                     Job = AtkHelper.IdToJob(info->ClassJob),
                     BuffDict = new()
                 };

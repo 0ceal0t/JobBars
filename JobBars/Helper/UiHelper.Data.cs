@@ -40,6 +40,25 @@ namespace JobBars.Helper {
         }
     }
 
+    public struct ClassJobActionInfo {
+        public uint ActionId;
+        public byte Level;
+        public bool IsRoleAction;
+    }
+
+    public struct ClassJobActionEvolution {
+        public uint ActionId;
+        /// <summary>
+        /// Action ID of the greatest ancestor.
+        /// </summary>
+        public uint BaseActionId;
+    }
+
+    public class ClassJobActionLevelRange {
+        public byte MinLevel;
+        public byte ReplacedLevel;
+    }
+
     public unsafe partial class AtkHelper {
         public static bool OutOfCombat => !Dalamud.Condition[ConditionFlag.InCombat];
         public static bool WeaponSheathed => Dalamud.ClientState.LocalPlayer != null && !Dalamud.ClientState.LocalPlayer.StatusFlags.HasFlag(StatusFlags.WeaponOut);
@@ -71,6 +90,17 @@ namespace JobBars.Helper {
         public static int GetIcon(ActionIds action) => GetIcon((uint)action);
         public static int GetIcon(uint action) => (int)ActionToIcon[action];
 
+        public static bool IsActionAvailableAtLevel(ActionIds action, byte level) => IsActionAvailableAtLevel((uint)action, level);
+        public static bool IsActionAvailableAtLevel(uint action, byte level) {
+            if (level == 0) return true;
+            var actionInfo = ClassJobActionIdToInfo.GetValueOrDefault(action);
+            if (actionInfo.IsRoleAction) return true;
+            if (ClassJobActionToLevelRange.TryGetValue(action, out var levelRange)) {
+                return level >= levelRange.MinLevel && (levelRange.ReplacedLevel == 0 || level < levelRange.ReplacedLevel);
+            }
+            return level >= actionInfo.Level;
+        }
+
         public static JobIds IdToJob(uint job) => job < 19 ? JobIds.OTHER : (JobIds)job;
 
         private static IEnumerable<ClassJob> JobSheet;
@@ -80,6 +110,8 @@ namespace JobBars.Helper {
         // Cache converted strings
         private static Dictionary<JobIds, string> JobToString;
         private static Dictionary<Item, string> ItemToString;
+        private static Dictionary<uint, ClassJobActionInfo> ClassJobActionIdToInfo = new();
+        private static Dictionary<uint, ClassJobActionLevelRange> ClassJobActionToLevelRange = new();
 
         public static string Localize(JobIds job) {
             if (JobToString.TryGetValue(job, out var jobString)) return jobString;
@@ -136,6 +168,7 @@ namespace JobBars.Helper {
             ItemToString = new();
             ActionList.Clear();
             StatusList.Clear();
+            ClassJobActionIdToInfo.Clear();
 
             ActionSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
                 x => !string.IsNullOrEmpty(x.Name) && (x.IsPlayerAction || x.ClassJob.Value != null) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
@@ -143,10 +176,10 @@ namespace JobBars.Helper {
             foreach (var item in ActionSheet) {
                 var name = item.Name.ToString();
                 var attackType = item.ActionCategory.Value.Name.ToString();
-                var actionId = item.ActionCategory.Value.RowId;
+                var categoryId = item.ActionCategory.Value.RowId;
                 if (item.Icon != 405 && item.Icon != 0) ActionToIcon[item.RowId] = item.Icon;
 
-                if (actionId == 2 || actionId == 3) { // spell or weaponskill
+                if (categoryId == 2 || categoryId == 3) { // spell or weaponskill
                     if (item.CooldownGroup == 58 || item.AdditionalCooldownGroup == 58) GCDs.Add(item.RowId); // not actually a gcd
                 }
 
@@ -157,6 +190,12 @@ namespace JobBars.Helper {
                         Id = item.RowId,
                         Type = ItemType.Action
                     }
+                });
+
+                ClassJobActionIdToInfo.Add(item.RowId, new ClassJobActionInfo {
+                    ActionId = item.RowId,
+                    Level = item.ClassJobLevel,
+                    IsRoleAction = item.IsRoleAction
                 });
             }
 
@@ -173,6 +212,57 @@ namespace JobBars.Helper {
             }
 
             JobSheet = Dalamud.DataManager.GetExcelSheet<ClassJob>().Where(x => x.Name != null);
+
+            SetupClassJobActionLevelRanges(ClassJobActionIdToInfo);
+        }
+
+        private static void SetupClassJobActionLevelRanges(Dictionary<uint, ClassJobActionInfo> classJobActionIdToInfo) {
+            ClassJobActionToLevelRange.Clear();
+
+            var actionEvoBases = Dalamud.DataManager.GetExcelSheet<ClassJobActionSort>()
+                .Where(row =>
+                    row.Unknown1/*BaseActionId*/ != 0 &&
+                    classJobActionIdToInfo.ContainsKey(row.Unknown0/*ActionId*/))
+                .Select(row => row.Unknown1/*BaseActionId*/)
+                .ToHashSet();
+
+            var actionEvos = Dalamud.DataManager.GetExcelSheet<ClassJobActionSort>()
+                .Where(row => actionEvoBases.Contains(row.Unknown1/*BaseActionId*/))
+                .Select(row => new ClassJobActionEvolution {
+                    ActionId = row.Unknown0,
+                    BaseActionId = row.Unknown1
+                })
+                .ToList();
+
+            Dictionary<uint, List<uint>> baseActionToActionGroup = new();
+            foreach (var evo in actionEvos) {
+                if (!classJobActionIdToInfo.ContainsKey(evo.ActionId)) continue;
+                if (!baseActionToActionGroup.TryGetValue(evo.BaseActionId, out var actionGroup)) {
+                    actionGroup = new();
+                    baseActionToActionGroup.Add(evo.BaseActionId, actionGroup);
+                }
+                actionGroup.Add(evo.ActionId);
+            }
+
+            foreach (var actionGroup in baseActionToActionGroup.Values) {
+                actionGroup.Sort((a1, a2) => {
+                    var a1Level = classJobActionIdToInfo.GetValueOrDefault(a1).Level;
+                    var a2Level = classJobActionIdToInfo.GetValueOrDefault(a2).Level;
+                    return a1Level - a2Level;
+                });
+
+                for (int i=0; i < actionGroup.Count; i++) {
+                    byte minLevel = classJobActionIdToInfo.GetValueOrDefault(actionGroup[i]).Level;
+                    byte replacedLevel = 0;
+                    if (i < actionGroup.Count - 1) {
+                        replacedLevel = classJobActionIdToInfo.GetValueOrDefault(actionGroup[i+1]).Level;
+                    }
+                    ClassJobActionToLevelRange.Add(actionGroup[i], new ClassJobActionLevelRange {
+                        MinLevel = minLevel,
+                        ReplacedLevel = replacedLevel
+                    });
+                }
+            }
         }
 
         public static float TimeLeft(float defaultDuration, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime) {
