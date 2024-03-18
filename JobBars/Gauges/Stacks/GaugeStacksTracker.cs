@@ -1,44 +1,44 @@
-﻿using JobBars.Helper;
 using JobBars.Atk;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
+using JobBars.Helper;
 
 namespace JobBars.Gauges.Stacks {
     public class GaugeStacksTracker : GaugeTracker, IGaugeBarInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
         private readonly GaugeStacksConfig Config;
         private int Value = 0;
 
-        public GaugeStacksTracker(GaugeStacksConfig config, int idx) {
+        public GaugeStacksTracker( GaugeStacksConfig config, int idx ) {
             Config = config;
-            LoadUI(Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeStacksTracker>(this, idx),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeStacksTracker>(this, idx),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeStacksTracker>(this, idx),
-                _ => new GaugeDiamond<GaugeStacksTracker>(this, idx) // DEFAULT
-            });
+            LoadUI( Config.TypeConfig switch {
+                GaugeBarConfig _ => new GaugeBar<GaugeStacksTracker>( this, idx ),
+                GaugeArrowConfig _ => new GaugeArrow<GaugeStacksTracker>( this, idx ),
+                GaugeDiamondConfig _ => new GaugeDiamond<GaugeStacksTracker>( this, idx ),
+                _ => new GaugeDiamond<GaugeStacksTracker>( this, idx ) // DEFAULT
+            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
 
         public override bool GetActive() => Value > 0;
 
-        public override void ProcessAction(Item action) { }
+        public override void ProcessAction( Item action ) { }
 
         protected override void TickTracker() {
-            int currentValue = 0;
-            foreach (var trigger in Config.Triggers) {
-                var value = AtkHelper.PlayerStatus.TryGetValue(trigger, out var elem) ? elem.StackCount : 0;
+            var currentValue = 0;
+            foreach( var trigger in Config.Triggers ) {
+                var value = AtkHelper.PlayerStatus.TryGetValue( trigger, out var elem ) ? elem.StackCount : 0;
                 currentValue = value > currentValue ? value : currentValue;
             }
 
-            if (currentValue != Value) {
-                if (currentValue == 0) {
-                    if (Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+            if( currentValue != Value ) {
+                if( currentValue == 0 ) {
+                    if( Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full )
                         Config.PlayCompletionSoundEffect();
                 }
-                else if (currentValue == Config.MaxStacks) {
-                    if (Config.CompletionSound == GaugeCompleteSoundType.When_Full || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full)
+                else if( currentValue == Config.MaxStacks ) {
+                    if( Config.CompletionSound == GaugeCompleteSoundType.When_Full || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full )
                         Config.PlayCompletionSoundEffect();
                 }
                 else {
@@ -48,7 +48,7 @@ namespace JobBars.Gauges.Stacks {
             Value = currentValue;
         }
 
-        public float GetBarPercent() => ((float)Value) / Config.MaxStacks;
+        public float GetBarPercent() => ( ( float )Value ) / Config.MaxStacks;
 
         public float GetBarIndicatorPercent() => 0;
 
@@ -58,17 +58,17 @@ namespace JobBars.Gauges.Stacks {
 
         public int GetTotalMaxTicks() => Config.MaxStacks;
 
-        public bool GetTickValue(int idx) => idx < Value;
+        public bool GetTickValue( int idx ) => idx < Value;
 
         public bool GetBarDanger() => false;
 
-        public string GetDiamondText(int idx) => "";
+        public string GetDiamondText( int idx ) => "";
 
         public float[] GetBarSegments() => null;
 
         public ElementColor GetColor() => Config.Color;
 
-        public ElementColor GetTickColor(int _) => Config.Color;
+        public ElementColor GetTickColor( int _ ) => Config.Color;
 
         public bool GetDiamondTextVisible() => false;
 

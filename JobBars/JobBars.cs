@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Hooking;
 using Dalamud.Plugin;
@@ -12,7 +12,6 @@ using JobBars.Gauges.Manager;
 using JobBars.Helper;
 using JobBars.Icons.Manager;
 using System;
-using System.Reflection;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
@@ -26,18 +25,15 @@ namespace JobBars {
         public static CursorManager CursorManager { get; private set; }
         public static IconManager IconManager { get; private set; }
 
-        public string Name => "JobBars";
-        public string AssemblyLocation { get; private set; } = Assembly.GetExecutingAssembly().Location;
-
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
-        private delegate void ReceiveActionEffectDelegate(int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
+        private delegate void ReceiveActionEffectDelegate( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail );
         private Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate(uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, UInt64 targetId, byte a10);
+        private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 );
         private Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
-        private delegate IntPtr IconDimmedDelegate(IntPtr iconUnk, byte dimmed);
+        private delegate IntPtr IconDimmedDelegate( IntPtr iconUnk, byte dimmed );
         private Hook<IconDimmedDelegate> IconDimmedHook;
 
         private static bool PlayerExists => Dalamud.ClientState?.LocalPlayer != null;
@@ -49,7 +45,7 @@ namespace JobBars {
 
         private bool IsLoaded = false;
 
-        public JobBars(DalamudPluginInterface pluginInterface) {
+        public JobBars( DalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
             AtkHelper.Setup();
@@ -59,13 +55,13 @@ namespace JobBars {
             try {
                 Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             }
-            catch (Exception e) {
-                Dalamud.Error(e, "Error loading config");
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error loading config" );
                 Configuration = new Configuration();
                 Configuration.Save();
             }
-            if (Configuration.Version < 1) {
-                Dalamud.Log("Old config version found");
+            if( Configuration.Version < 1 ) {
+                Dalamud.Log( "Old config version found" );
                 Configuration = new Configuration();
                 Configuration.Save();
             }
@@ -78,13 +74,13 @@ namespace JobBars {
 
             InitializeUI();
 
-            ReceiveActionEffectHook = Dalamud.Hooks.HookFromSignature<ReceiveActionEffectDelegate>(Constants.ReceiveActionEffectSig, ReceiveActionEffect);
+            ReceiveActionEffectHook = Dalamud.Hooks.HookFromSignature<ReceiveActionEffectDelegate>( Constants.ReceiveActionEffectSig, ReceiveActionEffect );
             ReceiveActionEffectHook.Enable();
 
-            ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>(Constants.ActorControlSig, ActorControlSelf);
+            ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
             ActorControlSelfHook.Enable();
 
-            IconDimmedHook = Dalamud.Hooks.HookFromSignature<IconDimmedDelegate>(Constants.IconDimmedSig, IconDimmedDetour);
+            IconDimmedHook = Dalamud.Hooks.HookFromSignature<IconDimmedDelegate>( Constants.IconDimmedSig, IconDimmedDetour );
             IconDimmedHook.Enable();
 
             Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
@@ -98,7 +94,7 @@ namespace JobBars {
 
         private void InitializeUI() {
             // these are created before the addons are even visible, so they aren't attached yet
-            Dalamud.Log("==== INIT ====");
+            Dalamud.Log( "==== INIT ====" );
             IconBuilder.Reset();
 
             Builder = new AtkBuilder();
@@ -144,29 +140,29 @@ namespace JobBars {
         }
 
         private void Animate() {
-            if (!IsLoaded) return;
+            if( !IsLoaded ) return;
             Animation.Tick();
         }
 
-        private void FrameworkOnUpdate(IFramework framework) {
-            if (!IsLoaded) return;
+        private void FrameworkOnUpdate( IFramework framework ) {
+            if( !IsLoaded ) return;
 
             var addon = AtkHelper.BuffGaugeAttachAddon;
 
-            if (!LoggedOut && RecreateUi) {
+            if( !LoggedOut && RecreateUi ) {
                 Logout();
                 return;
             }
 
-            if (!PlayerExists) {
-                if (!LoggedOut && (addon == null)) Logout();
+            if( !PlayerExists ) {
+                if( !LoggedOut && ( addon == null ) ) Logout();
                 return;
             }
 
-            if (addon == null || addon->RootNode == null || RecreateUi) return;
+            if( addon == null || addon->RootNode == null || RecreateUi ) return;
 
-            if (LoggedOut) {
-                Dalamud.Log("====== REATTACH =======");
+            if( LoggedOut ) {
+                Dalamud.Log( "====== REATTACH =======" );
                 Builder.Attach(); // re-attach after addons have been created
                 LoggedOut = false;
                 return;
@@ -182,7 +178,7 @@ namespace JobBars {
         }
 
         private void Logout() {
-            Dalamud.Log("==== LOGOUT ====");
+            Dalamud.Log( "==== LOGOUT ====" );
             IconBuilder.Reset();
             Animation.Dispose();
 
@@ -190,22 +186,22 @@ namespace JobBars {
             CurrentJob = JobIds.OTHER;
         }
 
-        private void CheckForJobChange() {
-            JobIds job = AtkHelper.IdToJob(Dalamud.ClientState.LocalPlayer.ClassJob.Id);
+        private static void CheckForJobChange() {
+            var job = AtkHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.Id );
 
-            if (job != CurrentJob) {
+            if( job != CurrentJob ) {
                 CurrentJob = job;
-                Dalamud.Log($"SWITCHED JOB TO {CurrentJob}");
-                GaugeManager.SetJob(CurrentJob);
-                CursorManager.SetJob(CurrentJob);
-                IconManager.SetJob(CurrentJob);
+                Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );
+                GaugeManager.SetJob( CurrentJob );
+                CursorManager.SetJob( CurrentJob );
+                IconManager.SetJob( CurrentJob );
             }
         }
 
         private void Tick() {
-            if (!IsLoaded) return;
+            if( !IsLoaded ) return;
 
-            AtkHelper.UpdateMp(Dalamud.ClientState.LocalPlayer.CurrentMp);
+            AtkHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
             AtkHelper.UpdatePlayerStatus();
 
             UpdatePartyMembers();
@@ -217,31 +213,31 @@ namespace JobBars {
 
             var time = DateTime.Now;
             var millis = time.Second * 1000 + time.Millisecond;
-            var percent = (float)(millis % 1000) / 1000;
+            var percent = ( float )( millis % 1000 ) / 1000;
 
-            Builder.Tick(Configuration.GaugePulse ? percent : 0f);
+            Builder.Tick( Configuration.GaugePulse ? percent : 0f );
         }
 
         // ======= COMMANDS ============
 
         private void SetupCommands() {
-            Dalamud.CommandManager.AddHandler("/jobbars", new CommandInfo(OnCommand) {
-                HelpMessage = $"Open config window for {Name}",
+            Dalamud.CommandManager.AddHandler( "/jobbars", new CommandInfo( OnCommand ) {
+                HelpMessage = $"Open config window for VFXEditor",
                 ShowInHelp = true
-            });
+            } );
         }
 
         private void OpenConfig() {
-            if (!IsLoaded) return;
+            if( !IsLoaded ) return;
             Visible = true;
         }
 
-        public void OnCommand(object command, object args) {
+        public void OnCommand( object command, object args ) {
             Visible = !Visible;
         }
 
-        public void RemoveCommands() {
-            Dalamud.CommandManager.RemoveHandler("/jobbars");
+        public static void RemoveCommands() {
+            Dalamud.CommandManager.RemoveHandler( "/jobbars" );
         }
     }
 }

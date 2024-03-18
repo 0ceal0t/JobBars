@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Diamond {
     public interface IGaugeDiamondInterface {
@@ -8,15 +8,15 @@ namespace JobBars.Gauges.Types.Diamond {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor GetTickColor(int idx);
+        public ElementColor GetTickColor( int idx );
 
         public bool GetDiamondTextVisible();
 
         // ===== TICK =======
 
-        public bool GetTickValue(int idx);
+        public bool GetTickValue( int idx );
 
-        public string GetDiamondText(int idx);
+        public string GetDiamondText( int idx );
 
         public bool GetReverseFill();
     }

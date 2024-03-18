@@ -1,4 +1,4 @@
-﻿namespace JobBars.Data {
+namespace JobBars.Data {
     public enum BuffIds : uint {
 
         // DRK =========

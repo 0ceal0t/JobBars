@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 // https://github.com/Caraxi/PartyListLayout/blob/ef40b191cd9e08349e1a0e9899aa252d580ff2ac/GameStructs/NumberArray/AddonPartyListNumberArray.cs
 namespace JobBars.GameStructs {
-    [StructLayout(LayoutKind.Sequential, Size = 727 * 4)]
+    [StructLayout( LayoutKind.Sequential, Size = 727 * 4 )]
     public unsafe struct AddonPartyListIntArray {
         public int Unknown000;
         public int Unknown001;
@@ -19,7 +19,7 @@ namespace JobBars.GameStructs {
     }
 
 
-    [StructLayout(LayoutKind.Sequential, Size = 42 * 4 * 8)]
+    [StructLayout( LayoutKind.Sequential, Size = 42 * 4 * 8 )]
     public unsafe struct AddonPartyListMembersIntArray {
         public AddonPartyListMemberIntArray Member0;
         public AddonPartyListMemberIntArray Member1;
@@ -30,7 +30,7 @@ namespace JobBars.GameStructs {
         public AddonPartyListMemberIntArray Member6;
         public AddonPartyListMemberIntArray Member7;
 
-        public AddonPartyListMemberIntArray this[int i] => i switch {
+        public readonly AddonPartyListMemberIntArray this[int i] => i switch {
             0 => Member0,
             1 => Member1,
             2 => Member2,
@@ -39,11 +39,11 @@ namespace JobBars.GameStructs {
             5 => Member5,
             6 => Member6,
             7 => Member7,
-            _ => throw new IndexOutOfRangeException("Index should be between 0 and 7")
+            _ => throw new IndexOutOfRangeException( "Index should be between 0 and 7" )
         };
     }
 
-    [StructLayout(LayoutKind.Sequential, Size = 42 * 4)]
+    [StructLayout( LayoutKind.Sequential, Size = 42 * 4 )]
     public unsafe struct AddonPartyListMemberIntArray {
         public int Level;
         public int ClassJobIcon;

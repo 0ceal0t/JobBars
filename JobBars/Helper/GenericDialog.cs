@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using ImGuiNET;
 using System.Numerics;
 
 namespace JobBars {
@@ -10,10 +10,10 @@ namespace JobBars {
 
         public bool IsVisible => Visible;
 
-        public GenericDialog(string name, bool menuBar = false, int startingHeight = 600, int startingWidth = 400) {
+        public GenericDialog( string name, bool menuBar = false, int startingHeight = 600, int startingWidth = 400 ) {
             Name = name;
             MenuBar = menuBar;
-            Size = new(startingHeight, startingWidth);
+            Size = new( startingHeight, startingWidth );
         }
 
         public void Show() {
@@ -28,15 +28,15 @@ namespace JobBars {
             Visible = !Visible;
         }
 
-        public void SetVisible(bool visible) {
+        public void SetVisible( bool visible ) {
             Visible = visible;
         }
 
         public void Draw() {
-            if (!Visible) return;
-            ImGui.SetNextWindowSize(Size, ImGuiCond.FirstUseEver);
+            if( !Visible ) return;
+            ImGui.SetNextWindowSize( Size, ImGuiCond.FirstUseEver );
 
-            if (ImGui.Begin(Name, ref Visible, (MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDocking)) {
+            if( ImGui.Begin( Name, ref Visible, ( MenuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) ) {
                 DrawBody();
             }
             ImGui.End();

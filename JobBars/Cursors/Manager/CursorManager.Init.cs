@@ -1,4 +1,3 @@
-﻿using JobBars.Data;
 using JobBars.Jobs;
 
 namespace JobBars.Cursors.Manager {

@@ -1,4 +1,4 @@
-﻿using Dalamud.Interface.Internal;
+using Dalamud.Interface.Internal;
 using ImGuiNET;
 using JobBars.Helper;
 using System;
@@ -14,12 +14,12 @@ namespace JobBars.Data {
         private ItemData Selected = new() {
             Icon = 0,
             Name = "",
-            Data = new Item((ActionIds)0)
+            Data = new Item( ( ActionIds )0 )
         };
         private ItemData SearchSelected = new() {
             Icon = 0,
             Name = "",
-            Data = new Item((ActionIds)0)
+            Data = new Item( ( ActionIds )0 )
         };
 
         private string Text = "[NONE]";
@@ -31,7 +31,7 @@ namespace JobBars.Data {
         private readonly string Label;
         private readonly string Id;
 
-        public ItemSelector(string label, string id, List<ItemData> data) {
+        public ItemSelector( string label, string id, List<ItemData> data ) {
             Label = label;
             Id = id;
             Data = data;
@@ -39,44 +39,44 @@ namespace JobBars.Data {
 
         public bool Draw() {
             var ret = false;
-            if (ImGui.BeginCombo(Id, Text, ImGuiComboFlags.HeightLargest)) {
+            if( ImGui.BeginCombo( Id, Text, ImGuiComboFlags.HeightLargest ) ) {
                 var resetScroll = false;
-                if (ImGui.InputText($"Search{Id}", ref SearchText, 100)) {
-                    _Searched = SearchText.Length == 0 ? null : Data.Where(x => x.Name.ToLower().Contains(SearchText.ToLower())).ToList();
+                if( ImGui.InputText( $"Search{Id}", ref SearchText, 100 ) ) {
+                    _Searched = SearchText.Length == 0 ? null : Data.Where( x => x.Name.Contains( SearchText, StringComparison.CurrentCultureIgnoreCase ) ).ToList();
                     resetScroll = true;
                 }
 
-                ImGui.BeginChild($"Select{Id}", new Vector2(ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 200), true);
+                ImGui.BeginChild( $"Select{Id}", new Vector2( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 200 ), true );
 
-                DisplayVisible(Searched.Count, out int preItems, out int showItems, out int postItems, out float itemHeight);
-                if (resetScroll) { ImGui.SetScrollHereY(); };
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + preItems * itemHeight);
+                DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+                if( resetScroll ) { ImGui.SetScrollHereY(); };
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
 
-                int idx = 0;
-                foreach (var item in Searched) {
-                    if (idx < preItems || idx > (preItems + showItems)) { idx++; continue; }
-                    if (ImGui.Selectable($"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data)) {
+                var idx = 0;
+                foreach( var item in Searched ) {
+                    if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
+                    if( ImGui.Selectable( $"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data ) ) {
                         SearchSelected = item;
                         try {
-                            Icon = Dalamud.TextureProvider.GetIcon(item.Icon > 0 ? item.Icon : 0);
+                            Icon = Dalamud.TextureProvider.GetIcon( item.Icon > 0 ? item.Icon : 0 );
                         }
-                        catch (Exception) {
-                            Icon = Dalamud.TextureProvider.GetIcon(0);
+                        catch( Exception ) {
+                            Icon = Dalamud.TextureProvider.GetIcon( 0 );
                         }
                     }
                     idx++;
                 }
 
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + postItems * itemHeight);
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
                 ImGui.EndChild();
 
-                if (SearchSelected.Data.Id != 0) {
-                    if (Icon != null) {
-                        ImGui.Image(Icon.ImGuiHandle, new Vector2(24, 24));
+                if( SearchSelected.Data.Id != 0 ) {
+                    if( Icon != null ) {
+                        ImGui.Image( Icon.ImGuiHandle, new Vector2( 24, 24 ) );
                         ImGui.SameLine();
                     }
 
-                    if (ImGui.Button("Select" + Id)) {
+                    if( ImGui.Button( "Select" + Id ) ) {
                         Selected = SearchSelected;
                         Text = Selected.Name;
                         ret = true;
@@ -86,18 +86,18 @@ namespace JobBars.Data {
                 ImGui.EndCombo();
             }
             ImGui.SameLine();
-            ImGui.Text(Label);
+            ImGui.Text( Label );
 
             return ret;
         }
 
-        private static void DisplayVisible(int count, out int preItems, out int showItems, out int postItems, out float itemHeight) {
+        private static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {
             float childHeight = 200;
             var scrollY = ImGui.GetScrollY();
             var style = ImGui.GetStyle();
             itemHeight = ImGui.GetTextLineHeight() + style.ItemSpacing.Y;
-            preItems = (int)Math.Floor(scrollY / itemHeight);
-            showItems = (int)Math.Ceiling(childHeight / itemHeight);
+            preItems = ( int )Math.Floor( scrollY / itemHeight );
+            showItems = ( int )Math.Ceiling( childHeight / itemHeight );
             postItems = count - showItems - preItems;
         }
 

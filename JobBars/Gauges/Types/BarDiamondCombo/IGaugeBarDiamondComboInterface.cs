@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.BarDiamondCombo {
     public interface IGaugeBarDiamondComboInterface {
@@ -14,7 +14,7 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor GetTickColor(int idx);
+        public ElementColor GetTickColor( int idx );
 
         // ===== TICK =======
 
@@ -24,7 +24,7 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
 
         public float GetBarPercent();
 
-        public bool GetTickValue(int idx);
+        public bool GetTickValue( int idx );
 
         public bool GetReverseFill();
     }

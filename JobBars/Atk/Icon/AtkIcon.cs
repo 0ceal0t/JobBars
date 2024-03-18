@@ -1,8 +1,5 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Helper;
-using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JobBars.Atk {
     public enum UIIconComboType {
@@ -19,7 +16,7 @@ namespace JobBars.Atk {
         public bool ShowRing;
     }
 
-    public unsafe abstract class AtkIcon {
+    public abstract unsafe class AtkIcon {
         protected enum IconState {
             None,
             TimerRunning,
@@ -43,7 +40,7 @@ namespace JobBars.Atk {
 
         protected uint NodeIdx = 200;
 
-        public AtkIcon(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) {
+        public AtkIcon( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) {
             ComboType = props.ComboType;
             ShowRing = props.ShowRing;
 
@@ -52,18 +49,18 @@ namespace JobBars.Atk {
             HotbarIdx = hotbarIdx;
             SlotIdx = slotIdx;
             Component = component;
-            IconComponent = (AtkComponentIcon*)Component->Component;
+            IconComponent = ( AtkComponentIcon* )Component->Component;
         }
 
-        public abstract void SetProgress(float current, float max);
+        public abstract void SetProgress( float current, float max );
 
         public abstract void SetDone();
 
-        public abstract void Tick(float dashPercent, bool border);
+        public abstract void Tick( float dashPercent, bool border );
 
         public abstract void OnDispose();
 
-        protected bool CalcShowBorder(bool active, bool border) => ComboType switch {
+        protected bool CalcShowBorder( bool active, bool border ) => ComboType switch {
             UIIconComboType.Only_When_Combo => border,
             UIIconComboType.Only_When_Active => active,
             UIIconComboType.Combo_Or_Active => border || active,
@@ -74,7 +71,7 @@ namespace JobBars.Atk {
 
         public abstract void RefreshVisuals();
 
-        protected static void SetTextSmall(AtkTextNode* text) {
+        protected static void SetTextSmall( AtkTextNode* text ) {
             text->AtkResNode.Width = 48;
             text->AtkResNode.Height = 12;
             text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
@@ -85,7 +82,7 @@ namespace JobBars.Atk {
             text->TextFlags = 8;
         }
 
-        protected static void SetTextLarge(AtkTextNode* text) {
+        protected static void SetTextLarge( AtkTextNode* text ) {
             text->AtkResNode.Width = 40;
             text->AtkResNode.Height = 35;
             text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
@@ -97,7 +94,7 @@ namespace JobBars.Atk {
         }
 
         public void Dispose() {
-            if (Disposed) {
+            if( Disposed ) {
                 return;
             }
             Disposed = true;

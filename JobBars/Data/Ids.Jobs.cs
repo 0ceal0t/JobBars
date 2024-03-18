@@ -1,4 +1,4 @@
-﻿namespace JobBars.Data {
+namespace JobBars.Data {
     public enum JobIds : uint {
         OTHER = 0,
         GNB = 37,

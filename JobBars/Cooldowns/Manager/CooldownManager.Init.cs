@@ -1,9 +1,8 @@
-﻿using System;
 using JobBars.Jobs;
 
 namespace JobBars.Cooldowns.Manager {
     public partial class CooldownManager {
-        protected override CooldownConfig[] GetOTHER() => Array.Empty<CooldownConfig>();
+        protected override CooldownConfig[] GetOTHER() => [];
 
         protected override CooldownConfig[] GetGNB() => GNB.Cooldowns;
         protected override CooldownConfig[] GetPLD() => PLD.Cooldowns;

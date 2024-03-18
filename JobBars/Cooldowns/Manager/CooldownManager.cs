@@ -13,24 +13,24 @@ namespace JobBars.Cooldowns.Manager {
 
     public unsafe partial class CooldownManager : PerJobManager<CooldownConfig[]> {
         private static readonly int MILLIS_LOOP = 250;
-        private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = new();
-        private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = new();
+        private Dictionary<uint, CooldownPartyMember> ObjectIdToMember = [];
+        private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = [];
 
         public CooldownManager() : base( "##JobBars_Cooldowns" ) {
             JobBars.Builder.SetCooldownPosition( JobBars.Configuration.CooldownPosition );
 
             // Initialize custom cooldowns, remove duplicates
             foreach( var custom in JobBars.Configuration.CustomCooldown.GroupBy( x => x.GetNameId() ).Select( x => x.First() ).ToList() ) {
-                if( !CustomCooldowns.ContainsKey( custom.Job ) ) CustomCooldowns[custom.Job] = new();
+                if( !CustomCooldowns.ContainsKey( custom.Job ) ) CustomCooldowns[custom.Job] = [];
                 CustomCooldowns[custom.Job].Add( new CooldownConfig( custom.Name, custom.GetNameId(), custom.Props ) );
             }
         }
 
         public CooldownConfig[] GetCooldownConfigs( JobIds job ) {
-            List<CooldownConfig> configs = new();
+            List<CooldownConfig> configs = [];
             if( JobToValue.TryGetValue( job, out var props ) ) configs.AddRange( props );
             if( CustomCooldowns.TryGetValue( job, out var customProps ) ) configs.AddRange( customProps );
-            return configs.ToArray();
+            return [.. configs];
         }
 
         public void PerformAction( Item action, uint objectId ) {
@@ -56,7 +56,7 @@ namespace JobBars.Cooldowns.Manager {
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = ( float )( millis % MILLIS_LOOP ) / MILLIS_LOOP;
 
-            Dictionary<uint, CooldownPartyMember> newObjectIdToMember = new();
+            Dictionary<uint, CooldownPartyMember> newObjectIdToMember = [];
 
             if( JobBars.PartyMembers == null ) Dalamud.Error( "PartyMembers is null" );
 
@@ -87,7 +87,7 @@ namespace JobBars.Cooldowns.Manager {
             ObjectIdToMember = newObjectIdToMember;
         }
 
-        public void UpdatePositionScale() {
+        public static void UpdatePositionScale() {
             JobBars.Builder.SetCooldownPosition( JobBars.Configuration.CooldownPosition + new Vector2( 0, AtkHelper.PartyListOffset() ) );
             JobBars.Builder.SetCooldownScale( JobBars.Configuration.CooldownScale );
             JobBars.Builder.RefreshCooldownsLayout();
@@ -100,7 +100,7 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void AddCustomCooldown( JobIds job, string name, CooldownProps props ) {
-            if( !CustomCooldowns.ContainsKey( job ) ) CustomCooldowns[job] = new();
+            if( !CustomCooldowns.ContainsKey( job ) ) CustomCooldowns[job] = [];
             var newCustom = JobBars.Configuration.AddCustomCooldown( name, job, props );
             CustomCooldowns[job].Add( new CooldownConfig( name, newCustom.GetNameId(), props ) );
         }

@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 
 namespace JobBars.Gauges {
     public abstract class GaugeTracker {
@@ -20,39 +20,39 @@ namespace JobBars.Gauges {
 
         public abstract bool GetActive();
 
-        public abstract void ProcessAction(Item action);
+        public abstract void ProcessAction( Item action );
 
-        public void SetPosition(Vector2 position) => UI?.SetPosition(position);
+        public void SetPosition( Vector2 position ) => UI?.SetPosition( position );
 
-        public void UpdateSplitPosition() => UI?.SetSplitPosition(GetConfig().Position);
+        public void UpdateSplitPosition() => UI?.SetSplitPosition( GetConfig().Position );
 
         public void UpdateVisual() => UI?.UpdateVisual();
 
         public void Tick() {
-            if (UI == null) return;
+            if( UI == null ) return;
             TickTracker();
             UI.Tick();
         }
 
         public void Cleanup() {
             Disposed = true;
-            if (UI == null) return;
+            if( UI == null ) return;
             UI.Cleanup();
             UI = null;
         }
 
-        protected void LoadUI(Gauge ui) {
+        protected void LoadUI( Gauge ui ) {
             UI = ui;
-            if (UI == null) return;
+            if( UI == null ) return;
             UI.UpdateVisual();
         }
 
         protected abstract void TickTracker();
 
-        public static R[] SplitArray<R>(R left, int size, bool reverse = false) => SplitArray(left, left, size, size, reverse);
-        public static R[] SplitArray<R>(R left, R right, int value, int size, bool reverse = false) {
+        public static R[] SplitArray<R>( R left, int size, bool reverse = false ) => SplitArray( left, left, size, size, reverse );
+        public static R[] SplitArray<R>( R left, R right, int value, int size, bool reverse = false ) {
             var ret = new R[size];
-            for (int i = 0; i < size; i++) ret[reverse ? (size - i - 1) : i] = i < value ? left : right;
+            for( var i = 0; i < size; i++ ) ret[reverse ? ( size - i - 1 ) : i] = i < value ? left : right;
             return ret;
         }
     }

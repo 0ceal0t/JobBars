@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Bar {
     public interface IGaugeBarInterface {

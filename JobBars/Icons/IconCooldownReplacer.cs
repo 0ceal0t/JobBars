@@ -1,5 +1,4 @@
-﻿using JobBars.Data;
-using JobBars.Helper;
+using JobBars.Data;
 using System;
 using System.Linq;
 
@@ -15,33 +14,31 @@ namespace JobBars.Icons {
         private readonly float Cooldown;
 
         private DateTime LastActiveTime;
-        private Item LastActiveTrigger;
 
-        public IconCooldownReplacer(string name, IconCooldownProps props) : base(name, true, props.Icons) {
+        public IconCooldownReplacer( string name, IconCooldownProps props ) : base( name, true, props.Icons ) {
             Triggers = props.Triggers;
             Cooldown = props.Cooldown;
         }
 
-        public override void ProcessAction(Item action) {
-            if (Triggers.Contains(action)) SetActive(action);
+        public override void ProcessAction( Item action ) {
+            if( Triggers.Contains( action ) ) SetActive();
         }
 
-        private void SetActive(Item trigger) {
+        private void SetActive() {
             State = IconState.Active;
             LastActiveTime = DateTime.Now;
-            LastActiveTrigger = trigger;
         }
 
         public override void Tick() {
-            if (State == IconState.Active) {
-                var timeLeft = Cooldown - (float)(DateTime.Now - LastActiveTime).TotalSeconds;
-                if (timeLeft <= 0) {
+            if( State == IconState.Active ) {
+                var timeLeft = Cooldown - ( float )( DateTime.Now - LastActiveTime ).TotalSeconds;
+                if( timeLeft <= 0 ) {
                     timeLeft = 0;
                     State = IconState.Inactive;
                 }
 
-                if (timeLeft == 0) ResetIcon();
-                else SetIcon(timeLeft, Cooldown);
+                if( timeLeft == 0 ) ResetIcon();
+                else SetIcon( timeLeft, Cooldown );
             }
         }
     }

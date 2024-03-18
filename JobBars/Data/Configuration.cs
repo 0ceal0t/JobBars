@@ -140,7 +140,7 @@ namespace JobBars.Data {
         public BoolValueConfig CooldownShowBorderWhenActive = new( true );
         public BoolValueConfig CooldownShowBorderWhenOffCD = new( false );
 
-        public List<CustomCooldownProps> CustomCooldown = new();
+        public List<CustomCooldownProps> CustomCooldown = [];
 
         // ===== CURSOR =======
 

@@ -1,9 +1,8 @@
-﻿using System;
 using JobBars.Jobs;
 
 namespace JobBars.Buffs.Manager {
     public unsafe partial class BuffManager {
-        protected override BuffConfig[] GetOTHER() => Array.Empty<BuffConfig>();
+        protected override BuffConfig[] GetOTHER() => [];
 
         protected override BuffConfig[] GetGNB() => GNB.Buffs;
         protected override BuffConfig[] GetPLD() => PLD.Buffs;

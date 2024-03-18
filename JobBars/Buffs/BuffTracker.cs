@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Atk;
 using JobBars.Helper;
 using System;
@@ -26,34 +26,34 @@ namespace JobBars.Buffs {
         private AtkBuff UI;
 
         public BuffState CurrentState => State;
-        public uint Id => (uint)Config.Icon;
-        public bool Enabled => (State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible);
+        public uint Id => ( uint )Config.Icon;
+        public bool Enabled => ( State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible );
         public bool Active => State == BuffState.Running;
         public bool Highlight => Active && Config.PartyListHighlight;
         public bool ShowPartyText => Config.ShowPartyText;
         public bool ApplyToTarget => Config.ApplyToTarget;
-        public string Text => ((int)Math.Round(TimeLeft)).ToString();
+        public string Text => ( ( int )Math.Round( TimeLeft ) ).ToString();
 
-        public BuffTracker(BuffConfig config) {
+        public BuffTracker( BuffConfig config ) {
             Config = config;
         }
 
-        public void ProcessAction(Item action) {
-            if (Config.Triggers.Contains(action)) SetActive(action);
+        public void ProcessAction( Item action ) {
+            if( Config.Triggers.Contains( action ) ) SetActive( action );
         }
 
-        private void SetActive(Item trigger) {
+        private void SetActive( Item trigger ) {
             State = BuffState.Running;
             LastActiveTime = DateTime.Now;
             LastActiveTrigger = trigger;
         }
 
-        public void Tick(Dictionary<Item, Status> buffDict) {
-            if (State != BuffState.Running && AtkHelper.CheckForTriggers(buffDict, Config.Triggers, out var trigger)) SetActive(trigger);
+        public void Tick( Dictionary<Item, Status> buffDict ) {
+            if( State != BuffState.Running && AtkHelper.CheckForTriggers( buffDict, Config.Triggers, out var trigger ) ) SetActive( trigger );
 
-            if (State == BuffState.Running) {
-                TimeLeft = AtkHelper.TimeLeft(Config.Duration, buffDict, LastActiveTrigger, LastActiveTime);
-                if (TimeLeft <= 0) { // Buff over
+            if( State == BuffState.Running ) {
+                TimeLeft = AtkHelper.TimeLeft( Config.Duration, buffDict, LastActiveTrigger, LastActiveTime );
+                if( TimeLeft <= 0 ) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;
 
@@ -61,50 +61,50 @@ namespace JobBars.Buffs {
                         Config.CD <= JobBars.Configuration.BuffDisplayTimer ? BuffState.OnCD_Visible : BuffState.OnCD_Hidden;
                 }
                 else { // Still running
-                    Percent = 1.0f - (float)(TimeLeft / Config.Duration);
+                    Percent = 1.0f - ( float )( TimeLeft / Config.Duration );
                 }
             }
-            else if (State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible) {
-                TimeLeft = (float)(Config.CD - (DateTime.Now - LastActiveTime).TotalSeconds);
+            else if( State == BuffState.OnCD_Hidden || State == BuffState.OnCD_Visible ) {
+                TimeLeft = ( float )( Config.CD - ( DateTime.Now - LastActiveTime ).TotalSeconds );
 
-                if (TimeLeft <= 0) {
+                if( TimeLeft <= 0 ) {
                     State = BuffState.OffCD;
                 }
-                else if (TimeLeft <= JobBars.Configuration.BuffDisplayTimer) { // CD low enough to be visible
+                else if( TimeLeft <= JobBars.Configuration.BuffDisplayTimer ) { // CD low enough to be visible
                     State = BuffState.OnCD_Visible;
                     Percent = TimeLeft / Config.CD;
                 }
             }
         }
 
-        public void TickUI(AtkBuff ui) {
-            if (UI != ui || UI?.IconId != Config.Icon) {
+        public void TickUI( AtkBuff ui ) {
+            if( UI != ui || UI?.IconId != Config.Icon ) {
                 UI = ui;
                 SetupUI();
             }
 
             UI.Show();
-            UI.SetColor(Config.Color);
+            UI.SetColor( Config.Color );
 
-            if (State == BuffState.Running) {
+            if( State == BuffState.Running ) {
                 UI.SetOffCD();
-                UI.SetPercent(Percent);
-                UI.SetText(Text);
+                UI.SetPercent( Percent );
+                UI.SetText( Text );
             }
-            else if (State == BuffState.OffCD) {
+            else if( State == BuffState.OffCD ) {
                 UI.SetOffCD();
-                UI.SetPercent(0);
-                UI.SetText("");
+                UI.SetPercent( 0 );
+                UI.SetText( "" );
             }
-            else if (State == BuffState.OnCD_Visible) {
-                UI.SetOnCD(JobBars.Configuration.BuffOnCDOpacity);
-                UI.SetPercent(Percent);
-                UI.SetText(Text);
+            else if( State == BuffState.OnCD_Visible ) {
+                UI.SetOnCD( JobBars.Configuration.BuffOnCDOpacity );
+                UI.SetPercent( Percent );
+                UI.SetText( Text );
             }
         }
 
         private void SetupUI() {
-            UI.LoadIcon(Config.Icon);
+            UI.LoadIcon( Config.Icon );
         }
 
         public void Reset() {

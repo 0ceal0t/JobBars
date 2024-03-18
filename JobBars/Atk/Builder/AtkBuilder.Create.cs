@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 
@@ -8,7 +8,7 @@ namespace JobBars.Atk {
             var node = AtkHelper.CleanAlloc<AtkResNode>();
             node->Ctor();
 
-            node->NodeID = (NodeIdx++);
+            node->NodeID = ( NodeIdx++ );
             node->Type = NodeType.Res;
             node->ScaleX = 1;
             node->ScaleY = 1;
@@ -32,7 +32,7 @@ namespace JobBars.Atk {
             var node = AtkHelper.CleanAlloc<AtkTextNode>();
             node->Ctor();
 
-            node->AtkResNode.NodeID = (NodeIdx++);
+            node->AtkResNode.NodeID = ( NodeIdx++ );
             node->AtkResNode.Type = NodeType.Text;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;
@@ -65,7 +65,7 @@ namespace JobBars.Atk {
             node->TextFlags = 16;
             node->TextFlags2 = 0;
 
-            node->SetText("");
+            node->SetText( "" );
 
             return node;
         }
@@ -76,7 +76,7 @@ namespace JobBars.Atk {
 
             node->WrapMode = 1;
 
-            node->AtkResNode.NodeID = (NodeIdx++);
+            node->AtkResNode.NodeID = ( NodeIdx++ );
             node->AtkResNode.Type = NodeType.Image;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;
@@ -104,7 +104,7 @@ namespace JobBars.Atk {
 
             node->PartsTypeRenderType = 128;
 
-            node->AtkResNode.NodeID = (NodeIdx++);
+            node->AtkResNode.NodeID = ( NodeIdx++ );
             node->AtkResNode.Type = NodeType.NineGrid;
             node->AtkResNode.ScaleX = 1;
             node->AtkResNode.ScaleY = 1;

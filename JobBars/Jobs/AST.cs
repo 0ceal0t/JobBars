@@ -1,46 +1,44 @@
-﻿using JobBars.Buffs;
+using JobBars.Atk;
+using JobBars.Buffs;
 using JobBars.Cooldowns;
 using JobBars.Cursors;
 using JobBars.Data;
-
 using JobBars.Gauges;
 using JobBars.Gauges.Procs;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
-using JobBars.Atk;
-using System;
 
 namespace JobBars.Jobs {
     public static class AST {
-        public static GaugeConfig[] Gauges => new GaugeConfig[] {
+        public static GaugeConfig[] Gauges => [
             new GaugeProcsConfig($"{AtkHelper.Localize(JobIds.AST)} {AtkHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps {
-                Procs = new []{
+                Procs = [
                     new ProcConfig(AtkHelper.Localize(BuffIds.GiantDominance), BuffIds.GiantDominance, AtkColor.LightBlue)
-                }
+                ]
             }),
             new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Combust3), GaugeVisualType.Bar, new GaugeTimerProps {
-                SubTimers = new [] {
+                SubTimers = [
                     new GaugeSubTimerProps {
                         MaxDuration = 30,
                         Color = AtkColor.LightBlue,
                         SubName = AtkHelper.Localize(BuffIds.Combust3),
-                        Triggers = new []{
+                        Triggers = [
                             new Item(BuffIds.Combust2),
                             new Item(BuffIds.Combust3),
                             new Item(BuffIds.Combust)
-                        }
+                        ]
                     }
-                }
+                ]
             })
-        };
+        ];
 
-        public static BuffConfig[] Buffs => new[] {
+        public static BuffConfig[] Buffs => [
             new BuffConfig(AtkHelper.Localize(BuffIds.TheBalance), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheBalance,
                 Color = AtkColor.Orange,
-                Triggers = new []{ new Item(BuffIds.TheBalance) },
+                Triggers = [new Item(BuffIds.TheBalance)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -48,7 +46,7 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.TheBole,
                 Color = AtkColor.BrightGreen,
-                Triggers = new []{ new Item(BuffIds.TheBole) },
+                Triggers = [new Item(BuffIds.TheBole)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -56,7 +54,7 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.TheSpear,
                 Color = AtkColor.DarkBlue,
-                Triggers = new []{ new Item(BuffIds.TheSpear) },
+                Triggers = [new Item(BuffIds.TheSpear)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -64,7 +62,7 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.TheSpire,
                 Color = AtkColor.Yellow,
-                Triggers = new []{ new Item(BuffIds.TheSpire) },
+                Triggers = [new Item(BuffIds.TheSpire)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -72,7 +70,7 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.TheArrow,
                 Color = AtkColor.LightBlue,
-                Triggers = new []{ new Item(BuffIds.TheArrow) },
+                Triggers = [new Item(BuffIds.TheArrow)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -80,7 +78,7 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.TheEwer,
                 Color = AtkColor.LightBlue,
-                Triggers = new []{ new Item(BuffIds.TheEwer) },
+                Triggers = [new Item(BuffIds.TheEwer)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -89,95 +87,95 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.Divination,
                 Color = AtkColor.Yellow,
-                Triggers = new []{ new Item(ActionIds.Divination) }
+                Triggers = [new Item(ActionIds.Divination)]
             })
-        };
+        ];
 
-        public static Cursor Cursors => new(JobIds.AST, CursorType.None, CursorType.CastTime);
+        public static Cursor Cursors => new( JobIds.AST, CursorType.None, CursorType.CastTime );
 
-        public static CooldownConfig[] Cooldowns => new[] {
+        public static CooldownConfig[] Cooldowns => [
             new CooldownConfig(AtkHelper.Localize(ActionIds.NeutralSect), new CooldownProps {
                 Icon = ActionIds.NeutralSect,
                 Duration = 20,
                 CD = 120,
-                Triggers = new []{ new Item(ActionIds.NeutralSect) }
+                Triggers = [new Item(ActionIds.NeutralSect)]
             }),
             new CooldownConfig(AtkHelper.Localize(ActionIds.Macrocosmos), new CooldownProps {
                 Icon = ActionIds.Macrocosmos,
                 CD = 180,
                 Duration = 15,
-                Triggers = new []{ new Item(ActionIds.Macrocosmos) }
+                Triggers = [new Item(ActionIds.Macrocosmos)]
             }),
             new CooldownConfig(AtkHelper.Localize(ActionIds.EarthlyStar), new CooldownProps {
                 Icon = ActionIds.EarthlyStar,
                 Duration = 20,
                 CD = 60,
-                Triggers = new []{ new Item(ActionIds.EarthlyStar) }
+                Triggers = [new Item(ActionIds.EarthlyStar)]
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.AST)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
                 CD = 60,
-                Triggers = new []{ new Item(ActionIds.Swiftcast) }
+                Triggers = [new Item(ActionIds.Swiftcast)]
             })
-        };
+        ];
 
-        public static IconReplacer[] Icons => new IconReplacer[] {
+        public static IconReplacer[] Icons => [
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Combust3), new IconBuffProps {
                 IsTimer = true,
-                Icons = new [] {
+                Icons = [
                     ActionIds.Combust1,
                     ActionIds.Combust2,
                     ActionIds.Combust3
-                },
-                Triggers = new[] {
+                ],
+                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust), Duration = 30 },
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust2), Duration = 30 },
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Combust3), Duration = 30 }
-                }
+                ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Divination), new IconBuffProps {
-                Icons = new [] { ActionIds.Divination },
-                Triggers = new[] {
+                Icons = [ActionIds.Divination],
+                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Divination), Duration = 15 }
-                }
+                ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Lightspeed), new IconBuffProps {
-                Icons = new [] { ActionIds.Lightspeed },
-                Triggers = new[] {
+                Icons = [ActionIds.Lightspeed],
+                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
-                }
+                ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(ActionIds.EarthlyStar), new IconBuffProps {
-                Icons = new [] {
+                Icons = [
                     ActionIds.EarthlyStar,
                     ActionIds.StellarDetonation
-                },
-                Triggers = new [] {
+                ],
+                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
-                }
+                ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(ActionIds.Astrodyne), new IconBuffProps {
-                Icons = new [] {
+                Icons = [
                     ActionIds.Astrodyne
-                },
-                Triggers = new[] {
+                ],
+                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
-                }
+                ]
             }),
             new IconCooldownReplacer(AtkHelper.Localize(ActionIds.MinorArcana), new IconCooldownProps {
-                Icons = new[] {
+                Icons = [
                     ActionIds.LordOfCrowns,
                     ActionIds.LadyOfCrowns
-                },
-                Triggers = new[] {
+                ],
+                Triggers = [
                     new Item(ActionIds.MinorArcana)
-                },
+                ],
                 Cooldown = 60
             })
-        };
+        ];
 
         public static bool MP => true;
 
-        public static float[] MP_SEGMENTS => new[] { 0.24f };
+        public static float[] MP_SEGMENTS => [0.24f];
     }
 }

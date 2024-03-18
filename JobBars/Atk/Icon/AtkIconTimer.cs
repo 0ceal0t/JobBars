@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System;
 
@@ -18,20 +18,20 @@ namespace JobBars.Atk {
         private AtkTextNode* Text;
         private AtkImageNode* Combo;
 
-        public AtkIconTimer(uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props) :
-            base(adjustedId, slotId, hotbarIdx, slotIdx, component, props) {
+        public AtkIconTimer( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) :
+            base( adjustedId, slotId, hotbarIdx, slotIdx, component, props ) {
 
             var nodeList = Component->Component->UldManager.NodeList;
 
             OriginalRecastContainer = nodeList[3];
-            OriginalImage = (AtkImageNode*)nodeList[0];
-            var originalRing = (AtkImageNode*)nodeList[7];
+            OriginalImage = ( AtkImageNode* )nodeList[0];
+            var originalRing = ( AtkImageNode* )nodeList[7];
 
             OriginalPreCombo = IconComponent->Frame->PrevSiblingNode;
             OriginalComboContainer = IconComponent->ComboBorder;
-            OriginalCombo = (AtkImageNode*)OriginalComboContainer->ChildNode;
+            OriginalCombo = ( AtkImageNode* )OriginalComboContainer->ChildNode;
 
-            OriginalText = (AtkTextNode*)IconComponent->UnknownImageNode;
+            OriginalText = ( AtkTextNode* )IconComponent->UnknownImageNode;
 
             Combo = AtkHelper.CleanAlloc<AtkImageNode>();
             Combo->Ctor();
@@ -50,8 +50,8 @@ namespace JobBars.Atk {
 
             Combo->AtkResNode.ParentNode = OriginalComboContainer->ParentNode;
 
-            AtkHelper.Link(OriginalPreCombo, (AtkResNode*)Combo);
-            AtkHelper.Link((AtkResNode*)Combo, OriginalComboContainer->PrevSiblingNode);
+            AtkHelper.Link( OriginalPreCombo, ( AtkResNode* )Combo );
+            AtkHelper.Link( ( AtkResNode* )Combo, OriginalComboContainer->PrevSiblingNode );
 
             // ========================
 
@@ -63,12 +63,12 @@ namespace JobBars.Atk {
             Text->AtkResNode.DrawFlags = 1;
             Text->AtkResNode.DrawFlags |= 4;
             RefreshVisuals();
-            Text->SetText("");
+            Text->SetText( "" );
 
             Text->AtkResNode.ParentNode = OriginalText->AtkResNode.ParentNode;
 
-            AtkHelper.Link(OriginalText->AtkResNode.NextSiblingNode, (AtkResNode*)Text);
-            AtkHelper.Link((AtkResNode*)Text, OriginalText->AtkResNode.PrevSiblingNode);
+            AtkHelper.Link( OriginalText->AtkResNode.NextSiblingNode, ( AtkResNode* )Text );
+            AtkHelper.Link( ( AtkResNode* )Text, OriginalText->AtkResNode.PrevSiblingNode );
 
             // ==========================
 
@@ -88,48 +88,48 @@ namespace JobBars.Atk {
             Ring->PartsList = originalRing->PartsList;
 
             Ring->AtkResNode.ParentNode = OriginalRecastContainer;
-            OriginalRecastContainer->ChildNode->PrevSiblingNode->PrevSiblingNode = (AtkResNode*)Ring;
+            OriginalRecastContainer->ChildNode->PrevSiblingNode->PrevSiblingNode = ( AtkResNode* )Ring;
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            AtkHelper.Show(Combo);
-            AtkHelper.Hide(Text);
-            AtkHelper.Hide(Ring);
+            AtkHelper.Show( Combo );
+            AtkHelper.Hide( Text );
+            AtkHelper.Hide( Ring );
         }
 
-        public override void SetProgress(float current, float max) {
-            if (State == IconState.TimerDone && current <= 0) return;
+        public override void SetProgress( float current, float max ) {
+            if( State == IconState.TimerDone && current <= 0 ) return;
             State = IconState.TimerRunning;
 
-            AtkHelper.Show(Text);
-            Text->SetText(((int)Math.Round(current)).ToString());
+            AtkHelper.Show( Text );
+            Text->SetText( ( ( int )Math.Round( current ) ).ToString() );
 
-            if (ShowRing) {
-                AtkHelper.Show(Ring);
-                Ring->PartId = (ushort)(80 - (float)(current / max) * 80);
+            if( ShowRing ) {
+                AtkHelper.Show( Ring );
+                Ring->PartId = ( ushort )( 80 - ( float )( current / max ) * 80 );
             }
 
-            JobBars.IconBuilder.AddIconOverride(new IntPtr(OriginalImage));
-            SetDimmed(true);
+            JobBars.IconBuilder.AddIconOverride( new IntPtr( OriginalImage ) );
+            SetDimmed( true );
         }
 
         public override void SetDone() {
             State = IconState.TimerDone;
-            AtkHelper.Hide(Text);
+            AtkHelper.Hide( Text );
 
-            AtkHelper.Hide(Ring);
+            AtkHelper.Hide( Ring );
 
-            JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
-            SetDimmed(false);
+            JobBars.IconBuilder.RemoveIconOverride( new IntPtr( OriginalImage ) );
+            SetDimmed( false );
         }
 
-        private void SetDimmed(bool dimmed) {
+        private void SetDimmed( bool dimmed ) {
             Dimmed = dimmed;
-            SetDimmed(OriginalImage, dimmed);
+            SetDimmed( OriginalImage, dimmed );
         }
 
-        public static void SetDimmed(AtkImageNode* image, bool dimmed) {
-            var val = (byte)(dimmed ? 50 : 100);
+        public static void SetDimmed( AtkImageNode* image, bool dimmed ) {
+            var val = ( byte )( dimmed ? 50 : 100 );
             image->AtkResNode.MultiplyRed = val;
             image->AtkResNode.MultiplyRed_2 = val;
             image->AtkResNode.MultiplyGreen = val;
@@ -138,9 +138,9 @@ namespace JobBars.Atk {
             image->AtkResNode.MultiplyBlue_2 = val;
         }
 
-        public override void Tick(float dashPercent, bool border) {
-            var showBorder = CalcShowBorder(State == IconState.TimerDone, border);
-            Combo->PartId = !showBorder ? (ushort)0 : (ushort)(6 + dashPercent * 7);
+        public override void Tick( float dashPercent, bool border ) {
+            var showBorder = CalcShowBorder( State == IconState.TimerDone, border );
+            Combo->PartId = !showBorder ? ( ushort )0 : ( ushort )( 6 + dashPercent * 7 );
         }
 
         public override void OnDispose() {
@@ -153,30 +153,30 @@ namespace JobBars.Atk {
 
             // =====================
 
-            Text->AtkResNode.NextSiblingNode->PrevSiblingNode = (AtkResNode*)OriginalText;
-            Text->AtkResNode.PrevSiblingNode->NextSiblingNode = (AtkResNode*)OriginalText;
+            Text->AtkResNode.NextSiblingNode->PrevSiblingNode = ( AtkResNode* )OriginalText;
+            Text->AtkResNode.PrevSiblingNode->NextSiblingNode = ( AtkResNode* )OriginalText;
 
             // =====================
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            if (Combo != null) {
-                Combo->AtkResNode.Destroy(true);
+            if( Combo != null ) {
+                Combo->AtkResNode.Destroy( true );
                 Combo = null;
             }
 
-            if (Ring != null) {
-                Ring->AtkResNode.Destroy(true);
+            if( Ring != null ) {
+                Ring->AtkResNode.Destroy( true );
                 Ring = null;
             }
 
-            if (Text != null) {
-                Text->AtkResNode.Destroy(true);
+            if( Text != null ) {
+                Text->AtkResNode.Destroy( true );
                 Text = null;
             }
 
-            JobBars.IconBuilder.RemoveIconOverride(new IntPtr(OriginalImage));
-            if (Dimmed) SetDimmed(false);
+            JobBars.IconBuilder.RemoveIconOverride( new IntPtr( OriginalImage ) );
+            if( Dimmed ) SetDimmed( false );
 
             OriginalPreCombo = null;
             OriginalComboContainer = null;
@@ -187,15 +187,15 @@ namespace JobBars.Atk {
         }
 
         public override void RefreshVisuals() {
-            if (JobBars.Configuration.IconTimerLarge) {
+            if( JobBars.Configuration.IconTimerLarge ) {
                 Text->AtkResNode.X = 5;
                 Text->AtkResNode.Y = 7;
-                SetTextLarge(Text);
+                SetTextLarge( Text );
             }
             else {
                 Text->AtkResNode.X = 3;
                 Text->AtkResNode.Y = 37;
-                SetTextSmall(Text);
+                SetTextSmall( Text );
             }
         }
     }

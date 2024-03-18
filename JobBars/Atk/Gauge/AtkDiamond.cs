@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using System.Collections.Generic;
 
@@ -14,46 +14,46 @@ namespace JobBars.Atk {
             private ElementColor Color = AtkColor.NoColor;
 
             public void Dispose() {
-                if (Text != null) {
-                    Text->AtkResNode.Destroy(true);
+                if( Text != null ) {
+                    Text->AtkResNode.Destroy( true );
                     Text = null;
                 }
 
-                if (Selected != null) {
-                    AtkHelper.UnloadTexture(Selected);
-                    Selected->AtkResNode.Destroy(true);
+                if( Selected != null ) {
+                    AtkHelper.UnloadTexture( Selected );
+                    Selected->AtkResNode.Destroy( true );
                     Selected = null;
                 }
 
-                if (SelectedContainer != null) {
-                    SelectedContainer->Destroy(true);
+                if( SelectedContainer != null ) {
+                    SelectedContainer->Destroy( true );
                     SelectedContainer = null;
                 }
 
-                if (Background != null) {
-                    AtkHelper.UnloadTexture(Background);
-                    Background->AtkResNode.Destroy(true);
+                if( Background != null ) {
+                    AtkHelper.UnloadTexture( Background );
+                    Background->AtkResNode.Destroy( true );
                     Background = null;
                 }
 
-                if (MainTick != null) {
-                    MainTick->Destroy(true);
+                if( MainTick != null ) {
+                    MainTick->Destroy( true );
                     MainTick = null;
                 }
             }
 
-            public void SetColor(ElementColor color) {
+            public void SetColor( ElementColor color ) {
                 Color = color;
-                AtkColor.SetColor(Selected, color);
+                AtkColor.SetColor( Selected, color );
             }
 
-            public void Tick(float percent) {
-                AtkColor.SetColorPulse((AtkResNode*)Selected, Color, percent);
+            public void Tick( float percent ) {
+                AtkColor.SetColorPulse( ( AtkResNode* )Selected, Color, percent );
             }
         }
 
         public static readonly int MAX = 12;
-        private List<UIDiamondTick> Ticks = new();
+        private List<UIDiamondTick> Ticks = [];
 
         public AtkDiamond() {
             RootRes = AtkBuilder.CreateResNode();
@@ -62,9 +62,9 @@ namespace JobBars.Atk {
             RootRes->Width = 160;
             RootRes->Height = 46;
 
-            List<LayoutNode> tickNodes = new();
+            List<LayoutNode> tickNodes = [];
 
-            for (int idx = 0; idx < MAX; idx++) {
+            for( var idx = 0; idx < MAX; idx++ ) {
                 // ======= TICKS =========
                 var tick = AtkBuilder.CreateResNode();
                 tick->X = 20 * idx;
@@ -77,8 +77,8 @@ namespace JobBars.Atk {
                 bg->AtkResNode.Height = 32;
                 bg->AtkResNode.X = 0;
                 bg->AtkResNode.Y = 0;
-                AtkHelper.SetupTexture(bg, "ui/uld/JobHudSimple_StackA.tex");
-                AtkHelper.UpdatePart(bg, 0, 0, 32, 32);
+                AtkHelper.SetupTexture( bg, "ui/uld/JobHudSimple_StackA.tex" );
+                AtkHelper.UpdatePart( bg, 0, 0, 32, 32 );
                 bg->Flags = 0;
                 bg->WrapMode = 1;
 
@@ -115,91 +115,91 @@ namespace JobBars.Atk {
                 selected->AtkResNode.Y = 0;
                 selected->AtkResNode.OriginX = 16;
                 selected->AtkResNode.OriginY = 16;
-                AtkHelper.SetupTexture(selected, "ui/uld/JobHudSimple_StackA.tex");
-                AtkHelper.UpdatePart(selected, 32, 0, 32, 32);
+                AtkHelper.SetupTexture( selected, "ui/uld/JobHudSimple_StackA.tex" );
+                AtkHelper.UpdatePart( selected, 32, 0, 32, 32 );
                 selected->Flags = 0;
                 selected->WrapMode = 1;
 
-                Ticks.Add(new UIDiamondTick {
+                Ticks.Add( new UIDiamondTick {
                     MainTick = tick,
                     Background = bg,
                     Selected = selected,
                     SelectedContainer = selectedContainer,
                     Text = text
-                });
+                } );
 
-                tickNodes.Add(new LayoutNode(tick, new[] {
+                tickNodes.Add( new LayoutNode( tick, new[] {
                     new LayoutNode(bg),
                     new LayoutNode(selectedContainer, new[] {
                         new LayoutNode(selected),
                         new LayoutNode(text)
                     })
-                }));
+                } ) );
             }
 
-            var layout = new LayoutNode(RootRes, tickNodes.ToArray());
+            var layout = new LayoutNode( RootRes, tickNodes.ToArray() );
             layout.Setup();
             layout.Cleanup();
         }
 
         public override void Dispose() {
-            for (int idx = 0; idx < MAX; idx++) {
+            for( var idx = 0; idx < MAX; idx++ ) {
                 Ticks[idx].Dispose();
                 Ticks[idx] = null;
             }
             Ticks = null;
 
-            if (RootRes != null) {
-                RootRes->Destroy(true);
+            if( RootRes != null ) {
+                RootRes->Destroy( true );
                 RootRes = null;
             }
         }
 
-        public void SetColor(int idx, ElementColor color) {
-            Ticks[idx].SetColor(color);
+        public void SetColor( int idx, ElementColor color ) {
+            Ticks[idx].SetColor( color );
         }
 
-        public void SetMaxValue(int value) {
-            for (int idx = 0; idx < MAX; idx++) {
-                AtkHelper.SetVisibility(Ticks[idx].MainTick, idx < value);
+        public void SetMaxValue( int value ) {
+            for( var idx = 0; idx < MAX; idx++ ) {
+                AtkHelper.SetVisibility( Ticks[idx].MainTick, idx < value );
             }
         }
 
-        public void SetTextVisible(bool showText) {
-            SetSpacing(showText ? 5 : 0);
-            for (int idx = 0; idx < MAX; idx++) {
-                AtkHelper.SetVisibility(Ticks[idx].Text, showText);
+        public void SetTextVisible( bool showText ) {
+            SetSpacing( showText ? 5 : 0 );
+            for( var idx = 0; idx < MAX; idx++ ) {
+                AtkHelper.SetVisibility( Ticks[idx].Text, showText );
             }
         }
 
-        private void SetSpacing(int space) {
-            for (int idx = 0; idx < MAX; idx++) {
-                Ticks[idx].MainTick->X = (20 + space) * idx;
+        private void SetSpacing( int space ) {
+            for( var idx = 0; idx < MAX; idx++ ) {
+                Ticks[idx].MainTick->X = ( 20 + space ) * idx;
             }
         }
 
-        public void SetValue(int idx, bool value) {
-            AtkHelper.SetVisibility(Ticks[idx].SelectedContainer, value);
+        public void SetValue( int idx, bool value ) {
+            AtkHelper.SetVisibility( Ticks[idx].SelectedContainer, value );
         }
 
-        public void SetText(int idx, string text) {
-            Ticks[idx].Text->SetText(text);
+        public void SetText( int idx, string text ) {
+            Ticks[idx].Text->SetText( text );
         }
 
-        public void ShowText(int idx) {
-            AtkHelper.Show(Ticks[idx].Text);
+        public void ShowText( int idx ) {
+            AtkHelper.Show( Ticks[idx].Text );
         }
 
-        public void HideText(int idx) {
-            AtkHelper.Hide(Ticks[idx].Text);
+        public void HideText( int idx ) {
+            AtkHelper.Hide( Ticks[idx].Text );
         }
 
         public void Clear() {
-            for (int idx = 0; idx < MAX; idx++) SetValue(idx, false);
+            for( var idx = 0; idx < MAX; idx++ ) SetValue( idx, false );
         }
 
-        public void Tick(float percent) {
-            Ticks.ForEach(t => t.Tick(percent));
+        public void Tick( float percent ) {
+            Ticks.ForEach( t => t.Tick( percent ) );
         }
     }
 }

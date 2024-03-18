@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Charges {
     public struct GaugeChargesProps {
@@ -20,7 +20,7 @@ namespace JobBars.Gauges.Charges {
     }
 
     public class GaugeChargesConfig : GaugeConfig {
-        private static readonly GaugeVisualType[] ValidGaugeVisualType = new[] { GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond };
+        private static readonly GaugeVisualType[] ValidGaugeVisualType = [GaugeVisualType.BarDiamondCombo, GaugeVisualType.Bar, GaugeVisualType.Diamond];
         protected override GaugeVisualType[] GetValidGaugeTypes() => ValidGaugeVisualType;
 
         public GaugesChargesPartProps[] Parts { get; private set; }
@@ -29,30 +29,30 @@ namespace JobBars.Gauges.Charges {
         public GaugeCompleteSoundType CompletionSound { get; private set; }
         public bool ReverseFill { get; private set; }
 
-        public GaugeChargesConfig(string name, GaugeVisualType type, GaugeChargesProps props) : base(name, type) {
+        public GaugeChargesConfig( string name, GaugeVisualType type, GaugeChargesProps props ) : base( name, type ) {
             Parts = props.Parts;
             SameColor = props.SameColor;
-            BarColor = JobBars.Configuration.GaugeColor.Get(Name, props.BarColor);
-            CompletionSound = JobBars.Configuration.GaugeCompletionSound.Get(Name, props.CompletionSound);
-            ReverseFill = JobBars.Configuration.GaugeReverseFill.Get(Name, false);
+            BarColor = JobBars.Configuration.GaugeColor.Get( Name, props.BarColor );
+            CompletionSound = JobBars.Configuration.GaugeCompletionSound.Get( Name, props.CompletionSound );
+            ReverseFill = JobBars.Configuration.GaugeReverseFill.Get( Name, false );
         }
 
-        public override GaugeTracker GetTracker(int idx) => new GaugeChargesTracker(this, idx);
+        public override GaugeTracker GetTracker( int idx ) => new GaugeChargesTracker( this, idx );
 
-        protected override void DrawConfig(string id, ref bool newVisual, ref bool reset) {
-            if (JobBars.Configuration.GaugeColor.Draw($"Color{id}", Name, BarColor, out var newColor)) {
+        protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
+            if( JobBars.Configuration.GaugeColor.Draw( $"Color{id}", Name, BarColor, out var newColor ) ) {
                 BarColor = newColor;
                 newVisual = true;
             }
 
-            if (JobBars.Configuration.GaugeCompletionSound.Draw($"Completion sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound)) {
+            if( JobBars.Configuration.GaugeCompletionSound.Draw( $"Completion sound{id}", Name, ValidSoundType, CompletionSound, out var newCompletionSound ) ) {
                 CompletionSound = newCompletionSound;
             }
 
             DrawCompletionSoundEffect();
             DrawSoundEffect();
 
-            if (JobBars.Configuration.GaugeReverseFill.Draw($"Reverse tick fill order{id}", Name, ReverseFill, out var newReverseFill)) {
+            if( JobBars.Configuration.GaugeReverseFill.Draw( $"Reverse tick fill order{id}", Name, ReverseFill, out var newReverseFill ) ) {
                 ReverseFill = newReverseFill;
                 newVisual = true;
             }

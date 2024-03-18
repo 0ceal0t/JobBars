@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using JobBars.Helper;
 using JobBars.Atk;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.Diamond;
+using JobBars.Helper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace JobBars.Gauges.Timer {
     public class GaugeTimerTracker : GaugeTracker, IGaugeBarInterface, IGaugeDiamondInterface {
@@ -23,13 +22,13 @@ namespace JobBars.Gauges.Timer {
 
             private float OffsetMaxDuration => Config.Offset == Config.MaxDuration ? 1f : Config.MaxDuration - Config.Offset;
 
-            public GaugeSubTimer(GaugeTimerConfig topConfig, GaugeTimerConfig.GaugeSubTimerConfig config) {
+            public GaugeSubTimer( GaugeTimerConfig topConfig, GaugeTimerConfig.GaugeSubTimerConfig config ) {
                 TopConfig = topConfig;
                 Config = config;
             }
 
-            public bool ProcessAction(Item action) {
-                if (Config.Triggers.Contains(action) && (!(State == GaugeState.Active) || !Config.NoRefresh)) { // START
+            public bool ProcessAction( Item action ) {
+                if( Config.Triggers.Contains( action ) && ( !( State == GaugeState.Active ) || !Config.NoRefresh ) ) { // START
                     LastActiveTrigger = action;
                     LastActiveTime = DateTime.Now;
                     State = GaugeState.Active;
@@ -40,23 +39,23 @@ namespace JobBars.Gauges.Timer {
             }
 
             public void Tick() {
-                var currentTimeLeft = AtkHelper.TimeLeft(Config.DefaultDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime) - Config.Offset;
-                if (currentTimeLeft > 0 && State == GaugeState.Inactive) { // switching targets with DoTs on them, need to restart the icon, etc.
+                var currentTimeLeft = AtkHelper.TimeLeft( Config.DefaultDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime ) - Config.Offset;
+                if( currentTimeLeft > 0 && State == GaugeState.Inactive ) { // switching targets with DoTs on them, need to restart the icon, etc.
                     State = GaugeState.Active;
                 }
 
-                if (State == GaugeState.Active) {
-                    if (currentTimeLeft <= 0) {
+                if( State == GaugeState.Active ) {
+                    if( currentTimeLeft <= 0 ) {
                         currentTimeLeft = 0; // prevent "-1" or something
                         State = GaugeState.Inactive;
                     }
 
-                    bool currentDanger = currentTimeLeft < Config.LowWarningTime && Config.LowWarningTime > 0 && !Config.HideLowWarning && currentTimeLeft > 0;
-                    bool beforeOk = TimeLeft >= Config.LowWarningTime;
-                    if (currentDanger && beforeOk) TopConfig.PlaySoundEffect();
+                    var currentDanger = currentTimeLeft < Config.LowWarningTime && Config.LowWarningTime > 0 && !Config.HideLowWarning && currentTimeLeft > 0;
+                    var beforeOk = TimeLeft >= Config.LowWarningTime;
+                    if( currentDanger && beforeOk ) TopConfig.PlaySoundEffect();
                     InDanger = currentDanger;
 
-                    var barTimeLeft = Config.Invert ? (currentTimeLeft == 0 ? 0 : OffsetMaxDuration - currentTimeLeft) : currentTimeLeft;
+                    var barTimeLeft = Config.Invert ? ( currentTimeLeft == 0 ? 0 : OffsetMaxDuration - currentTimeLeft ) : currentTimeLeft;
 
                     PercentRemaining = barTimeLeft / OffsetMaxDuration;
                     TimeLeft = currentTimeLeft;
@@ -70,7 +69,7 @@ namespace JobBars.Gauges.Timer {
 
             public bool GetDanger() => InDanger;
 
-            public string GetText() => ((int)Math.Round(TimeLeft)).ToString();
+            public string GetText() => ( ( int )Math.Round( TimeLeft ) ).ToString();
 
             public float GetBarPercent() => PercentRemaining;
 
@@ -83,34 +82,34 @@ namespace JobBars.Gauges.Timer {
         private readonly List<GaugeSubTimer> SubTimers;
         private GaugeSubTimer ActiveSubTimer;
 
-        public GaugeTimerTracker(GaugeTimerConfig config, int idx) {
+        public GaugeTimerTracker( GaugeTimerConfig config, int idx ) {
             Config = config;
-            SubTimers = Config.SubTimers.Select(subTimer => new GaugeSubTimer(config, subTimer)).ToList();
+            SubTimers = Config.SubTimers.Select( subTimer => new GaugeSubTimer( config, subTimer ) ).ToList();
             ActiveSubTimer = SubTimers[0];
-            LoadUI(Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeTimerTracker>(this, idx),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeTimerTracker>(this, idx),
-                _ => new GaugeBar<GaugeTimerTracker>(this, idx) // DEFAULT
-            });
+            LoadUI( Config.TypeConfig switch {
+                GaugeBarConfig _ => new GaugeBar<GaugeTimerTracker>( this, idx ),
+                GaugeDiamondConfig _ => new GaugeDiamond<GaugeTimerTracker>( this, idx ),
+                _ => new GaugeBar<GaugeTimerTracker>( this, idx ) // DEFAULT
+            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
 
         public override bool GetActive() => ActiveSubTimer.GetActive();
 
-        public override void ProcessAction(Item action) {
+        public override void ProcessAction( Item action ) {
             var refreshVisuals = false;
-            foreach (var subTimer in SubTimers) {
-                if (subTimer.ProcessAction(action) && subTimer != ActiveSubTimer) {
+            foreach( var subTimer in SubTimers ) {
+                if( subTimer.ProcessAction( action ) && subTimer != ActiveSubTimer ) {
                     ActiveSubTimer = subTimer;
                     refreshVisuals = true;
                 }
             }
-            if (refreshVisuals) UI.UpdateVisual();
+            if( refreshVisuals ) UI.UpdateVisual();
         }
 
         protected override void TickTracker() {
-            foreach (var subTimer in SubTimers) subTimer.Tick();
+            foreach( var subTimer in SubTimers ) subTimer.Tick();
         }
 
         public float[] GetBarSegments() => null;
@@ -144,13 +143,13 @@ namespace JobBars.Gauges.Timer {
 
         public int GetCurrentMaxTicks() => 1;
 
-        public ElementColor GetTickColor(int idx) => ActiveSubTimer.GetColor();
+        public ElementColor GetTickColor( int idx ) => ActiveSubTimer.GetColor();
 
         public bool GetDiamondTextVisible() => false;
 
-        public bool GetTickValue(int idx) => ActiveSubTimer.GetActive();
+        public bool GetTickValue( int idx ) => ActiveSubTimer.GetActive();
 
-        public string GetDiamondText(int idx) => "";
+        public string GetDiamondText( int idx ) => "";
 
         public bool GetReverseFill() => false;
     }

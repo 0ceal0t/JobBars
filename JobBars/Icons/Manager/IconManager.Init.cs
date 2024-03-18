@@ -1,11 +1,8 @@
-﻿using JobBars.Data;
-using System;
-using JobBars.Helper;
 using JobBars.Jobs;
 
 namespace JobBars.Icons.Manager {
     public partial class IconManager {
-        protected override IconReplacer[] GetOTHER() => Array.Empty<IconReplacer>();
+        protected override IconReplacer[] GetOTHER() => [];
 
         protected override IconReplacer[] GetGNB() => GNB.Icons;
         protected override IconReplacer[] GetPLD() => PLD.Icons;

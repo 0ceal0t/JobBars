@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 using System.Numerics;
 
 namespace JobBars.Gauges {
@@ -29,8 +29,8 @@ namespace JobBars.Gauges {
         public abstract int GetHeight();
         public abstract int GetWidth();
         public abstract int GetYOffset();
-        public abstract void SetPosition(Vector2 position);
-        public abstract void SetSplitPosition(Vector2 position);
+        public abstract void SetPosition( Vector2 position );
+        public abstract void SetSplitPosition( Vector2 position );
     }
 
     public abstract class Gauge<T, S> : Gauge where T : AtkGauge where S : GaugeTracker {
@@ -43,26 +43,26 @@ namespace JobBars.Gauges {
         }
 
         public override void Tick() {
-            if (UI == null) return;
+            if( UI == null ) return;
             TickGauge();
-            UI.SetVisible(!Tracker.GetConfig().HideWhenInactive || Tracker.GetActive());
+            UI.SetVisible( !Tracker.GetConfig().HideWhenInactive || Tracker.GetActive() );
         }
 
-        public override void SetPosition(Vector2 position) => UI.SetPosition(position);
+        public override void SetPosition( Vector2 position ) => UI.SetPosition( position );
 
-        public override void SetSplitPosition(Vector2 position) => UI.SetSplitPosition(position);
+        public override void SetSplitPosition( Vector2 position ) => UI.SetSplitPosition( position );
 
         public override void UpdateVisual() {
-            if (UI == null) return;
-            UI.SetVisible(Tracker.GetConfig().Enabled);
-            UI.SetScale(Tracker.GetConfig().Scale);
+            if( UI == null ) return;
+            UI.SetVisible( Tracker.GetConfig().Enabled );
+            UI.SetScale( Tracker.GetConfig().Scale );
 
             UpdateVisualGauge();
         }
 
-        public override int GetHeight() => (int)(Tracker.GetConfig().Scale * GetHeightGauge());
+        public override int GetHeight() => ( int )( Tracker.GetConfig().Scale * GetHeightGauge() );
 
-        public override int GetWidth() => (int)(Tracker.GetConfig().Scale * GetWidthGauge());
+        public override int GetWidth() => ( int )( Tracker.GetConfig().Scale * GetWidthGauge() );
 
         protected abstract void TickGauge();
 

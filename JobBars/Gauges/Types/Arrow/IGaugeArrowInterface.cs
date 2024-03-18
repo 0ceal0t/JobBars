@@ -1,4 +1,4 @@
-﻿using JobBars.Atk;
+using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Arrow {
     public interface IGaugeArrowInterface {
@@ -8,11 +8,11 @@ namespace JobBars.Gauges.Types.Arrow {
 
         public int GetCurrentMaxTicks();
 
-        public ElementColor GetTickColor(int idx);
+        public ElementColor GetTickColor( int idx );
 
         // ===== TICK =======
 
-        public bool GetTickValue(int idx);
+        public bool GetTickValue( int idx );
 
         public bool GetReverseFill();
     }

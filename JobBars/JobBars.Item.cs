@@ -12,36 +12,36 @@ namespace JobBars {
         public uint Id;
         public ItemType Type;
 
-        public Item(ActionIds action) {
-            Id = (uint)action;
+        public Item( ActionIds action ) {
+            Id = ( uint )action;
             Type = ItemType.Action;
         }
 
-        public Item(BuffIds buff) {
-            Id = (uint)buff;
+        public Item( BuffIds buff ) {
+            Id = ( uint )buff;
             Type = ItemType.Buff;
         }
 
-        public override readonly bool Equals(object obj) {
-            return obj is Item overrides && Equals(overrides);
+        public override readonly bool Equals( object obj ) {
+            return obj is Item overrides && Equals( overrides );
         }
 
-        public readonly bool Equals(Item other) {
-            return (Id == other.Id) && ((Type == ItemType.Buff) == (other.Type == ItemType.Buff));
+        public readonly bool Equals( Item other ) {
+            return ( Id == other.Id ) && ( ( Type == ItemType.Buff ) == ( other.Type == ItemType.Buff ) );
         }
 
-        public static bool operator ==(Item left, Item right) {
-            return left.Equals(right);
+        public static bool operator ==( Item left, Item right ) {
+            return left.Equals( right );
         }
 
-        public static bool operator !=(Item left, Item right) {
-            return !(left == right);
+        public static bool operator !=( Item left, Item right ) {
+            return !( left == right );
         }
 
         public override readonly int GetHashCode() {
-            int hash = 13;
-            hash = (hash * 7) + Id.GetHashCode();
-            hash = (hash * 7) + (Type == ItemType.Buff).GetHashCode();
+            var hash = 13;
+            hash = ( hash * 7 ) + Id.GetHashCode();
+            hash = ( hash * 7 ) + ( Type == ItemType.Buff ).GetHashCode();
             return hash;
         }
     }

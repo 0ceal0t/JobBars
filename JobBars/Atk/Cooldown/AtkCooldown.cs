@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Graphics;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
@@ -23,7 +23,7 @@ namespace JobBars.Atk {
 
             TextNode = AtkBuilder.CreateTextNode();
             TextNode->FontSize = 21;
-            TextNode->LineSpacing = (byte)HEIGHT;
+            TextNode->LineSpacing = ( byte )HEIGHT;
             TextNode->AlignmentFontType = 52;
             TextNode->AtkResNode.Width = WIDTH;
             TextNode->AtkResNode.Height = HEIGHT;
@@ -39,63 +39,63 @@ namespace JobBars.Atk {
             Icon->AtkResNode.X = 0;
             Icon->AtkResNode.Y = 0;
             Icon->PartId = 0;
-            Icon->Flags |= (byte)ImageNodeFlags.AutoFit;
+            Icon->Flags |= ( byte )ImageNodeFlags.AutoFit;
             Icon->WrapMode = 1;
-            AtkHelper.SetupIcon(Icon, 405);
-            AtkHelper.UpdatePart(Icon, 0, 0, 44, 46);
+            AtkHelper.SetupIcon( Icon, 405 );
+            AtkHelper.UpdatePart( Icon, 0, 0, 44, 46 );
 
             Border = AtkBuilder.CreateImageNode();
             Border->AtkResNode.Width = 49;
             Border->AtkResNode.Height = 47;
             Border->AtkResNode.X = -4;
             Border->AtkResNode.Y = -2;
-            AtkHelper.SetupTexture(Border, "ui/uld/IconA_Frame.tex");
-            AtkHelper.UpdatePart(Border, 0, 96, 48, 48);
+            AtkHelper.SetupTexture( Border, "ui/uld/IconA_Frame.tex" );
+            AtkHelper.UpdatePart( Border, 0, 96, 48, 48 );
             Border->Flags = 0;
             Border->WrapMode = 1;
-            AtkHelper.SetScale((AtkResNode*)Border, ((float)WIDTH + 8) / 49.0f, ((float)HEIGHT + 6) / 47.0f);
+            AtkHelper.SetScale( ( AtkResNode* )Border, ( ( float )WIDTH + 8 ) / 49.0f, ( ( float )HEIGHT + 6 ) / 47.0f );
 
-            var layout = new LayoutNode(RootRes, new[] {
+            var layout = new LayoutNode( RootRes, new[] {
                 new LayoutNode(Icon),
                 new LayoutNode(Border),
                 new LayoutNode(TextNode)
-            });
+            } );
             layout.Setup();
             layout.Cleanup();
 
-            TextNode->SetText("");
+            TextNode->SetText( "" );
         }
 
-        private void SetTextSize(byte size) {
+        private void SetTextSize( byte size ) {
             TextNode->FontSize = size;
         }
 
         public void SetNoDash() {
-            AtkHelper.UpdatePart(Border, 0, 96, 48, 48);
+            AtkHelper.UpdatePart( Border, 0, 96, 48, 48 );
         }
 
-        public void SetDash(float percent) {
-            var partId = (int)(percent * 7); // 0 - 6
+        public void SetDash( float percent ) {
+            var partId = ( int )( percent * 7 ); // 0 - 6
 
             var row = partId % 3;
-            var column = (partId - row) / 3;
+            var column = ( partId - row ) / 3;
 
-            var u = (ushort)(96 + (48 * row));
-            var v = (ushort)(48 * column);
+            var u = ( ushort )( 96 + ( 48 * row ) );
+            var v = ( ushort )( 48 * column );
 
-            AtkHelper.UpdatePart(Border, u, v, 48, 48);
+            AtkHelper.UpdatePart( Border, u, v, 48, 48 );
         }
 
-        public void SetText(string text) {
-            SetTextSize(text.Length > 2 ? (byte)17 : (byte)21);
-            TextNode->SetText(text);
+        public void SetText( string text ) {
+            SetTextSize( text.Length > 2 ? ( byte )17 : ( byte )21 );
+            TextNode->SetText( text );
         }
 
-        public void SetOnCD(float opacity) {
+        public void SetOnCD( float opacity ) {
             Icon->AtkResNode.MultiplyBlue = 75;
             Icon->AtkResNode.MultiplyRed = 75;
             Icon->AtkResNode.MultiplyGreen = 75;
-            RootRes->Color.A = (byte)(255 * opacity);
+            RootRes->Color.A = ( byte )( 255 * opacity );
         }
 
         public void SetOffCD() {
@@ -105,32 +105,32 @@ namespace JobBars.Atk {
             RootRes->Color.A = 255;
         }
 
-        public void LoadIcon(ActionIds action) {
+        public void LoadIcon( ActionIds action ) {
             LastIconId = action;
-            var icon = AtkHelper.GetIcon(action);
-            Icon->LoadIconTexture(icon, 0);
+            var icon = AtkHelper.GetIcon( action );
+            Icon->LoadIconTexture( icon, 0 );
         }
 
         public override void Dispose() {
-            if (TextNode != null) {
-                TextNode->AtkResNode.Destroy(true);
+            if( TextNode != null ) {
+                TextNode->AtkResNode.Destroy( true );
                 TextNode = null;
             }
 
-            if (Icon != null) {
-                AtkHelper.UnloadTexture(Icon);
-                Icon->AtkResNode.Destroy(true);
+            if( Icon != null ) {
+                AtkHelper.UnloadTexture( Icon );
+                Icon->AtkResNode.Destroy( true );
                 Icon = null;
             }
 
-            if (Border != null) {
-                AtkHelper.UnloadTexture(Border);
-                Border->AtkResNode.Destroy(true);
+            if( Border != null ) {
+                AtkHelper.UnloadTexture( Border );
+                Border->AtkResNode.Destroy( true );
                 Border = null;
             }
 
-            if (RootRes != null) {
-                RootRes->Destroy(true);
+            if( RootRes != null ) {
+                RootRes->Destroy( true );
                 RootRes = null;
             }
         }
@@ -139,39 +139,39 @@ namespace JobBars.Atk {
     public unsafe class AtkCooldown : AtkElement {
         public static readonly int MAX_ITEMS = 10;
 
-        public List<UICooldownItem> Items = new();
+        public List<UICooldownItem> Items = [];
 
         public AtkCooldown() {
             RootRes = AtkBuilder.CreateResNode();
             RootRes->X = 0;
             RootRes->Y = 0;
-            RootRes->Width = (ushort)((3 + UICooldownItem.WIDTH) * MAX_ITEMS); // with padding
+            RootRes->Width = ( ushort )( ( 3 + UICooldownItem.WIDTH ) * MAX_ITEMS ); // with padding
             RootRes->Height = UICooldownItem.HEIGHT;
 
             UICooldownItem lastItem = null;
-            for (var idx = 0; idx < MAX_ITEMS; idx++) {
+            for( var idx = 0; idx < MAX_ITEMS; idx++ ) {
                 var item = new UICooldownItem();
                 item.RootRes->ParentNode = RootRes;
-                AtkHelper.SetPosition(item.RootRes, -(5 + UICooldownItem.WIDTH) * idx, 0);
-                Items.Add(item);
+                AtkHelper.SetPosition( item.RootRes, -( 5 + UICooldownItem.WIDTH ) * idx, 0 );
+                Items.Add( item );
 
-                if (lastItem != null) AtkHelper.Link(lastItem.RootRes, item.RootRes);
+                if( lastItem != null ) AtkHelper.Link( lastItem.RootRes, item.RootRes );
                 lastItem = item;
             }
 
-            RootRes->ChildCount = (ushort)(MAX_ITEMS * (1 + Items[0].RootRes->ChildCount));
+            RootRes->ChildCount = ( ushort )( MAX_ITEMS * ( 1 + Items[0].RootRes->ChildCount ) );
             RootRes->ChildNode = Items[0].RootRes;
         }
 
         public override void Dispose() {
-            for (int idx = 0; idx < MAX_ITEMS; idx++) {
+            for( var idx = 0; idx < MAX_ITEMS; idx++ ) {
                 Items[idx].Dispose();
                 Items[idx] = null;
             }
             Items = null;
 
-            if (RootRes != null) {
-                RootRes->Destroy(true);
+            if( RootRes != null ) {
+                RootRes->Destroy( true );
                 RootRes = null;
             }
         }
