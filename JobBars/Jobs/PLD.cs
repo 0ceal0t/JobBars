@@ -26,12 +26,10 @@ namespace JobBars.Jobs {
                 ],
                 Color = AtkColor.LightBlue
             }),
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.SwordOath), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 3,
-                Triggers = [
-                    new Item(BuffIds.SwordOath)
-                ],
-                Color = AtkColor.BlueGreen
+            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.AtonementReady), GaugeVisualType.Diamond, new GaugeProcProps{
+                Procs = [
+                    new ProcConfig(AtkHelper.Localize(BuffIds.AtonementReady), BuffIds.VerfireReady, AtkColor.LightBlue)
+                ]
             }),
             new GaugeGCDConfig(AtkHelper.Localize(BuffIds.FightOrFlight), GaugeVisualType.Bar, new GaugeSubGCDProps {
                 MaxCounter = 8,
@@ -64,7 +62,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.PLD)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
-                Duration = 10,
+                Duration = 15,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Reprisal)]
             }),
@@ -84,7 +82,10 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.FightOrFlight), new IconBuffProps {
-                Icons = [ActionIds.FightOrFlight],
+                Icons = [
+                    ActionIds.FightOrFlight,
+                    ActionIds.GoringBlade
+                ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 20 }
                 ]
@@ -95,10 +96,14 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Sentinel), new IconBuffProps {
-                Icons = [ActionIds.Sentinel],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Guardian), new IconBuffProps {
+                Icons = [
+                    ActionIds.Sentinel,
+                    ActionIds.Guardian
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sentinel), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sentinel), Duration = 15 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Guardian), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Bulwark), new IconBuffProps {

@@ -32,7 +32,7 @@ namespace JobBars.Jobs {
         public static BuffConfig[] Buffs => [
             new BuffConfig(AtkHelper.Localize(ActionIds.ChainStratagem), new BuffProps {
                 CD = 120,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.ChainStratagem,
                 Color = AtkColor.White,
                 Triggers = [new Item(ActionIds.ChainStratagem)]
@@ -42,6 +42,12 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.SCH, CursorType.None, CursorType.CastTime );
 
         public static CooldownConfig[] Cooldowns => [
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Seraphism), new CooldownProps {
+                Icon = ActionIds.Seraphism,
+                Duration = 20,
+                CD = 180,
+                Triggers = [new Item(ActionIds.Seraphism )]
+            }),
             new CooldownConfig(AtkHelper.Localize(ActionIds.SummonSeraph), new CooldownProps {
                 Icon = ActionIds.SummonSeraph,
                 Duration = 22,
@@ -62,16 +68,24 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SCH)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
-                CD = 60,
+                CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
             })
         ];
 
         public static IconReplacer[] Icons => new[] {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Seraphism), new IconBuffProps {
+                Icons = [
+                    ActionIds.Seraphism,
+                ],
+                Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Seraphism), Duration = 20 }
+                ]
+            }),
             new IconBuffReplacer(AtkHelper.Localize(ActionIds.ChainStratagem), new IconBuffProps {
                 Icons = [ActionIds.ChainStratagem],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Biolysis), new IconBuffProps {

@@ -33,6 +33,13 @@ namespace JobBars.Jobs {
                 ],
                 Color = AtkColor.BlueGreen
             }),
+            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.SacredSight), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 3,
+                Triggers = [
+                    new Item(BuffIds.SacredSight)
+                ],
+                Color = AtkColor.White
+            }),
         ];
 
         public static BuffConfig[] Buffs => [];
@@ -59,7 +66,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.WHM)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
-                CD = 60,
+                CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
             })
         ];

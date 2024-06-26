@@ -42,43 +42,11 @@ namespace JobBars.Jobs {
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
-            new BuffConfig(AtkHelper.Localize(BuffIds.TheBole), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.TheBole,
-                Color = AtkColor.BrightGreen,
-                Triggers = [new Item(BuffIds.TheBole)],
-                ApplyToTarget = true,
-                ShowPartyText = true
-            }),
             new BuffConfig(AtkHelper.Localize(BuffIds.TheSpear), new BuffProps {
                 Duration = 15,
                 Icon = ActionIds.TheSpear,
                 Color = AtkColor.DarkBlue,
                 Triggers = [new Item(BuffIds.TheSpear)],
-                ApplyToTarget = true,
-                ShowPartyText = true
-            }),
-            new BuffConfig(AtkHelper.Localize(BuffIds.TheSpire), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.TheSpire,
-                Color = AtkColor.Yellow,
-                Triggers = [new Item(BuffIds.TheSpire)],
-                ApplyToTarget = true,
-                ShowPartyText = true
-            }),
-            new BuffConfig(AtkHelper.Localize(BuffIds.TheArrow), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.TheArrow,
-                Color = AtkColor.LightBlue,
-                Triggers = [new Item(BuffIds.TheArrow)],
-                ApplyToTarget = true,
-                ShowPartyText = true
-            }),
-            new BuffConfig(AtkHelper.Localize(BuffIds.TheEwer), new BuffProps {
-                Duration = 15,
-                Icon = ActionIds.TheEwer,
-                Color = AtkColor.LightBlue,
-                Triggers = [new Item(BuffIds.TheEwer)],
                 ApplyToTarget = true,
                 ShowPartyText = true
             }),
@@ -114,7 +82,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.AST)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
-                CD = 60,
+                CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
             })
         ];
@@ -153,24 +121,6 @@ namespace JobBars.Jobs {
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GiantDominance), Duration = 10 }
                 ]
-            }),
-            new IconBuffReplacer(AtkHelper.Localize(ActionIds.Astrodyne), new IconBuffProps {
-                Icons = [
-                    ActionIds.Astrodyne
-                ],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HarmonyOfSpirit), Duration = 15 }
-                ]
-            }),
-            new IconCooldownReplacer(AtkHelper.Localize(ActionIds.MinorArcana), new IconCooldownProps {
-                Icons = [
-                    ActionIds.LordOfCrowns,
-                    ActionIds.LadyOfCrowns
-                ],
-                Triggers = [
-                    new Item(ActionIds.MinorArcana)
-                ],
-                Cooldown = 60
             })
         ];
 

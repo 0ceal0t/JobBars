@@ -50,7 +50,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.WAR)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
-                Duration = 10,
+                Duration = 15,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Reprisal)]
             }),
@@ -86,21 +86,23 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Vengeance), new IconBuffProps {
-                Icons = [ActionIds.Vengeance],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Damnation), new IconBuffProps {
+                Icons = [
+                    ActionIds.Vengeance,
+                    ActionIds.Damnation
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Vengeance), Duration = 15 }
-                ]
-            }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.RawIntuition), new IconBuffProps {
-                Icons = [ActionIds.RawIntuition],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RawIntuition), Duration = 6 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Vengeance), Duration = 15 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Damnation), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Bloodwhetting), new IconBuffProps {
-                Icons = [ActionIds.Bloodwhetting],
+                Icons = [
+                    ActionIds.RawIntuition,
+                    ActionIds.Bloodwhetting
+                ],
                 Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RawIntuition), Duration = 6 },
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Bloodwhetting), Duration = 8 }
                 ]
             }),

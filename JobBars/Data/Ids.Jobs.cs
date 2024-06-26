@@ -20,6 +20,8 @@ namespace JobBars.Data {
         MNK = 20,
         BLU = 36,
         RPR = 39,
-        SGE = 40
+        SGE = 40,
+        VPR = 41,
+        PCT = 42,
     }
 }

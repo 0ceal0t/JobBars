@@ -10,6 +10,7 @@ namespace JobBars.Data {
         WalkingDead = 811,
         ShadowWall = 747,
         DarkMind = 746,
+        ShadowedVigil = 3835,
 
         // WAR =========
         InnerRelease = 1177,
@@ -19,16 +20,18 @@ namespace JobBars.Data {
         Bloodwhetting = 2678,
         Holmgang = 409,
         ThrillOfBattle = 87,
+        Damnation = 3832,
 
         // PLD =========
         FightOrFlight = 0x4c,
         Requiescat = 1368,
-        SwordOath = 1902,
         PassageOfArms = 1175,
         DivineMight = 2673,
         Sentinel = 74,
         Bulwark = 77,
         HallowedGround = 82,
+        AtonementReady = 1902,
+        Guardian = 3829,
 
         // GNB =========
         NoMercy = 0x727,
@@ -37,6 +40,7 @@ namespace JobBars.Data {
         Superbolide = 1836,
         HeartOfStone = 1840,
         HeartOfCorundum = 2683,
+        GreatNebula = 3838,
 
         // SCH =========
         ArcBio = 179,
@@ -44,6 +48,7 @@ namespace JobBars.Data {
         Biolysis = 1895,
         Excog = 1220,
         ChainStratagem = 7436,
+        Seraphism = 3885,
 
         // WHM =========
         Aero = 143,
@@ -51,6 +56,7 @@ namespace JobBars.Data {
         Dia = 1871,
         PresenceOfMind = 157,
         LilyBell = 2709,
+        SacredSight = 3879,
 
         // AST =========
         TheBalance = 0x75a,
@@ -71,6 +77,7 @@ namespace JobBars.Data {
         EukrasianDosis = 2614,
         EukrasianDosis2 = 2615,
         EukrasianDosis3 = 2616,
+        EukrasianDyskrasia = 3897,
 
         // MNK =========
         PerfectBalance = 110,

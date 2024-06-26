@@ -34,7 +34,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.GNB)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
-                Duration = 10,
+                Duration = 15,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Reprisal)]
             }),
@@ -48,7 +48,10 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
-                Icons = [ActionIds.NoMercy],
+                Icons = [
+                    ActionIds.NoMercy,
+                    ActionIds.SonicBreak
+                ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
                 ]
@@ -59,10 +62,14 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Nebula), new IconBuffProps {
-                Icons = [ActionIds.Nebula],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.GreatNebula), new IconBuffProps {
+                Icons = [
+                    ActionIds.Nebula,
+                    ActionIds.GreatNebula
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Nebula), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Nebula), Duration = 15 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GreatNebula), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.Camouflage), new IconBuffProps {
@@ -83,15 +90,14 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Superbolide), Duration = 10 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HeartOfStone), new IconBuffProps {
-                Icons = [ActionIds.HeartOfStone],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HeartOfStone), Duration = 7 }
-                ]
-            }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.HeartOfCorundum), new IconBuffProps {
-                Icons = [ActionIds.HeartOfCorundum],
+                Icons =
+                [
+                    ActionIds.HeartOfStone,
+                    ActionIds.HeartOfCorundum
+                ],
                 Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HeartOfStone), Duration = 7 },
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HeartOfCorundum), Duration = 8 }
                 ]
             })

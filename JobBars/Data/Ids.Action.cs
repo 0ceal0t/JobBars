@@ -13,6 +13,7 @@ namespace JobBars.Data {
         BloodWeapon = 3625,
         ShadowWall = 3636,
         DarkMind = 3634,
+        ShadowedVigil = 36927,
 
         // WAR ==========
         InnerRelease = 7389,
@@ -24,6 +25,7 @@ namespace JobBars.Data {
         Bloodwhetting = 25751,
         Vengeance = 44,
         ThrillOfBattle = 40,
+        Damnation = 36923,
 
         // PLD ===========
         Requiescat = 7383,
@@ -42,6 +44,7 @@ namespace JobBars.Data {
         FightOrFlight = 20,
         Sentinel = 17,
         Bulwark = 22,
+        Guardian = 36920,
 
         // GNB ===========
         NoMercy = 16138,
@@ -51,6 +54,8 @@ namespace JobBars.Data {
         Camouflage = 16140,
         HeartOfStone = 16161,
         HeartOfCorundum = 25758,
+        GreatNebula = 36935,
+        SonicBreak = 16153,
 
         // SCH ===========
         Swiftcast = 7561, // all healers and casters
@@ -61,6 +66,7 @@ namespace JobBars.Data {
         SummonSeraph = 16545,
         Expedient = 25868,
         Protraction = 25867,
+        Seraphism = 37014,
 
         // WHM ===========
         Dia = 16532,
@@ -104,6 +110,8 @@ namespace JobBars.Data {
         Pneuma = 24318,
         Holos = 24310,
         Panhaima = 24311,
+        EukrasianDyskrasia = 37032,
+        Philosophia = 37035,
 
         // MNK ===========
         TrueNorth = 7546, // All melee

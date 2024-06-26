@@ -23,13 +23,6 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.Delirium)
                 ],
                 Color = AtkColor.Red
-            }),
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.BloodWeapon), GaugeVisualType.Diamond, new GaugeStacksProps {
-                MaxStacks = 5,
-                Triggers = [
-                    new Item(BuffIds.BloodWeapon)
-                ],
-                Color = AtkColor.DarkBlue
             })
         ];
 
@@ -61,7 +54,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.DRK)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
-                Duration = 10,
+                Duration = 15,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Reprisal)]
             }),
@@ -86,10 +79,14 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.ShadowWall), new IconBuffProps {
-                Icons = [ActionIds.ShadowWall],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.ShadowedVigil), new IconBuffProps {
+                Icons = [
+                    ActionIds.ShadowWall,
+                    ActionIds.ShadowedVigil
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ShadowWall), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ShadowWall), Duration = 15 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ShadowedVigil), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.DarkMind), new IconBuffProps {

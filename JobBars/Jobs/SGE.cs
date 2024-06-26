@@ -17,7 +17,8 @@ namespace JobBars.Jobs {
                 Triggers = [
                     new Item(BuffIds.EukrasianDosis),
                     new Item(BuffIds.EukrasianDosis2),
-                    new Item(BuffIds.EukrasianDosis3)
+                    new Item(BuffIds.EukrasianDosis3),
+                    new Item(BuffIds.EukrasianDyskrasia),
                 ]
             })
         ];
@@ -27,6 +28,12 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.SGE, CursorType.None, CursorType.CastTime );
 
         public static CooldownConfig[] Cooldowns => [
+            new CooldownConfig(AtkHelper.Localize(ActionIds.Philosophia), new CooldownProps {
+                Icon = ActionIds.Philosophia,
+                CD = 180,
+                Duration = 20,
+                Triggers = [new Item(ActionIds.Philosophia )]
+            }),
             new CooldownConfig(AtkHelper.Localize(ActionIds.Pneuma), new CooldownProps {
                 Icon = ActionIds.Pneuma,
                 CD = 120,
@@ -46,7 +53,7 @@ namespace JobBars.Jobs {
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SGE)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
-                CD = 60,
+                CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
             })
         ];
@@ -61,11 +68,13 @@ namespace JobBars.Jobs {
                     ActionIds.Dosis,
                     ActionIds.Dosis2,
                     ActionIds.Dosis3,
+                    ActionIds.EukrasianDyskrasia
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.EukrasianDosis), Duration = 30 },
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.EukrasianDosis2), Duration = 30 },
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.EukrasianDosis3), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.EukrasianDosis3), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.EukrasianDyskrasia), Duration = 30 }
                 ]
             })
         ];
