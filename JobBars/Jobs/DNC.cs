@@ -14,14 +14,23 @@ namespace JobBars.Jobs {
             new GaugeProcsConfig($"{AtkHelper.Localize(JobIds.DNC)} {AtkHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = [
                     new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingSymmetry),
-                        [new Item(BuffIds.FlourishingSymmetry), new Item(BuffIds.SilkenSymmetry)],
-                        AtkColor.BrightGreen),
+                        [
+                            new Item(BuffIds.FlourishingSymmetry),
+                            new Item(BuffIds.SilkenSymmetry)
+                        ], AtkColor.BrightGreen),
                     new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingFlow),
-                        [new Item(BuffIds.FlourishingFlow), new Item(BuffIds.SilkenFlow)],
-                        AtkColor.DarkBlue),
+                        [
+                            new Item(BuffIds.FlourishingFlow),
+                            new Item(BuffIds.SilkenFlow)
+                        ], AtkColor.DarkBlue),
                     new ProcConfig(AtkHelper.Localize(BuffIds.ThreefoldFanDance), BuffIds.ThreefoldFanDance, AtkColor.HealthGreen),
                     new ProcConfig(AtkHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, AtkColor.LightBlue),
                     new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingStarfall), BuffIds.FlourishingStarfall, AtkColor.Red)
+                ]
+            }),
+            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.FinishingMoveReady), GaugeVisualType.Diamond, new GaugeProcProps{
+                Procs = [
+                    new ProcConfig(AtkHelper.Localize(BuffIds.FinishingMoveReady), BuffIds.FinishingMoveReady, AtkColor.White)
                 ]
             })
         ];

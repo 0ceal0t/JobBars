@@ -14,12 +14,12 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class BRD {
         public static GaugeConfig[] Gauges => [
-            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.StraightShotReady), GaugeVisualType.Diamond, new GaugeProcProps {
+            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.HawksEye), GaugeVisualType.Diamond, new GaugeProcProps {
                 Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.StraightShotReady), BuffIds.StraightShotReady, AtkColor.Yellow)
+                    new ProcConfig(AtkHelper.Localize(BuffIds.HawksEye), BuffIds.HawksEye, AtkColor.Yellow)
                 ]
             }),
-            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.BloodLetter), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.HeartbreakShot), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                 BarColor = AtkColor.Red,
                 SameColor = true,
                 Parts = [
@@ -28,7 +28,10 @@ namespace JobBars.Jobs {
                         Diamond = true,
                         CD = 15,
                         MaxCharges = 3,
-                        Triggers = [new Item(ActionIds.BloodLetter)]
+                        Triggers = [
+                            new Item(ActionIds.BloodLetter),
+                            new Item(ActionIds.HeartbreakShot),
+                        ]
                     }
                 ]
             }),
@@ -61,14 +64,14 @@ namespace JobBars.Jobs {
         public static BuffConfig[] Buffs => [
             new BuffConfig(AtkHelper.Localize(ActionIds.BattleVoice), new BuffProps {
                 CD = 120,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.BattleVoice,
                 Color = AtkColor.Orange,
                 Triggers = [new Item(ActionIds.BattleVoice)]
             }),
             new BuffConfig(AtkHelper.Localize(ActionIds.RadiantFinale), new BuffProps {
                 CD = 110,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.RadiantFinale,
                 Color = AtkColor.DarkBlue,
                 Triggers = [new Item(ActionIds.RadiantFinale)]
@@ -116,13 +119,13 @@ namespace JobBars.Jobs {
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.BattleVoice), new IconBuffProps {
                 Icons = [ActionIds.BattleVoice],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.RadiantFinale), new IconBuffProps {
                 Icons = [ActionIds.RadiantFinale],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.VenomousBite), new IconBuffProps {

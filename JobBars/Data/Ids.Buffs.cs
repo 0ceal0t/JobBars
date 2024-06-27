@@ -126,6 +126,7 @@ namespace JobBars.Data {
         Barrage = 128,
         RadiantFinale = 2722,
         BattleVoice = 141,
+        HawksEye = 3861,
 
         // MCH =========
         Wildfire = 0x79a,
@@ -141,6 +142,7 @@ namespace JobBars.Data {
         FlourishingStarfall = 2700,
         SilkenFlow = 2694,
         SilkenSymmetry = 2693,
+        FinishingMoveReady = 3868,
 
         // BLM =========
         Firestarter = 165,

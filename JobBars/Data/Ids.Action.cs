@@ -160,6 +160,7 @@ namespace JobBars.Data {
         Troubadour = 7405,
         NaturesMinne = 7408,
         RadiantFinale = 25785,
+        HeartbreakShot = 36975,
 
         // MCH ===========
         Wildfire = 2878,
@@ -167,6 +168,8 @@ namespace JobBars.Data {
         Ricochet = 2890,
         Tactician = 16889,
         Dismantle = 2887,
+        Checkmate = 36980,
+        DoubleCheck = 36979,
 
         // DNC ===========
         QuadTechFinish = 16196,

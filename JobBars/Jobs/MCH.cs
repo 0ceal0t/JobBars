@@ -28,7 +28,7 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.Wildfire)
                 ]
             }),
-            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.GaussRound), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.DoubleCheck), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                 BarColor = AtkColor.Red,
                 SameColor = true,
                 Parts = [
@@ -37,11 +37,14 @@ namespace JobBars.Jobs {
                         Diamond = true,
                         CD = 30,
                         MaxCharges = 3,
-                        Triggers = [new Item(ActionIds.GaussRound)]
+                        Triggers = [
+                            new Item(ActionIds.GaussRound),
+                            new Item(ActionIds.DoubleCheck)
+                        ]
                     }
                 ]
             }),
-            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.Ricochet), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.Checkmate), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
                 BarColor = AtkColor.LightBlue,
                 SameColor = true,
                 Parts = [
@@ -50,7 +53,10 @@ namespace JobBars.Jobs {
                         Diamond = true,
                         CD = 30,
                         MaxCharges = 3,
-                        Triggers = [new Item(ActionIds.Ricochet)]
+                        Triggers = [
+                            new Item(ActionIds.Ricochet),
+                            new Item(ActionIds.Checkmate),
+                        ]
                     }
                 ]
             })
