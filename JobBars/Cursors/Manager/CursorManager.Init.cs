@@ -21,12 +21,14 @@ namespace JobBars.Cursors.Manager {
         protected override Cursor GetDRG() => DRG.Cursors;
         protected override Cursor GetSAM() => SAM.Cursors;
         protected override Cursor GetNIN() => NIN.Cursors;
+        protected override Cursor GetVPR() => VPR.Cursors;
         protected override Cursor GetMNK() => MNK.Cursors;
         protected override Cursor GetRPR() => RPR.Cursors;
 
         protected override Cursor GetSMN() => SMN.Cursors;
         protected override Cursor GetBLM() => BLM.Cursors;
         protected override Cursor GetRDM() => RDM.Cursors;
+        protected override Cursor GetPCT() => PCT.Cursors;
         protected override Cursor GetBLU() => BLU.Cursors;
     }
 }

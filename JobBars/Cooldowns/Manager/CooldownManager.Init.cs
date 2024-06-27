@@ -21,12 +21,14 @@ namespace JobBars.Cooldowns.Manager {
         protected override CooldownConfig[] GetDRG() => DRG.Cooldowns;
         protected override CooldownConfig[] GetSAM() => SAM.Cooldowns;
         protected override CooldownConfig[] GetNIN() => NIN.Cooldowns;
+        protected override CooldownConfig[] GetVPR() => VPR.Cooldowns;
         protected override CooldownConfig[] GetMNK() => MNK.Cooldowns;
         protected override CooldownConfig[] GetRPR() => RPR.Cooldowns;
 
         protected override CooldownConfig[] GetSMN() => SMN.Cooldowns;
         protected override CooldownConfig[] GetBLM() => BLM.Cooldowns;
         protected override CooldownConfig[] GetRDM() => RDM.Cooldowns;
+        protected override CooldownConfig[] GetPCT() => PCT.Cooldowns;
         protected override CooldownConfig[] GetBLU() => BLU.Cooldowns;
     }
 }

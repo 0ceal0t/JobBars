@@ -210,6 +210,11 @@ namespace JobBars.Data {
         Manafication = 7521,
         MagickBarrier = 25857,
 
+        // PCT ===========
+        StarryMuse = 34675,
+        TemperaCoat = 34685,
+
+
         // BLU ===========
         SongOfTorment = 11386,
         PeculiarLight = 11421,

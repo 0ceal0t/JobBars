@@ -26,12 +26,14 @@ namespace JobBars.Gauges.Manager {
         protected override GaugeConfig[] GetDRG() => AddMiscGauges( DRG.Gauges, JobIds.DRG, DRG.MP, DRG.MP_SEGMENTS );
         protected override GaugeConfig[] GetSAM() => AddMiscGauges( SAM.Gauges, JobIds.SAM, SAM.MP, SAM.MP_SEGMENTS );
         protected override GaugeConfig[] GetNIN() => AddMiscGauges( NIN.Gauges, JobIds.NIN, NIN.MP, NIN.MP_SEGMENTS );
+        protected override GaugeConfig[] GetVPR() => AddMiscGauges( VPR.Gauges, JobIds.VPR, VPR.MP, VPR.MP_SEGMENTS );
         protected override GaugeConfig[] GetMNK() => AddMiscGauges( MNK.Gauges, JobIds.MNK, MNK.MP, MNK.MP_SEGMENTS );
         protected override GaugeConfig[] GetRPR() => AddMiscGauges( RPR.Gauges, JobIds.RPR, RPR.MP, RPR.MP_SEGMENTS );
 
         protected override GaugeConfig[] GetSMN() => AddMiscGauges( SMN.Gauges, JobIds.SMN, SMN.MP, SMN.MP_SEGMENTS );
         protected override GaugeConfig[] GetBLM() => AddMiscGauges( BLM.Gauges, JobIds.BLM, BLM.MP, BLM.MP_SEGMENTS );
         protected override GaugeConfig[] GetRDM() => AddMiscGauges( RDM.Gauges, JobIds.RDM, RDM.MP, RDM.MP_SEGMENTS );
+        protected override GaugeConfig[] GetPCT() => AddMiscGauges( PCT.Gauges, JobIds.PCT, PCT.MP, PCT.MP_SEGMENTS );
         protected override GaugeConfig[] GetBLU() => AddMiscGauges( BLU.Gauges, JobIds.BLU, BLU.MP, BLU.MP_SEGMENTS );
 
         private static GaugeConfig[] AddMiscGauges( GaugeConfig[] configs, JobIds job, bool mp, float[] mpSegments ) {

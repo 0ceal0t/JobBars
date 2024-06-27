@@ -21,12 +21,14 @@ namespace JobBars.Icons.Manager {
         protected override IconReplacer[] GetDRG() => DRG.Icons;
         protected override IconReplacer[] GetSAM() => SAM.Icons;
         protected override IconReplacer[] GetNIN() => NIN.Icons;
+        protected override IconReplacer[] GetVPR() => VPR.Icons;
         protected override IconReplacer[] GetMNK() => MNK.Icons;
         protected override IconReplacer[] GetRPR() => RPR.Icons;
 
         protected override IconReplacer[] GetSMN() => SMN.Icons;
         protected override IconReplacer[] GetBLM() => BLM.Icons;
         protected override IconReplacer[] GetRDM() => RDM.Icons;
+        protected override IconReplacer[] GetPCT() => PCT.Icons;
         protected override IconReplacer[] GetBLU() => BLU.Icons;
     }
 }

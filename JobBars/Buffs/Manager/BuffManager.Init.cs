@@ -21,12 +21,14 @@ namespace JobBars.Buffs.Manager {
         protected override BuffConfig[] GetDRG() => DRG.Buffs;
         protected override BuffConfig[] GetSAM() => SAM.Buffs;
         protected override BuffConfig[] GetNIN() => NIN.Buffs;
+        protected override BuffConfig[] GetVPR() => VPR.Buffs;
         protected override BuffConfig[] GetMNK() => MNK.Buffs;
         protected override BuffConfig[] GetRPR() => RPR.Buffs;
 
         protected override BuffConfig[] GetSMN() => SMN.Buffs;
         protected override BuffConfig[] GetBLM() => BLM.Buffs;
         protected override BuffConfig[] GetRDM() => RDM.Buffs;
+        protected override BuffConfig[] GetPCT() => PCT.Buffs;
         protected override BuffConfig[] GetBLU() => BLU.Buffs;
     }
 }

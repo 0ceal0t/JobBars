@@ -32,12 +32,14 @@ namespace JobBars.Data {
             JobToValue.Add( JobIds.DRG, GetDRG() );
             JobToValue.Add( JobIds.SAM, GetSAM() );
             JobToValue.Add( JobIds.NIN, GetNIN() );
+            JobToValue.Add( JobIds.VPR, GetVPR() );
             JobToValue.Add( JobIds.MNK, GetMNK() );
             JobToValue.Add( JobIds.RPR, GetRPR() );
 
             JobToValue.Add( JobIds.SMN, GetSMN() );
             JobToValue.Add( JobIds.BLM, GetBLM() );
             JobToValue.Add( JobIds.RDM, GetRDM() );
+            JobToValue.Add( JobIds.PCT, GetPCT() );
             JobToValue.Add( JobIds.BLU, GetBLU() );
         }
 
@@ -56,11 +58,13 @@ namespace JobBars.Data {
         protected abstract T GetDRG();
         protected abstract T GetSAM();
         protected abstract T GetNIN();
+        protected abstract T GetVPR();
         protected abstract T GetMNK();
         protected abstract T GetRPR();
         protected abstract T GetSMN();
         protected abstract T GetBLM();
         protected abstract T GetRDM();
+        protected abstract T GetPCT();
         protected abstract T GetBLU();
 
         protected abstract void DrawHeader();

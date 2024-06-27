@@ -104,6 +104,11 @@ namespace JobBars.Data {
         KunaisBane = 3906,
         Dokumori = 3849,
 
+        // VPR =========
+        HuntersInstinct = 3668,
+        NoxiousGash = 3667,
+        Swiftscaled = 3669,
+
         // SAM =========
         Meikyo = 1233,
         Fugetsu = 1298,
@@ -167,6 +172,11 @@ namespace JobBars.Data {
         Manafication = 1971,
         VerfireReady = 1234,
         VerstoneReady = 1235,
+
+        // PCT =========
+        Hyperphantasia = 3688,
+        SubtractivePaletee = 3674,
+        StarryMuse = 3685,
 
         // BLU =========
         BluBleed = 1714,
