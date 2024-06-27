@@ -80,7 +80,7 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => [
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.RPR)})", new CooldownProps {
                 Icon = ActionIds.Feint,
-                Duration = 10,
+                Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Feint)]
             }),

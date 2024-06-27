@@ -51,19 +51,25 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.Mug), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.Dokumori), new BuffProps {
                 CD = 120,
                 Duration = 20,
-                Icon = ActionIds.Mug,
+                Icon = ActionIds.Dokumori,
                 Color = AtkColor.LightBlue,
-                Triggers = [new Item(ActionIds.Mug)]
+                Triggers = [
+                    new Item(ActionIds.Mug),
+                    new Item(ActionIds.Dokumori)
+                ]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.TrickAttack), new BuffProps {
+            new BuffConfig(AtkHelper.Localize(ActionIds.KunaisBane), new BuffProps {
                 CD = 60,
                 Duration = 15,
-                Icon = ActionIds.TrickAttack,
+                Icon = ActionIds.KunaisBane,
                 Color = AtkColor.Yellow,
-                Triggers = [new Item(ActionIds.TrickAttack)]
+                Triggers = [
+                    new Item(ActionIds.TrickAttack),
+                    new Item(ActionIds.KunaisBane),
+                ]
             }),
             new BuffConfig(AtkHelper.Localize(BuffIds.Bunshin), new BuffProps {
                 CD = 90,
@@ -79,23 +85,31 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => [
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.NIN)})", new CooldownProps {
                 Icon = ActionIds.Feint,
-                Duration = 10,
+                Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Feint)]
             })
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.TrickAttack), new IconBuffProps {
-                Icons = [ActionIds.TrickAttack],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.KunaisBane), new IconBuffProps {
+                Icons = [
+                    ActionIds.TrickAttack,
+                    ActionIds.KunaisBane,
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.TrickAttack), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.TrickAttack), Duration = 15 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.KunaisBane), Duration = 15 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Mug), new IconBuffProps {
-                Icons = [ActionIds.Mug],
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Dokumori), new IconBuffProps {
+                Icons = [
+                    ActionIds.Mug,
+                    ActionIds.Dokumori
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Mug), Duration = 20 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Mug), Duration = 20 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Dokumori), Duration = 20 }
                 ]
             })
         };

@@ -6,9 +6,7 @@ using JobBars.Data;
 using JobBars.Gauges;
 using JobBars.Gauges.Charges;
 using JobBars.Gauges.GCD;
-using JobBars.Gauges.Procs;
 using JobBars.Gauges.Stacks;
-using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
 
@@ -21,26 +19,6 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.PerfectBalance)
                 ],
                 Color = AtkColor.Orange
-            }),
-            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.LeadenFist), GaugeVisualType.Diamond, new GaugeProcProps{
-                Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.LeadenFist), BuffIds.LeadenFist, AtkColor.Yellow)
-                ],
-                ProcSound = GaugeCompleteSoundType.Never
-            }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.DisciplinedFist), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 15,
-                Color = AtkColor.PurplePink,
-                Triggers = [
-                    new Item(BuffIds.DisciplinedFist)
-                ]
-            }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Demolish), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 18,
-                Color = AtkColor.Yellow,
-                Triggers = [
-                    new Item(BuffIds.Demolish)
-                ]
             }),
             new GaugeGCDConfig(AtkHelper.Localize(BuffIds.RiddleOfFire), GaugeVisualType.Bar, new GaugeSubGCDProps {
                 MaxCounter = 11,
@@ -73,7 +51,7 @@ namespace JobBars.Jobs {
         public static BuffConfig[] Buffs => [
             new BuffConfig(AtkHelper.Localize(ActionIds.Brotherhood), new BuffProps {
                 CD = 120,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.Brotherhood,
                 Color = AtkColor.Orange,
                 Triggers = [new Item(ActionIds.Brotherhood)]
@@ -106,25 +84,14 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.RiddleOfFire), new IconBuffProps {
-                Icons = [ActionIds.RiddleOfFire],
+                Icons = [
+                    ActionIds.RiddleOfFire,
+                    ActionIds.FiresReply,
+                ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RiddleOfFire), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.DisciplinedFist), new IconBuffProps {
-                IsTimer = true,
-                Icons = [ActionIds.TwinSnakes],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DisciplinedFist), Duration = 15 }
-                ]
-            }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Demolish), new IconBuffProps {
-                IsTimer = true,
-                Icons = [ActionIds.Demolish],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Demolish), Duration = 18 }
-                ]
-            })
         };
 
         public static bool MP => false;

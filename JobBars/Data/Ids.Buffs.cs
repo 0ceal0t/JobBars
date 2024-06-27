@@ -101,6 +101,8 @@ namespace JobBars.Data {
         Bunshin = 0x7a2,
         RaijuReady = 2690,
         Mug = 3183,
+        KunaisBane = 3906,
+        Dokumori = 3849,
 
         // SAM =========
         Meikyo = 1233,

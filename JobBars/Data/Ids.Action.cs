@@ -122,6 +122,7 @@ namespace JobBars.Data {
         TwinSnakes = 61,
         Demolish = 66,
         Mantra = 65,
+        FiresReply = 36950,
 
         // DRG ===========
         DragonSight = 7398,
@@ -130,11 +131,14 @@ namespace JobBars.Data {
         Disembowel = 87,
         ChaosThrust = 88,
         ChaoticSpring = 25772,
+        SpiralBlow = 36955,
 
         // NIN ===========
         TrickAttack = 2258,
         Bunshin = 16493,
         Mug = 2248,
+        KunaisBane = 36958,
+        Dokumori = 36957,
 
         // SAM ===========
         Higanbana = 7489,

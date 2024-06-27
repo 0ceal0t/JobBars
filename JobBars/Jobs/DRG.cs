@@ -21,21 +21,19 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.LanceCharge)
                 ]
             }),
-            new GaugeGCDConfig(AtkHelper.Localize(BuffIds.RightEye), GaugeVisualType.Arrow, new GaugeSubGCDProps {
-                MaxCounter = 8,
-                MaxDuration = 20,
-                Color = AtkColor.Orange,
-                Triggers = [
-                    new Item(BuffIds.RightEye),
-                    new Item(BuffIds.RightEye2)
-                ]
-            }),
             new GaugeTimerConfig(AtkHelper.Localize(BuffIds.ChaoticSpring), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 24,
                 Color = AtkColor.Purple,
                 Triggers = [
                     new Item(BuffIds.ChaosThrust),
                     new Item(BuffIds.ChaoticSpring)
+                ]
+            }),
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.PowerSurge), GaugeVisualType.Bar, new GaugeSubTimerProps {
+                MaxDuration = 30,
+                Color = AtkColor.BlueGreen,
+                Triggers = [
+                    new Item(BuffIds.PowerSurge),
                 ]
             }),
             new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.DRG)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
@@ -63,26 +61,12 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.DragonSight), new BuffProps {
-                CD = 120,
-                Duration = 20,
-                Icon = ActionIds.DragonSight,
-                Color = AtkColor.Orange,
-                Triggers = [new Item(ActionIds.DragonSight)]
-            }),
             new BuffConfig(AtkHelper.Localize(ActionIds.BattleLitany), new BuffProps {
                 CD = 120,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.BattleLitany,
                 Color = AtkColor.LightBlue,
                 Triggers = [new Item(ActionIds.BattleLitany)]
-            }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.LanceCharge), new BuffProps {
-                CD = 60,
-                Duration = 20,
-                Icon = ActionIds.LanceCharge,
-                Color = AtkColor.Red,
-                Triggers = [new Item(ActionIds.LanceCharge)]
             })
         ];
 
@@ -91,7 +75,7 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => [
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.DRG)})", new CooldownProps {
                 Icon = ActionIds.Feint,
-                Duration = 10,
+                Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Feint)]
             })
@@ -104,18 +88,14 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.RightEye), new IconBuffProps {
-                Icons = [ActionIds.DragonSight],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RightEye), Duration = 20 },
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RightEye2), Duration = 20 }
-                ]
-            }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.PowerSurge), new IconBuffProps {
                 IsTimer = true,
-                Icons = [ActionIds.Disembowel],
+                Icons = [
+                    ActionIds.Disembowel,
+                    ActionIds.SpiralBlow,
+                ],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 24 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 30 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.ChaosThrust), new IconBuffProps {
