@@ -183,6 +183,8 @@ namespace JobBars.Data {
         Thunder4 = 7420,
         LeyLines = 3573,
         Sharpcast = 3574,
+        HighThunder = 36986,
+        HighThunder2 = 36987,
 
         // SMN ===========
         SummonBahamut = 7427,
@@ -192,6 +194,9 @@ namespace JobBars.Data {
         AstralFlare = 25821,
         FountainOfFire = 16514,
         BrandOfPurgatory = 16515,
+        SummonSolarBahamut = 36992,
+        UmbralImpulse = 36994,
+        UmbralFlare = 36995,
 
         // RDM ===========
         Embolden = 7520,

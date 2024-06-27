@@ -44,7 +44,20 @@ namespace JobBars.Jobs {
                         Triggers = [
                             new Item(ActionIds.SummonPhoenix)
                         ]
-                    }
+                    },
+                    new GaugeSubGCDProps {
+                        MaxCounter = 6,
+                        MaxDuration = 15,
+                        Color = AtkColor.White,
+                        SubName = AtkHelper.Localize(ActionIds.SummonSolarBahamut),
+                        Increment = [
+                            new Item(ActionIds.UmbralImpulse),
+                            new Item(ActionIds.UmbralFlare)
+                        ],
+                        Triggers = [
+                            new Item(ActionIds.SummonSolarBahamut)
+                        ]
+                    },
                 ]
             })
         ];
@@ -70,6 +83,13 @@ namespace JobBars.Jobs {
                 Icon = ActionIds.SummonPhoenix,
                 Color = AtkColor.Orange,
                 Triggers = [new Item(ActionIds.SummonPhoenix)]
+            }),
+            new BuffConfig(AtkHelper.Localize(ActionIds.SummonSolarBahamut), new BuffProps {
+                CD = 60,
+                Duration = 15,
+                Icon = ActionIds.SummonSolarBahamut,
+                Color = AtkColor.White,
+                Triggers = [new Item(ActionIds.SummonSolarBahamut )]
             })
         ];
 
@@ -78,13 +98,13 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => [
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.SMN)})", new CooldownProps {
                 Icon = ActionIds.Addle,
-                Duration = 10,
+                Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Addle)]
             }),
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SMN)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
-                CD = 60,
+                CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
             })
         ];

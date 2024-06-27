@@ -152,6 +152,9 @@ namespace JobBars.Data {
         LeyLines = 737,
         Sharpcast = 867,
         Triplecast = 1211,
+        Thunderhead = 3870,
+        HighThunder = 3871,
+        HighThunder2 = 3872,
 
         // SMN =========
         FurtherRuin = 2701,

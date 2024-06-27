@@ -17,7 +17,7 @@ namespace JobBars.Jobs {
                 ShowText = true,
                 Procs = [
                     new ProcConfig(AtkHelper.Localize(BuffIds.Firestarter), BuffIds.Firestarter, AtkColor.Orange),
-                    new ProcConfig(AtkHelper.Localize(BuffIds.Thundercloud), BuffIds.Thundercloud, AtkColor.LightBlue)
+                    new ProcConfig(AtkHelper.Localize(BuffIds.Thunderhead), BuffIds.Thunderhead, AtkColor.LightBlue)
                 ]
             }),
             new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Triplecast), GaugeVisualType.Diamond, new GaugeStacksProps {
@@ -27,24 +27,26 @@ namespace JobBars.Jobs {
                 ],
                 Color = AtkColor.MpPink
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Thunder3), GaugeVisualType.Bar, new GaugeTimerProps {
+            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.HighThunder), GaugeVisualType.Bar, new GaugeTimerProps {
                 SubTimers = [
                     new GaugeSubTimerProps {
                         MaxDuration = 30,
                         Color = AtkColor.DarkBlue,
-                        SubName = AtkHelper.Localize(BuffIds.Thunder3),
+                        SubName = AtkHelper.Localize(BuffIds.HighThunder),
                         Triggers = [
                             new Item(BuffIds.Thunder3),
-                            new Item(BuffIds.Thunder)
+                            new Item(BuffIds.Thunder),
+                            new Item(BuffIds.HighThunder),
                         ]
                     },
                     new GaugeSubTimerProps {
-                        MaxDuration = 18,
+                        MaxDuration = 24,
                         Color = AtkColor.Purple,
-                        SubName = AtkHelper.Localize(BuffIds.Thunder4),
+                        SubName = AtkHelper.Localize(BuffIds.HighThunder2),
                         Triggers = [
                             new Item(BuffIds.Thunder4),
-                            new Item(BuffIds.Thunder2)
+                            new Item(BuffIds.Thunder2),
+                            new Item(BuffIds.HighThunder2),
                         ]
                     }
                 ]
@@ -58,45 +60,43 @@ namespace JobBars.Jobs {
         public static CooldownConfig[] Cooldowns => [
             new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.BLM)})", new CooldownProps {
                 Icon = ActionIds.Addle,
-                Duration = 10,
+                Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Addle)]
             })
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Thunder3), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HighThunder), new IconBuffProps {
                 IsTimer = true,
                 Icons = [
                     ActionIds.Thunder,
-                    ActionIds.Thunder3
+                    ActionIds.Thunder3,
+                    ActionIds.HighThunder,
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder), Duration = 21 },
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder3), Duration = 30 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HighThunder), Duration = 30 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Thunder4), new IconBuffProps {
+            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HighThunder2), new IconBuffProps {
                 IsTimer = true,
                 Icons = [
                     ActionIds.Thunder2,
-                    ActionIds.Thunder4
+                    ActionIds.Thunder4,
+                    ActionIds.HighThunder2,
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder2), Duration = 18 },
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Thunder4), Duration = 18 },
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HighThunder2), Duration = 24 }
                 ]
             }),
             new IconBuffReplacer(AtkHelper.Localize(BuffIds.LeyLines), new IconBuffProps {
                 Icons = [ActionIds.LeyLines],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }
-                ]
-            }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Sharpcast), new IconBuffProps {
-                Icons = [ActionIds.Sharpcast],
-                Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Sharpcast), Duration = 30 }
                 ]
             })
         };
