@@ -8,9 +8,9 @@ namespace JobBars.Cooldowns {
     public unsafe class CooldownPartyMember {
         private JobIds PartyMemberCurrentJob = JobIds.OTHER;
         private readonly List<CooldownTracker> Trackers = [];
-        private readonly uint ObjectId;
+        private readonly ulong ObjectId;
 
-        public CooldownPartyMember( uint objectId ) {
+        public CooldownPartyMember( ulong objectId ) {
             ObjectId = objectId;
         }
 

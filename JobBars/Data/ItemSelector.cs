@@ -1,4 +1,4 @@
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures.TextureWraps;
 using ImGuiNET;
 using JobBars.Helper;
 using System;
@@ -58,10 +58,10 @@ namespace JobBars.Data {
                     if( ImGui.Selectable( $"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data ) ) {
                         SearchSelected = item;
                         try {
-                            Icon = Dalamud.TextureProvider.GetIcon( item.Icon > 0 ? item.Icon : 0 );
+                            Icon = Dalamud.TextureProvider.GetFromGameIcon( item.Icon > 0 ? item.Icon : 0 ).GetWrapOrDefault();
                         }
                         catch( Exception ) {
-                            Icon = Dalamud.TextureProvider.GetIcon( 0 );
+                            Icon = Dalamud.TextureProvider.GetFromGameIcon( 0 ).GetWrapOrDefault();
                         }
                     }
                     idx++;

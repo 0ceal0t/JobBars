@@ -6,23 +6,24 @@ using JobBars.GameStructs;
 namespace JobBars.Helper {
     public unsafe partial class AtkHelper {
         public static unsafe AddonPartyListIntArray* GetPartyUI() {
-            var uiModule = Framework.Instance()->GetUiModule();
+            var uiModule = Framework.Instance()->UIModule;
             if( uiModule == null ) return null;
             return ( AddonPartyListIntArray* )uiModule->GetRaptureAtkModule()->AtkModule.AtkArrayDataHolder.NumberArrays[4]->IntArray;
         }
 
         public static AddonHotbarNumberArray* GetHotbarUI() {
-            var uiModule = Framework.Instance()->GetUiModule();
+            var uiModule = Framework.Instance()->UIModule;
+            if( uiModule == null ) return null;
             return ( AddonHotbarNumberArray* )uiModule->GetRaptureAtkModule()->AtkModule.AtkArrayDataHolder.NumberArrays[6]->IntArray;
         }
 
-        public static AtkUnitBase* GetAddon( string name ) => AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName( name );
+        public static AtkUnitBase* GetAddon( string name ) => AtkStage.Instance()->RaptureAtkUnitManager->GetAddonByName( name );
 
-        public static AddonActionBarCross* GetCrossBar() => ( AddonActionBarCross* )GetAddon( "_ActionCross" );
+        public static AddonActionCross* GetCrossBar() => ( AddonActionCross* )GetAddon( "_ActionCross" );
 
-        public static AddonActionBarDoubleCross* GetLeftDoubleCrossBar() => ( AddonActionBarDoubleCross* )GetAddon( "_ActionDoubleCrossL" );
+        public static AddonActionDoubleCrossBase* GetLeftDoubleCrossBar() => ( AddonActionDoubleCrossBase* )GetAddon( "_ActionDoubleCrossL" );
 
-        public static AddonActionBarDoubleCross* GetRightDoubleCrossBar() => ( AddonActionBarDoubleCross* )GetAddon( "_ActionDoubleCrossR" );
+        public static AddonActionDoubleCrossBase* GetRightDoubleCrossBar() => ( AddonActionDoubleCrossBase* )GetAddon( "_ActionDoubleCrossR" );
 
         public static AtkUnitBase* ChatLogAddon => GetAddon( "ChatLog" );
 

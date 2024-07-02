@@ -142,7 +142,7 @@ namespace JobBars.Atk {
         }
 
         public void SetValue( int idx, bool value ) {
-            var prevVisible = Ticks[idx].Selected->AtkResNode.IsVisible;
+            var prevVisible = Ticks[idx].Selected->AtkResNode.IsVisible();
             AtkHelper.SetVisibility( Ticks[idx].Selected, value );
 
             if( value && !prevVisible ) {

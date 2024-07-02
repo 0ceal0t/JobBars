@@ -16,9 +16,9 @@ namespace JobBars {
             var id = *( ( uint* )effectHeader.ToPointer() + 0x2 );
             var type = *( ( byte* )effectHeader.ToPointer() + 0x1F ); // 1 = action
 
-            var selfId = ( int )Dalamud.ClientState.LocalPlayer.ObjectId;
+            var selfId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
             var isSelf = sourceId == selfId;
-            var isPet = !isSelf && ( GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH ) && IsPet( sourceId, selfId );
+            var isPet = !isSelf && ( GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH ) && IsPet( ( ulong )sourceId, selfId );
             var isParty = !isSelf && !isPet && IsInParty( ( uint )sourceId );
 
             if( type != 1 || !( isSelf || isPet || isParty ) ) {
@@ -102,7 +102,7 @@ namespace JobBars {
             ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10 );
             if( !IsLoaded ) return;
 
-            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.ObjectId ) {
+            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.GameObjectId ) {
                 AtkHelper.UpdateActorTick();
             }
             else if( entityId > 0 && id == Constants.ActorControlOtherId ) {
@@ -137,12 +137,12 @@ namespace JobBars {
             AtkHelper.ZoneChanged( data );
         }
 
-        private static bool IsPet( int objectId, int ownerId ) {
+        private static bool IsPet( ulong objectId, int ownerId ) {
             if( objectId == 0 ) return false;
             foreach( var actor in Dalamud.Objects ) {
                 if( actor == null ) continue;
-                if( actor.ObjectId == objectId ) {
-                    if( actor is BattleNpc npc ) {
+                if( actor.GameObjectId == objectId ) {
+                    if( actor is IBattleNpc npc ) {
                         if( npc.Address == IntPtr.Zero ) return false;
                         return npc.OwnerId == ownerId;
                     }

@@ -2,14 +2,12 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using JobBars.Data;
 using JobBars.Helper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace JobBars {
     public class CurrentPartyMember {
-        public uint ObjectId;
+        public ulong ObjectId;
         public JobIds Job;
         public uint CurrentHP;
         public uint MaxHP;
@@ -26,12 +24,12 @@ namespace JobBars {
             PartyMembers = order.Select( objectId => objectId == 0 ? null : members.Find( member => member.ObjectId == objectId ) ).ToList();
         }
 
-        private static List<uint> GetPartyMemberOrder() {
-            var ret = new List<uint>();
+        private static List<ulong> GetPartyMemberOrder() {
+            var ret = new List<ulong>();
 
             var partyUI = AtkHelper.GetPartyUI();
             if( partyUI == null || partyUI->PartyMemberCount == 0 ) { // fallback
-                ret.Add( Dalamud.ClientState.LocalPlayer.ObjectId );
+                ret.Add( Dalamud.ClientState.LocalPlayer.GameObjectId );
                 return ret;
             }
 
@@ -48,11 +46,11 @@ namespace JobBars {
             var ret = new List<CurrentPartyMember>();
             var localPlayer = Dalamud.ClientState.LocalPlayer;
 
-            var groupManager = GroupManager.Instance();
-            if( groupManager == null || groupManager->MemberCount == 0 ) { // fallback
+            var groupManager = GroupManager.Instance()->MainGroup;
+            if( groupManager.MemberCount == 0 ) { // fallback
                 var localPartyMember = new CurrentPartyMember {
                     IsPlayer = true,
-                    ObjectId = localPlayer.ObjectId,
+                    ObjectId = localPlayer.GameObjectId,
                     CurrentHP = localPlayer.CurrentHp,
                     MaxHP = localPlayer.MaxHp,
                     Job = AtkHelper.IdToJob( localPlayer.ClassJob.Id ),
@@ -68,22 +66,22 @@ namespace JobBars {
             }
 
             for( var i = 0; i < 8; i++ ) {
-                var info = ( PartyMember* )( new IntPtr( groupManager->PartyMembers ) + Marshal.SizeOf( typeof( PartyMember ) ) * i );
-                if( info->ObjectID == 0 || info->ObjectID == 0xE0000000 || info->ObjectID == 0xFFFFFFFF ) continue;
+                var info = groupManager.PartyMembers[i];
+                if( info.EntityId == 0 || info.EntityId == 0xE0000000 || info.EntityId == 0xFFFFFFFF ) continue;
 
                 var partyMember = new CurrentPartyMember {
-                    IsPlayer = info->ObjectID == localPlayer.ObjectId,
-                    ObjectId = info->ObjectID,
-                    CurrentHP = info->CurrentHP,
-                    MaxHP = info->MaxHP,
-                    Job = AtkHelper.IdToJob( info->ClassJob ),
+                    IsPlayer = info.EntityId == localPlayer.GameObjectId,
+                    ObjectId = info.EntityId,
+                    CurrentHP = info.CurrentHP,
+                    MaxHP = info.MaxHP,
+                    Job = AtkHelper.IdToJob( info.ClassJob ),
                     BuffDict = []
                 };
 
-                if( info->StatusManager.Status == null ) continue;
-                for( var j = 0; j < info->StatusManager.NumValidStatuses; j++ ) {
-                    var status = ( Status* )( new IntPtr( info->StatusManager.Status ) + 0xC * j );
-                    if( status->StatusID == 0 ) continue;
+                if( info.StatusManager.Status == null ) continue;
+                for( var j = 0; j < info.StatusManager.NumValidStatuses; j++ ) {
+                    var status = info.StatusManager.Status[j];
+                    if( status.StatusId == 0 ) continue;
                     AtkHelper.StatusToBuffItem( partyMember.BuffDict, status );
                 }
 
@@ -109,7 +107,7 @@ namespace JobBars {
             foreach( var member in PartyMembers ) {
                 if( member == null ) continue;
                 foreach( var entry in member.BuffDict ) {
-                    if( entry.Value.SourceID != ownerId ) continue;
+                    if( entry.Value.SourceId != ownerId ) continue;
                     if( !buffsToSearch.Contains( ( BuffIds )entry.Key.Id ) ) continue;
                     buffDict[entry.Key] = entry.Value;
                 }

@@ -92,9 +92,9 @@ namespace JobBars.Helper {
             return timeElapsed > 0;
         }
 
-        public static GameObject PreviousEnemyTarget => GetPreviousEnemyTarget();
+        public static IGameObject PreviousEnemyTarget => GetPreviousEnemyTarget();
 
-        private static GameObject GetPreviousEnemyTarget() {
+        private static IGameObject GetPreviousEnemyTarget() {
             var actorAddress = Marshal.ReadIntPtr( new IntPtr( TargetSystem.Instance() ) + Constants.PreviousTargetOffset );
             if( actorAddress == IntPtr.Zero ) return null;
 

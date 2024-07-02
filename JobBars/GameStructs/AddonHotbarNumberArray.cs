@@ -15,25 +15,25 @@ namespace JobBars.GameStructs {
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct AddonHotbars {
-        [FieldOffset( 0x400 * 0 )] public HotbarStruct HotBar_1;
-        [FieldOffset( 0x400 * 1 )] public HotbarStruct HotBar_2;
-        [FieldOffset( 0x400 * 2 )] public HotbarStruct HotBar_3;
-        [FieldOffset( 0x400 * 3 )] public HotbarStruct HotBar_4;
-        [FieldOffset( 0x400 * 4 )] public HotbarStruct HotBar_5;
-        [FieldOffset( 0x400 * 5 )] public HotbarStruct HotBar_6;
-        [FieldOffset( 0x400 * 6 )] public HotbarStruct HotBar_7;
-        [FieldOffset( 0x400 * 7 )] public HotbarStruct HotBar_8;
-        [FieldOffset( 0x400 * 8 )] public HotbarStruct HotBar_9;
-        [FieldOffset( 0x400 * 9 )] public HotbarStruct HotBar_10;
+        [FieldOffset( 0x44 * 16 * 0 )] public HotbarStruct HotBar_1;
+        [FieldOffset( 0x44 * 16 * 1 )] public HotbarStruct HotBar_2;
+        [FieldOffset( 0x44 * 16 * 2 )] public HotbarStruct HotBar_3;
+        [FieldOffset( 0x44 * 16 * 3 )] public HotbarStruct HotBar_4;
+        [FieldOffset( 0x44 * 16 * 4 )] public HotbarStruct HotBar_5;
+        [FieldOffset( 0x44 * 16 * 5 )] public HotbarStruct HotBar_6;
+        [FieldOffset( 0x44 * 16 * 6 )] public HotbarStruct HotBar_7;
+        [FieldOffset( 0x44 * 16 * 7 )] public HotbarStruct HotBar_8;
+        [FieldOffset( 0x44 * 16 * 8 )] public HotbarStruct HotBar_9;
+        [FieldOffset( 0x44 * 16 * 9 )] public HotbarStruct HotBar_10;
 
-        [FieldOffset( 0x400 * 10 )] public HotbarStruct CrossHotBar_1;
-        [FieldOffset( 0x400 * 11 )] public HotbarStruct CrossHotBar_2;
-        [FieldOffset( 0x400 * 12 )] public HotbarStruct CrossHotBar_3;
-        [FieldOffset( 0x400 * 13 )] public HotbarStruct CrossHotBar_4;
-        [FieldOffset( 0x400 * 14 )] public HotbarStruct CrossHotBar_5;
-        [FieldOffset( 0x400 * 15 )] public HotbarStruct CrossHotBar_6;
-        [FieldOffset( 0x400 * 16 )] public HotbarStruct CrossHotBar_7;
-        [FieldOffset( 0x400 * 17 )] public HotbarStruct CrossHotBar_8;
+        [FieldOffset( 0x44 * 16 * 10 )] public HotbarStruct CrossHotBar_1;
+        [FieldOffset( 0x44 * 16 * 11 )] public HotbarStruct CrossHotBar_2;
+        [FieldOffset( 0x44 * 16 * 12 )] public HotbarStruct CrossHotBar_3;
+        [FieldOffset( 0x44 * 16 * 13 )] public HotbarStruct CrossHotBar_4;
+        [FieldOffset( 0x44 * 16 * 14 )] public HotbarStruct CrossHotBar_5;
+        [FieldOffset( 0x44 * 16 * 15 )] public HotbarStruct CrossHotBar_6;
+        [FieldOffset( 0x44 * 16 * 16 )] public HotbarStruct CrossHotBar_7;
+        [FieldOffset( 0x44 * 16 * 17 )] public HotbarStruct CrossHotBar_8;
 
         public readonly HotbarStruct this[int i] => i switch {
             0 => HotBar_1,
@@ -58,24 +58,24 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout( LayoutKind.Explicit, Size = 0x400 )]
+    [StructLayout( LayoutKind.Explicit, Size = 0x44 * 16 )]
     public unsafe struct HotbarStruct {
-        [FieldOffset( 0x40 * 0 )] public HotbarSlotStruct Slot_1;
-        [FieldOffset( 0x40 * 1 )] public HotbarSlotStruct Slot_2;
-        [FieldOffset( 0x40 * 2 )] public HotbarSlotStruct Slot_3;
-        [FieldOffset( 0x40 * 3 )] public HotbarSlotStruct Slot_4;
-        [FieldOffset( 0x40 * 4 )] public HotbarSlotStruct Slot_5;
-        [FieldOffset( 0x40 * 5 )] public HotbarSlotStruct Slot_6;
-        [FieldOffset( 0x40 * 6 )] public HotbarSlotStruct Slot_7;
-        [FieldOffset( 0x40 * 7 )] public HotbarSlotStruct Slot_8;
-        [FieldOffset( 0x40 * 8 )] public HotbarSlotStruct Slot_9;
-        [FieldOffset( 0x40 * 9 )] public HotbarSlotStruct Slot_10;
-        [FieldOffset( 0x40 * 10 )] public HotbarSlotStruct Slot_11;
-        [FieldOffset( 0x40 * 11 )] public HotbarSlotStruct Slot_12;
-        [FieldOffset( 0x40 * 12 )] public HotbarSlotStruct Slot_13;
-        [FieldOffset( 0x40 * 13 )] public HotbarSlotStruct Slot_14;
-        [FieldOffset( 0x40 * 14 )] public HotbarSlotStruct Slot_15;
-        [FieldOffset( 0x40 * 15 )] public HotbarSlotStruct Slot_16;
+        [FieldOffset( 0x44 * 0 )] public HotbarSlotStruct Slot_1;
+        [FieldOffset( 0x44 * 1 )] public HotbarSlotStruct Slot_2;
+        [FieldOffset( 0x44 * 2 )] public HotbarSlotStruct Slot_3;
+        [FieldOffset( 0x44 * 3 )] public HotbarSlotStruct Slot_4;
+        [FieldOffset( 0x44 * 4 )] public HotbarSlotStruct Slot_5;
+        [FieldOffset( 0x44 * 5 )] public HotbarSlotStruct Slot_6;
+        [FieldOffset( 0x44 * 6 )] public HotbarSlotStruct Slot_7;
+        [FieldOffset( 0x44 * 7 )] public HotbarSlotStruct Slot_8;
+        [FieldOffset( 0x44 * 8 )] public HotbarSlotStruct Slot_9;
+        [FieldOffset( 0x44 * 9 )] public HotbarSlotStruct Slot_10;
+        [FieldOffset( 0x44 * 10 )] public HotbarSlotStruct Slot_11;
+        [FieldOffset( 0x44 * 11 )] public HotbarSlotStruct Slot_12;
+        [FieldOffset( 0x44 * 12 )] public HotbarSlotStruct Slot_13;
+        [FieldOffset( 0x44 * 13 )] public HotbarSlotStruct Slot_14;
+        [FieldOffset( 0x44 * 14 )] public HotbarSlotStruct Slot_15;
+        [FieldOffset( 0x44 * 15 )] public HotbarSlotStruct Slot_16;
 
         public readonly HotbarSlotStruct this[int i] => i switch {
             0 => Slot_1,
@@ -98,7 +98,7 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout( LayoutKind.Explicit, Size = 0x40 )]
+    [StructLayout( LayoutKind.Explicit, Size = 0x44 )]
     public unsafe struct HotbarSlotStruct {
         [FieldOffset( 0x00 )] public HotbarSlotStructType Type;
         [FieldOffset( 0x0C )] public uint ActionId;
@@ -107,6 +107,6 @@ namespace JobBars.GameStructs {
 
     public enum HotbarSlotStructType : byte {
         Empty = 0x00,
-        Action = 0x2D
+        Action = 0x2E
     }
 }

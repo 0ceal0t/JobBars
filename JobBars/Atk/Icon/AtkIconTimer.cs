@@ -35,7 +35,7 @@ namespace JobBars.Atk {
 
             Combo = AtkHelper.CleanAlloc<AtkImageNode>();
             Combo->Ctor();
-            Combo->AtkResNode.NodeID = NodeIdx++;
+            Combo->AtkResNode.NodeId = NodeIdx++;
             Combo->AtkResNode.Type = NodeType.Image;
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
@@ -57,7 +57,7 @@ namespace JobBars.Atk {
 
             Text = AtkHelper.CleanAlloc<AtkTextNode>();
             Text->Ctor();
-            Text->AtkResNode.NodeID = NodeIdx++;
+            Text->AtkResNode.NodeId = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
             Text->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Text->AtkResNode.DrawFlags = 1;
@@ -74,7 +74,7 @@ namespace JobBars.Atk {
 
             Ring = AtkHelper.CleanAlloc<AtkImageNode>(); // for timer
             Ring->Ctor();
-            Ring->AtkResNode.NodeID = NodeIdx++;
+            Ring->AtkResNode.NodeId = NodeIdx++;
             Ring->AtkResNode.Type = NodeType.Image;
             Ring->AtkResNode.X = 2;
             Ring->AtkResNode.Y = 2;

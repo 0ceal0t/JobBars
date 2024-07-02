@@ -19,7 +19,7 @@ namespace JobBars.Atk {
             Highlight->RightOffset = 20;
             Highlight->LeftOffset = 20;
             Highlight->PartsTypeRenderType = 220;
-            Highlight->AtkResNode.NodeID = 23;
+            Highlight->AtkResNode.NodeId = 23;
             Highlight->AtkResNode.DrawFlags = 0;
             Highlight->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Highlight->AtkResNode.MultiplyBlue = 50;
@@ -39,7 +39,7 @@ namespace JobBars.Atk {
             TextNode->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             TextNode->AtkResNode.DrawFlags = 1;
             TextNode->AtkResNode.Priority = 1;
-            TextNode->AtkResNode.NodeID = 24;
+            TextNode->AtkResNode.NodeId = 24;
             TextNode->SetText( "" );
             AtkHelper.Hide( TextNode );
         }

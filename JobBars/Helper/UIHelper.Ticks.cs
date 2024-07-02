@@ -9,7 +9,7 @@ namespace JobBars.Helper {
         private static bool ActorTickActive = false;
         private static DateTime ActorTickTime;
 
-        private static uint DoTTickObjectId = 0;
+        private static ulong DoTTickObjectId = 0;
         private static DateTime DoTTickTime;
 
         public static void UpdateMp( uint currentMp ) {

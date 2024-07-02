@@ -8,7 +8,7 @@ using DalamudStatus = Dalamud.Game.ClientState.Statuses.Status;
 namespace JobBars.Helper {
     public unsafe partial class AtkHelper {
         public static Dictionary<Item, Status> PlayerStatus { get; private set; }
-        public static uint PreviousEnemyTargetId { get; private set; }
+        public static ulong PreviousEnemyTargetId { get; private set; }
 
         private static readonly List<uint> StatusIgnoreSource = new( [ // count these buffs even though they're not coming from us
             (uint)BuffIds.PhysicalAttenuation,
@@ -19,12 +19,12 @@ namespace JobBars.Helper {
         public static void UpdatePlayerStatus() {
             Dictionary<Item, Status> buffDict = [];
 
-            var ownerId = ( int )Dalamud.ClientState.LocalPlayer.ObjectId;
+            var ownerId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
             ActorToBuffItems( Dalamud.ClientState.LocalPlayer, ownerId, buffDict );
 
             var prevEnemy = PreviousEnemyTarget;
             if( prevEnemy != null ) ActorToBuffItems( prevEnemy, ownerId, buffDict );
-            PreviousEnemyTargetId = prevEnemy == null ? 0 : prevEnemy.ObjectId;
+            PreviousEnemyTargetId = prevEnemy == null ? 0 : prevEnemy.GameObjectId;
 
             PlayerStatus = buffDict;
         }
@@ -40,16 +40,16 @@ namespace JobBars.Helper {
             return false;
         }
 
-        public static void StatusToBuffItem( Dictionary<Item, Status> buffDict, Status* status ) {
+        public static void StatusToBuffItem( Dictionary<Item, Status> buffDict, Status status ) {
             buffDict[new Item {
-                Id = status->StatusID,
+                Id = status.StatusId,
                 Type = ItemType.Buff
             }] = new Status {
-                Param = status->Param,
-                RemainingTime = status->RemainingTime > 0 ? status->RemainingTime : status->RemainingTime * -1,
-                SourceID = status->SourceID,
-                StackCount = status->StackCount,
-                StatusID = status->StatusID
+                Param = status.Param,
+                RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
+                SourceId = status.SourceId,
+                StackCount = status.StackCount,
+                StatusId = status.StatusId
             };
         }
 
@@ -60,15 +60,15 @@ namespace JobBars.Helper {
             }] = new Status {
                 Param = ( byte )status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                SourceID = status.SourceId,
+                SourceId = status.SourceId,
                 StackCount = status.StackCount,
-                StatusID = ( ushort )status.StatusId
+                StatusId = ( ushort )status.StatusId
             };
         }
 
-        public static void ActorToBuffItems( GameObject actor, int ownerId, Dictionary<Item, Status> buffDict ) {
+        public static void ActorToBuffItems( IGameObject actor, int ownerId, Dictionary<Item, Status> buffDict ) {
             if( actor == null ) return;
-            if( actor is BattleChara charaActor ) {
+            if( actor is IBattleChara charaActor ) {
                 foreach( var status in charaActor.StatusList ) {
                     if( status.SourceId != ownerId && !StatusIgnoreSource.Contains( status.StatusId ) ) continue;
                     StatusToBuffItem( buffDict, status );

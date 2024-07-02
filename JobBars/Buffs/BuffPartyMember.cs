@@ -5,10 +5,10 @@ namespace JobBars.Buffs {
     public class BuffPartyMember {
         private JobIds PartyMemberCurrentJob = JobIds.OTHER;
         private readonly List<BuffTracker> Trackers = [];
-        private readonly uint ObjectId;
+        private readonly ulong ObjectId;
         private readonly bool IsPlayer;
 
-        public BuffPartyMember( uint objectId, bool isPlayer ) {
+        public BuffPartyMember( ulong objectId, bool isPlayer ) {
             ObjectId = objectId;
             IsPlayer = isPlayer;
         }

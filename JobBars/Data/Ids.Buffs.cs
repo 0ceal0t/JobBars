@@ -59,10 +59,10 @@ namespace JobBars.Data {
         SacredSight = 3879,
 
         // AST =========
-        TheBalance = 0x75a,
+        TheBalance = 3887,
         TheBole = 0x75b,
         TheArrow = 0x75c,
-        TheSpear = 0x75d,
+        TheSpear = 3889,
         TheEwer = 0x75e,
         TheSpire = 0x75f,
         Combust = 838,

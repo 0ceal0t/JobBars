@@ -59,7 +59,7 @@ namespace JobBars.Helper {
 
             foreach( var node in NodesToLoad ) {
                 if( node.IsIcon ) { // Load icon
-                    node.Node->LoadIconTexture( node.IconId, 0 );
+                    node.Node->LoadIconTexture( ( uint )node.IconId, 0 );
                 }
                 else { // Load texture path
                     var imageNode = node.Node;

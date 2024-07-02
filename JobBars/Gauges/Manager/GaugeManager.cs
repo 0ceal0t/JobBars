@@ -48,7 +48,7 @@ namespace JobBars.Gauges.Manager {
             // ============================
 
             if( CurrentJob == JobIds.SCH && !AtkHelper.OutOfCombat ) { // only need this to catch excog for now
-                JobBars.SearchForPartyMemberStatus( ( int )Dalamud.ClientState.LocalPlayer.ObjectId, AtkHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
+                JobBars.SearchForPartyMemberStatus( ( int )Dalamud.ClientState.LocalPlayer.GameObjectId, AtkHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
             }
 
             foreach( var gauge in CurrentGauges.Where( g => g.Enabled && !g.Disposed ) ) gauge.Tick();

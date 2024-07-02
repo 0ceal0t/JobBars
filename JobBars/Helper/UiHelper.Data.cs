@@ -1,4 +1,4 @@
-using Dalamud;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Enums;
 using JobBars.Data;
@@ -68,8 +68,8 @@ namespace JobBars.Helper {
         public static bool IsGCD( ActionIds action ) => IsGCD( ( uint )action );
         public static bool IsGCD( uint action ) => GCDs.Contains( action );
 
-        public static int GetIcon( ActionIds action ) => GetIcon( ( uint )action );
-        public static int GetIcon( uint action ) => ( int )ActionToIcon[action];
+        public static uint GetIcon( ActionIds action ) => GetIcon( ( uint )action );
+        public static uint GetIcon( uint action ) => ActionToIcon[action];
 
         public static JobIds IdToJob( uint job ) => job < 19 ? JobIds.OTHER : ( JobIds )job;
 

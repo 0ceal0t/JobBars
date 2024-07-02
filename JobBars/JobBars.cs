@@ -45,7 +45,7 @@ namespace JobBars {
 
         private bool IsLoaded = false;
 
-        public JobBars( DalamudPluginInterface pluginInterface ) {
+        public JobBars( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
             AtkHelper.Setup();

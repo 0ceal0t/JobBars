@@ -1,3 +1,4 @@
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
 using JobBars.Helper;
@@ -74,8 +75,8 @@ namespace JobBars.Atk {
             HashSet<CreateIconStruct> createIcons = [];
 
             for( var hotbarIndex = 0; hotbarIndex < AllActionBars.Length; hotbarIndex++ ) {
-                var actionBar = ( AddonActionBarBase* )AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName( AllActionBars[hotbarIndex] );
-                if( actionBar == null || actionBar->ActionBarSlotsAction == null || actionBar->AtkUnitBase.IsVisible == false ) continue;
+                var actionBar = ( AddonActionBarBase* )AtkStage.Instance()->RaptureAtkUnitManager->GetAddonByName( AllActionBars[hotbarIndex] );
+                if( actionBar == null || actionBar->AtkUnitBase.IsVisible == false ) continue;
 
                 if( hotbarIndex == 10 ) { // cross
                     ProcessCrossHotbar( hotbarIndex, actionBar, hotbarData, foundIcons, createIcons, percent );
@@ -110,20 +111,20 @@ namespace JobBars.Atk {
             var crossBar = AtkHelper.GetCrossBar();
             if( crossBar == null ) return;
 
-            if( crossBar->LeftCompactFlags != 0 || crossBar->RightCompactFlags != 0 ) {
+            if( crossBar->ExpandedHoldMapValueLR != 0 || crossBar->ExpandedHoldMapValueRL != 0 ) {
                 ProcessCompactCrossHotbar( hotbarIndex, actionBar, crossBar, hotbarData, foundIcons, createIcons, percent );
                 return;
             }
 
-            var hotbar = hotbarData->Hotbars[10 + crossBar->CrossBarSet];
+            var hotbar = hotbarData->Hotbars[10 + ( int )crossBar->Flags190];
 
-            for( var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++ ) {
-                ProcessIcon( hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent );
+            for( var slotIndex = 0; slotIndex < actionBar->SlotCount; slotIndex++ ) {
+                ProcessIcon( hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotVector[slotIndex], foundIcons, createIcons, percent );
             }
         }
 
-        private void ProcessCompactCrossHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarCross* crossBar, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
-            crossBar->GetCompact( out var compactSet, out var compactLeft );
+        private void ProcessCompactCrossHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonActionCross* crossBar, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
+            GetCompact( crossBar, out var compactSet, out var compactLeft );
 
             var set = 10 + compactSet - 1;
             var hotbar = hotbarData->Hotbars[set];
@@ -132,14 +133,50 @@ namespace JobBars.Atk {
                 var slotIndex = idx + 4;
                 var dataIndex = idx + ( compactLeft ? 0 : 8 );
 
-                ProcessIcon( hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent );
+                ProcessIcon( hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotVector[slotIndex], foundIcons, createIcons, percent );
             }
         }
 
-        private void ProcessDoubleCrossHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonActionBarDoubleCross* doubleCrossBar, bool left, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
-            var hotbar = hotbarData->Hotbars[doubleCrossBar->HotbarIndex];
-            var setLeft = doubleCrossBar->Left == 1;
-            var large = doubleCrossBar->LargeDoubleCross == 1;
+        public bool GetCompact( AddonActionCross* crossBar, out int set, out bool left ) {
+            set = -1;
+            left = false;
+
+            if( GetCompactLeft( crossBar, out var setL, out var leftL ) ) {
+                set = setL;
+                left = leftL;
+                return true;
+            }
+
+            if( GetCompactRight( crossBar, out var setR, out var leftR ) ) {
+                set = setR;
+                left = leftR;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool GetCompactLeft( AddonActionCross* crossBar, out int set, out bool left ) => GetSelectedCompact( crossBar->ExpandedHoldMapValueLR, out set, out left );
+
+        public bool GetCompactRight( AddonActionCross* crossBar, out int set, out bool left ) => GetSelectedCompact( crossBar->ExpandedHoldMapValueRL, out set, out left );
+
+        public static bool GetSelectedCompact( uint flag, out int set, out bool left ) { // 1 = 0/left, 2 = 0/right, 3 = 1/left, etc.
+            set = 0;
+            left = false;
+
+            if( flag == 0 ) return false;
+
+            var leftOver = flag % 2;
+            left = leftOver == 1;
+            set = ( int )( ( flag + leftOver ) / 2 );
+
+            return true;
+        }
+
+        private void ProcessDoubleCrossHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonActionDoubleCrossBase* doubleCrossBar, bool left, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
+            var hotbar = hotbarData->Hotbars[doubleCrossBar->BarTarget];
+            var setLeft = doubleCrossBar->UseLeftSide == 1;
+            var large = doubleCrossBar->ShowDPadSlots == 1;
 
             for( var idx = 0; idx < ( large ? 8 : 4 ); idx++ ) {
                 var slotIndex = idx;
@@ -149,19 +186,19 @@ namespace JobBars.Atk {
                     dataIndex += 4;
                 }
 
-                ProcessIcon( hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent );
+                ProcessIcon( hotbarIndex, slotIndex, hotbar[dataIndex], actionBar->ActionBarSlotVector[slotIndex], foundIcons, createIcons, percent );
             }
         }
 
         private void ProcessNormalHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
             var hotbar = hotbarData->Hotbars[hotbarIndex];
 
-            for( var slotIndex = 0; slotIndex < actionBar->HotbarSlotCount; slotIndex++ ) {
-                ProcessIcon( hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotsAction[slotIndex], foundIcons, createIcons, percent );
+            for( var slotIndex = 0; slotIndex < actionBar->SlotCount; slotIndex++ ) {
+                ProcessIcon( hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotVector[slotIndex], foundIcons, createIcons, percent );
             }
         }
 
-        private void ProcessIcon( int hotbarIndex, int slotIndex, HotbarSlotStruct slotData, ActionBarSlotAction slot, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
+        private void ProcessIcon( int hotbarIndex, int slotIndex, HotbarSlotStruct slotData, ActionBarSlot slot, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
             if( slotData.Type != HotbarSlotStructType.Action ) return;
 
             var action = AtkHelper.GetAdjustedAction( slotData.ActionId );

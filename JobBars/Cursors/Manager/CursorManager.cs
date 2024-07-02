@@ -45,7 +45,7 @@ namespace JobBars.Cursors.Manager {
 
             if( JobBars.Configuration.CursorPosition == CursorPositionType.MouseCursor ) {
                 var pos = ImGui.GetMousePos() - viewport.Pos;
-                var atkStage = AtkStage.GetSingleton();
+                var atkStage = AtkStage.Instance();
 
                 var dragging = *( ( byte* )new IntPtr( atkStage ) + 0x137 );
                 if( JobBars.Configuration.CursorHideWhenHeld && dragging != 1 ) {
