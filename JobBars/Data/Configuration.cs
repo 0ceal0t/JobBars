@@ -97,7 +97,6 @@ namespace JobBars.Data {
         public float BuffScale = 1.0f;
 
         public bool BuffBarEnabled = true;
-        public bool BuffPartyListASTText = false;
         public bool BuffHideOutOfCombat = false;
         public bool BuffHideWeaponSheathed = false;
         public bool BuffIncludeParty = true;

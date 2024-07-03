@@ -61,13 +61,11 @@ namespace JobBars.Buffs.Manager {
                 var member = ObjectIdToMember.TryGetValue( partyMember.ObjectId, out var _member ) ? _member : new BuffPartyMember( partyMember.ObjectId, partyMember.IsPlayer );
                 member.Tick( activeBuffs, partyMember, out var highlight, out var partyText );
                 JobBars.Builder.SetBuffPartyListVisible( idx, highlight );
-                JobBars.Builder.SetBuffPartyListText( idx, ( JobBars.Configuration.BuffPartyListASTText && JobBars.CurrentJob == JobIds.AST ) ? partyText : "" );
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
 
             for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) {
                 JobBars.Builder.SetBuffPartyListVisible( idx, false );
-                JobBars.Builder.SetBuffPartyListText( idx, "" );
             }
 
             var buffIdx = 0;

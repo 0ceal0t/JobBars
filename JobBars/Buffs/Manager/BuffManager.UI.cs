@@ -44,13 +44,6 @@ namespace JobBars.Buffs.Manager {
             }
         };
 
-        private readonly InfoBox<BuffManager> PartyListInfoBox = new() {
-            Label = "Party List",
-            ContentsAction = ( BuffManager manager ) => {
-                if( ImGui.Checkbox( "Show card duration when on AST" + manager.Id, ref JobBars.Configuration.BuffPartyListASTText ) ) JobBars.Configuration.Save();
-            }
-        };
-
         private readonly InfoBox<BuffManager> HideWhenInfoBox = new() {
             Label = "Hide When",
             ContentsAction = ( BuffManager manager ) => {
@@ -68,7 +61,6 @@ namespace JobBars.Buffs.Manager {
 
         protected override void DrawSettings() {
             PositionInfoBox.Draw( this );
-            PartyListInfoBox.Draw( this );
             HideWhenInfoBox.Draw( this );
 
             ImGui.SetNextItemWidth( 50f );

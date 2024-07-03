@@ -48,11 +48,10 @@ namespace JobBars.Atk {
             // ========= PARTYLIST =============
 
             var partyListAddon = AtkHelper.PartyListAddon;
-
             for( var i = 0; i < PartyListBuffs.Count; i++ ) {
                 if( partyListAddon != null ) {
                     var partyMember = partyListAddon->PartyMembers[i];
-                    PartyListBuffs[i].DetachFrom( partyMember.TargetGlowContainer, partyMember.EmnityBarContainer );
+                    PartyListBuffs[i].DetachFrom( partyMember.TargetGlowContainer );
                     partyMember.PartyMemberComponent->UldManager.UpdateDrawNodeList();
                 }
                 PartyListBuffs[i].Dispose();
@@ -79,11 +78,9 @@ namespace JobBars.Atk {
         }
 
         public void SetBuffPartyListVisible( int idx, bool visible ) => PartyListBuffs[idx].SetHighlightVisibility( visible );
-        public void SetBuffPartyListText( int idx, string text ) => PartyListBuffs[idx].SetText( text );
         public void HideAllBuffPartyList() {
             foreach( var item in PartyListBuffs ) {
                 item.SetHighlightVisibility( false );
-                item.SetText( "" );
             }
         }
 
