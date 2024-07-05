@@ -5,6 +5,7 @@ namespace JobBars.Data {
         Rampart = 1191, // All tanks
         ArmsLength = 1209, // All tanks
         Delirium = 1972,
+        EnhancedDelirium = 3836,
         BloodWeapon = 742,
         LivingDead = 810,
         WalkingDead = 811,

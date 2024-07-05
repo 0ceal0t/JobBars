@@ -20,7 +20,8 @@ namespace JobBars.Jobs {
             new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Delirium), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = [
-                    new Item(BuffIds.Delirium)
+                    new Item(BuffIds.Delirium),
+                    new Item(BuffIds.EnhancedDelirium)
                 ],
                 Color = AtkColor.Red
             })
@@ -32,7 +33,10 @@ namespace JobBars.Jobs {
                 Duration = 15,
                 Icon = ActionIds.Delirium,
                 Color = AtkColor.Red,
-                Triggers = [new Item(BuffIds.Delirium)]
+                Triggers = [
+                    new Item(BuffIds.Delirium),
+                    new Item(BuffIds.EnhancedDelirium)
+                ]
             }),
             new BuffConfig(AtkHelper.Localize(ActionIds.LivingShadow), new BuffProps {
                 CD = 120,
