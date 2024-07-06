@@ -1,5 +1,6 @@
 using JobBars.Atk;
 using JobBars.Data;
+using JobBars.Nodes.Cooldown;
 using System.Collections.Generic;
 using System.Linq;
 using static JobBars.Cooldowns.CooldownTracker;
@@ -14,7 +15,7 @@ namespace JobBars.Cooldowns {
             ObjectId = objectId;
         }
 
-        public void Tick( AtkCooldown ui, CurrentPartyMember partyMember, float percent ) {
+        public void Tick( CooldownRow row, CurrentPartyMember partyMember, float percent ) {
             if( PartyMemberCurrentJob != partyMember.Job ) {
                 PartyMemberCurrentJob = partyMember.Job;
                 SetupTrackers();
@@ -36,12 +37,12 @@ namespace JobBars.Cooldowns {
                 }
 
                 var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? AtkCooldown.MAX_ITEMS - 1 - trackerIdx : trackerIdx;
-                tracker.TickUI( ui.Items[uiIdx], percent );
+                tracker.TickUi( row.Nodes[uiIdx], percent );
                 trackerIdx++;
             }
             for( var i = trackerIdx; i < AtkCooldown.MAX_ITEMS; i++ ) {
                 var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? AtkCooldown.MAX_ITEMS - 1 - i : i;
-                ui.Items[uiIdx].SetVisible( false ); // hide unused
+                row.Nodes[uiIdx].IsVisible = false;
             }
         }
 

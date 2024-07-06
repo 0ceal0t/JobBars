@@ -18,7 +18,6 @@ namespace JobBars.Nodes.Buff {
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
 
-
         private string CurrentText = "";
 
         public BuffNode() : base( NodeType.Res ) {

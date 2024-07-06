@@ -1,6 +1,7 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
+using JobBars.Nodes.Cooldown;
 using JobBars.Nodes.Cursor;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
@@ -13,30 +14,31 @@ namespace JobBars.Atk {
 
         public BuffRoot BuffRoot { get; private set; }
         public CursorRoot CursorRoot { get; private set; }
+        public CooldownRoot CooldownRoot { get; private set; }
 
         public AtkBuilder() {
             NodeIdx = NODE_IDX_START;
 
             InitGauges();
             InitBuffs();
-            InitCooldowns();
 
             BuffRoot = new();
             CursorRoot = new();
+            CooldownRoot = new();
         }
 
         public void Dispose() {
             AtkHelper.Detach( GaugeRoot );
-            AtkHelper.Detach( CooldownRoot );
 
             JobBars.NativeController.DetachFromAddon( BuffRoot, AtkHelper.BuffGaugeAttachAddon );
             JobBars.NativeController.DetachFromAddon( CursorRoot, AtkHelper.BuffGaugeAttachAddon );
+            JobBars.NativeController.DetachFromAddon( CooldownRoot, AtkHelper.CooldownAttachAddon );
 
-            DisposeCooldowns();
             DisposeGauges();
 
             BuffRoot.Dispose();
             CursorRoot.Dispose();
+            CooldownRoot.Dispose();
 
             var attachAddon = AtkHelper.BuffGaugeAttachAddon;
             if( attachAddon != null ) attachAddon->UldManager.UpdateDrawNodeList();
@@ -68,6 +70,7 @@ namespace JobBars.Atk {
 
             JobBars.NativeController.AttachToAddon( BuffRoot, buffGaugeAddon, buffGaugeAddon->RootNode, NodePosition.AsLastChild );
             JobBars.NativeController.AttachToAddon( CursorRoot, buffGaugeAddon, buffGaugeAddon->RootNode, NodePosition.AsLastChild );
+            JobBars.NativeController.AttachToAddon( CooldownRoot, cooldownAddon, cooldownAddon->RootNode, NodePosition.AsLastChild );
 
             Dalamud.Log( "Attached Gauges" );
 
@@ -80,14 +83,6 @@ namespace JobBars.Atk {
             }
 
             Dalamud.Log( "Attached PartyList" );
-
-            // ===== COOLDOWNS =========
-
-            CooldownRoot->ParentNode = cooldownAddon->RootNode;
-            CooldownRoot->Timeline = cooldownAddon->RootNode->Timeline;
-            AtkHelper.Attach( cooldownAddon, CooldownRoot );
-
-            Dalamud.Log( "Attached Cooldowns" );
 
             // ======================
 

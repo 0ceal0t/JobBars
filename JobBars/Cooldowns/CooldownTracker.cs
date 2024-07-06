@@ -1,7 +1,7 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
-using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
+using JobBars.Nodes.Cooldown;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace JobBars.Cooldowns {
         private Item LastActiveTrigger;
         private float TimeLeft;
 
-        private UICooldownItem UI;
+        private CooldownNode Node;
 
         public TrackerState CurrentState => State;
         public ActionIds Icon => Config.Icon;
@@ -60,48 +60,50 @@ namespace JobBars.Cooldowns {
             }
         }
 
-        public void TickUI( UICooldownItem ui, float percent ) {
-            if( UI != ui || UI?.IconId != Config.Icon ) {
-                UI = ui;
-                SetupUI();
+        public void TickUi( CooldownNode node, float percent ) {
+            if( node == null ) return;
+
+            if( Node != node || Node?.IconId != Config.Icon ) {
+                Node = node;
+                SetupUi();
             }
 
-            UI.Show();
+            Node.IsVisible = true;
 
             if( State == TrackerState.None ) {
-                ui.SetOffCD();
-                ui.SetText( "" );
-                ui.SetNoDash();
+                node.SetOffCd();
+                node.SetText( "" );
+                node.SetNoDash();
             }
             else if( State == TrackerState.Running ) {
-                ui.SetOffCD();
-                ui.SetText( ( ( int )Math.Round( TimeLeft ) ).ToString() );
+                node.SetOffCd();
+                node.SetText( ( ( int )Math.Round( TimeLeft ) ).ToString() );
                 if( Config.ShowBorderWhenActive ) {
-                    ui.SetDash( percent );
+                    node.SetDash( percent );
                 }
                 else {
-                    ui.SetNoDash();
+                    node.SetNoDash();
                 }
             }
             else if( State == TrackerState.OnCD ) {
-                ui.SetOnCD( JobBars.Configuration.CooldownsOnCDOpacity );
-                ui.SetText( ( ( int )Math.Round( TimeLeft ) ).ToString() );
-                ui.SetNoDash();
+                node.SetOnCd();
+                node.SetText( ( ( int )Math.Round( TimeLeft ) ).ToString() );
+                node.SetNoDash();
             }
             else if( State == TrackerState.OffCD ) {
-                ui.SetOffCD();
-                ui.SetText( "" );
+                node.SetOffCd();
+                node.SetText( "" );
                 if( Config.ShowBorderWhenOffCD ) {
-                    ui.SetDash( percent );
+                    node.SetDash( percent );
                 }
                 else {
-                    ui.SetNoDash();
+                    node.SetNoDash();
                 }
             }
         }
 
-        private void SetupUI() {
-            UI.LoadIcon( Config.Icon );
+        private void SetupUi() {
+            Node.LoadIcon( Config.Icon );
         }
 
         public void Reset() {
