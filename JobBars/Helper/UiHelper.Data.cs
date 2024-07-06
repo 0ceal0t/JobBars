@@ -65,8 +65,8 @@ namespace JobBars.Helper {
         public static List<ItemData> StatusList { get; private set; } = [];
         public static List<ItemData> ActionList { get; private set; } = [];
 
-        public static bool IsGCD( ActionIds action ) => IsGCD( ( uint )action );
-        public static bool IsGCD( uint action ) => GCDs.Contains( action );
+        public static bool IsGcd( ActionIds action ) => IsGcd( ( uint )action );
+        public static bool IsGcd( uint action ) => GCDs.Contains( action );
 
         public static uint GetIcon( ActionIds action ) => GetIcon( ( uint )action );
         public static uint GetIcon( uint action ) => ActionToIcon[action];

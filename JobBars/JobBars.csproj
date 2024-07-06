@@ -84,4 +84,12 @@
   <ItemGroup>
     <PackageReference Include="DalamudPackager" Version="2.1.13" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\KamiToolKit\KamiToolKit.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Nodes\PartyList\" />
+  </ItemGroup>
 </Project>

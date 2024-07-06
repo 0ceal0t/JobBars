@@ -28,7 +28,7 @@ namespace JobBars {
 
             var actionItem = new Item {
                 Id = id,
-                Type = ( AtkHelper.IsGCD( id ) ? ItemType.GCD : ItemType.OGCD )
+                Type = ( AtkHelper.IsGcd( id ) ? ItemType.GCD : ItemType.OGCD )
             };
 
             if( !isParty ) { // don't let party members affect our gauge

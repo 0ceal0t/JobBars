@@ -1,6 +1,6 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
-using JobBars.Atk;
 using JobBars.Helper;
+using JobBars.Nodes.Buff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace JobBars.Buffs {
         private float TimeLeft;
         private float Percent;
 
-        private AtkBuff UI;
+        private BuffNode Node;
 
         public BuffState CurrentState => State;
         public uint Id => ( uint )Config.Icon;
@@ -77,34 +77,39 @@ namespace JobBars.Buffs {
             }
         }
 
-        public void TickUI( AtkBuff ui ) {
-            if( UI != ui || UI?.IconId != Config.Icon ) {
-                UI = ui;
+        public void TickUi( BuffNode node ) {
+            if( node == null ) {
+                Dalamud.Log( "here" );
+                return;
+            }
+
+            if( Node != node || Node?.IconId != Config.Icon ) {
+                Node = node;
                 SetupUI();
             }
 
-            UI.Show();
-            UI.SetColor( Config.Color );
+            Node.IsVisible = true;
+            Node.SetColor( Config.Color );
 
             if( State == BuffState.Running ) {
-                UI.SetOffCD();
-                UI.SetPercent( Percent );
-                UI.SetText( Text );
+                Node.SetOffCd();
+                Node.SetPercent( Percent );
+                Node.SetText( Text );
             }
             else if( State == BuffState.OffCD ) {
-                UI.SetOffCD();
-                UI.SetPercent( 0 );
-                UI.SetText( "" );
+                Node.SetOffCd();
+                Node.SetPercent( 0 );
+                Node.SetText( "" );
             }
             else if( State == BuffState.OnCD_Visible ) {
-                UI.SetOnCD( JobBars.Configuration.BuffOnCDOpacity );
-                UI.SetPercent( Percent );
-                UI.SetText( Text );
+                Node.SetOnCd();
+                Node.SetPercent( Percent );
+                Node.SetText( Text );
             }
         }
 
         private void SetupUI() {
-            UI.LoadIcon( Config.Icon );
+            Node.LoadIcon( Config.Icon );
         }
 
         public void Reset() {

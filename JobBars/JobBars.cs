@@ -11,6 +11,7 @@ using JobBars.Data;
 using JobBars.Gauges.Manager;
 using JobBars.Helper;
 using JobBars.Icons.Manager;
+using KamiToolKit;
 using System;
 
 namespace JobBars {
@@ -24,6 +25,7 @@ namespace JobBars {
         public static CooldownManager CooldownManager { get; private set; }
         public static CursorManager CursorManager { get; private set; }
         public static IconManager IconManager { get; private set; }
+        public static NativeController NativeController { get; private set; }
 
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
@@ -45,8 +47,12 @@ namespace JobBars {
 
         private bool IsLoaded = false;
 
+        public static uint NodeId { get; set; } = 89990001;
+
         public JobBars( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
+
+            NativeController = new( pluginInterface );
 
             AtkHelper.Setup();
             AtkColor.SetupColors();
@@ -135,6 +141,8 @@ namespace JobBars {
             IconBuilder = null;
             Builder = null;
             Configuration = null;
+
+            NativeController?.Dispose();
 
             RemoveCommands();
         }

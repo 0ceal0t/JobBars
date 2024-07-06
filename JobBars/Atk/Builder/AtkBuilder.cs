@@ -1,9 +1,10 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
+using KamiToolKit.Classes;
 
 namespace JobBars.Atk {
     public unsafe partial class AtkBuilder {
-        private static readonly uint NODE_IDX_START = 89990001;
+        private static readonly uint NODE_IDX_START = 89995001;
         private static uint NodeIdx = NODE_IDX_START;
 
         public AtkBuilder() {
@@ -13,13 +14,14 @@ namespace JobBars.Atk {
             InitCooldowns();
             InitCursor();
 
-            AtkHelper.Link( GaugeRoot, BuffRoot );
-            AtkHelper.Link( BuffRoot, CursorRoot );
+            AtkHelper.Link( GaugeRoot, CursorRoot );
         }
 
         public void Dispose() {
             AtkHelper.Detach( GaugeRoot );
             AtkHelper.Detach( CooldownRoot );
+
+            JobBars.NativeController.DetachFromAddon( BuffRoot, AtkHelper.BuffGaugeAttachAddon );
 
             DisposeCooldowns();
             DisposeGauges();
@@ -46,13 +48,15 @@ namespace JobBars.Atk {
             // ===== CONTAINERS =========
 
             GaugeRoot->ParentNode = buffGaugeAddon->RootNode;
-            BuffRoot->ParentNode = buffGaugeAddon->RootNode;
+            //BuffRoot->ParentNode = buffGaugeAddon->RootNode;
             CursorRoot->ParentNode = buffGaugeAddon->RootNode;
 
-            CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
-            CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
+            GaugeRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
+            // BuffRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
             CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
             AtkHelper.Attach( buffGaugeAddon, GaugeRoot );
+
+            JobBars.NativeController.AttachToAddon( BuffRoot, buffGaugeAddon, buffGaugeAddon->RootNode, NodePosition.AsLastChild );
 
             Dalamud.Log( "Attached Gauges" );
 

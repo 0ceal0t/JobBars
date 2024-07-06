@@ -7,6 +7,12 @@
         "requested": "[2.1.13, )",
         "resolved": "2.1.13",
         "contentHash": "rMN1omGe8536f4xLMvx9NwfvpAc9YFFfeXJ1t4P4PE6Gu8WCIoFliR1sh07hM+bfODmesk/dvMbji7vNI+B/pQ=="
+      },
+      "kamitoolkit": {
+        "type": "Project",
+        "dependencies": {
+          "DalamudPackager": "[2.1.13, )"
+        }
       }
     }
   }

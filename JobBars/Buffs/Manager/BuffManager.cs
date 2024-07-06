@@ -1,6 +1,6 @@
-using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
+using JobBars.Nodes.Buff;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +15,7 @@ namespace JobBars.Buffs.Manager {
         public BuffManager() : base( "##JobBars_Buffs" ) {
             ApplyToTargetBuffs.AddRange( JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) ).ToList() );
             JobBars.Builder.HideAllBuffPartyList();
-            JobBars.Builder.HideAllBuffs();
+            JobBars.Builder.BuffRoot.IsVisible = false;
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {
@@ -38,11 +38,11 @@ namespace JobBars.Buffs.Manager {
         public void Tick() {
             if( AtkHelper.CalcDoHide( JobBars.Configuration.BuffBarEnabled, JobBars.Configuration.BuffHideOutOfCombat, JobBars.Configuration.BuffHideWeaponSheathed ) ) {
                 JobBars.Builder.HideAllBuffPartyList();
-                JobBars.Builder.HideBuffs();
+                JobBars.Builder.BuffRoot.IsVisible = false;
                 return;
             }
             else {
-                JobBars.Builder.ShowBuffs();
+                JobBars.Builder.BuffRoot.IsVisible = true;
             }
 
             // ============================
@@ -73,20 +73,20 @@ namespace JobBars.Buffs.Manager {
                 activeBuffs.OrderBy( b => b.CurrentState ) :
                 activeBuffs.OrderBy( b => b.Id )
             ) {
-                if( buffIdx >= ( AtkBuilder.MAX_BUFFS - 1 ) ) break;
-                buff.TickUI( JobBars.Builder.Buffs[buffIdx] );
+                if( buffIdx >= ( BuffRoot.MAX_BUFFS - 1 ) ) break;
+                buff.TickUi( JobBars.Builder.BuffRoot.Buffs[buffIdx] );
                 buffIdx++;
             }
-            for( var i = buffIdx; i < AtkBuilder.MAX_BUFFS; i++ ) {
-                JobBars.Builder.Buffs[i].Hide(); // hide unused
+            for( var i = buffIdx; i < BuffRoot.MAX_BUFFS; i++ ) {
+                JobBars.Builder.BuffRoot.Buffs[i].IsVisible = false;
             }
 
             ObjectIdToMember = newObjectIdToMember;
         }
 
         public static void UpdatePositionScale() {
-            JobBars.Builder.SetBuffPosition( JobBars.Configuration.BuffPosition );
-            JobBars.Builder.SetBuffScale( JobBars.Configuration.BuffScale );
+            JobBars.Builder.BuffRoot.SetPosition( JobBars.Configuration.BuffPosition );
+            JobBars.Builder.BuffRoot.SetScale( JobBars.Configuration.BuffScale );
         }
 
         public void ResetUI() {

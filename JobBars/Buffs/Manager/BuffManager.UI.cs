@@ -14,22 +14,22 @@ namespace JobBars.Buffs.Manager {
                 ImGui.SetNextItemWidth( 25f );
                 if( ImGui.InputInt( "Buffs per line" + manager.Id, ref JobBars.Configuration.BuffHorizontal, 0 ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.RefreshBuffLayout();
+                    JobBars.Builder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Right-to-left" + manager.Id, ref JobBars.Configuration.BuffRightToLeft ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.RefreshBuffLayout();
+                    JobBars.Builder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Bottom-to-top" + manager.Id, ref JobBars.Configuration.BuffBottomToTop ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.RefreshBuffLayout();
+                    JobBars.Builder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Square buffs" + manager.Id, ref JobBars.Configuration.BuffSquare ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.UpdateBuffsSize();
+                    JobBars.Builder.BuffRoot.Update();
                 }
 
                 if( ImGui.InputFloat( "Scale" + manager.Id, ref JobBars.Configuration.BuffScale ) ) {
@@ -73,7 +73,7 @@ namespace JobBars.Buffs.Manager {
 
             if( ImGui.Checkbox( "Thin buff border", ref JobBars.Configuration.BuffThinBorder ) ) {
                 JobBars.Configuration.Save();
-                JobBars.Builder.UpdateBorderThin();
+                JobBars.Builder.BuffRoot.Update();
             }
 
             ImGui.SetNextItemWidth( 50f );
@@ -84,7 +84,7 @@ namespace JobBars.Buffs.Manager {
                 if( JobBars.Configuration.BuffTextSize_v2 <= 0 ) JobBars.Configuration.BuffTextSize_v2 = 1;
                 if( JobBars.Configuration.BuffTextSize_v2 > 255 ) JobBars.Configuration.BuffTextSize_v2 = 255;
                 JobBars.Configuration.Save();
-                JobBars.Builder.UpdateBuffsTextSize();
+                JobBars.Builder.BuffRoot.Update();
             }
         }
 
@@ -106,7 +106,7 @@ namespace JobBars.Buffs.Manager {
             JobBars.SetWindowPosition( "Buff Bar##BuffPosition", pos );
             JobBars.Configuration.BuffPosition = pos;
             JobBars.Configuration.Save();
-            JobBars.Builder.SetBuffPosition( pos );
+            JobBars.Builder.BuffRoot.SetPosition( pos );
         }
     }
 }

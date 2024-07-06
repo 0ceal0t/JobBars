@@ -2,6 +2,7 @@ using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace JobBars.Atk {
     public struct ElementColor {
@@ -24,6 +25,9 @@ namespace JobBars.Atk {
             MultiplyGreen = multGreen;
             MultiplyBlue = multBlue;
         }
+
+        public readonly Vector3 AddColor => new( AddRed / 255f, AddGreen / 255f, AddBlue / 255f );
+        public readonly Vector3 MultiplyColor => new( MultiplyRed / 255f, MultiplyGreen / 255f, MultiplyBlue / 255f );
     }
 
     public class AtkColor {
