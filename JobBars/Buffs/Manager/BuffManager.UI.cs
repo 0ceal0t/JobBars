@@ -1,4 +1,5 @@
 using ImGuiNET;
+using JobBars.Atk;
 using JobBars.Data;
 using System.Numerics;
 
@@ -96,17 +97,14 @@ namespace JobBars.Buffs.Manager {
 
         public void DrawPositionBox() {
             if( LOCKED ) return;
-
-            if( JobBars.DrawPositionView( "Buff Bar##BuffPosition", JobBars.Configuration.BuffPosition, out var pos ) ) {
-                SetBuffPosition( pos );
-            }
+            if( JobBars.DrawPositionView( "Buff Bar##BuffPosition", JobBars.Configuration.BuffPosition, out var pos ) ) SetBuffPosition( pos );
         }
 
         private static void SetBuffPosition( Vector2 pos ) {
             JobBars.SetWindowPosition( "Buff Bar##BuffPosition", pos );
             JobBars.Configuration.BuffPosition = pos;
             JobBars.Configuration.Save();
-            JobBars.Builder.BuffRoot.SetPosition( pos );
+            AtkBuilder.SetPosition( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffPosition );
         }
     }
 }

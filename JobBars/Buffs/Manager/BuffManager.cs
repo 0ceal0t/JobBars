@@ -1,3 +1,4 @@
+using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
@@ -85,8 +86,8 @@ namespace JobBars.Buffs.Manager {
         }
 
         public static void UpdatePositionScale() {
-            JobBars.Builder.BuffRoot.SetPosition( JobBars.Configuration.BuffPosition );
-            JobBars.Builder.BuffRoot.SetScale( JobBars.Configuration.BuffScale );
+            AtkBuilder.SetPosition( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffPosition );
+            AtkBuilder.SetScale( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffScale );
         }
 
         public void ResetUI() {

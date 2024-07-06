@@ -6,7 +6,7 @@ using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
 namespace JobBars.Nodes.Buff {
-    public class BuffNode : NodeBase<AtkResNode> {
+    public unsafe class BuffNode : NodeBase<AtkResNode> {
         public static ushort WIDTH => ( ushort )( JobBars.Configuration.BuffSquare ? 40 : 36 );
         public static ushort HEIGHT => ( ushort )( JobBars.Configuration.BuffSquare ? 40 : 28 );
 
@@ -30,8 +30,6 @@ namespace JobBars.Nodes.Buff {
             };
             Icon.LoadIcon( 405 );
 
-            JobBars.NativeController.AttachToNode( Icon, this, NodePosition.AsLastChild );
-
             Overlay = new ImageNode() {
                 NodeID = JobBars.NodeId++,
                 Height = 1,
@@ -39,11 +37,9 @@ namespace JobBars.Nodes.Buff {
                 TextureSize = new( 37, 37 ),
                 NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Unknown,
-                ImageNodeFlags = 0
+                ImageNodeFlags = 0,
             };
             Overlay.LoadTexture( "ui/uld/IconA_Frame.tex" );
-
-            JobBars.NativeController.AttachToNode( Overlay, Icon, NodePosition.AfterTarget );
 
             Border = new NineGridNode() {
                 NodeID = JobBars.NodeId++,
@@ -53,8 +49,6 @@ namespace JobBars.Nodes.Buff {
                 NodeFlags = NodeFlags.Visible,
             };
             Border.LoadTexture( "ui/uld/IconA_Frame.tex" );
-
-            JobBars.NativeController.AttachToNode( Border, Overlay, NodePosition.AfterTarget );
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,
@@ -70,7 +64,12 @@ namespace JobBars.Nodes.Buff {
                 Text = "",
             };
 
-            JobBars.NativeController.AttachToNode( Text, Border, NodePosition.AfterTarget );
+            JobBars.NativeController.AttachToNode( [
+                Icon,
+                Overlay,
+                Border,
+                Text
+            ], this, NodePosition.AsLastChild );
 
             Update();
         }
