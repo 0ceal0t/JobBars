@@ -49,6 +49,9 @@ namespace JobBars.Atk {
             BuffRoot->ParentNode = buffGaugeAddon->RootNode;
             CursorRoot->ParentNode = buffGaugeAddon->RootNode;
 
+            CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
+            CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
+            CursorRoot->Timeline = buffGaugeAddon->RootNode->Timeline;
             AtkHelper.Attach( buffGaugeAddon, GaugeRoot );
 
             Dalamud.Log( "Attached Gauges" );
@@ -66,7 +69,7 @@ namespace JobBars.Atk {
             // ===== COOLDOWNS =========
 
             CooldownRoot->ParentNode = cooldownAddon->RootNode;
-
+            CooldownRoot->Timeline = cooldownAddon->RootNode->Timeline;
             AtkHelper.Attach( cooldownAddon, CooldownRoot );
 
             Dalamud.Log( "Attached Cooldowns" );

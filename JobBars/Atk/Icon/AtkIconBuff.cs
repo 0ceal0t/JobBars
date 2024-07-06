@@ -15,38 +15,32 @@ namespace JobBars.Atk {
             OriginalOverlay = nodeList[1];
             var originalBorder = ( AtkImageNode* )nodeList[4];
 
-            Combo = AtkHelper.CleanAlloc<AtkImageNode>();
-            Combo->Ctor();
+            Combo = AtkHelper.CloneNode( originalBorder );
             Combo->AtkResNode.NodeId = NodeIdx++;
-            Combo->AtkResNode.Type = NodeType.Image;
             Combo->AtkResNode.X = -2;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
-            Combo->AtkResNode.DrawFlags = 1;
-            Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
             Combo->PartId = 0;
             Combo->PartsList = originalBorder->PartsList;
+
+            // ====================
 
             BigText = AtkHelper.CleanAlloc<AtkTextNode>();
             BigText->Ctor();
             BigText->AtkResNode.NodeId = NodeIdx++;
             BigText->AtkResNode.Type = NodeType.Text;
-            BigText->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
-            BigText->AtkResNode.DrawFlags = 1;
-            BigText->AtkResNode.DrawFlags |= 4;
+            BigText->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop | NodeFlags.Enabled | NodeFlags.EmitsEvents;
             RefreshVisuals();
             BigText->SetText( "" );
 
             var rootNode = ( AtkResNode* )Component;
-            var macroIcon = nodeList[15];
             Combo->AtkResNode.ParentNode = rootNode;
             BigText->AtkResNode.ParentNode = rootNode;
 
             AtkHelper.Link( OriginalOverlay, ( AtkResNode* )Combo );
             AtkHelper.Link( ( AtkResNode* )Combo, ( AtkResNode* )BigText );
-            AtkHelper.Link( ( AtkResNode* )BigText, macroIcon );
+            AtkHelper.Link( ( AtkResNode* )BigText, nodeList[15] );
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
@@ -83,16 +77,6 @@ namespace JobBars.Atk {
         public override void OnDispose() {
             AtkHelper.Link( OriginalOverlay, BigText->AtkResNode.PrevSiblingNode );
             Component->Component->UldManager.UpdateDrawNodeList();
-
-            if( Combo != null ) {
-                Combo->AtkResNode.Destroy( true );
-                Combo = null;
-            }
-
-            if( BigText != null ) {
-                BigText->AtkResNode.Destroy( true );
-                BigText = null;
-            }
 
             AtkHelper.Show( OriginalOverlay );
             OriginalOverlay = null;

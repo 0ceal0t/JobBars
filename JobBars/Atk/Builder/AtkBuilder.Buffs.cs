@@ -33,9 +33,7 @@ namespace JobBars.Atk {
 
             RefreshBuffLayout();
 
-            for( var i = 0; i < 8; i++ ) {
-                PartyListBuffs.Add( new AtkBuffPartyList() );
-            }
+            for( var i = 0; i < 8; i++ ) PartyListBuffs.Add( new AtkBuffPartyList() );
         }
 
         private void DisposeBuffs() {

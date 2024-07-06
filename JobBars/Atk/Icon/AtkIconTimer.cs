@@ -12,7 +12,7 @@ namespace JobBars.Atk {
         private AtkResNode* OriginalPreCombo;
         private AtkResNode* OriginalComboContainer;
         private AtkImageNode* OriginalCombo;
-        public AtkTextNode* OriginalText;
+        public AtkImageNode* OriginalText;
 
         private AtkImageNode* Ring;
         private AtkTextNode* Text;
@@ -31,18 +31,13 @@ namespace JobBars.Atk {
             OriginalComboContainer = IconComponent->ComboBorder;
             OriginalCombo = ( AtkImageNode* )OriginalComboContainer->ChildNode;
 
-            OriginalText = ( AtkTextNode* )IconComponent->UnknownImageNode;
+            OriginalText = IconComponent->UnknownImageNode;
 
-            Combo = AtkHelper.CleanAlloc<AtkImageNode>();
-            Combo->Ctor();
+            Combo = AtkHelper.CloneNode( OriginalCombo );
             Combo->AtkResNode.NodeId = NodeIdx++;
-            Combo->AtkResNode.Type = NodeType.Image;
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
             Combo->AtkResNode.Height = 48;
-            Combo->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
-            Combo->AtkResNode.DrawFlags = 1;
-            Combo->AtkResNode.DrawFlags |= 4;
             Combo->WrapMode = 1;
             Combo->PartId = 0;
             Combo->PartsList = OriginalCombo->PartsList;
@@ -59,9 +54,7 @@ namespace JobBars.Atk {
             Text->Ctor();
             Text->AtkResNode.NodeId = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
-            Text->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
-            Text->AtkResNode.DrawFlags = 1;
-            Text->AtkResNode.DrawFlags |= 4;
+            Text->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop | NodeFlags.Enabled | NodeFlags.EmitsEvents;
             RefreshVisuals();
             Text->SetText( "" );
 
@@ -72,17 +65,12 @@ namespace JobBars.Atk {
 
             // ==========================
 
-            Ring = AtkHelper.CleanAlloc<AtkImageNode>(); // for timer
-            Ring->Ctor();
+            Ring = AtkHelper.CloneNode( originalRing );
             Ring->AtkResNode.NodeId = NodeIdx++;
-            Ring->AtkResNode.Type = NodeType.Image;
             Ring->AtkResNode.X = 2;
             Ring->AtkResNode.Y = 2;
             Ring->AtkResNode.Width = 44;
             Ring->AtkResNode.Height = 46;
-            Ring->AtkResNode.NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
-            Ring->AtkResNode.DrawFlags = 1;
-            Ring->AtkResNode.DrawFlags |= 4;
             Ring->WrapMode = 1;
             Ring->PartId = 0;
             Ring->PartsList = originalRing->PartsList;
@@ -159,21 +147,6 @@ namespace JobBars.Atk {
             // =====================
 
             Component->Component->UldManager.UpdateDrawNodeList();
-
-            if( Combo != null ) {
-                Combo->AtkResNode.Destroy( true );
-                Combo = null;
-            }
-
-            if( Ring != null ) {
-                Ring->AtkResNode.Destroy( true );
-                Ring = null;
-            }
-
-            if( Text != null ) {
-                Text->AtkResNode.Destroy( true );
-                Text = null;
-            }
 
             JobBars.IconBuilder.RemoveIconOverride( new IntPtr( OriginalImage ) );
             if( Dimmed ) SetDimmed( false );

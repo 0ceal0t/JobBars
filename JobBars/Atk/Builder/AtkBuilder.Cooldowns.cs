@@ -12,7 +12,8 @@ namespace JobBars.Atk {
             CooldownRoot = CreateResNode();
             CooldownRoot->Width = 100;
             CooldownRoot->Height = 100;
-            CooldownRoot->NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
+            CooldownRoot->NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop | NodeFlags.Enabled | NodeFlags.EmitsEvents;
+            CooldownRoot->DrawFlags = 0;
             AtkHelper.SetPosition( CooldownRoot, -40, 40 );
 
             AtkCooldown lastCooldown = null;

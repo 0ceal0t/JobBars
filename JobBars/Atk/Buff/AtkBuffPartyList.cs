@@ -45,7 +45,6 @@ namespace JobBars.Atk {
                 return;
             }
             if( targetGlowContainer == null ) return;
-            targetGlowContainer->ChildCount = 3;
 
             AtkHelper.Detach( ( AtkResNode* )Highlight );
 

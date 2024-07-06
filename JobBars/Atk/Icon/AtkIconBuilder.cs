@@ -5,6 +5,7 @@ using JobBars.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace JobBars.Atk {
     public unsafe class AtkIconBuilder {
@@ -93,9 +94,7 @@ namespace JobBars.Atk {
             }
 
             // remove unused
-            foreach( var icon in Icons.Where( x => !foundIcons.Contains( x ) ) ) {
-                icon.Dispose();
-            }
+            foreach( var icon in Icons.Where( x => !foundIcons.Contains( x ) ) ) icon.Dispose();
             Icons.RemoveAll( x => !foundIcons.Contains( x ) );
 
             // create new
@@ -116,8 +115,8 @@ namespace JobBars.Atk {
                 return;
             }
 
-            var hotbar = hotbarData->Hotbars[10 + ( int )crossBar->Flags190];
 
+            var hotbar = hotbarData->Hotbars[10 + Marshal.ReadInt32( ( nint )crossBar + 0x1A0 )];
             for( var slotIndex = 0; slotIndex < actionBar->SlotCount; slotIndex++ ) {
                 ProcessIcon( hotbarIndex, slotIndex, hotbar[slotIndex], actionBar->ActionBarSlotVector[slotIndex], foundIcons, createIcons, percent );
             }
