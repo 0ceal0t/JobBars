@@ -15,7 +15,6 @@ namespace JobBars.Buffs.Manager {
 
         public BuffManager() : base( "##JobBars_Buffs" ) {
             ApplyToTargetBuffs.AddRange( JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) ).ToList() );
-            //JobBars.NodeBuilder.HideAllBuffPartyList();
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {
@@ -37,7 +36,7 @@ namespace JobBars.Buffs.Manager {
 
         public void Tick() {
             if( UiHelper.CalcDoHide( JobBars.Configuration.BuffBarEnabled, JobBars.Configuration.BuffHideOutOfCombat, JobBars.Configuration.BuffHideWeaponSheathed ) ) {
-                //JobBars.NodeBuilder.HideAllBuffPartyList();
+                JobBars.NodeBuilder.HighlightRoot.HideAll();
                 JobBars.NodeBuilder.BuffRoot.IsVisible = false;
                 return;
             }
@@ -60,13 +59,13 @@ namespace JobBars.Buffs.Manager {
 
                 var member = ObjectIdToMember.TryGetValue( partyMember.ObjectId, out var _member ) ? _member : new BuffPartyMember( partyMember.ObjectId, partyMember.IsPlayer );
                 member.Tick( activeBuffs, partyMember, out var highlight, out var partyText );
-                //JobBars.Builder.SetBuffPartyListVisible( idx, highlight );
+                JobBars.NodeBuilder.HighlightRoot.Highlights[idx].IsVisible = highlight;
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
 
-            //for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) {
-            //    JobBars.Builder.SetBuffPartyListVisible( idx, false );
-            // }
+            for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) {
+                JobBars.NodeBuilder.HighlightRoot.Highlights[idx].IsVisible = false;
+            }
 
             var buffIdx = 0;
             foreach( var buff in JobBars.Configuration.BuffOrderByActive ?

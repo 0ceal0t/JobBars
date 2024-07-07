@@ -6,6 +6,7 @@ using JobBars.Nodes.Buff;
 using JobBars.Nodes.Cooldown;
 using JobBars.Nodes.Cursor;
 using JobBars.Nodes.Gauge;
+using JobBars.Nodes.Highlight;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace JobBars.Nodes.Builder {
         public CursorRoot CursorRoot { get; private set; }
         public CooldownRoot CooldownRoot { get; private set; }
         public GaugeRoot GaugeRoot { get; private set; }
+        public HighlightRoot HighlightRoot { get; private set; }
 
         public NodeBuilder() { }
 
@@ -88,6 +90,12 @@ namespace JobBars.Nodes.Builder {
                     JobBars.NativeController.AttachToAddon( CooldownRoot, addon, addon->RootNode, NodePosition.AsLastChild, false, false );
                 }
 
+                if( name == "_PartyList" ) {
+                    HighlightRoot = new();
+
+                    JobBars.NativeController.AttachToAddon( HighlightRoot, addon, addon->GetNodeById( 20 ), NodePosition.AfterTarget, false, false );
+                }
+
                 IsAttached.Add( name );
             } );
         }
@@ -119,6 +127,14 @@ namespace JobBars.Nodes.Builder {
                         JobBars.NativeController.DetachFromAddon( CooldownRoot, addon, false, false );
                         CooldownRoot.Dispose();
                         CooldownRoot = null;
+                    }
+                }
+
+                if( name == "_PartyList" ) {
+                    if( HighlightRoot != null ) {
+                        JobBars.NativeController.DetachFromAddon( HighlightRoot, addon, false, false );
+                        HighlightRoot.Dispose();
+                        HighlightRoot = null;
                     }
                 }
 
