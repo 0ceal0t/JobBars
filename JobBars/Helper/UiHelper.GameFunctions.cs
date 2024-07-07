@@ -3,25 +3,19 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.GameStructs;
 using System;
 using System.Runtime.InteropServices;
 
 namespace JobBars.Helper {
-    public unsafe partial class AtkHelper {
+    public unsafe partial class UiHelper {
         public delegate long PlaySoundEffectDelegate( int a1, long a2, long a3, int a4 );
         public static PlaySoundEffectDelegate PlayGameSoundEffect { get; private set; }
-
-        private static Crc32 Crc32;
 
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
             PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );
             SetupSheets();
-
-            Crc32 = new Crc32();
-
             Ready = true;
         }
 

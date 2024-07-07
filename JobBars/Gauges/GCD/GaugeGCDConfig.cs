@@ -1,5 +1,6 @@
 using ImGuiNET;
 using JobBars.Atk;
+using JobBars.Nodes.Gauge.Arrow;
 
 namespace JobBars.Gauges.GCD {
     public struct GaugeSubGCDProps {
@@ -83,7 +84,7 @@ namespace JobBars.Gauges.GCD {
 
                 if( JobBars.Configuration.GaugeMaxGcds.Draw( $"Maximum GCDs{suffix}{id}", subGCD.Name, subGCD.MaxCounter, out var newMax ) ) {
                     if( newMax <= 0 ) newMax = 1;
-                    if( newMax > AtkArrow.MAX ) newMax = AtkArrow.MAX;
+                    if( newMax > ArrowNode.MAX_ITEMS ) newMax = ArrowNode.MAX_ITEMS;
                     subGCD.MaxCounter = newMax;
                     newVisual = true;
                 }

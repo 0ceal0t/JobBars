@@ -56,14 +56,14 @@ namespace JobBars.Cursors {
 
         private static float GetValue( CursorType type, ItemData status, float statusDuration ) => type switch {
             CursorType.None => 0,
-            CursorType.GCD => AtkHelper.GetGCD( out var _, out var _ ),
-            CursorType.CastTime => AtkHelper.GetCastTime( out var _, out var _ ),
-            CursorType.MpTick => AtkHelper.GetMpTick(),
-            CursorType.ActorTick => AtkHelper.GetActorTick(),
+            CursorType.GCD => UiHelper.GetGCD( out var _, out var _ ),
+            CursorType.CastTime => UiHelper.GetCastTime( out var _, out var _ ),
+            CursorType.MpTick => UiHelper.GetMpTick(),
+            CursorType.ActorTick => UiHelper.GetActorTick(),
             CursorType.StaticCircle => 2, // just a placeholder value, doesn't actually matter
             CursorType.StaticRing => 1,
             CursorType.StatusTime => GetStatusTime( status, statusDuration ),
-            CursorType.DoT_Tick => AtkHelper.GetDoTTick(),
+            CursorType.DoT_Tick => UiHelper.GetDoTTick(),
             CursorType.Slidecast => GetSlidecastTime(),
             _ => 0
         };
@@ -71,14 +71,14 @@ namespace JobBars.Cursors {
         private static float GetStatusTime( ItemData status, float statusDuration ) {
             if( statusDuration == 0 ) return 0;
             if( status.Data.Id == 0 ) return 0;
-            var ret = ( AtkHelper.PlayerStatus.TryGetValue( status.Data, out var value ) ? ( value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1 ) : 0 ) / statusDuration;
+            var ret = ( UiHelper.PlayerStatus.TryGetValue( status.Data, out var value ) ? ( value.RemainingTime > 0 ? value.RemainingTime : value.RemainingTime * -1 ) : 0 ) / statusDuration;
             return Math.Min( ret, 1f );
         }
 
         private static float GetSlidecastTime() {
-            if( JobBars.Configuration.GaugeSlidecastTime <= 0f ) return AtkHelper.GetCastTime( out var _, out var _ );
+            if( JobBars.Configuration.GaugeSlidecastTime <= 0f ) return UiHelper.GetCastTime( out var _, out var _ );
 
-            var isCasting = AtkHelper.GetCurrentCast( out var currentTime, out var totalTime );
+            var isCasting = UiHelper.GetCurrentCast( out var currentTime, out var totalTime );
             if( !isCasting || totalTime == 0 ) return 0;
             var slidecastTime = totalTime - JobBars.Configuration.GaugeSlidecastTime;
             if( currentTime > slidecastTime ) return 0;
@@ -91,7 +91,7 @@ namespace JobBars.Cursors {
             }
 
             if( InnerType == CursorType.StatusTime ) {
-                if( JobBars.Configuration.CursorStatus.Draw( $"Inner status{_ID}", InnerName, AtkHelper.StatusList, InnerStatus, out var newInnerStatus ) ) {
+                if( JobBars.Configuration.CursorStatus.Draw( $"Inner status{_ID}", InnerName, UiHelper.StatusList, InnerStatus, out var newInnerStatus ) ) {
                     InnerStatus = newInnerStatus;
                 }
                 if( JobBars.Configuration.CursorStatusDuration.Draw( $"Inner status duration{_ID}", InnerName, InnerStatusDuration, out var newInnerStatusDuration ) ) {
@@ -104,7 +104,7 @@ namespace JobBars.Cursors {
             }
 
             if( OuterType == CursorType.StatusTime ) {
-                if( JobBars.Configuration.CursorStatus.Draw( $"Outer status{_ID}", OuterName, AtkHelper.StatusList, OuterStatus, out var newOuterStatus ) ) {
+                if( JobBars.Configuration.CursorStatus.Draw( $"Outer status{_ID}", OuterName, UiHelper.StatusList, OuterStatus, out var newOuterStatus ) ) {
                     OuterStatus = newOuterStatus;
                 }
                 if( JobBars.Configuration.CursorStatusDuration.Draw( $"Outer status duration{_ID}", OuterName, OuterStatusDuration, out var newOuterStautsDuration ) ) {

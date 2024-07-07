@@ -1,5 +1,6 @@
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.Atk;
 using JobBars.GameStructs;
 using JobBars.Helper;
 using System;
@@ -7,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace JobBars.Atk {
-    public unsafe class AtkIconBuilder {
+namespace JobBars.Nodes.Icon {
+    public unsafe class IconBuilder {
         private readonly string[] AllActionBars = [
             "_ActionBar",
             "_ActionBar01",
@@ -39,8 +40,7 @@ namespace JobBars.Atk {
             public UIIconProps Props;
         }
 
-        public AtkIconBuilder() {
-        }
+        public IconBuilder() { }
 
         public void Setup( List<uint> triggers, UIIconProps props ) {
             if( triggers == null ) return;
@@ -69,7 +69,7 @@ namespace JobBars.Atk {
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = ( float )( millis % MILLIS_LOOP ) / MILLIS_LOOP;
 
-            var hotbarData = AtkHelper.GetHotbarUI();
+            var hotbarData = UiHelper.GetHotbarUI();
             if( hotbarData == null ) return;
 
             HashSet<AtkIcon> foundIcons = [];
@@ -83,10 +83,10 @@ namespace JobBars.Atk {
                     ProcessCrossHotbar( hotbarIndex, actionBar, hotbarData, foundIcons, createIcons, percent );
                 }
                 else if( hotbarIndex == 11 ) {
-                    ProcessDoubleCrossHotbar( hotbarIndex, actionBar, AtkHelper.GetLeftDoubleCrossBar(), true, hotbarData, foundIcons, createIcons, percent );
+                    ProcessDoubleCrossHotbar( hotbarIndex, actionBar, UiHelper.GetLeftDoubleCrossBar(), true, hotbarData, foundIcons, createIcons, percent );
                 }
                 else if( hotbarIndex == 12 ) {
-                    ProcessDoubleCrossHotbar( hotbarIndex, actionBar, AtkHelper.GetRightDoubleCrossBar(), false, hotbarData, foundIcons, createIcons, percent );
+                    ProcessDoubleCrossHotbar( hotbarIndex, actionBar, UiHelper.GetRightDoubleCrossBar(), false, hotbarData, foundIcons, createIcons, percent );
                 }
                 else {
                     ProcessNormalHotbar( hotbarIndex, actionBar, hotbarData, foundIcons, createIcons, percent );
@@ -107,7 +107,7 @@ namespace JobBars.Atk {
         }
 
         private void ProcessCrossHotbar( int hotbarIndex, AddonActionBarBase* actionBar, AddonHotbarNumberArray* hotbarData, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
-            var crossBar = AtkHelper.GetCrossBar();
+            var crossBar = UiHelper.GetCrossBar();
             if( crossBar == null ) return;
 
             if( crossBar->ExpandedHoldMapValueLR != 0 || crossBar->ExpandedHoldMapValueRL != 0 ) {
@@ -200,7 +200,7 @@ namespace JobBars.Atk {
         private void ProcessIcon( int hotbarIndex, int slotIndex, HotbarSlotStruct slotData, ActionBarSlot slot, HashSet<AtkIcon> foundIcons, HashSet<CreateIconStruct> createIcons, float percent ) {
             if( slotData.Type != HotbarSlotStructType.Action ) return;
 
-            var action = AtkHelper.GetAdjustedAction( slotData.ActionId );
+            var action = UiHelper.GetAdjustedAction( slotData.ActionId );
 
             if( !IconConfigs.TryGetValue( action, out var props ) ) return; // not looking for this action id
 

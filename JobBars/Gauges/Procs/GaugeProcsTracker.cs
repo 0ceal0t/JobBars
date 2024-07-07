@@ -47,13 +47,13 @@ namespace JobBars.Gauges.Procs {
 
                 foreach( var trigger in proc.Config.Triggers ) {
                     if( trigger.Type == ItemType.Buff ) {
-                        if( AtkHelper.PlayerStatus.TryGetValue( trigger, out var buff ) ) {
+                        if( UiHelper.PlayerStatus.TryGetValue( trigger, out var buff ) ) {
                             procActive = true;
                             proc.RemainingTime = Math.Max( 0, buff.RemainingTime );
                         }
                     }
                     else {
-                        if( !AtkHelper.GetRecastActive( trigger.Id, out _ ) ) {
+                        if( !UiHelper.GetRecastActive( trigger.Id, out _ ) ) {
                             procActive = true;
                         }
                     }

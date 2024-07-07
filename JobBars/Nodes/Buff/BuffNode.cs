@@ -53,7 +53,7 @@ namespace JobBars.Nodes.Buff {
                 NodeID = JobBars.NodeId++,
                 FontSize = ( byte )JobBars.Configuration.BuffTextSize_v2,
                 LineSpacing = ( byte )JobBars.Configuration.BuffTextSize_v2,
-                AlignmentType = ( AlignmentType )52,
+                AlignmentFontType = 52,
                 NodeFlags = NodeFlags.Visible,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 0, 0, 0, 1 ),
@@ -111,7 +111,7 @@ namespace JobBars.Nodes.Buff {
         public void LoadIcon( ActionIds action ) {
             if( action == LastAction ) return;
             LastAction = action;
-            Icon.LoadIcon( AtkHelper.GetIcon( action ) );
+            Icon.LoadIcon( UiHelper.GetIcon( action ) );
         }
 
         public void SetText( string text ) {
@@ -123,8 +123,7 @@ namespace JobBars.Nodes.Buff {
 
         public void SetColor( ElementColor color ) {
             if( JobBars.Configuration.BuffThinBorder ) color.AddBlue -= 40;
-            Border.MultiplyColor = color.MultiplyColor;
-            Border.AddColor = color.AddColor;
+            color.SetColor( Border );
         }
 
         protected override void Dispose( bool disposing ) {

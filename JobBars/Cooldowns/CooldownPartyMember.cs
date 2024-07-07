@@ -1,4 +1,3 @@
-using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Nodes.Cooldown;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace JobBars.Cooldowns {
             foreach( var tracker in Trackers ) {
                 tracker.Tick( partyMember.BuffDict );
 
-                if( trackerIdx >= ( AtkCooldown.MAX_ITEMS - 1 ) ) break;
+                if( trackerIdx >= ( CooldownRow.MAX_ITEMS - 1 ) ) break;
                 // skip if disabled
                 if( !JobBars.Configuration.CooldownsStateShowDefault && tracker.CurrentState == TrackerState.None ||
                     !JobBars.Configuration.CooldownsStateShowRunning && tracker.CurrentState == TrackerState.Running ||
@@ -36,12 +35,12 @@ namespace JobBars.Cooldowns {
                     continue;
                 }
 
-                var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? AtkCooldown.MAX_ITEMS - 1 - trackerIdx : trackerIdx;
+                var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? CooldownRow.MAX_ITEMS - 1 - trackerIdx : trackerIdx;
                 tracker.TickUi( row.Nodes[uiIdx], percent );
                 trackerIdx++;
             }
-            for( var i = trackerIdx; i < AtkCooldown.MAX_ITEMS; i++ ) {
-                var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? AtkCooldown.MAX_ITEMS - 1 - i : i;
+            for( var i = trackerIdx; i < CooldownRow.MAX_ITEMS; i++ ) {
+                var uiIdx = JobBars.Configuration.CooldownsLeftAligned ? CooldownRow.MAX_ITEMS - 1 - i : i;
                 row.Nodes[uiIdx].IsVisible = false;
             }
         }
@@ -59,7 +58,7 @@ namespace JobBars.Cooldowns {
             foreach( var prop in trackerProps.OrderBy( x => x.Order ) ) {
                 if( !prop.Enabled ) continue;
                 count++;
-                if( count > AtkCooldown.MAX_ITEMS ) continue;
+                if( count > CooldownRow.MAX_ITEMS ) continue;
                 Trackers.Add( new CooldownTracker( prop ) );
             }
         }

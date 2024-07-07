@@ -1,4 +1,4 @@
-using JobBars.Atk;
+using JobBars.Nodes.Gauge;
 using System.Numerics;
 
 namespace JobBars.Gauges {
@@ -25,7 +25,6 @@ namespace JobBars.Gauges {
     public abstract class Gauge {
         public abstract void UpdateVisual();
         public abstract void Tick();
-        public abstract void Cleanup();
         public abstract int GetHeight();
         public abstract int GetWidth();
         public abstract int GetYOffset();
@@ -33,29 +32,24 @@ namespace JobBars.Gauges {
         public abstract void SetSplitPosition( Vector2 position );
     }
 
-    public abstract class Gauge<T, S> : Gauge where T : AtkGauge where S : GaugeTracker {
-        protected T UI;
+    public abstract class Gauge<T, S> : Gauge where T : class, IGaugeNode where S : GaugeTracker {
+        protected T Node;
         protected S Tracker;
 
-        public override void Cleanup() {
-            Tracker = null;
-            UI = null;
-        }
-
         public override void Tick() {
-            if( UI == null ) return;
+            if( Node == null ) return;
             TickGauge();
-            UI.SetVisible( !Tracker.GetConfig().HideWhenInactive || Tracker.GetActive() );
+            Node.SetVisible( !Tracker.GetConfig().HideWhenInactive || Tracker.GetActive() );
         }
 
-        public override void SetPosition( Vector2 position ) => UI.SetPosition( position );
+        public override void SetPosition( Vector2 position ) => Node.SetPosition( position );
 
-        public override void SetSplitPosition( Vector2 position ) => UI.SetSplitPosition( position );
+        public override void SetSplitPosition( Vector2 position ) => Node.SetSplitPosition( position );
 
         public override void UpdateVisual() {
-            if( UI == null ) return;
-            UI.SetVisible( Tracker.GetConfig().Enabled );
-            UI.SetScale( Tracker.GetConfig().Scale );
+            if( Node == null ) return;
+            Node.SetVisible( Tracker.GetConfig().Enabled );
+            Node.SetScale( Tracker.GetConfig().Scale );
 
             UpdateVisualGauge();
         }

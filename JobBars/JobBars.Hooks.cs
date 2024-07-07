@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace JobBars {
     public unsafe partial class JobBars {
         private void ReceiveActionEffect( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail ) {
-            if( !IsLoaded || !PlayerExists ) {
+            if( !NodeBuilder.IsLoaded || !Dalamud.ClientState.IsLoggedIn ) {
                 ReceiveActionEffectHook.Original( sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail );
                 return;
             }
@@ -28,7 +28,7 @@ namespace JobBars {
 
             var actionItem = new Item {
                 Id = id,
-                Type = ( AtkHelper.IsGcd( id ) ? ItemType.GCD : ItemType.OGCD )
+                Type = ( UiHelper.IsGcd( id ) ? ItemType.GCD : ItemType.OGCD )
             };
 
             if( !isParty ) { // don't let party members affect our gauge
@@ -100,13 +100,13 @@ namespace JobBars {
 
         private void ActorControlSelf( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 ) {
             ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10 );
-            if( !IsLoaded ) return;
+            if( !NodeBuilder.IsLoaded ) return;
 
             if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.GameObjectId ) {
-                AtkHelper.UpdateActorTick();
+                UiHelper.UpdateActorTick();
             }
             else if( entityId > 0 && id == Constants.ActorControlOtherId ) {
-                AtkHelper.UpdateDoTTick( entityId );
+                UiHelper.UpdateDoTTick( entityId );
             }
 
             if( arg1 == Constants.WipeArg1 ) {
@@ -114,27 +114,16 @@ namespace JobBars {
                 IconManager?.Reset();
                 BuffManager?.ResetTrackers();
                 CooldownManager?.ResetTrackers();
-                AtkHelper.ResetTicks();
+                UiHelper.ResetTicks();
             }
         }
 
         private IntPtr IconDimmedDetour( IntPtr iconUnk, byte dimmed ) {
             var icon = IconDimmedHook.Original( iconUnk, dimmed );
-            if( !IsLoaded ) return icon;
+            if( !NodeBuilder.IsLoaded ) return icon;
 
             IconBuilder?.ProcessIconOverride( icon );
             return icon;
-        }
-
-        private void ZoneChanged( ushort data ) {
-            if( !IsLoaded ) return;
-
-            GaugeManager?.Reset();
-            IconManager?.Reset();
-            BuffManager?.ResetTrackers();
-            // don't reset CDs on zone change
-            AtkHelper.ResetTicks();
-            AtkHelper.ZoneChanged( data );
         }
 
         private static bool IsPet( ulong objectId, int ownerId ) {

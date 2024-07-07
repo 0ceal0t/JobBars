@@ -12,18 +12,18 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class SMN {
         public static GaugeConfig[] Gauges => [
-            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.FurtherRuin), GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig(UiHelper.Localize(BuffIds.FurtherRuin), GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FurtherRuin), BuffIds.FurtherRuin, AtkColor.DarkBlue)
+                    new ProcConfig(UiHelper.Localize(BuffIds.FurtherRuin), BuffIds.FurtherRuin, ColorConstants.DarkBlue)
                 ]
             }),
-            new GaugeGCDConfig(AtkHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new GaugeGCDProps {
+            new GaugeGCDConfig(UiHelper.Localize(ActionIds.SummonBahamut), GaugeVisualType.Arrow, new GaugeGCDProps {
                 SubGCDs = [
                     new GaugeSubGCDProps {
                         MaxCounter = 6,
                         MaxDuration = 15,
-                        Color = AtkColor.LightBlue,
-                        SubName = AtkHelper.Localize(ActionIds.SummonBahamut),
+                        Color = ColorConstants.LightBlue,
+                        SubName = UiHelper.Localize(ActionIds.SummonBahamut),
                         Increment = [
                             new Item(ActionIds.AstralImpulse),
                             new Item(ActionIds.AstralFlare)
@@ -35,8 +35,8 @@ namespace JobBars.Jobs {
                     new GaugeSubGCDProps {
                         MaxCounter = 6,
                         MaxDuration = 15,
-                        Color = AtkColor.Orange,
-                        SubName = AtkHelper.Localize(ActionIds.SummonPhoenix),
+                        Color = ColorConstants.Orange,
+                        SubName = UiHelper.Localize(ActionIds.SummonPhoenix),
                         Increment = [
                             new Item(ActionIds.FountainOfFire),
                             new Item(ActionIds.BrandOfPurgatory)
@@ -48,8 +48,8 @@ namespace JobBars.Jobs {
                     new GaugeSubGCDProps {
                         MaxCounter = 6,
                         MaxDuration = 15,
-                        Color = AtkColor.White,
-                        SubName = AtkHelper.Localize(ActionIds.SummonSolarBahamut),
+                        Color = ColorConstants.White,
+                        SubName = UiHelper.Localize(ActionIds.SummonSolarBahamut),
                         Increment = [
                             new Item(ActionIds.UmbralImpulse),
                             new Item(ActionIds.UmbralFlare)
@@ -63,32 +63,32 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.SearingLight), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.SearingLight), new BuffProps {
                 CD = 120,
                 Duration = 30,
                 Icon = ActionIds.SearingLight,
-                Color = AtkColor.Purple,
+                Color = ColorConstants.Purple,
                 Triggers = [new Item(ActionIds.SearingLight)]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.SummonBahamut), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.SummonBahamut), new BuffProps {
                 CD = 120,
                 Duration = 15,
                 Icon = ActionIds.SummonBahamut,
-                Color = AtkColor.LightBlue,
+                Color = ColorConstants.LightBlue,
                 Triggers = [new Item(ActionIds.SummonBahamut)]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.SummonPhoenix), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.SummonPhoenix), new BuffProps {
                 CD = 120,
                 Duration = 15,
                 Icon = ActionIds.SummonPhoenix,
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
                 Triggers = [new Item(ActionIds.SummonPhoenix)]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.SummonSolarBahamut), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.SummonSolarBahamut), new BuffProps {
                 CD = 60,
                 Duration = 15,
                 Icon = ActionIds.SummonSolarBahamut,
-                Color = AtkColor.White,
+                Color = ColorConstants.White,
                 Triggers = [new Item(ActionIds.SummonSolarBahamut )]
             })
         ];
@@ -96,13 +96,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.SMN, CursorType.None, CursorType.CastTime );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.SMN)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Addle)} ({UiHelper.Localize(JobIds.SMN)})", new CooldownProps {
                 Icon = ActionIds.Addle,
                 Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Addle)]
             }),
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SMN)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Swiftcast)} ({UiHelper.Localize(JobIds.SMN)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
                 CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]

@@ -45,7 +45,7 @@ namespace JobBars.Gauges.Charges {
                 var diamondFound = false;
                 foreach( var trigger in part.Triggers ) {
                     if( trigger.Type == ItemType.Buff ) {
-                        var buffExists = AtkHelper.PlayerStatus.TryGetValue( trigger, out var buff );
+                        var buffExists = UiHelper.PlayerStatus.TryGetValue( trigger, out var buff );
                         var buffValue = buffExists ? buff.StackCount : 0;
 
                         if( part.Bar && !barAssigned && buffExists ) {
@@ -63,7 +63,7 @@ namespace JobBars.Gauges.Charges {
                         }
                     }
                     else {
-                        var recastActive = AtkHelper.GetRecastActive( trigger.Id, out var timeElapsed );
+                        var recastActive = UiHelper.GetRecastActive( trigger.Id, out var timeElapsed );
                         var actionValue = recastActive ? ( int )Math.Floor( timeElapsed / part.CD ) : part.MaxCharges;
 
                         if( part.Bar && !barAssigned && recastActive ) {
@@ -145,7 +145,7 @@ namespace JobBars.Gauges.Charges {
                 if( idx < endIdx ) return part.Color;
                 startIdx = endIdx;
             }
-            return AtkColor.NoColor;
+            return ColorConstants.NoColor;
         }
 
         public bool GetDiamondTextVisible() => false;

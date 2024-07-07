@@ -1,7 +1,7 @@
 using System;
 
 namespace JobBars.Helper {
-    public unsafe partial class AtkHelper {
+    public unsafe partial class UiHelper {
         private static bool MpTickActive = false;
         private static DateTime MpTime;
         private static uint LastMp = 0;

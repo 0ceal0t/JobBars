@@ -54,8 +54,8 @@ namespace JobBars {
         }
 
         private void BuildSettingsUi() {
-            if( !IsLoaded ) return;
-            if( !PlayerExists ) return;
+            if( !NodeBuilder.IsLoaded ) return;
+            if( !Dalamud.ClientState.IsLoggedIn ) return;
             if( !Visible ) return;
 
             var _ID = "##JobBars_Settings";

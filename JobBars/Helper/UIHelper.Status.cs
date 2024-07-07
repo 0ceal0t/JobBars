@@ -6,7 +6,7 @@ using System.Linq;
 using DalamudStatus = Dalamud.Game.ClientState.Statuses.Status;
 
 namespace JobBars.Helper {
-    public unsafe partial class AtkHelper {
+    public unsafe partial class UiHelper {
         public static Dictionary<Item, Status> PlayerStatus { get; private set; }
         public static ulong PreviousEnemyTargetId { get; private set; }
 

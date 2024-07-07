@@ -1,4 +1,3 @@
-using JobBars.Helper;
 using System.Collections.Generic;
 
 namespace JobBars.Atk {
@@ -12,7 +11,7 @@ namespace JobBars.Atk {
         private void DisposeBuffs() {
             // ========= PARTYLIST =============
 
-            var partyListAddon = AtkHelper.PartyListAddon;
+            /*var partyListAddon = AtkHelper.PartyListAddon;
             for( var i = 0; i < PartyListBuffs.Count; i++ ) {
                 if( partyListAddon != null ) {
                     var partyMember = partyListAddon->PartyMembers[i];
@@ -21,7 +20,7 @@ namespace JobBars.Atk {
                 }
                 PartyListBuffs[i].Dispose();
             }
-            PartyListBuffs = null;
+            PartyListBuffs = null;*/
         }
 
         public void SetBuffPartyListVisible( int idx, bool visible ) => PartyListBuffs[idx].SetHighlightVisibility( visible );

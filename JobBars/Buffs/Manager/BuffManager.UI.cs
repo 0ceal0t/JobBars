@@ -1,6 +1,6 @@
 using ImGuiNET;
-using JobBars.Atk;
 using JobBars.Data;
+using JobBars.Nodes.Builder;
 using System.Numerics;
 
 namespace JobBars.Buffs.Manager {
@@ -15,22 +15,22 @@ namespace JobBars.Buffs.Manager {
                 ImGui.SetNextItemWidth( 25f );
                 if( ImGui.InputInt( "Buffs per line" + manager.Id, ref JobBars.Configuration.BuffHorizontal, 0 ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.BuffRoot.Update();
+                    JobBars.NodeBuilder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Right-to-left" + manager.Id, ref JobBars.Configuration.BuffRightToLeft ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.BuffRoot.Update();
+                    JobBars.NodeBuilder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Bottom-to-top" + manager.Id, ref JobBars.Configuration.BuffBottomToTop ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.BuffRoot.Update();
+                    JobBars.NodeBuilder.BuffRoot.Update();
                 }
 
                 if( ImGui.Checkbox( "Square buffs" + manager.Id, ref JobBars.Configuration.BuffSquare ) ) {
                     JobBars.Configuration.Save();
-                    JobBars.Builder.BuffRoot.Update();
+                    JobBars.NodeBuilder.BuffRoot.Update();
                 }
 
                 if( ImGui.InputFloat( "Scale" + manager.Id, ref JobBars.Configuration.BuffScale ) ) {
@@ -56,7 +56,7 @@ namespace JobBars.Buffs.Manager {
         protected override void DrawHeader() {
             if( ImGui.Checkbox( "Buff bar enabled" + Id, ref JobBars.Configuration.BuffBarEnabled ) ) {
                 JobBars.Configuration.Save();
-                ResetUI();
+                ResetUi();
             }
         }
 
@@ -69,12 +69,12 @@ namespace JobBars.Buffs.Manager {
 
             if( ImGui.Checkbox( "Show party members' buffs", ref JobBars.Configuration.BuffIncludeParty ) ) {
                 JobBars.Configuration.Save();
-                ResetUI();
+                ResetUi();
             }
 
             if( ImGui.Checkbox( "Thin buff border", ref JobBars.Configuration.BuffThinBorder ) ) {
                 JobBars.Configuration.Save();
-                JobBars.Builder.BuffRoot.Update();
+                JobBars.NodeBuilder.BuffRoot.Update();
             }
 
             ImGui.SetNextItemWidth( 50f );
@@ -85,14 +85,14 @@ namespace JobBars.Buffs.Manager {
                 if( JobBars.Configuration.BuffTextSize_v2 <= 0 ) JobBars.Configuration.BuffTextSize_v2 = 1;
                 if( JobBars.Configuration.BuffTextSize_v2 > 255 ) JobBars.Configuration.BuffTextSize_v2 = 255;
                 JobBars.Configuration.Save();
-                JobBars.Builder.BuffRoot.Update();
+                JobBars.NodeBuilder.BuffRoot.Update();
             }
         }
 
         protected override void DrawItem( BuffConfig[] item, JobIds _ ) {
             var reset = false;
             foreach( var buff in item ) buff.Draw( Id, ref reset );
-            if( reset ) ResetUI();
+            if( reset ) ResetUi();
         }
 
         public void DrawPositionBox() {
@@ -104,7 +104,7 @@ namespace JobBars.Buffs.Manager {
             JobBars.SetWindowPosition( "Buff Bar##BuffPosition", pos );
             JobBars.Configuration.BuffPosition = pos;
             JobBars.Configuration.Save();
-            AtkBuilder.SetPosition( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffPosition );
+            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.BuffRoot, JobBars.Configuration.BuffPosition );
         }
     }
 }

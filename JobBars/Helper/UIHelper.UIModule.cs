@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
 
 namespace JobBars.Helper {
-    public unsafe partial class AtkHelper {
+    public unsafe partial class UiHelper {
         public static unsafe AddonPartyListIntArray* GetPartyUI() {
             var uiModule = Framework.Instance()->UIModule;
             if( uiModule == null ) return null;
@@ -48,6 +48,17 @@ namespace JobBars.Helper {
             Data.AttachAddon.Chatbox => ChatLogAddon,
             Data.AttachAddon.HP_MP_Bars => ParameterAddon,
             Data.AttachAddon.PartyList => ( AtkUnitBase* )PartyListAddon,
+            _ => null
+        };
+
+        public static string BuffGaugeAttachAddonName => GetAddonNameName( JobBars.AttachAddon );
+
+        public static string CooldownAttachAddonName => GetAddonNameName( JobBars.CooldownAttachAddon );
+
+        public static string GetAddonNameName( Data.AttachAddon addon ) => addon switch {
+            Data.AttachAddon.Chatbox => "ChatLog",
+            Data.AttachAddon.HP_MP_Bars => "_ParameterWidget",
+            Data.AttachAddon.PartyList => "_PartyList",
             _ => null
         };
     }

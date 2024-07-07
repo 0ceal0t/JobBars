@@ -11,28 +11,28 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class PCT {
         public static GaugeConfig[] Gauges => [
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Hyperphantasia), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.Hyperphantasia), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = [
                     new Item(BuffIds.Hyperphantasia)
                 ],
-                Color = AtkColor.PurplePink
+                Color = ColorConstants.PurplePink
             }),
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.SubtractivePaletee), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.SubtractivePaletee), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = [
                     new Item(BuffIds.SubtractivePaletee)
                 ],
-                Color = AtkColor.BlueGreen
+                Color = ColorConstants.BlueGreen
             }),
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.StarryMuse), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.StarryMuse), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.StarryMuse,
-                Color = AtkColor.Purple,
+                Color = ColorConstants.Purple,
                 Triggers = [new Item(ActionIds.StarryMuse )]
             })
         ];
@@ -40,13 +40,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.PCT, CursorType.None, CursorType.CastTime );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Addle)} ({AtkHelper.Localize(JobIds.PCT)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Addle)} ({UiHelper.Localize(JobIds.PCT)})", new CooldownProps {
                 Icon = ActionIds.Addle,
                 Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Addle)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.TemperaCoat), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.TemperaCoat), new CooldownProps {
                 Icon = ActionIds.TemperaCoat,
                 CD = 120,
                 Triggers = [new Item(ActionIds.TemperaCoat )]
@@ -54,7 +54,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => [
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.StarryMuse), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.StarryMuse), new IconBuffProps {
                 Icons = [
                     ActionIds.StarryMuse
                 ],

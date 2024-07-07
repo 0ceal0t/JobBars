@@ -155,7 +155,7 @@ namespace JobBars.Data {
         public Dictionary<string, string> Color = [];
 
         public ElementColor Get( string name, ElementColor defaultColor ) => Color.TryGetValue( name, out var val ) ?
-            AtkColor.GetColor( val, defaultColor ) : defaultColor;
+            ColorConstants.GetColor( val, defaultColor ) : defaultColor;
 
         public void Set( string name, ElementColor color ) {
             Color[name] = color.Name;

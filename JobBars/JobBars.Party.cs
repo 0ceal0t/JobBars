@@ -27,7 +27,7 @@ namespace JobBars {
         private static List<ulong> GetPartyMemberOrder() {
             var ret = new List<ulong>();
 
-            var partyUI = AtkHelper.GetPartyUI();
+            var partyUI = UiHelper.GetPartyUI();
             if( partyUI == null || partyUI->PartyMemberCount == 0 ) { // fallback
                 ret.Add( Dalamud.ClientState.LocalPlayer.GameObjectId );
                 return ret;
@@ -53,12 +53,12 @@ namespace JobBars {
                     ObjectId = localPlayer.GameObjectId,
                     CurrentHP = localPlayer.CurrentHp,
                     MaxHP = localPlayer.MaxHp,
-                    Job = AtkHelper.IdToJob( localPlayer.ClassJob.Id ),
+                    Job = UiHelper.IdToJob( localPlayer.ClassJob.Id ),
                     BuffDict = []
                 };
 
                 foreach( var status in localPlayer.StatusList ) {
-                    AtkHelper.StatusToBuffItem( localPartyMember.BuffDict, status );
+                    UiHelper.StatusToBuffItem( localPartyMember.BuffDict, status );
                 }
 
                 ret.Add( localPartyMember );
@@ -74,7 +74,7 @@ namespace JobBars {
                     ObjectId = info.EntityId,
                     CurrentHP = info.CurrentHP,
                     MaxHP = info.MaxHP,
-                    Job = AtkHelper.IdToJob( info.ClassJob ),
+                    Job = UiHelper.IdToJob( info.ClassJob ),
                     BuffDict = []
                 };
 
@@ -82,7 +82,7 @@ namespace JobBars {
                 for( var j = 0; j < info.StatusManager.NumValidStatuses; j++ ) {
                     var status = info.StatusManager.Status[j];
                     if( status.StatusId == 0 ) continue;
-                    AtkHelper.StatusToBuffItem( partyMember.BuffDict, status );
+                    UiHelper.StatusToBuffItem( partyMember.BuffDict, status );
                 }
 
                 ret.Add( partyMember );

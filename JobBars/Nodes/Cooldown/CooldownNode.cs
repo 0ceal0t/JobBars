@@ -47,7 +47,7 @@ namespace JobBars.Nodes.Cooldown {
                 Size = new( WIDTH, HEIGHT ),
                 FontSize = 21,
                 LineSpacing = ( byte )HEIGHT,
-                AlignmentType = ( AlignmentType )52,
+                AlignmentFontType = 52,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 0, 0, 0, 1 ),
                 TextId = 0,
@@ -103,7 +103,7 @@ namespace JobBars.Nodes.Cooldown {
         public void LoadIcon( ActionIds action ) {
             if( action == LastAction ) return;
             LastAction = action;
-            Icon.LoadIcon( AtkHelper.GetIcon( action ) );
+            Icon.LoadIcon( UiHelper.GetIcon( action ) );
         }
 
         protected override void Dispose( bool disposing ) {

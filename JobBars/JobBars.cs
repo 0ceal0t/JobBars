@@ -11,14 +11,16 @@ using JobBars.Data;
 using JobBars.Gauges.Manager;
 using JobBars.Helper;
 using JobBars.Icons.Manager;
+using JobBars.Nodes.Builder;
+using JobBars.Nodes.Icon;
 using KamiToolKit;
 using System;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public static Configuration Configuration { get; private set; }
-        public static AtkBuilder Builder { get; private set; }
-        public static AtkIconBuilder IconBuilder { get; private set; }
+        public static NodeBuilder NodeBuilder { get; private set; }
+        public static IconBuilder IconBuilder { get; private set; }
 
         public static GaugeManager GaugeManager { get; private set; }
         public static BuffManager BuffManager { get; private set; }
@@ -30,22 +32,17 @@ namespace JobBars {
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
         private delegate void ReceiveActionEffectDelegate( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail );
-        private Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
+        private readonly Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
 
         private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 );
-        private Hook<ActorControlSelfDelegate> ActorControlSelfHook;
+        private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
         private delegate IntPtr IconDimmedDelegate( IntPtr iconUnk, byte dimmed );
-        private Hook<IconDimmedDelegate> IconDimmedHook;
-
-        private static bool PlayerExists => Dalamud.ClientState?.LocalPlayer != null;
-        private static bool RecreateUi => Dalamud.Condition[ConditionFlag.CreatingCharacter]; // getting haircut, etc.
-        private bool LoggedOut = true;
+        private readonly Hook<IconDimmedDelegate> IconDimmedHook;
 
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
-        private bool IsLoaded = false;
 
         public static uint NodeId { get; set; } = 89990001;
 
@@ -54,10 +51,9 @@ namespace JobBars {
 
             NativeController = new( pluginInterface );
 
-            AtkHelper.Setup();
-            AtkColor.SetupColors();
+            UiHelper.Setup();
+            ColorConstants.SetupColors();
 
-            // Upgrade if config is too old
             try {
                 Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             }
@@ -72,45 +68,35 @@ namespace JobBars {
                 Configuration.Save();
             }
 
-            AttachAddon = Configuration.AttachAddon;
-            CooldownAttachAddon = Configuration.CooldownAttachAddon;
-            IconBuilder = new AtkIconBuilder();
-
-            // ==========================
-
-            InitializeUI();
-
             ReceiveActionEffectHook = Dalamud.Hooks.HookFromSignature<ReceiveActionEffectDelegate>( Constants.ReceiveActionEffectSig, ReceiveActionEffect );
-            ReceiveActionEffectHook.Enable();
-
             ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
+            IconDimmedHook = Dalamud.Hooks.HookFromSignature<IconDimmedDelegate>( Constants.IconDimmedSig, IconDimmedDetour );
+            ReceiveActionEffectHook.Enable();
+            IconDimmedHook.Enable();
             ActorControlSelfHook.Enable();
 
-            IconDimmedHook = Dalamud.Hooks.HookFromSignature<IconDimmedDelegate>( Constants.IconDimmedSig, IconDimmedDetour );
-            IconDimmedHook.Enable();
+            AttachAddon = Configuration.AttachAddon;
+            CooldownAttachAddon = Configuration.CooldownAttachAddon;
 
-            Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
-            Dalamud.PluginInterface.UiBuilder.Draw += Animate;
-            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
-            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
-            Dalamud.Framework.Update += FrameworkOnUpdate;
-            Dalamud.ClientState.TerritoryChanged += ZoneChanged;
-            SetupCommands();
-        }
-
-        private void InitializeUI() {
-            // these are created before the addons are even visible, so they aren't attached yet
-            Dalamud.Log( "==== INIT ====" );
-            IconBuilder.Reset();
-
-            Builder = new AtkBuilder();
+            IconBuilder = new IconBuilder();
+            NodeBuilder = new NodeBuilder();
             BuffManager = new BuffManager();
             CooldownManager = new CooldownManager();
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
             IconManager = new IconManager();
 
-            IsLoaded = true;
+            Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
+            SetupCommands();
+
+            if( Dalamud.ClientState.IsLoggedIn ) OnLogin();
+            Dalamud.Framework.Update += OnFrameworkUpdate;
+            Dalamud.ClientState.Login += OnLogin;
+            Dalamud.ClientState.Logout += OnLogout;
+            Dalamud.ClientState.TerritoryChanged += OnZoneChange;
+
         }
 
         public void Dispose() {
@@ -118,101 +104,36 @@ namespace JobBars {
             ActorControlSelfHook?.Dispose();
             IconDimmedHook?.Dispose();
 
-            ReceiveActionEffectHook = null;
-            ActorControlSelfHook = null;
-            IconDimmedHook = null;
-
             Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
-            Dalamud.PluginInterface.UiBuilder.Draw -= Animate;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
-            Dalamud.Framework.Update -= FrameworkOnUpdate;
-            Dalamud.ClientState.TerritoryChanged -= ZoneChanged;
+            RemoveCommands();
 
-            GaugeManager = null;
-            BuffManager = null;
-            CooldownManager = null;
-            CursorManager = null;
-            IconManager = null;
+            Dalamud.Framework.Update -= OnFrameworkUpdate;
+            Dalamud.ClientState.Login -= OnLogin;
+            Dalamud.ClientState.Logout -= OnLogout;
+            Dalamud.ClientState.TerritoryChanged -= OnZoneChange;
 
             Animation.Dispose();
             IconBuilder?.Dispose();
-            Builder?.Dispose();
-            IconBuilder = null;
-            Builder = null;
-            Configuration = null;
-
+            NodeBuilder?.Dispose();
             NativeController?.Dispose();
-
-            RemoveCommands();
         }
 
-        private void Animate() {
-            if( !IsLoaded ) return;
+        private void OnFrameworkUpdate( IFramework framework ) {
+            if( Dalamud.ClientState.IsPvP ) return;
+            if( !Dalamud.ClientState.IsLoggedIn ) return;
+            if( Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ) return;
+
+            if( !NodeBuilder.IsLoaded ) return;
+
+            UiHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
+            UiHelper.UpdatePlayerStatus();
+
             Animation.Tick();
-        }
-
-        private void FrameworkOnUpdate( IFramework framework ) {
-            if( !IsLoaded ) return;
-
-            var addon = AtkHelper.BuffGaugeAttachAddon;
-
-            if( !LoggedOut && RecreateUi ) {
-                Logout();
-                return;
-            }
-
-            if( !PlayerExists ) {
-                if( !LoggedOut && ( addon == null ) ) Logout();
-                return;
-            }
-
-            if( addon == null || addon->RootNode == null || RecreateUi ) return;
-
-            if( LoggedOut ) {
-                Dalamud.Log( "====== REATTACH =======" );
-                Builder.Attach(); // re-attach after addons have been created
-                LoggedOut = false;
-                return;
-            }
-
-            AtkHelper.TickTextures();
             CheckForJobChange();
-            Tick();
-
-            GaugeManager.UpdatePositionScale();
-            BuffManager.UpdatePositionScale();
-            CooldownManager.UpdatePositionScale();
-        }
-
-        private void Logout() {
-            Dalamud.Log( "==== LOGOUT ====" );
-            IconBuilder.Reset();
-            Animation.Dispose();
-
-            LoggedOut = true;
-            CurrentJob = JobIds.OTHER;
-        }
-
-        private static void CheckForJobChange() {
-            var job = AtkHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.Id );
-
-            if( job != CurrentJob ) {
-                CurrentJob = job;
-                Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );
-                GaugeManager.SetJob( CurrentJob );
-                CursorManager.SetJob( CurrentJob );
-                IconManager.SetJob( CurrentJob );
-            }
-        }
-
-        private void Tick() {
-            if( !IsLoaded ) return;
-
-            AtkHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
-            AtkHelper.UpdatePlayerStatus();
-
             UpdatePartyMembers();
+
             GaugeManager.Tick();
             BuffManager.Tick();
             CooldownManager.Tick();
@@ -223,7 +144,41 @@ namespace JobBars {
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = ( float )( millis % 1000 ) / 1000;
 
-            Builder.Tick( Configuration.GaugePulse ? percent : 0f );
+            NodeBuilder.Tick( Configuration.GaugePulse ? percent : 0f );
+            GaugeManager.UpdatePositionScale();
+            BuffManager.UpdatePositionScale();
+            CooldownManager.UpdatePositionScale();
+        }
+
+        private void OnLogin() {
+            NodeBuilder.Load();
+        }
+
+        private void OnLogout() {
+            Dalamud.Log( "==== LOGOUT ====" );
+            IconBuilder.Reset();
+            Animation.Dispose();
+            CurrentJob = JobIds.OTHER;
+        }
+
+        private void OnZoneChange( ushort newZoneId ) {
+            if( !NodeBuilder.IsLoaded ) return;
+
+            GaugeManager?.Reset();
+            IconManager?.Reset(); // <---- TODO: what's going on with this?
+            BuffManager?.ResetTrackers();
+            UiHelper.ResetTicks();
+        }
+
+        private static void CheckForJobChange() {
+            var job = UiHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.Id );
+            if( job != CurrentJob ) {
+                CurrentJob = job;
+                Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );
+                GaugeManager.SetJob( CurrentJob );
+                CursorManager.SetJob( CurrentJob );
+                IconManager.SetJob( CurrentJob );
+            }
         }
 
         // ======= COMMANDS ============
@@ -236,7 +191,7 @@ namespace JobBars {
         }
 
         private void OpenConfig() {
-            if( !IsLoaded ) return;
+            if( !NodeBuilder.IsLoaded ) return;
             Visible = true;
         }
 

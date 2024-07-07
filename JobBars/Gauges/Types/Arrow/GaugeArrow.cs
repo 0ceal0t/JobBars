@@ -1,15 +1,15 @@
-using JobBars.Atk;
+using JobBars.Nodes.Gauge.Arrow;
 
 namespace JobBars.Gauges.Types.Arrow {
-    public class GaugeArrow<T> : Gauge<AtkArrow, T> where T : GaugeTracker, IGaugeArrowInterface {
+    public class GaugeArrow<T> : Gauge<ArrowNode, T> where T : GaugeTracker, IGaugeArrowInterface {
         private readonly int MaxStacks;
 
         public GaugeArrow( T tracker, int idx ) {
             Tracker = tracker;
-            UI = JobBars.Builder.Arrows[idx];
+            Node = JobBars.NodeBuilder.GaugeRoot.Arrows[idx];
             MaxStacks = Tracker.GetTotalMaxTicks();
-            UI.SetMaxValue( Tracker.GetCurrentMaxTicks() );
-            UI.Clear();
+            Node.SetMaxValue( Tracker.GetCurrentMaxTicks() );
+            Node.Clear();
         }
 
         protected override int GetHeightGauge() => 32;
@@ -24,15 +24,15 @@ namespace JobBars.Gauges.Types.Arrow {
 
         protected override void TickGauge() {
             for( var i = 0; i < Size; i++ ) {
-                UI.SetValue( i, Tracker.GetTickValue( Index( i ) ) );
+                Node.SetValue( i, Tracker.GetTickValue( Index( i ) ) );
             }
         }
 
         protected override void UpdateVisualGauge() {
-            UI.SetMaxValue( Tracker.GetCurrentMaxTicks() );
+            Node.SetMaxValue( Tracker.GetCurrentMaxTicks() );
 
             for( var i = 0; i < Size; i++ ) {
-                UI.SetColor( i, Tracker.GetTickColor( Index( i ) ) );
+                Node.SetColor( i, Tracker.GetTickColor( Index( i ) ) );
             }
         }
     }

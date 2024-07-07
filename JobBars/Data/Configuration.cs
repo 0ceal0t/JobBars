@@ -151,8 +151,8 @@ namespace JobBars.Data {
         public Vector2 CursorCustomPosition = new( 200, 200 );
         public float CursorInnerScale = 1.5f;
         public float CursorOuterScale = 1.2f;
-        public string CursorInnerColor = AtkColor.MpPink.Name;
-        public string CursorOuterColor = AtkColor.HealthGreen.Name;
+        public string CursorInnerColor = ColorConstants.MpPink.Name;
+        public string CursorOuterColor = ColorConstants.HealthGreen.Name;
 
         public ComboValueConfig<CursorType> CursorType = new();
         public ComboValueConfig<Helper.ItemData> CursorStatus = new( true );
@@ -201,7 +201,7 @@ namespace JobBars.Data {
         public static bool DrawColor( string id, ElementColor currentValue, out ElementColor value ) {
             value = currentValue;
             if( ImGui.BeginCombo( id, value.Name ) ) {
-                foreach( var entry in AtkColor.AllColors ) {
+                foreach( var entry in ColorConstants.AllColors ) {
                     if( ImGui.Selectable( $"{entry.Key}##Combo", value.Name == entry.Key ) ) {
                         value = entry.Value;
                         ImGui.EndCombo();

@@ -12,7 +12,7 @@ namespace JobBars.Data {
             foreach( var entry in JobToValue ) {
                 if( entry.Key == JobIds.OTHER ) continue;
 
-                var rowId = AtkHelper.Localize( entry.Key ) + Id;
+                var rowId = UiHelper.Localize( entry.Key ) + Id;
                 if( ImGui.CollapsingHeader( rowId ) ) {
                     ImGui.Indent();
 

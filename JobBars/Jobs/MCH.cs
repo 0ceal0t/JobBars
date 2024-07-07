@@ -13,23 +13,23 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class MCH {
         public static GaugeConfig[] Gauges => [
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Overheated), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.Overheated), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = [
                     new Item(BuffIds.Overheated)
                 ],
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
             }),
-            new GaugeGCDConfig(AtkHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
+            new GaugeGCDConfig(UiHelper.Localize(BuffIds.Wildfire), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 6,
                 MaxDuration = 10,
-                Color = AtkColor.Red,
+                Color = ColorConstants.Red,
                 Triggers = [
                     new Item(BuffIds.Wildfire)
                 ]
             }),
-            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.DoubleCheck), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = AtkColor.Red,
+            new GaugeChargesConfig(UiHelper.Localize(ActionIds.DoubleCheck), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.Red,
                 SameColor = true,
                 Parts = [
                     new GaugesChargesPartProps {
@@ -44,8 +44,8 @@ namespace JobBars.Jobs {
                     }
                 ]
             }),
-            new GaugeChargesConfig(AtkHelper.Localize(ActionIds.Checkmate), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = AtkColor.LightBlue,
+            new GaugeChargesConfig(UiHelper.Localize(ActionIds.Checkmate), GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.LightBlue,
                 SameColor = true,
                 Parts = [
                     new GaugesChargesPartProps {
@@ -63,11 +63,11 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.Wildfire), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.Wildfire), new BuffProps {
                 CD = 120,
                 Duration = 10,
                 Icon = ActionIds.Wildfire,
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
                 Triggers = [new Item(ActionIds.Wildfire)]
             })
         ];
@@ -75,13 +75,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.MCH, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Tactician), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Tactician), new CooldownProps {
                 Icon = ActionIds.Tactician,
                 Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Tactician)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Dismantle), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Dismantle), new CooldownProps {
                 Icon = ActionIds.Dismantle,
                 Duration = 10,
                 CD = 120,
@@ -90,7 +90,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Wildfire), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Wildfire), new IconBuffProps {
                 Icons = [ActionIds.Wildfire],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Wildfire), Duration = 10 }

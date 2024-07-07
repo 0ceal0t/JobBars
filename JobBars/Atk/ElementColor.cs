@@ -1,5 +1,6 @@
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -28,9 +29,28 @@ namespace JobBars.Atk {
 
         public readonly Vector3 AddColor => new( AddRed / 255f, AddGreen / 255f, AddBlue / 255f );
         public readonly Vector3 MultiplyColor => new( MultiplyRed / 255f, MultiplyGreen / 255f, MultiplyBlue / 255f );
+
+        public readonly void SetColor( NodeBase node ) {
+            node.MultiplyColor = MultiplyColor;
+            node.AddColor = AddColor;
+        }
+
+        public readonly void SetColorPulse( NodeBase node, float percent ) {
+            // 0 = color
+            // 50 = color + 100
+            // 100 = color
+
+            var add = ( short )( 75 * ( 1f - 2f * Math.Abs( percent - 0.5f ) ) ); // 0 -> 1 -> 0
+            var currentRed = ( short )( AddRed + add );
+            var currentGreen = ( short )( AddGreen + add );
+            var currentBlue = ( short )( AddBlue + add );
+
+            node.MultiplyColor = MultiplyColor;
+            node.AddColor = new( currentRed / 255f, currentGreen / 255f, currentBlue / 255f );
+        }
     }
 
-    public class AtkColor {
+    public class ColorConstants {
         public static readonly ByteColor BYTE_White = new() {
             R = 255,
             G = 255,
@@ -64,6 +84,7 @@ namespace JobBars.Atk {
             node->MultiplyGreen_2 = multGreen;
             node->MultiplyBlue_2 = multBlue;
         }
+
         public static unsafe void SetColorPulse( AtkResNode* node, ElementColor color, float percent ) {
             // 0 = color
             // 50 = color + 100

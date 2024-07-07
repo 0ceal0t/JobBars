@@ -1,14 +1,15 @@
 using JobBars.Atk;
+using JobBars.Nodes.Gauge.Bar;
 
 namespace JobBars.Gauges.Types.Bar {
-    public class GaugeBar<T> : Gauge<AtkBar, T> where T : GaugeTracker, IGaugeBarInterface {
+    public class GaugeBar<T> : Gauge<BarNode, T> where T : GaugeTracker, IGaugeBarInterface {
         public GaugeBar( T tracker, int idx ) {
             Tracker = tracker;
-            UI = JobBars.Builder.Bars[idx];
-            UI.SetSegments( Tracker.GetBarSegments() );
-            UI.SetTextColor( Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor );
-            UI.SetPercent( 0 );
-            UI.SetText( "0" );
+            Node = JobBars.NodeBuilder.GaugeRoot.Bars[idx];
+            Node.SetSegments( Tracker.GetBarSegments() );
+            Node.SetTextColor( Tracker.GetBarDanger() ? ColorConstants.Red : ColorConstants.NoColor );
+            Node.SetPercent( 0 );
+            Node.SetText( "0" );
         }
 
         protected override int GetHeightGauge() => Tracker.GetVertical() ? 160 : 46;
@@ -18,18 +19,18 @@ namespace JobBars.Gauges.Types.Bar {
         public override int GetYOffset() => 0;
 
         protected override void TickGauge() {
-            UI.SetTextColor( Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor );
-            UI.SetText( Tracker.GetBarText() );
+            Node.SetTextColor( Tracker.GetBarDanger() ? ColorConstants.Red : ColorConstants.NoColor );
+            Node.SetText( Tracker.GetBarText() );
 
             var value = Tracker.GetBarPercent();
-            UI.SetPercent( value );
-            UI.SetIndicatorPercent( Tracker.GetBarIndicatorPercent(), value );
+            Node.SetPercent( value );
+            Node.SetIndicatorPercent( Tracker.GetBarIndicatorPercent(), value );
         }
 
         protected override void UpdateVisualGauge() {
-            UI.SetColor( Tracker.GetColor() );
-            UI.SetTextVisible( Tracker.GetBarTextVisible() );
-            UI.SetLayout( Tracker.GetBarTextSwap(), Tracker.GetVertical() );
+            Node.SetColor( Tracker.GetColor() );
+            Node.SetTextVisible( Tracker.GetBarTextVisible() );
+            Node.SetLayout( Tracker.GetBarTextSwap(), Tracker.GetVertical() );
         }
     }
 }

@@ -12,15 +12,15 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class SCH {
         public static GaugeConfig[] Gauges => [
-            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.Excog), GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig(UiHelper.Localize(BuffIds.Excog), GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.Excog), BuffIds.Excog, AtkColor.BrightGreen)
+                    new ProcConfig(UiHelper.Localize(BuffIds.Excog), BuffIds.Excog, ColorConstants.BrightGreen)
                 ],
                 ProcSound = GaugeCompleteSoundType.When_Empty
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Biolysis), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.Biolysis), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 30,
-                Color = AtkColor.BlueGreen,
+                Color = ColorConstants.BlueGreen,
                 Triggers = [
                     new Item(BuffIds.ArcBio),
                     new Item(BuffIds.ArcBio2),
@@ -30,11 +30,11 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.ChainStratagem), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.ChainStratagem), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.ChainStratagem,
-                Color = AtkColor.White,
+                Color = ColorConstants.White,
                 Triggers = [new Item(ActionIds.ChainStratagem)]
             })
         ];
@@ -42,31 +42,31 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.SCH, CursorType.None, CursorType.CastTime );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Seraphism), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Seraphism), new CooldownProps {
                 Icon = ActionIds.Seraphism,
                 Duration = 20,
                 CD = 180,
                 Triggers = [new Item(ActionIds.Seraphism )]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.SummonSeraph), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.SummonSeraph), new CooldownProps {
                 Icon = ActionIds.SummonSeraph,
                 Duration = 22,
                 CD = 120,
                 Triggers = [new Item(ActionIds.SummonSeraph)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Expedient), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Expedient), new CooldownProps {
                 Icon = ActionIds.Expedient,
                 Duration = 20,
                 CD = 120,
                 Triggers = [new Item(ActionIds.Expedient)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Protraction), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Protraction), new CooldownProps {
                 Icon = ActionIds.Protraction,
                 Duration = 10,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Protraction)]
             }),
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Swiftcast)} ({AtkHelper.Localize(JobIds.SCH)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Swiftcast)} ({UiHelper.Localize(JobIds.SCH)})", new CooldownProps {
                 Icon = ActionIds.Swiftcast,
                 CD = 40,
                 Triggers = [new Item(ActionIds.Swiftcast)]
@@ -74,7 +74,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Seraphism), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Seraphism), new IconBuffProps {
                 Icons = [
                     ActionIds.Seraphism,
                 ],
@@ -82,13 +82,13 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Seraphism), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(ActionIds.ChainStratagem), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(ActionIds.ChainStratagem), new IconBuffProps {
                 Icons = [ActionIds.ChainStratagem],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Biolysis), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Biolysis), new IconBuffProps {
                 IsTimer = true,
                 Icons = [
                     ActionIds.SchBio,

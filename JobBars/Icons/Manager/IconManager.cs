@@ -6,8 +6,7 @@ namespace JobBars.Icons.Manager {
         public JobIds CurrentJob = JobIds.OTHER;
         private IconReplacer[] CurrentIcons => JobToValue.TryGetValue( CurrentJob, out var gauges ) ? gauges : JobToValue[JobIds.OTHER];
 
-        public IconManager() : base( "##JobBars_Icons" ) {
-        }
+        public IconManager() : base( "##JobBars_Icons" ) { }
 
         public void SetJob( JobIds job ) {
             JobBars.IconBuilder.Reset();
@@ -31,9 +30,7 @@ namespace JobBars.Icons.Manager {
 
         public void Tick() {
             if( !JobBars.Configuration.IconsEnabled ) return;
-            foreach( var icon in CurrentIcons.Where( i => i.Enabled ) ) {
-                icon.Tick();
-            }
+            foreach( var icon in CurrentIcons.Where( i => i.Enabled ) ) icon.Tick();
             JobBars.IconBuilder.Tick();
         }
     }

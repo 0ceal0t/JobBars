@@ -18,6 +18,7 @@ namespace JobBars {
         [PluginService] public static IJobGauges JobGauges { get; private set; } = null;
         [PluginService] public static IPluginLog PluginLog { get; private set; } = null;
         [PluginService] public static IGameInteropProvider Hooks { get; private set; } = null;
+        [PluginService] public static IAddonLifecycle AddonLifecycle { get; private set; } = null;
 
         public static void Error( Exception e, string message ) => PluginLog.Error( e, message );
 

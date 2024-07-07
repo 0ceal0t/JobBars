@@ -11,26 +11,26 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class VPR {
         public static GaugeConfig[] Gauges => [
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.HuntersInstinct), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.HuntersInstinct), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 DefaultDuration = 40,
-                Color = AtkColor.PurplePink,
+                Color = ColorConstants.PurplePink,
                 Triggers = [
                     new Item(BuffIds.HuntersInstinct)
                 ]
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.NoxiousGash), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.NoxiousGash), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 DefaultDuration = 40,
-                Color = AtkColor.Red,
+                Color = ColorConstants.Red,
                 Triggers = [
                     new Item(BuffIds.NoxiousGash)
                 ]
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.Swiftscaled), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.Swiftscaled), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 DefaultDuration = 40,
-                Color = AtkColor.Yellow,
+                Color = ColorConstants.Yellow,
                 Triggers = [
                     new Item(BuffIds.Swiftscaled)
                 ]
@@ -42,7 +42,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.VPR, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.NIN)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Feint)} ({UiHelper.Localize(JobIds.NIN)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 15,
                 CD = 90,

@@ -18,7 +18,7 @@ namespace JobBars.Gauges.Rolling {
 
         public GaugeRollingConfig( string name, GaugeVisualType type ) : base( name, type ) {
             Enabled = JobBars.Configuration.GaugeEnabled.Get( Name, false ); // default disabled
-            Color = JobBars.Configuration.GaugeColor.Get( Name, AtkColor.Yellow );
+            Color = JobBars.Configuration.GaugeColor.Get( Name, ColorConstants.Yellow );
             RollingType = JobBars.Configuration.GaugeGCDRolling.Get( Name, GaugeGCDRollingType.GCD );
         }
 

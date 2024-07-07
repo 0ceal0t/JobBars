@@ -4,8 +4,11 @@ using JobBars.Helper;
 
 namespace JobBars.Atk {
     public unsafe partial class AtkBuilder {
+        private static readonly uint NODE_IDX_START = 89995001;
+        private static uint NodeIdx = NODE_IDX_START;
+
         public static AtkResNode* CreateResNode() {
-            var node = AtkHelper.CleanAlloc<AtkResNode>();
+            var node = UiHelper.CleanAlloc<AtkResNode>();
             node->Ctor();
 
             node->NodeId = ( NodeIdx++ );
@@ -15,7 +18,7 @@ namespace JobBars.Atk {
             node->Rotation = 0;
             node->Depth = 0;
             node->Depth_2 = 0;
-            node->Color = AtkColor.BYTE_White;
+            node->Color = ColorConstants.BYTE_White;
             node->ParentNode = null;
             node->ChildNode = null;
             node->ChildCount = 0;
@@ -29,7 +32,7 @@ namespace JobBars.Atk {
         }
 
         public static AtkTextNode* CreateTextNode() {
-            var node = AtkHelper.CleanAlloc<AtkTextNode>();
+            var node = UiHelper.CleanAlloc<AtkTextNode>();
             node->Ctor();
 
             node->AtkResNode.NodeId = ( NodeIdx++ );
@@ -41,7 +44,7 @@ namespace JobBars.Atk {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = AtkColor.BYTE_White;
+            node->AtkResNode.Color = ColorConstants.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;
@@ -51,14 +54,14 @@ namespace JobBars.Atk {
             node->AtkResNode.DrawFlags = 8;
 
             node->TextId = 0;
-            node->TextColor = AtkColor.BYTE_White;
+            node->TextColor = ColorConstants.BYTE_White;
             node->EdgeColor = new ByteColor {
                 R = 157,
                 G = 131,
                 B = 91,
                 A = 255
             };
-            node->BackgroundColor = AtkColor.BYTE_Transparent;
+            node->BackgroundColor = ColorConstants.BYTE_Transparent;
             node->LineSpacing = 18;
             node->AlignmentFontType = 21;
             node->FontSize = 18;
@@ -71,7 +74,7 @@ namespace JobBars.Atk {
         }
 
         public static AtkImageNode* CreateImageNode() {
-            var node = AtkHelper.CleanAlloc<AtkImageNode>();
+            var node = UiHelper.CleanAlloc<AtkImageNode>();
             node->Ctor();
 
             node->WrapMode = 1;
@@ -85,7 +88,7 @@ namespace JobBars.Atk {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = AtkColor.BYTE_White;
+            node->AtkResNode.Color = ColorConstants.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;
@@ -99,7 +102,7 @@ namespace JobBars.Atk {
         }
 
         public static AtkNineGridNode* CreateNineNode() {
-            var node = AtkHelper.CleanAlloc<AtkNineGridNode>();
+            var node = UiHelper.CleanAlloc<AtkNineGridNode>();
             node->Ctor();
 
             node->PartsTypeRenderType = 128;
@@ -113,7 +116,7 @@ namespace JobBars.Atk {
             node->AtkResNode.Rotation = 0;
             node->AtkResNode.Depth = 0;
             node->AtkResNode.Depth_2 = 0;
-            node->AtkResNode.Color = AtkColor.BYTE_White;
+            node->AtkResNode.Color = ColorConstants.BYTE_White;
             node->AtkResNode.ParentNode = null;
             node->AtkResNode.ChildNode = null;
             node->AtkResNode.ChildCount = 0;

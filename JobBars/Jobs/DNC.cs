@@ -11,43 +11,43 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class DNC {
         public static GaugeConfig[] Gauges => [
-            new GaugeProcsConfig($"{AtkHelper.Localize(JobIds.DNC)} {AtkHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig($"{UiHelper.Localize(JobIds.DNC)} {UiHelper.ProcText}", GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingSymmetry),
+                    new ProcConfig(UiHelper.Localize(BuffIds.FlourishingSymmetry),
                         [
                             new Item(BuffIds.FlourishingSymmetry),
                             new Item(BuffIds.SilkenSymmetry)
-                        ], AtkColor.BrightGreen),
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingFlow),
+                        ], ColorConstants.BrightGreen),
+                    new ProcConfig(UiHelper.Localize(BuffIds.FlourishingFlow),
                         [
                             new Item(BuffIds.FlourishingFlow),
                             new Item(BuffIds.SilkenFlow)
-                        ], AtkColor.DarkBlue),
-                    new ProcConfig(AtkHelper.Localize(BuffIds.ThreefoldFanDance), BuffIds.ThreefoldFanDance, AtkColor.HealthGreen),
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, AtkColor.LightBlue),
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FlourishingStarfall), BuffIds.FlourishingStarfall, AtkColor.Red)
+                        ], ColorConstants.DarkBlue),
+                    new ProcConfig(UiHelper.Localize(BuffIds.ThreefoldFanDance), BuffIds.ThreefoldFanDance, ColorConstants.HealthGreen),
+                    new ProcConfig(UiHelper.Localize(BuffIds.FourfoldFanDance), BuffIds.FourfoldFanDance, ColorConstants.LightBlue),
+                    new ProcConfig(UiHelper.Localize(BuffIds.FlourishingStarfall), BuffIds.FlourishingStarfall, ColorConstants.Red)
                 ]
             }),
-            new GaugeProcsConfig(AtkHelper.Localize(BuffIds.FinishingMoveReady), GaugeVisualType.Diamond, new GaugeProcProps{
+            new GaugeProcsConfig(UiHelper.Localize(BuffIds.FinishingMoveReady), GaugeVisualType.Diamond, new GaugeProcProps{
                 Procs = [
-                    new ProcConfig(AtkHelper.Localize(BuffIds.FinishingMoveReady), BuffIds.FinishingMoveReady, AtkColor.White)
+                    new ProcConfig(UiHelper.Localize(BuffIds.FinishingMoveReady), BuffIds.FinishingMoveReady, ColorConstants.White)
                 ]
             })
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.QuadTechFinish), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.QuadTechFinish), new BuffProps {
                 CD = 115, // -5 seconds for the dance to actually be cast
                 Duration = 20,
                 Icon = ActionIds.QuadTechFinish,
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
                 Triggers = [new Item(ActionIds.QuadTechFinish)]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.Devilment), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.Devilment), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.Devilment,
-                Color = AtkColor.BrightGreen,
+                Color = ColorConstants.BrightGreen,
                 Triggers = [new Item(ActionIds.Devilment)]
             })
         ];
@@ -55,19 +55,19 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.DNC, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig(AtkHelper.Localize(ActionIds.ShieldSamba), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.ShieldSamba), new CooldownProps {
                 Icon = ActionIds.ShieldSamba,
                 Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.ShieldSamba)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Improvisation), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Improvisation), new CooldownProps {
                 Icon = ActionIds.Improvisation,
                 Duration = 15,
                 CD = 120,
                 Triggers = [new Item(BuffIds.Improvisation)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.CuringWaltz), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.CuringWaltz), new CooldownProps {
                 Icon = ActionIds.CuringWaltz,
                 CD = 60,
                 Triggers = [new Item(ActionIds.CuringWaltz)]
@@ -75,7 +75,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Devilment), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Devilment), new IconBuffProps {
                 Icons = [ActionIds.Devilment],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Devilment), Duration = 20 }

@@ -11,10 +11,10 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class GNB {
         public static GaugeConfig[] Gauges => [
-            new GaugeGCDConfig(AtkHelper.Localize(BuffIds.NoMercy), GaugeVisualType.Arrow, new GaugeSubGCDProps {
+            new GaugeGCDConfig(UiHelper.Localize(BuffIds.NoMercy), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 9,
                 MaxDuration = 20,
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
                 Triggers = [
                     new Item(BuffIds.NoMercy)
                 ]
@@ -26,19 +26,19 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.GNB, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig(AtkHelper.Localize(ActionIds.Superbolide), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.Superbolide), new CooldownProps {
                 Icon = ActionIds.Superbolide,
                 Duration = 10,
                 CD = 360,
                 Triggers = [new Item(ActionIds.Superbolide)]
             }),
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Reprisal)} ({AtkHelper.Localize(JobIds.GNB)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Reprisal)} ({UiHelper.Localize(JobIds.GNB)})", new CooldownProps {
                 Icon = ActionIds.Reprisal,
                 Duration = 15,
                 CD = 60,
                 Triggers = [new Item(ActionIds.Reprisal)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.HeartOfLight), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.HeartOfLight), new CooldownProps {
                 Icon = ActionIds.HeartOfLight,
                 Duration = 15,
                 CD = 90,
@@ -47,7 +47,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
                 Icons = [
                     ActionIds.NoMercy,
                     ActionIds.SonicBreak
@@ -56,13 +56,13 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.Rampart)} ({AtkHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+            new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.GNB)})", new IconBuffProps {
                 Icons = [ActionIds.Rampart],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.GreatNebula), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.GreatNebula), new IconBuffProps {
                 Icons = [
                     ActionIds.Nebula,
                     ActionIds.GreatNebula
@@ -72,25 +72,25 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GreatNebula), Duration = 15 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Camouflage), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Camouflage), new IconBuffProps {
                 Icons = [ActionIds.Camouflage],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Camouflage), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer($"{AtkHelper.Localize(ActionIds.ArmsLength)} ({AtkHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+            new IconBuffReplacer($"{UiHelper.Localize(ActionIds.ArmsLength)} ({UiHelper.Localize(JobIds.GNB)})", new IconBuffProps {
                 Icons = [ActionIds.ArmsLength],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Superbolide), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Superbolide), new IconBuffProps {
                 Icons = [ActionIds.Superbolide],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Superbolide), Duration = 10 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.HeartOfCorundum), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.HeartOfCorundum), new IconBuffProps {
                 Icons =
                 [
                     ActionIds.HeartOfStone,

@@ -28,7 +28,7 @@ namespace JobBars.Gauges.Stacks {
         protected override void TickTracker() {
             var currentValue = 0;
             foreach( var trigger in Config.Triggers ) {
-                var value = AtkHelper.PlayerStatus.TryGetValue( trigger, out var elem ) ? elem.StackCount : 0;
+                var value = UiHelper.PlayerStatus.TryGetValue( trigger, out var elem ) ? elem.StackCount : 0;
                 currentValue = value > currentValue ? value : currentValue;
             }
 

@@ -86,7 +86,7 @@ namespace JobBars.Icons {
                         Offset = newOffset;
                     }
 
-                    if( JobBars.Configuration.IconTimerRing.Draw( $"Display Ring{_ID}", Name, Enabled, out var newRing ) ) {
+                    if( JobBars.Configuration.IconTimerRing.Draw( $"Display ring{_ID}", Name, Enabled, out var newRing ) ) {
                         ShowRing = newRing;
                         CreateIconProps();
                         JobBars.IconManager.Reset();

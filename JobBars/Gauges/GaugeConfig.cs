@@ -93,7 +93,7 @@ namespace JobBars.Gauges {
         }
 
         protected void DrawSoundEffect( string label = "Progress sound effect" ) {
-            if( ImGui.Button( "Test##SoundEffect" ) ) Helper.AtkHelper.PlaySoundEffect( SoundEffect );
+            if( ImGui.Button( "Test##SoundEffect" ) ) Helper.UiHelper.PlaySoundEffect( SoundEffect );
             ImGui.SameLine();
 
             ImGui.SetNextItemWidth( 200f );
@@ -104,10 +104,10 @@ namespace JobBars.Gauges {
             HelpMarker( "For macro sound effects, add 36. For example, <se.6> would be 6+36=42" );
         }
 
-        public void PlaySoundEffect() => Helper.AtkHelper.PlaySoundEffect( SoundEffect );
+        public void PlaySoundEffect() => Helper.UiHelper.PlaySoundEffect( SoundEffect );
 
         protected void DrawCompletionSoundEffect() {
-            if( ImGui.Button( "Test##CompletionSoundEffect" ) ) Helper.AtkHelper.PlaySoundEffect( CompletionSoundEffect );
+            if( ImGui.Button( "Test##CompletionSoundEffect" ) ) Helper.UiHelper.PlaySoundEffect( CompletionSoundEffect );
             ImGui.SameLine();
 
             ImGui.SetNextItemWidth( 200f );
@@ -118,7 +118,7 @@ namespace JobBars.Gauges {
             HelpMarker( "For macro sound effects, add 36. For example, <se.6> would be 6+36=42" );
         }
 
-        public void PlayCompletionSoundEffect() => Helper.AtkHelper.PlaySoundEffect( CompletionSoundEffect );
+        public void PlayCompletionSoundEffect() => Helper.UiHelper.PlaySoundEffect( CompletionSoundEffect );
 
         public static void HelpMarker( string text ) {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
@@ -136,7 +136,7 @@ namespace JobBars.Gauges {
             if( JobBars.DrawPositionView( Name + "##GaugePosition", Position, out var pos ) ) {
                 JobBars.Configuration.GaugeSplitPosition.Set( Name, pos );
                 SetSplitPosition( pos );
-                JobBars.GaugeManager.UpdatePositionScale();
+                //JobBars.GaugeManager.UpdatePositionScale();
             }
         }
 

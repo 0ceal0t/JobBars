@@ -4,17 +4,17 @@ namespace JobBars.Gauges {
     public abstract class GaugeTracker {
         public bool Disposed { get; private set; } = false;
 
-        protected Gauge UI { get; private set; }
+        protected Gauge GaugeUi { get; private set; }
 
         public bool Enabled => GetConfig().Enabled;
 
         public int Order => GetConfig().Order;
 
-        public int Height => UI?.GetHeight() ?? 0;
+        public int Height => GaugeUi?.GetHeight() ?? 0;
 
-        public int Width => UI?.GetWidth() ?? 0;
+        public int Width => GaugeUi?.GetWidth() ?? 0;
 
-        public int YOffset => UI?.GetYOffset() ?? 0;
+        public int YOffset => GaugeUi?.GetYOffset() ?? 0;
 
         public abstract GaugeConfig GetConfig();
 
@@ -22,29 +22,28 @@ namespace JobBars.Gauges {
 
         public abstract void ProcessAction( Item action );
 
-        public void SetPosition( Vector2 position ) => UI?.SetPosition( position );
+        public void SetPosition( Vector2 position ) => GaugeUi?.SetPosition( position );
 
-        public void UpdateSplitPosition() => UI?.SetSplitPosition( GetConfig().Position );
+        public void UpdateSplitPosition() => GaugeUi?.SetSplitPosition( GetConfig().Position );
 
-        public void UpdateVisual() => UI?.UpdateVisual();
+        public void UpdateVisual() => GaugeUi?.UpdateVisual();
 
         public void Tick() {
-            if( UI == null ) return;
+            if( GaugeUi == null ) return;
             TickTracker();
-            UI.Tick();
+            GaugeUi.Tick();
         }
 
         public void Cleanup() {
             Disposed = true;
-            if( UI == null ) return;
-            UI.Cleanup();
-            UI = null;
+            if( GaugeUi == null ) return;
+            GaugeUi = null;
         }
 
         protected void LoadUI( Gauge ui ) {
-            UI = ui;
-            if( UI == null ) return;
-            UI.UpdateVisual();
+            GaugeUi = ui;
+            if( GaugeUi == null ) return;
+            GaugeUi.UpdateVisual();
         }
 
         protected abstract void TickTracker();

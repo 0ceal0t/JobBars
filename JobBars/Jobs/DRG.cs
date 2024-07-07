@@ -13,31 +13,31 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class DRG {
         public static GaugeConfig[] Gauges => [
-            new GaugeGCDConfig(AtkHelper.Localize(BuffIds.LanceCharge), GaugeVisualType.Arrow, new GaugeSubGCDProps {
+            new GaugeGCDConfig(UiHelper.Localize(BuffIds.LanceCharge), GaugeVisualType.Arrow, new GaugeSubGCDProps {
                 MaxCounter = 8,
                 MaxDuration = 20,
-                Color = AtkColor.Red,
+                Color = ColorConstants.Red,
                 Triggers = [
                     new Item(BuffIds.LanceCharge)
                 ]
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.ChaoticSpring), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.ChaoticSpring), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 24,
-                Color = AtkColor.Purple,
+                Color = ColorConstants.Purple,
                 Triggers = [
                     new Item(BuffIds.ChaosThrust),
                     new Item(BuffIds.ChaoticSpring)
                 ]
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.PowerSurge), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.PowerSurge), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 30,
-                Color = AtkColor.BlueGreen,
+                Color = ColorConstants.BlueGreen,
                 Triggers = [
                     new Item(BuffIds.PowerSurge),
                 ]
             }),
-            new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.DRG)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = AtkColor.NoColor,
+            new GaugeChargesConfig($"{UiHelper.Localize(ActionIds.TrueNorth)} ({UiHelper.Localize(JobIds.DRG)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.NoColor,
                 SameColor = true,
                 Parts = [
                     new GaugesChargesPartProps {
@@ -61,11 +61,11 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.BattleLitany), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.BattleLitany), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.BattleLitany,
-                Color = AtkColor.LightBlue,
+                Color = ColorConstants.LightBlue,
                 Triggers = [new Item(ActionIds.BattleLitany)]
             })
         ];
@@ -73,7 +73,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.DRG, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.DRG)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Feint)} ({UiHelper.Localize(JobIds.DRG)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 15,
                 CD = 90,
@@ -82,13 +82,13 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.LanceCharge), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.LanceCharge), new IconBuffProps {
                 Icons = [ActionIds.LanceCharge],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.PowerSurge), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.PowerSurge), new IconBuffProps {
                 IsTimer = true,
                 Icons = [
                     ActionIds.Disembowel,
@@ -98,7 +98,7 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PowerSurge), Duration = 30 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.ChaosThrust), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.ChaosThrust), new IconBuffProps {
                 IsTimer = true,
                 Icons = [
                     ActionIds.ChaosThrust,

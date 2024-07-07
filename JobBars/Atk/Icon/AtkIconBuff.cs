@@ -5,8 +5,8 @@ using System;
 namespace JobBars.Atk {
     public unsafe class AtkIconBuff : AtkIcon {
         private AtkResNode* OriginalOverlay;
-        private AtkImageNode* Combo;
-        private AtkTextNode* BigText;
+        private readonly AtkImageNode* Combo;
+        private readonly AtkTextNode* BigText;
 
         public AtkIconBuff( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) :
             base( adjustedId, slotId, hotbarIdx, slotIdx, component, props ) {
@@ -15,7 +15,7 @@ namespace JobBars.Atk {
             OriginalOverlay = nodeList[1];
             var originalBorder = ( AtkImageNode* )nodeList[4];
 
-            Combo = AtkHelper.CloneNode( originalBorder );
+            Combo = UiHelper.CloneNode( originalBorder );
             Combo->AtkResNode.NodeId = NodeIdx++;
             Combo->AtkResNode.X = -2;
             Combo->AtkResNode.Width = 48;
@@ -26,7 +26,7 @@ namespace JobBars.Atk {
 
             // ====================
 
-            BigText = AtkHelper.CleanAlloc<AtkTextNode>();
+            BigText = UiHelper.CleanAlloc<AtkTextNode>();
             BigText->Ctor();
             BigText->AtkResNode.NodeId = NodeIdx++;
             BigText->AtkResNode.Type = NodeType.Text;
@@ -38,22 +38,22 @@ namespace JobBars.Atk {
             Combo->AtkResNode.ParentNode = rootNode;
             BigText->AtkResNode.ParentNode = rootNode;
 
-            AtkHelper.Link( OriginalOverlay, ( AtkResNode* )Combo );
-            AtkHelper.Link( ( AtkResNode* )Combo, ( AtkResNode* )BigText );
-            AtkHelper.Link( ( AtkResNode* )BigText, nodeList[15] );
+            UiHelper.Link( OriginalOverlay, ( AtkResNode* )Combo );
+            UiHelper.Link( ( AtkResNode* )Combo, ( AtkResNode* )BigText );
+            UiHelper.Link( ( AtkResNode* )BigText, nodeList[15] );
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            AtkHelper.Hide( Combo );
-            AtkHelper.Hide( BigText );
+            UiHelper.Hide( Combo );
+            UiHelper.Hide( BigText );
         }
 
         public override void SetProgress( float current, float max ) {
             if( State != IconState.BuffRunning ) {
                 State = IconState.BuffRunning;
-                AtkHelper.Hide( OriginalOverlay );
-                AtkHelper.Show( BigText );
-                AtkHelper.Show( Combo );
+                UiHelper.Hide( OriginalOverlay );
+                UiHelper.Show( BigText );
+                UiHelper.Show( Combo );
             }
             BigText->SetText( ( ( int )Math.Round( current ) ).ToString() );
         }
@@ -62,23 +62,23 @@ namespace JobBars.Atk {
             if( State == IconState.None ) return;
             State = IconState.None;
 
-            AtkHelper.Hide( BigText );
-            AtkHelper.Hide( Combo );
-            AtkHelper.Show( OriginalOverlay );
+            UiHelper.Hide( BigText );
+            UiHelper.Hide( Combo );
+            UiHelper.Show( OriginalOverlay );
         }
 
         public override void Tick( float dashPercent, bool border ) {
             // avoid doubling up on borders if combo_or_active
             var showBorder = CalcShowBorder( State == IconState.BuffRunning, false );
             Combo->PartId = !showBorder ? ( ushort )0 : ( ushort )( 6 + dashPercent * 7 );
-            AtkHelper.SetVisibility( Combo, showBorder );
+            UiHelper.SetVisibility( Combo, showBorder );
         }
 
         public override void OnDispose() {
-            AtkHelper.Link( OriginalOverlay, BigText->AtkResNode.PrevSiblingNode );
+            UiHelper.Link( OriginalOverlay, BigText->AtkResNode.PrevSiblingNode );
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            AtkHelper.Show( OriginalOverlay );
+            UiHelper.Show( OriginalOverlay );
             OriginalOverlay = null;
         }
 

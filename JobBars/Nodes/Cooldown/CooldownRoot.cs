@@ -14,7 +14,7 @@ namespace JobBars.Nodes.Cooldown {
         public CooldownRoot() : base( NodeType.Res ) {
             NodeID = JobBars.NodeId++;
             Size = new( 100, 100 );
-            Position = new( -40, -40 );
+            Position = JobBars.Configuration.CooldownPosition;
             NodeFlags = NodeFlags.Visible;
 
             for( var i = 0; i < 8; i++ ) Rows.Add( new CooldownRow() );

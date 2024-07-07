@@ -14,9 +14,9 @@ namespace JobBars.Atk {
         private AtkImageNode* OriginalCombo;
         public AtkImageNode* OriginalText;
 
-        private AtkImageNode* Ring;
-        private AtkTextNode* Text;
-        private AtkImageNode* Combo;
+        private readonly AtkImageNode* Ring;
+        private readonly AtkTextNode* Text;
+        private readonly AtkImageNode* Combo;
 
         public AtkIconTimer( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) :
             base( adjustedId, slotId, hotbarIdx, slotIdx, component, props ) {
@@ -33,7 +33,7 @@ namespace JobBars.Atk {
 
             OriginalText = IconComponent->UnknownImageNode;
 
-            Combo = AtkHelper.CloneNode( OriginalCombo );
+            Combo = UiHelper.CloneNode( OriginalCombo );
             Combo->AtkResNode.NodeId = NodeIdx++;
             Combo->AtkResNode.X = 0;
             Combo->AtkResNode.Width = 48;
@@ -45,12 +45,12 @@ namespace JobBars.Atk {
 
             Combo->AtkResNode.ParentNode = OriginalComboContainer->ParentNode;
 
-            AtkHelper.Link( OriginalPreCombo, ( AtkResNode* )Combo );
-            AtkHelper.Link( ( AtkResNode* )Combo, OriginalComboContainer->PrevSiblingNode );
+            UiHelper.Link( OriginalPreCombo, ( AtkResNode* )Combo );
+            UiHelper.Link( ( AtkResNode* )Combo, OriginalComboContainer->PrevSiblingNode );
 
             // ========================
 
-            Text = AtkHelper.CleanAlloc<AtkTextNode>();
+            Text = UiHelper.CleanAlloc<AtkTextNode>();
             Text->Ctor();
             Text->AtkResNode.NodeId = NodeIdx++;
             Text->AtkResNode.Type = NodeType.Text;
@@ -60,12 +60,12 @@ namespace JobBars.Atk {
 
             Text->AtkResNode.ParentNode = OriginalText->AtkResNode.ParentNode;
 
-            AtkHelper.Link( OriginalText->AtkResNode.NextSiblingNode, ( AtkResNode* )Text );
-            AtkHelper.Link( ( AtkResNode* )Text, OriginalText->AtkResNode.PrevSiblingNode );
+            UiHelper.Link( OriginalText->AtkResNode.NextSiblingNode, ( AtkResNode* )Text );
+            UiHelper.Link( ( AtkResNode* )Text, OriginalText->AtkResNode.PrevSiblingNode );
 
             // ==========================
 
-            Ring = AtkHelper.CloneNode( originalRing );
+            Ring = UiHelper.CloneNode( originalRing );
             Ring->AtkResNode.NodeId = NodeIdx++;
             Ring->AtkResNode.X = 2;
             Ring->AtkResNode.Y = 2;
@@ -80,20 +80,20 @@ namespace JobBars.Atk {
 
             Component->Component->UldManager.UpdateDrawNodeList();
 
-            AtkHelper.Show( Combo );
-            AtkHelper.Hide( Text );
-            AtkHelper.Hide( Ring );
+            UiHelper.Show( Combo );
+            UiHelper.Hide( Text );
+            UiHelper.Hide( Ring );
         }
 
         public override void SetProgress( float current, float max ) {
             if( State == IconState.TimerDone && current <= 0 ) return;
             State = IconState.TimerRunning;
 
-            AtkHelper.Show( Text );
+            UiHelper.Show( Text );
             Text->SetText( ( ( int )Math.Round( current ) ).ToString() );
 
             if( ShowRing ) {
-                AtkHelper.Show( Ring );
+                UiHelper.Show( Ring );
                 Ring->PartId = ( ushort )( 80 - ( float )( current / max ) * 80 );
             }
 
@@ -103,9 +103,9 @@ namespace JobBars.Atk {
 
         public override void SetDone() {
             State = IconState.TimerDone;
-            AtkHelper.Hide( Text );
+            UiHelper.Hide( Text );
 
-            AtkHelper.Hide( Ring );
+            UiHelper.Hide( Ring );
 
             JobBars.IconBuilder.RemoveIconOverride( new IntPtr( OriginalImage ) );
             SetDimmed( false );

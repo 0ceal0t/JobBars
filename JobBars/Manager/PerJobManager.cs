@@ -8,7 +8,7 @@ namespace JobBars.Data {
         protected override void DrawLeftColumn() {
             foreach( var job in JobToValue.Keys ) {
                 if( job == JobIds.OTHER ) continue;
-                if( ImGui.Selectable( AtkHelper.Localize( job ) + Id, SelectedJob == job ) ) {
+                if( ImGui.Selectable( UiHelper.Localize( job ) + Id, SelectedJob == job ) ) {
                     SelectedJob = job;
                 }
             }

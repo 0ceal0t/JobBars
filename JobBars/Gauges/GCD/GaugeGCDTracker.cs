@@ -59,7 +59,7 @@ namespace JobBars.Gauges.GCD {
 
             public void Tick() {
                 if( State == GaugeState.Active ) {
-                    var timeLeft = AtkHelper.TimeLeft( Config.MaxDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime );
+                    var timeLeft = UiHelper.TimeLeft( Config.MaxDuration, UiHelper.PlayerStatus, LastActiveTrigger, LastActiveTime );
                     if( timeLeft < 0 ) {
                         State = GaugeState.Finished;
                         StopTime = DateTime.Now;
@@ -129,7 +129,7 @@ namespace JobBars.Gauges.GCD {
                     refreshVisuals = true;
                 }
             }
-            if( refreshVisuals ) UI.UpdateVisual();
+            if( refreshVisuals ) GaugeUi.UpdateVisual();
         }
 
         protected override void TickTracker() {

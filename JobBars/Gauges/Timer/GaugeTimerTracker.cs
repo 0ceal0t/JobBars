@@ -39,7 +39,7 @@ namespace JobBars.Gauges.Timer {
             }
 
             public void Tick() {
-                var currentTimeLeft = AtkHelper.TimeLeft( Config.DefaultDuration, AtkHelper.PlayerStatus, LastActiveTrigger, LastActiveTime ) - Config.Offset;
+                var currentTimeLeft = UiHelper.TimeLeft( Config.DefaultDuration, UiHelper.PlayerStatus, LastActiveTrigger, LastActiveTime ) - Config.Offset;
                 if( currentTimeLeft > 0 && State == GaugeState.Inactive ) { // switching targets with DoTs on them, need to restart the icon, etc.
                     State = GaugeState.Active;
                 }
@@ -105,7 +105,7 @@ namespace JobBars.Gauges.Timer {
                     refreshVisuals = true;
                 }
             }
-            if( refreshVisuals ) UI.UpdateVisual();
+            if( refreshVisuals ) GaugeUi.UpdateVisual();
         }
 
         protected override void TickTracker() {

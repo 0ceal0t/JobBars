@@ -1,7 +1,7 @@
-using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
+using JobBars.Nodes.Builder;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,8 +15,7 @@ namespace JobBars.Buffs.Manager {
 
         public BuffManager() : base( "##JobBars_Buffs" ) {
             ApplyToTargetBuffs.AddRange( JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) ).ToList() );
-            JobBars.Builder.HideAllBuffPartyList();
-            JobBars.Builder.BuffRoot.IsVisible = false;
+            //JobBars.NodeBuilder.HideAllBuffPartyList();
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {
@@ -37,13 +36,13 @@ namespace JobBars.Buffs.Manager {
         }
 
         public void Tick() {
-            if( AtkHelper.CalcDoHide( JobBars.Configuration.BuffBarEnabled, JobBars.Configuration.BuffHideOutOfCombat, JobBars.Configuration.BuffHideWeaponSheathed ) ) {
-                JobBars.Builder.HideAllBuffPartyList();
-                JobBars.Builder.BuffRoot.IsVisible = false;
+            if( UiHelper.CalcDoHide( JobBars.Configuration.BuffBarEnabled, JobBars.Configuration.BuffHideOutOfCombat, JobBars.Configuration.BuffHideWeaponSheathed ) ) {
+                //JobBars.NodeBuilder.HideAllBuffPartyList();
+                JobBars.NodeBuilder.BuffRoot.IsVisible = false;
                 return;
             }
             else {
-                JobBars.Builder.BuffRoot.IsVisible = true;
+                JobBars.NodeBuilder.BuffRoot.IsVisible = true;
             }
 
             // ============================
@@ -61,13 +60,13 @@ namespace JobBars.Buffs.Manager {
 
                 var member = ObjectIdToMember.TryGetValue( partyMember.ObjectId, out var _member ) ? _member : new BuffPartyMember( partyMember.ObjectId, partyMember.IsPlayer );
                 member.Tick( activeBuffs, partyMember, out var highlight, out var partyText );
-                JobBars.Builder.SetBuffPartyListVisible( idx, highlight );
+                //JobBars.Builder.SetBuffPartyListVisible( idx, highlight );
                 newObjectIdToMember[partyMember.ObjectId] = member;
             }
 
-            for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) {
-                JobBars.Builder.SetBuffPartyListVisible( idx, false );
-            }
+            //for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) {
+            //    JobBars.Builder.SetBuffPartyListVisible( idx, false );
+            // }
 
             var buffIdx = 0;
             foreach( var buff in JobBars.Configuration.BuffOrderByActive ?
@@ -75,22 +74,22 @@ namespace JobBars.Buffs.Manager {
                 activeBuffs.OrderBy( b => b.Id )
             ) {
                 if( buffIdx >= ( BuffRoot.MAX_BUFFS - 1 ) ) break;
-                buff.TickUi( JobBars.Builder.BuffRoot.Buffs[buffIdx] );
+                buff.TickUi( JobBars.NodeBuilder.BuffRoot.Buffs[buffIdx] );
                 buffIdx++;
             }
             for( var i = buffIdx; i < BuffRoot.MAX_BUFFS; i++ ) {
-                JobBars.Builder.BuffRoot.Buffs[i].IsVisible = false;
+                JobBars.NodeBuilder.BuffRoot.Buffs[i].IsVisible = false;
             }
 
             ObjectIdToMember = newObjectIdToMember;
         }
 
         public static void UpdatePositionScale() {
-            AtkBuilder.SetPosition( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffPosition );
-            AtkBuilder.SetScale( JobBars.Builder.BuffRoot, JobBars.Configuration.BuffScale );
+            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.BuffRoot, JobBars.Configuration.BuffPosition );
+            NodeBuilder.SetScaleGlobal( JobBars.NodeBuilder.BuffRoot, JobBars.Configuration.BuffScale );
         }
 
-        public void ResetUI() {
+        public void ResetUi() {
             ObjectIdToMember.Clear();
         }
 

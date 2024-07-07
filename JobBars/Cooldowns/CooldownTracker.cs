@@ -22,8 +22,6 @@ namespace JobBars.Cooldowns {
         private Item LastActiveTrigger;
         private float TimeLeft;
 
-        private CooldownNode Node;
-
         public TrackerState CurrentState => State;
         public ActionIds Icon => Config.Icon;
 
@@ -42,10 +40,10 @@ namespace JobBars.Cooldowns {
         }
 
         public void Tick( Dictionary<Item, Status> buffDict ) {
-            if( State != TrackerState.Running && AtkHelper.CheckForTriggers( buffDict, Config.Triggers, out var trigger ) ) SetActive( trigger );
+            if( State != TrackerState.Running && UiHelper.CheckForTriggers( buffDict, Config.Triggers, out var trigger ) ) SetActive( trigger );
 
             if( State == TrackerState.Running ) {
-                TimeLeft = AtkHelper.TimeLeft( JobBars.Configuration.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime );
+                TimeLeft = UiHelper.TimeLeft( JobBars.Configuration.CooldownsHideActiveBuffDuration ? 0 : Config.Duration, buffDict, LastActiveTrigger, LastActiveTime );
                 if( TimeLeft <= 0 ) {
                     TimeLeft = 0;
                     State = TrackerState.OnCD; // mitigation needs to have a CD
@@ -63,12 +61,9 @@ namespace JobBars.Cooldowns {
         public void TickUi( CooldownNode node, float percent ) {
             if( node == null ) return;
 
-            if( Node != node || Node?.IconId != Config.Icon ) {
-                Node = node;
-                SetupUi();
-            }
+            if( node?.IconId != Config.Icon ) node.LoadIcon( Config.Icon );
 
-            Node.IsVisible = true;
+            node.IsVisible = true;
 
             if( State == TrackerState.None ) {
                 node.SetOffCd();
@@ -93,17 +88,9 @@ namespace JobBars.Cooldowns {
             else if( State == TrackerState.OffCD ) {
                 node.SetOffCd();
                 node.SetText( "" );
-                if( Config.ShowBorderWhenOffCD ) {
-                    node.SetDash( percent );
-                }
-                else {
-                    node.SetNoDash();
-                }
+                if( Config.ShowBorderWhenOffCD ) node.SetDash( percent );
+                else node.SetNoDash();
             }
-        }
-
-        private void SetupUi() {
-            Node.LoadIcon( Config.Icon );
         }
 
         public void Reset() {

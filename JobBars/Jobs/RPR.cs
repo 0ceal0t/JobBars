@@ -13,40 +13,40 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class RPR {
         public static GaugeConfig[] Gauges => [
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.SoulReaver), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.SoulReaver), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 2,
                 Triggers = [
                     new Item(BuffIds.SoulReaver),
                     new Item(BuffIds.SoulReaver2)
                 ],
-                Color = AtkColor.Red
+                Color = ColorConstants.Red
             }),
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.ImmortalSacrifice), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.ImmortalSacrifice), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 8,
                 Triggers = [
                     new Item(BuffIds.ImmortalSacrifice)
                 ],
-                Color = AtkColor.PurplePink
+                Color = ColorConstants.PurplePink
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.BloodsownCircle), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.BloodsownCircle), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 6,
                 DefaultDuration = 30,
-                Color = AtkColor.BlueGreen,
+                Color = ColorConstants.BlueGreen,
                 HideLowWarning = true,
                 Triggers = [
                     new Item(BuffIds.BloodsownCircle)
                 ]
             }),
-            new GaugeTimerConfig(AtkHelper.Localize(BuffIds.DeathsDesign), GaugeVisualType.Bar, new GaugeSubTimerProps {
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.DeathsDesign), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 60,
                 DefaultDuration = 30,
-                Color = AtkColor.Purple,
+                Color = ColorConstants.Purple,
                 Triggers = [
                     new Item(BuffIds.DeathsDesign)
                 ]
             }),
-            new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.RPR)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = AtkColor.NoColor,
+            new GaugeChargesConfig($"{UiHelper.Localize(ActionIds.TrueNorth)} ({UiHelper.Localize(JobIds.RPR)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.NoColor,
                 SameColor = true,
                 Parts = [
                     new GaugesChargesPartProps {
@@ -66,11 +66,11 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.ArcaneCircle), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.ArcaneCircle), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.ArcaneCircle,
-                Color = AtkColor.Red,
+                Color = ColorConstants.Red,
                 Triggers = [new Item(ActionIds.ArcaneCircle)]
             })
         ];
@@ -78,13 +78,13 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.RPR, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.RPR)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Feint)} ({UiHelper.Localize(JobIds.RPR)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 15,
                 CD = 90,
                 Triggers = [new Item(ActionIds.Feint)]
             }),
-            new CooldownConfig(AtkHelper.Localize(ActionIds.ArcaneCrest), new CooldownProps {
+            new CooldownConfig(UiHelper.Localize(ActionIds.ArcaneCrest), new CooldownProps {
                 Icon = ActionIds.ArcaneCrest,
                 CD = 30,
                 Triggers = [new Item(ActionIds.ArcaneCrest)]
@@ -92,7 +92,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => [
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.DeathsDesign), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.DeathsDesign), new IconBuffProps {
                 IsTimer = true,
                 Icons = [ActionIds.ShadowOfDeath],
                 Triggers = [

@@ -1,5 +1,4 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Atk;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace JobBars.Nodes.Cooldown {
 
             for( var idx = 0; idx < MAX_ITEMS; idx++ ) {
                 var node = new CooldownNode {
-                    Position = new( -( 5 + UICooldownItem.WIDTH ) * idx, 0 )
+                    Position = new( -( 5 + CooldownNode.WIDTH ) * idx, 0 )
                 };
                 Nodes.Add( node );
             }

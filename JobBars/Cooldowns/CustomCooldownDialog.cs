@@ -19,9 +19,9 @@ namespace JobBars.Cooldowns {
         private float CustomCD = 30;
         private float CustomDuration = 0;
 
-        private readonly ItemSelector CustomTriggerAction = new( "Trigger", "##CustomCD_Action", AtkHelper.ActionList );
-        private readonly ItemSelector CustomTriggerBuff = new( "Trigger", "##CustomCD_Buff", AtkHelper.StatusList );
-        private readonly ItemSelector CustomIcon = new( "Icon", "##CustomCD_Icon", AtkHelper.ActionList );
+        private readonly ItemSelector CustomTriggerAction = new( "Trigger", "##CustomCD_Action", UiHelper.ActionList );
+        private readonly ItemSelector CustomTriggerBuff = new( "Trigger", "##CustomCD_Buff", UiHelper.StatusList );
+        private readonly ItemSelector CustomIcon = new( "Icon", "##CustomCD_Icon", UiHelper.ActionList );
 
         private static CooldownManager Manager => JobBars.CooldownManager;
 
@@ -61,7 +61,7 @@ namespace JobBars.Cooldowns {
 
             if( icon.Data.Id != 0 && selected.Data.Id != 0 ) {
                 if( ImGui.Button( "+ Add" ) ) {
-                    var newName = $"{selected.Name} - Custom ({AtkHelper.Localize( SelectedJob )})";
+                    var newName = $"{selected.Name} - Custom ({UiHelper.Localize( SelectedJob )})";
                     var newProps = new CooldownProps {
                         CD = CustomCD,
                         Duration = CustomDuration,

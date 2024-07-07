@@ -23,8 +23,6 @@ namespace JobBars.Buffs {
         private float TimeLeft;
         private float Percent;
 
-        private BuffNode Node;
-
         public BuffState CurrentState => State;
         public uint Id => ( uint )Config.Icon;
         public bool Enabled => ( State == BuffState.Running || State == BuffState.OffCD || State == BuffState.OnCD_Visible );
@@ -49,10 +47,10 @@ namespace JobBars.Buffs {
         }
 
         public void Tick( Dictionary<Item, Status> buffDict ) {
-            if( State != BuffState.Running && AtkHelper.CheckForTriggers( buffDict, Config.Triggers, out var trigger ) ) SetActive( trigger );
+            if( State != BuffState.Running && UiHelper.CheckForTriggers( buffDict, Config.Triggers, out var trigger ) ) SetActive( trigger );
 
             if( State == BuffState.Running ) {
-                TimeLeft = AtkHelper.TimeLeft( Config.Duration, buffDict, LastActiveTrigger, LastActiveTime );
+                TimeLeft = UiHelper.TimeLeft( Config.Duration, buffDict, LastActiveTrigger, LastActiveTime );
                 if( TimeLeft <= 0 ) { // Buff over
                     Percent = 1f;
                     TimeLeft = 0;
@@ -78,38 +76,28 @@ namespace JobBars.Buffs {
         }
 
         public void TickUi( BuffNode node ) {
-            if( node == null ) {
-                Dalamud.Log( "here" );
-                return;
-            }
+            if( node == null ) return;
 
-            if( Node != node || Node?.IconId != Config.Icon ) {
-                Node = node;
-                SetupUI();
-            }
+            if( node?.IconId != Config.Icon ) node.LoadIcon( Config.Icon );
 
-            Node.IsVisible = true;
-            Node.SetColor( Config.Color );
+            node.IsVisible = true;
+            node.SetColor( Config.Color );
 
             if( State == BuffState.Running ) {
-                Node.SetOffCd();
-                Node.SetPercent( Percent );
-                Node.SetText( Text );
+                node.SetOffCd();
+                node.SetPercent( Percent );
+                node.SetText( Text );
             }
             else if( State == BuffState.OffCD ) {
-                Node.SetOffCd();
-                Node.SetPercent( 0 );
-                Node.SetText( "" );
+                node.SetOffCd();
+                node.SetPercent( 0 );
+                node.SetText( "" );
             }
             else if( State == BuffState.OnCD_Visible ) {
-                Node.SetOnCd();
-                Node.SetPercent( Percent );
-                Node.SetText( Text );
+                node.SetOnCd();
+                node.SetPercent( Percent );
+                node.SetText( Text );
             }
-        }
-
-        private void SetupUI() {
-            Node.LoadIcon( Config.Icon );
         }
 
         public void Reset() {

@@ -24,17 +24,17 @@ namespace JobBars.Atk {
 
             if( Highlight == null ) {
                 var toCopy = ( AtkNineGridNode* )targetGlowContainer->ChildNode;
-                Highlight = AtkHelper.CloneNode( toCopy );
+                Highlight = UiHelper.CloneNode( toCopy );
                 Highlight->ParentNode = toCopy->ParentNode;
 
                 Highlight->AtkResNode.MultiplyBlue = 50;
                 Highlight->AtkResNode.MultiplyRed = 150;
                 Highlight->AtkResNode.NodeId = 23;
-                AtkHelper.UpdatePart( Highlight->PartsList, 0, 112, 0, 48, 48 );
-                AtkHelper.Hide( Highlight );
+                UiHelper.UpdatePart( Highlight->PartsList, 0, 112, 0, 48, 48 );
+                UiHelper.Hide( Highlight );
             }
 
-            AtkHelper.Link( targetGlowContainer->ChildNode->PrevSiblingNode->PrevSiblingNode, ( AtkResNode* )Highlight );
+            UiHelper.Link( targetGlowContainer->ChildNode->PrevSiblingNode->PrevSiblingNode, ( AtkResNode* )Highlight );
 
             Attached = true;
         }
@@ -46,14 +46,14 @@ namespace JobBars.Atk {
             }
             if( targetGlowContainer == null ) return;
 
-            AtkHelper.Detach( ( AtkResNode* )Highlight );
+            UiHelper.Detach( ( AtkResNode* )Highlight );
 
             Attached = false;
         }
 
         public void SetHighlightVisibility( bool visible ) {
             if( Highlight == null ) return;
-            AtkHelper.SetVisibility( Highlight, visible );
+            UiHelper.SetVisibility( Highlight, visible );
         }
     }
 }

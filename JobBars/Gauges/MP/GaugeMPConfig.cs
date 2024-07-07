@@ -13,7 +13,7 @@ namespace JobBars.Gauges.MP {
             Segments = segments;
             if( defaultDisabled )
                 Enabled = JobBars.Configuration.GaugeEnabled.Get( Name, false ); // default disabled
-            Color = JobBars.Configuration.GaugeColor.Get( Name, AtkColor.MpPink );
+            Color = JobBars.Configuration.GaugeColor.Get( Name, ColorConstants.MpPink );
             ShowSegments = JobBars.Configuration.GaugeShowSegments.Get( Name );
         }
 

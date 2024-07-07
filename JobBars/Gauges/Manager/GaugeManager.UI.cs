@@ -1,5 +1,6 @@
 using ImGuiNET;
 using JobBars.Data;
+using JobBars.Nodes.Builder;
 using System;
 using System.Numerics;
 
@@ -105,14 +106,14 @@ namespace JobBars.Gauges.Manager {
             JobBars.SetWindowPosition( "Gauge Bar##GaugePosition", pos );
             JobBars.Configuration.GaugePositionGlobal = pos;
             JobBars.Configuration.Save();
-            JobBars.Builder.SetGaugePosition( pos );
+            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.GaugeRoot, pos );
         }
 
         private static void SetGaugePositionPerJob( JobIds job, Vector2 pos ) {
             JobBars.SetWindowPosition( $"Gauge Bar ({job})##GaugePosition", pos );
             JobBars.Configuration.GaugePerJobPosition.Set( $"{job}", pos );
             JobBars.Configuration.Save();
-            JobBars.Builder.SetGaugePosition( pos );
+            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.GaugeRoot, pos );
         }
 
         // ==========================================

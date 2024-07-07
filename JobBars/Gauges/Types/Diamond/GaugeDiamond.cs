@@ -1,15 +1,15 @@
-using JobBars.Atk;
+using JobBars.Nodes.Gauge.Diamond;
 
 namespace JobBars.Gauges.Types.Diamond {
-    public class GaugeDiamond<T> : Gauge<AtkDiamond, T> where T : GaugeTracker, IGaugeDiamondInterface {
+    public class GaugeDiamond<T> : Gauge<DiamondNode, T> where T : GaugeTracker, IGaugeDiamondInterface {
         private readonly int MaxStacks;
 
         public GaugeDiamond( T tracker, int idx ) {
             Tracker = tracker;
-            UI = JobBars.Builder.Diamonds[idx];
+            Node = JobBars.NodeBuilder.GaugeRoot.Diamonds[idx];
             MaxStacks = Tracker.GetTotalMaxTicks();
-            UI.SetMaxValue( Tracker.GetCurrentMaxTicks() );
-            UI.Clear();
+            Node.SetMaxValue( Tracker.GetCurrentMaxTicks() );
+            Node.Clear();
         }
 
         protected override int GetHeightGauge() => Tracker.GetDiamondTextVisible() ? 40 : 32;
@@ -24,21 +24,21 @@ namespace JobBars.Gauges.Types.Diamond {
 
         protected override void TickGauge() {
             for( var i = 0; i < Size; i++ ) {
-                UI.SetValue( i, Tracker.GetTickValue( Index( i ) ) );
+                Node.SetValue( i, Tracker.GetTickValue( Index( i ) ) );
             }
 
             if( !Tracker.GetDiamondTextVisible() ) return;
             for( var i = 0; i < Size; i++ ) {
-                UI.SetText( i, Tracker.GetDiamondText( Index( i ) ) );
+                Node.SetText( i, Tracker.GetDiamondText( Index( i ) ) );
             }
         }
 
         protected override void UpdateVisualGauge() {
-            UI.SetTextVisible( Tracker.GetDiamondTextVisible() );
-            UI.SetMaxValue( Tracker.GetCurrentMaxTicks() );
+            Node.SetTextVisible( Tracker.GetDiamondTextVisible() );
+            Node.SetMaxValue( Tracker.GetCurrentMaxTicks() );
 
             for( var i = 0; i < Size; i++ ) {
-                UI.SetColor( i, Tracker.GetTickColor( Index( i ) ) );
+                Node.SetColor( i, Tracker.GetTickColor( Index( i ) ) );
             }
         }
     }

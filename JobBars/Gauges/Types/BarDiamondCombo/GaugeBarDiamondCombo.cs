@@ -1,17 +1,18 @@
 using JobBars.Atk;
+using JobBars.Nodes.Gauge.BarDiamondCombo;
 
 namespace JobBars.Gauges.Types.BarDiamondCombo {
-    public class GaugeBarDiamondCombo<T> : Gauge<AtkBarDiamondCombo, T> where T : GaugeTracker, IGaugeBarDiamondComboInterface {
+    public class GaugeBarDiamondCombo<T> : Gauge<BarDiamondComboNode, T> where T : GaugeTracker, IGaugeBarDiamondComboInterface {
         public GaugeBarDiamondCombo( T tracker, int idx ) {
             Tracker = tracker;
-            UI = new AtkBarDiamondCombo( JobBars.Builder.Bars[idx], JobBars.Builder.Diamonds[idx] );
-            UI.SetSegments( Tracker.GetBarSegments() );
-            UI.SetTextColor( Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor );
-            UI.SetPercent( 0 );
-            UI.SetText( "0" );
+            Node = new( JobBars.NodeBuilder.GaugeRoot.Bars[idx], JobBars.NodeBuilder.GaugeRoot.Diamonds[idx] );
+            Node.SetSegments( Tracker.GetBarSegments() );
+            Node.SetTextColor( Tracker.GetBarDanger() ? ColorConstants.Red : ColorConstants.NoColor );
+            Node.SetPercent( 0 );
+            Node.SetText( "0" );
 
-            UI.SetMaxValue( Tracker.GetCurrentMaxTicks() );
-            UI.Clear();
+            Node.SetMaxValue( Tracker.GetCurrentMaxTicks() );
+            Node.Clear();
         }
 
         protected override int GetHeightGauge() => 50;
@@ -25,21 +26,21 @@ namespace JobBars.Gauges.Types.BarDiamondCombo {
         private int Index( int i ) => Reverse ? ( Size - i - 1 ) : i;
 
         protected override void TickGauge() {
-            UI.SetTextColor( Tracker.GetBarDanger() ? AtkColor.Red : AtkColor.NoColor );
-            UI.SetText( Tracker.GetBarText() );
-            UI.SetPercent( Tracker.GetBarPercent() );
+            Node.SetTextColor( Tracker.GetBarDanger() ? ColorConstants.Red : ColorConstants.NoColor );
+            Node.SetText( Tracker.GetBarText() );
+            Node.SetPercent( Tracker.GetBarPercent() );
 
             for( var i = 0; i < Size; i++ ) {
-                UI.SetDiamondValue( i, Tracker.GetTickValue( Index( i ) ) );
+                Node.SetDiamondValue( i, Tracker.GetTickValue( Index( i ) ) );
             }
         }
 
         protected override void UpdateVisualGauge() {
-            UI.SetGaugeColor( Tracker.GetColor() );
-            UI.SetBarTextVisible( Tracker.GetBarTextVisible() );
+            Node.SetBarColor( Tracker.GetColor() );
+            Node.SetBarTextVisible( Tracker.GetBarTextVisible() );
 
             for( var i = 0; i < Size; i++ ) {
-                UI.SetDiamondColor( i, Tracker.GetTickColor( Index( i ) ) );
+                Node.SetDiamondColor( i, Tracker.GetTickColor( Index( i ) ) );
             }
         }
     }

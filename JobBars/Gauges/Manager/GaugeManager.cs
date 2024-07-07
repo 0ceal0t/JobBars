@@ -1,6 +1,6 @@
 using JobBars.Data;
 using JobBars.Helper;
-
+using JobBars.Nodes.Builder;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -13,15 +13,12 @@ namespace JobBars.Gauges.Manager {
 
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new( [BuffIds.Excog] ); // which buffs on party members do we care about?
 
-        public GaugeManager() : base( "##JobBars_Gauges" ) {
-            JobBars.Builder.HideAllGauges();
-        }
+        public GaugeManager() : base( "##JobBars_Gauges" ) { }
 
         public void SetJob( JobIds job ) {
             foreach( var gauge in CurrentGauges ) gauge.Cleanup();
             CurrentGauges.Clear();
-            JobBars.Builder.HideAllGauges();
-
+            JobBars.NodeBuilder.GaugeRoot.HideAll();
 
             CurrentJob = job;
             for( var idx = 0; idx < CurrentConfigs.Length; idx++ ) {
@@ -37,18 +34,18 @@ namespace JobBars.Gauges.Manager {
         }
 
         public void Tick() {
-            if( AtkHelper.CalcDoHide( JobBars.Configuration.GaugesEnabled, JobBars.Configuration.GaugesHideOutOfCombat, JobBars.Configuration.GaugesHideWeaponSheathed ) ) {
-                JobBars.Builder.HideGauges();
+            if( UiHelper.CalcDoHide( JobBars.Configuration.GaugesEnabled, JobBars.Configuration.GaugesHideOutOfCombat, JobBars.Configuration.GaugesHideWeaponSheathed ) ) {
+                JobBars.NodeBuilder.GaugeRoot.IsVisible = false;
                 return;
             }
             else {
-                JobBars.Builder.ShowGauges();
+                JobBars.NodeBuilder.GaugeRoot.IsVisible = true;
             }
 
             // ============================
 
-            if( CurrentJob == JobIds.SCH && !AtkHelper.OutOfCombat ) { // only need this to catch excog for now
-                JobBars.SearchForPartyMemberStatus( ( int )Dalamud.ClientState.LocalPlayer.GameObjectId, AtkHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
+            if( CurrentJob == JobIds.SCH && !UiHelper.OutOfCombat ) { // only need this to catch excog for now
+                JobBars.SearchForPartyMemberStatus( ( int )Dalamud.ClientState.LocalPlayer.GameObjectId, UiHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
             }
 
             foreach( var gauge in CurrentGauges.Where( g => g.Enabled && !g.Disposed ) ) gauge.Tick();
@@ -57,8 +54,9 @@ namespace JobBars.Gauges.Manager {
         private Vector2 GetPerJobPosition() => JobBars.Configuration.GaugePerJobPosition.Get( $"{CurrentJob}" );
 
         public void UpdatePositionScale() {
-            JobBars.Builder.SetGaugePosition( JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
-            JobBars.Builder.SetGaugeScale( JobBars.Configuration.GaugeScale );
+            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.GaugeRoot,
+                JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
+            NodeBuilder.SetScaleGlobal( JobBars.NodeBuilder.GaugeRoot, JobBars.Configuration.GaugeScale );
 
             var position = 0;
             foreach( var gauge in CurrentGauges.OrderBy( g => g.Order ).Where( g => g.Enabled ) ) {

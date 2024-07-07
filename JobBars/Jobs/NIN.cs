@@ -12,22 +12,22 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class NIN {
         public static GaugeConfig[] Gauges => [
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.RaijuReady), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.RaijuReady), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 3,
                 Triggers = [
                     new Item(BuffIds.RaijuReady)
                 ],
-                Color = AtkColor.PurplePink
+                Color = ColorConstants.PurplePink
             }),
-            new GaugeStacksConfig(AtkHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.Bunshin), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 5,
                 Triggers = [
                     new Item(BuffIds.Bunshin)
                 ],
-                Color = AtkColor.Red
+                Color = ColorConstants.Red
             }),
-            new GaugeChargesConfig($"{AtkHelper.Localize(ActionIds.TrueNorth)} ({AtkHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
-                BarColor = AtkColor.NoColor,
+            new GaugeChargesConfig($"{UiHelper.Localize(ActionIds.TrueNorth)} ({UiHelper.Localize(JobIds.NIN)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.NoColor,
                 SameColor = true,
                 Parts = [
                     new GaugesChargesPartProps {
@@ -51,31 +51,31 @@ namespace JobBars.Jobs {
         ];
 
         public static BuffConfig[] Buffs => [
-            new BuffConfig(AtkHelper.Localize(ActionIds.Dokumori), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.Dokumori), new BuffProps {
                 CD = 120,
                 Duration = 20,
                 Icon = ActionIds.Dokumori,
-                Color = AtkColor.LightBlue,
+                Color = ColorConstants.LightBlue,
                 Triggers = [
                     new Item(ActionIds.Mug),
                     new Item(ActionIds.Dokumori)
                 ]
             }),
-            new BuffConfig(AtkHelper.Localize(ActionIds.KunaisBane), new BuffProps {
+            new BuffConfig(UiHelper.Localize(ActionIds.KunaisBane), new BuffProps {
                 CD = 60,
                 Duration = 15,
                 Icon = ActionIds.KunaisBane,
-                Color = AtkColor.Yellow,
+                Color = ColorConstants.Yellow,
                 Triggers = [
                     new Item(ActionIds.TrickAttack),
                     new Item(ActionIds.KunaisBane),
                 ]
             }),
-            new BuffConfig(AtkHelper.Localize(BuffIds.Bunshin), new BuffProps {
+            new BuffConfig(UiHelper.Localize(BuffIds.Bunshin), new BuffProps {
                 CD = 90,
                 Duration = 30,
                 Icon = ActionIds.Bunshin,
-                Color = AtkColor.Orange,
+                Color = ColorConstants.Orange,
                 Triggers = [new Item(BuffIds.Bunshin)]
             })
         ];
@@ -83,7 +83,7 @@ namespace JobBars.Jobs {
         public static Cursor Cursors => new( JobIds.NIN, CursorType.None, CursorType.GCD );
 
         public static CooldownConfig[] Cooldowns => [
-            new CooldownConfig($"{AtkHelper.Localize(ActionIds.Feint)} ({AtkHelper.Localize(JobIds.NIN)})", new CooldownProps {
+            new CooldownConfig($"{UiHelper.Localize(ActionIds.Feint)} ({UiHelper.Localize(JobIds.NIN)})", new CooldownProps {
                 Icon = ActionIds.Feint,
                 Duration = 15,
                 CD = 90,
@@ -92,7 +92,7 @@ namespace JobBars.Jobs {
         ];
 
         public static IconReplacer[] Icons => new[] {
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.KunaisBane), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.KunaisBane), new IconBuffProps {
                 Icons = [
                     ActionIds.TrickAttack,
                     ActionIds.KunaisBane,
@@ -102,7 +102,7 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.KunaisBane), Duration = 15 }
                 ]
             }),
-            new IconBuffReplacer(AtkHelper.Localize(BuffIds.Dokumori), new IconBuffProps {
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.Dokumori), new IconBuffProps {
                 Icons = [
                     ActionIds.Mug,
                     ActionIds.Dokumori
