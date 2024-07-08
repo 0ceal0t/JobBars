@@ -1,4 +1,7 @@
+using FFXIVClientStructs.FFXIV.Client.UI;
 using JobBars.Data;
+using JobBars.GameStructs;
+using JobBars.Helper;
 using System.Linq;
 
 namespace JobBars.Icons.Manager {
@@ -9,11 +12,7 @@ namespace JobBars.Icons.Manager {
         public IconManager() : base( "##JobBars_Icons" ) { }
 
         public void SetJob( JobIds job ) {
-            JobBars.IconBuilder.Reset();
             CurrentJob = job;
-
-            if( !JobBars.Configuration.IconsEnabled ) return;
-            foreach( var icon in CurrentIcons ) icon.Setup();
         }
 
         public void Reset() => SetJob( CurrentJob );
@@ -24,14 +23,18 @@ namespace JobBars.Icons.Manager {
 
         public void PerformAction( Item action ) {
             if( !JobBars.Configuration.IconsEnabled ) return;
-
             foreach( var icon in CurrentIcons.Where( i => i.Enabled ) ) icon.ProcessAction( action );
         }
 
         public void Tick() {
             if( !JobBars.Configuration.IconsEnabled ) return;
             foreach( var icon in CurrentIcons.Where( i => i.Enabled ) ) icon.Tick();
-            JobBars.IconBuilder.Tick();
+        }
+
+        public void UpdateIcon( HotbarSlotStruct* data, ActionBarSlot slot ) {
+            if( !JobBars.Configuration.IconsEnabled ) return;
+            var action = UiHelper.GetAdjustedAction( data->ActionId );
+            CurrentIcons.FirstOrDefault( i => i.AppliesTo( action ) )?.UpdateIcon( data, slot );
         }
     }
 }

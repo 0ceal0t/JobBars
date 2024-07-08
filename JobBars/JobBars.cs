@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
-using Dalamud.Hooking;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using JobBars.Atk;
@@ -12,7 +11,6 @@ using JobBars.Gauges.Manager;
 using JobBars.Helper;
 using JobBars.Icons.Manager;
 using JobBars.Nodes.Builder;
-using JobBars.Nodes.Icon;
 using KamiToolKit;
 using System;
 
@@ -20,8 +18,6 @@ namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public static Configuration Configuration { get; private set; }
         public static NodeBuilder NodeBuilder { get; private set; }
-        public static IconBuilder IconBuilder { get; private set; }
-
         public static GaugeManager GaugeManager { get; private set; }
         public static BuffManager BuffManager { get; private set; }
         public static CooldownManager CooldownManager { get; private set; }
@@ -31,18 +27,8 @@ namespace JobBars {
 
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
-        private delegate void ReceiveActionEffectDelegate( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail );
-        private readonly Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
-
-        private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 );
-        private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
-
-        private delegate IntPtr IconDimmedDelegate( IntPtr iconUnk, byte dimmed );
-        private readonly Hook<IconDimmedDelegate> IconDimmedHook;
-
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
-
 
         public static uint NodeId { get; set; } = 89990001;
 
@@ -70,15 +56,12 @@ namespace JobBars {
 
             ReceiveActionEffectHook = Dalamud.Hooks.HookFromSignature<ReceiveActionEffectDelegate>( Constants.ReceiveActionEffectSig, ReceiveActionEffect );
             ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
-            IconDimmedHook = Dalamud.Hooks.HookFromSignature<IconDimmedDelegate>( Constants.IconDimmedSig, IconDimmedDetour );
             ReceiveActionEffectHook.Enable();
-            IconDimmedHook.Enable();
             ActorControlSelfHook.Enable();
 
             AttachAddon = Configuration.AttachAddon;
             CooldownAttachAddon = Configuration.CooldownAttachAddon;
 
-            IconBuilder = new IconBuilder();
             NodeBuilder = new NodeBuilder();
             BuffManager = new BuffManager();
             CooldownManager = new CooldownManager();
@@ -102,7 +85,6 @@ namespace JobBars {
         public void Dispose() {
             ReceiveActionEffectHook?.Dispose();
             ActorControlSelfHook?.Dispose();
-            IconDimmedHook?.Dispose();
 
             Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
@@ -115,7 +97,6 @@ namespace JobBars {
             Dalamud.ClientState.TerritoryChanged -= OnZoneChange;
 
             Animation.Dispose();
-            IconBuilder?.Dispose();
             NodeBuilder?.Dispose();
             NativeController?.Dispose();
         }
@@ -156,7 +137,6 @@ namespace JobBars {
 
         private void OnLogout() {
             Dalamud.Log( "==== LOGOUT ====" );
-            IconBuilder.Reset();
             Animation.Dispose();
             CurrentJob = JobIds.OTHER;
         }
@@ -165,7 +145,7 @@ namespace JobBars {
             if( !NodeBuilder.IsLoaded ) return;
 
             GaugeManager?.Reset();
-            IconManager?.Reset(); // <---- TODO: what's going on with this?
+            IconManager?.Reset();
             BuffManager?.ResetTrackers();
             UiHelper.ResetTicks();
         }

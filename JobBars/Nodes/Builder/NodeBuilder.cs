@@ -1,6 +1,8 @@
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using JobBars.GameStructs;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
 using JobBars.Nodes.Cooldown;
@@ -14,6 +16,23 @@ using System.Numerics;
 
 namespace JobBars.Nodes.Builder {
     public unsafe partial class NodeBuilder {
+        public static readonly List<string> AllActionBars = [
+            "_ActionBar",
+            "_ActionBar01",
+            "_ActionBar02",
+            "_ActionBar03",
+            "_ActionBar04",
+            "_ActionBar05",
+            "_ActionBar06",
+            "_ActionBar07",
+            "_ActionBar08",
+            "_ActionBar09",
+            "_ActionCross",
+            "_ActionDoubleCrossL",
+            "_ActionDoubleCrossR"
+        ];
+
+
         private readonly HashSet<string> IsAttached = [];
         public bool IsLoaded => IsAttached.Count > 0;
 
@@ -38,6 +57,24 @@ namespace JobBars.Nodes.Builder {
             if( UiHelper.PartyListAddon is not null ) AttachToNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
             if( UiHelper.ChatLogAddon is not null ) AttachToNative( UiHelper.ChatLogAddon, "ChatLog" );
             if( UiHelper.ParameterAddon is not null ) AttachToNative( UiHelper.ParameterAddon, "_ParameterWidget" );
+
+            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreRequestedUpdate, AllActionBars, ActionBarUpdate );
+        }
+
+        private void ActionBarUpdate( AddonEvent _, AddonArgs args ) {
+            var addon = ( AddonActionBarBase* )args.Addon;
+            if( args is AddonRequestedUpdateArgs updateArgs ) {
+                var data = ( ( NumberArrayData** )updateArgs.NumberArrayData )[6];
+                var hotbarIdx = AllActionBars.IndexOf( args.AddonName );
+                var addonData = ( AddonHotbarNumberArray* )data->IntArray;
+                var hotbarData = ( HotbarSlotStruct* )( ( nint )addonData + 0x3C + sizeof( HotbarStruct ) * hotbarIdx );
+                for( var i = 0; i < addon->SlotCount; i++ ) {
+                    var slotData = ( HotbarSlotStruct* )( ( nint )hotbarData + sizeof( HotbarSlotStruct ) * i );
+                    var slot = addon->ActionBarSlotVector[i];
+
+                    JobBars.IconManager?.UpdateIcon( slotData, slot );
+                }
+            }
         }
 
         public void Unload() {
@@ -49,6 +86,8 @@ namespace JobBars.Nodes.Builder {
 
             Dalamud.AddonLifecycle.UnregisterListener( OnParametersSetup );
             Dalamud.AddonLifecycle.UnregisterListener( OnParametersFinalize );
+
+            Dalamud.AddonLifecycle.UnregisterListener( ActionBarUpdate );
 
             if( UiHelper.PartyListAddon is not null ) DetachFromNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
             if( UiHelper.ChatLogAddon is not null ) DetachFromNative( UiHelper.ChatLogAddon, "ChatLog" );

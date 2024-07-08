@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using static JobBars.Icons.IconReplacer;
 
 namespace JobBars.Data {
     public enum GaugePositionType {

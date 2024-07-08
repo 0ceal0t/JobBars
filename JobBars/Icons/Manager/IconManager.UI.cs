@@ -6,15 +6,8 @@ namespace JobBars.Icons.Manager {
         private readonly InfoBox<IconManager> LargeIconInfoBox = new() {
             Label = "Large Text",
             ContentsAction = ( IconManager manager ) => {
-                if( ImGui.Checkbox( "Buff icons" + manager.Id, ref JobBars.Configuration.IconBuffLarge ) ) {
-                    JobBars.IconBuilder.RefreshVisuals();
-                    JobBars.Configuration.Save();
-                }
-
-                if( ImGui.Checkbox( "Timer icons" + manager.Id, ref JobBars.Configuration.IconTimerLarge ) ) {
-                    JobBars.IconBuilder.RefreshVisuals();
-                    JobBars.Configuration.Save();
-                }
+                if( ImGui.Checkbox( "Buff icons" + manager.Id, ref JobBars.Configuration.IconBuffLarge ) ) JobBars.Configuration.Save();
+                if( ImGui.Checkbox( "Timer icons" + manager.Id, ref JobBars.Configuration.IconTimerLarge ) ) JobBars.Configuration.Save();
             }
         };
 

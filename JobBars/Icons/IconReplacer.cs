@@ -1,29 +1,30 @@
+using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
 using JobBars.Data;
+using JobBars.GameStructs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using IconComboType = JobBars.Atk.IconComboType;
-using IconProps = JobBars.Atk.IconProps;
 
 namespace JobBars.Icons {
     public abstract class IconReplacer {
-        public static readonly IconComboType[] ValidComboTypes = ( IconComboType[] )Enum.GetValues( typeof( IconComboType ) );
-
-        public enum IconState {
-            Inactive,
-            Active
+        public enum IconComboType {
+            Combo_Or_Active,
+            Combo_And_Active,
+            Only_When_Combo,
+            Only_When_Active,
+            Never
         }
+
+        public static readonly IconComboType[] ValidComboTypes = ( IconComboType[] )Enum.GetValues( typeof( IconComboType ) );
 
         public bool Enabled;
 
         public readonly string Name;
-        protected readonly bool IsTimer;
-        protected readonly List<uint> Icons;
-        protected IconState State = IconState.Inactive;
+        public readonly bool IsTimer;
+        public readonly List<uint> Icons;
         protected IconComboType ComboType;
-        protected IconProps IconProps;
         protected float Offset;
         protected bool ShowRing;
 
@@ -35,30 +36,11 @@ namespace JobBars.Icons {
             ComboType = JobBars.Configuration.IconComboType.Get( Name );
             Offset = JobBars.Configuration.IconTimerOffset.Get( Name );
             ShowRing = JobBars.Configuration.IconTimerRing.Get( Name );
-            CreateIconProps();
-        }
-
-        private void CreateIconProps() {
-            IconProps = new UIIconProps {
-                IsTimer = IsTimer,
-                ComboType = ComboType,
-                ShowRing = ShowRing
-            };
-        }
-
-        public void Setup() {
-            State = IconState.Inactive;
-            if( !Enabled ) return;
-            JobBars.IconBuilder.Setup( Icons, IconProps );
         }
 
         public abstract void Tick();
 
         public abstract void ProcessAction( Item action );
-
-        protected void SetIcon( float current, float duration ) => JobBars.IconBuilder.SetProgress( Icons, current, duration );
-
-        protected void ResetIcon() => JobBars.IconBuilder.SetDone( Icons );
 
         public void Draw( string id, JobIds _ ) {
             var _ID = id + Name;
@@ -70,27 +52,12 @@ namespace JobBars.Icons {
                 ImGui.PopStyleColor();
                 ImGui.Indent();
 
-                if( JobBars.Configuration.IconEnabled.Draw( $"Enabled{_ID}", Name, Enabled, out var newEnabled ) ) {
-                    Enabled = newEnabled;
-                    JobBars.IconManager.Reset();
-                }
-
-                if( JobBars.Configuration.IconComboType.Draw( $"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType ) ) {
-                    ComboType = newComboType;
-                    CreateIconProps();
-                    JobBars.IconManager.Reset();
-                }
+                if( JobBars.Configuration.IconEnabled.Draw( $"Enabled{_ID}", Name, Enabled, out var newEnabled ) ) Enabled = newEnabled;
+                if( JobBars.Configuration.IconComboType.Draw( $"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType ) ) ComboType = newComboType;
 
                 if( IsTimer ) {
-                    if( JobBars.Configuration.IconTimerOffset.Draw( $"Time offset{_ID}", Name, Offset, out var newOffset ) ) {
-                        Offset = newOffset;
-                    }
-
-                    if( JobBars.Configuration.IconTimerRing.Draw( $"Display ring{_ID}", Name, Enabled, out var newRing ) ) {
-                        ShowRing = newRing;
-                        CreateIconProps();
-                        JobBars.IconManager.Reset();
-                    }
+                    if( JobBars.Configuration.IconTimerOffset.Draw( $"Time offset{_ID}", Name, Offset, out var newOffset ) ) Offset = newOffset;
+                    if( JobBars.Configuration.IconTimerRing.Draw( $"Display ring{_ID}", Name, Enabled, out var newRing ) ) ShowRing = newRing;
                 }
 
                 ImGui.Unindent();
@@ -99,5 +66,9 @@ namespace JobBars.Icons {
                 ImGui.PopStyleColor();
             }
         }
+
+        public bool AppliesTo( uint actionId ) => Enabled && Icons.Contains( actionId );
+
+        public abstract unsafe void UpdateIcon( HotbarSlotStruct* data, ActionBarSlot slot );
     }
 }

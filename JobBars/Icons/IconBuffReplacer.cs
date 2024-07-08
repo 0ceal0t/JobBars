@@ -1,5 +1,8 @@
+using FFXIVClientStructs.FFXIV.Client.UI;
 using JobBars.Data;
+using JobBars.GameStructs;
 using JobBars.Helper;
+using System;
 
 namespace JobBars.Icons {
     public struct IconBuffProps {
@@ -14,7 +17,17 @@ namespace JobBars.Icons {
     }
 
     public class IconBuffReplacer : IconReplacer {
+        public enum IconBuffState {
+            Inactive,
+            Active,
+            Done
+        }
+
         private readonly IconBuffTriggerStruct[] Triggers;
+
+        private IconBuffState State = IconBuffState.Inactive;
+        private float MaxDuration;
+        private float TimeLeft;
 
         public IconBuffReplacer( string name, IconBuffProps props ) : base( name, props.IsTimer, props.Icons ) {
             Triggers = props.Triggers;
@@ -23,29 +36,66 @@ namespace JobBars.Icons {
         public override void ProcessAction( Item action ) { }
 
         public override void Tick() {
-            var timeLeft = -1f;
-            var maxDuration = 1f;
+            TimeLeft = -1f;
+            MaxDuration = 1f;
             foreach( var trigger in Triggers ) {
                 if( UiHelper.PlayerStatus.TryGetValue( trigger.Trigger, out var value ) ) {
-                    timeLeft = value.RemainingTime - Offset;
-                    maxDuration = trigger.Duration - Offset;
+                    TimeLeft = value.RemainingTime - Offset;
+                    MaxDuration = trigger.Duration - Offset;
                     break;
                 }
             }
 
-            if( timeLeft > 0 && State == IconState.Inactive ) {
-                State = IconState.Active;
-            }
+            if( TimeLeft > 0 && State != IconBuffState.Active ) State = IconBuffState.Active;
 
-            if( State == IconState.Active ) {
-                if( timeLeft <= 0 ) {
-                    timeLeft = 0;
-                    State = IconState.Inactive;
+            if( State == IconBuffState.Active ) {
+                if( TimeLeft <= 0 ) {
+                    TimeLeft = 0;
+                    State = IconBuffState.Done;
                 }
-
-                if( timeLeft == 0 ) ResetIcon();
-                else SetIcon( timeLeft, maxDuration );
             }
         }
+
+        public override unsafe void UpdateIcon( HotbarSlotStruct* data, ActionBarSlot slot ) {
+            if( State == IconBuffState.Active ) {
+                if( IsTimer ) { // Timer
+                    data->YellowBorder = CalcShowBorder( false, data->YellowBorder );
+                    data->TextColor = 0;
+                    data->Usable = false;
+                    data->CdText = ( uint )Math.Round( TimeLeft );
+
+                    if( JobBars.Configuration.IconTimerLarge ) data->TextStyle = 5;
+
+                    if( ShowRing ) {
+                        data->CdPercent = ( uint )Math.Round( 100f * ( 1f - ( TimeLeft / MaxDuration ) ) );
+                        if( data->CdPercent == 100 ) data->CdPercent = 0;
+                        data->UseRing = true;
+                    }
+                }
+                else { // Buff
+                    data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
+                    data->TextColor = 0;
+                    data->CdText = ( uint )Math.Round( TimeLeft );
+                    data->GcdSwingPercent = 0;
+                    data->CdPercent = 0;
+                    data->Usable = true;
+                    data->UseRing = false;
+
+                    if( JobBars.Configuration.IconBuffLarge ) data->TextStyle = 5;
+                }
+            }
+            else if( State == IconBuffState.Done && IsTimer ) {
+                data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
+            }
+        }
+
+        protected bool CalcShowBorder( bool active, bool border ) => ComboType switch {
+            IconComboType.Only_When_Combo => border,
+            IconComboType.Only_When_Active => active,
+            IconComboType.Combo_Or_Active => border || active,
+            IconComboType.Combo_And_Active => border && active,
+            IconComboType.Never => false,
+            _ => false
+        };
     }
 }

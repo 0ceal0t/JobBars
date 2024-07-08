@@ -102,6 +102,16 @@ namespace JobBars.GameStructs {
     public unsafe struct HotbarSlotStruct {
         [FieldOffset( 0x00 )] public HotbarSlotStructType Type;
         [FieldOffset( 0x0C )] public uint ActionId;
+
+        [FieldOffset( 4 )] public uint TextColor;
+        [FieldOffset( 8 )] public uint TextStyle;
+        [FieldOffset( 28 )] public bool UseRing;
+        [FieldOffset( 32 )] public uint GcdSwingPercent;
+        [FieldOffset( 36 )] public uint CdPercent;
+        [FieldOffset( 40 )] public uint CdText;
+        [FieldOffset( 64 )] public bool OutOfRange;
+        [FieldOffset( 24 )] public bool Usable;
+
         [FieldOffset( 0x38 )] public bool YellowBorder;
     }
 

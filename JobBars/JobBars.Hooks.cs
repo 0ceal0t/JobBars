@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Hooking;
 using JobBars.Data;
 using JobBars.GameStructs;
 using JobBars.Helper;
@@ -7,6 +8,12 @@ using System.Collections.Generic;
 
 namespace JobBars {
     public unsafe partial class JobBars {
+        private delegate void ReceiveActionEffectDelegate( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail );
+        private readonly Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
+
+        private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 );
+        private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
+
         private void ReceiveActionEffect( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail ) {
             if( !NodeBuilder.IsLoaded || !Dalamud.ClientState.IsLoggedIn ) {
                 ReceiveActionEffectHook.Original( sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail );
@@ -116,14 +123,6 @@ namespace JobBars {
                 CooldownManager?.ResetTrackers();
                 UiHelper.ResetTicks();
             }
-        }
-
-        private IntPtr IconDimmedDetour( IntPtr iconUnk, byte dimmed ) {
-            var icon = IconDimmedHook.Original( iconUnk, dimmed );
-            if( !NodeBuilder.IsLoaded ) return icon;
-
-            IconBuilder?.ProcessIconOverride( icon );
-            return icon;
         }
 
         private static bool IsPet( ulong objectId, int ownerId ) {
