@@ -8,7 +8,7 @@ namespace JobBars.Atk {
         private readonly AtkImageNode* Combo;
         private readonly AtkTextNode* BigText;
 
-        public AtkIconBuff( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) :
+        public AtkIconBuff( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, IconProps props ) :
             base( adjustedId, slotId, hotbarIdx, slotIdx, component, props ) {
 
             var nodeList = Component->Component->UldManager.NodeList;

@@ -27,7 +27,7 @@ namespace JobBars.Nodes.Icon {
         ];
         private static readonly int MILLIS_LOOP = 250;
 
-        private readonly Dictionary<uint, UIIconProps> IconConfigs = [];
+        private readonly Dictionary<uint, IconProps> IconConfigs = [];
         private readonly List<AtkIcon> Icons = [];
         private readonly HashSet<IntPtr> IconOverride = [];
 
@@ -37,12 +37,12 @@ namespace JobBars.Nodes.Icon {
             public int HotBarIndex;
             public int SlotIndex;
             public AtkComponentNode* Component;
-            public UIIconProps Props;
+            public IconProps Props;
         }
 
         public IconBuilder() { }
 
-        public void Setup( List<uint> triggers, UIIconProps props ) {
+        public void Setup( List<uint> triggers, IconProps props ) {
             if( triggers == null ) return;
 
             foreach( var trigger in triggers ) {
@@ -65,6 +65,8 @@ namespace JobBars.Nodes.Icon {
         }
 
         public void Tick() {
+            return;
+
             var time = DateTime.Now;
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = ( float )( millis % MILLIS_LOOP ) / MILLIS_LOOP;

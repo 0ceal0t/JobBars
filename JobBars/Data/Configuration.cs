@@ -164,7 +164,7 @@ namespace JobBars.Data {
         public bool IconBuffLarge = true;
         public bool IconTimerLarge = false;
         public BoolValueConfig IconEnabled = new( true );
-        public ComboValueConfig<UIIconComboType> IconComboType = new();
+        public ComboValueConfig<IconComboType> IconComboType = new();
         public FloatValueConfig IconTimerOffset = new( 0f );
         public BoolValueConfig IconTimerRing = new( true );
 

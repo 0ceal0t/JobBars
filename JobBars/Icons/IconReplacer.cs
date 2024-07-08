@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using UIIconComboType = JobBars.Atk.UIIconComboType;
-using UIIconProps = JobBars.Atk.UIIconProps;
+using IconComboType = JobBars.Atk.IconComboType;
+using IconProps = JobBars.Atk.IconProps;
 
 namespace JobBars.Icons {
     public abstract class IconReplacer {
-        public static readonly UIIconComboType[] ValidComboTypes = ( UIIconComboType[] )Enum.GetValues( typeof( UIIconComboType ) );
+        public static readonly IconComboType[] ValidComboTypes = ( IconComboType[] )Enum.GetValues( typeof( IconComboType ) );
 
         public enum IconState {
             Inactive,
@@ -22,8 +22,8 @@ namespace JobBars.Icons {
         protected readonly bool IsTimer;
         protected readonly List<uint> Icons;
         protected IconState State = IconState.Inactive;
-        protected UIIconComboType ComboType;
-        protected UIIconProps IconProps;
+        protected IconComboType ComboType;
+        protected IconProps IconProps;
         protected float Offset;
         protected bool ShowRing;
 

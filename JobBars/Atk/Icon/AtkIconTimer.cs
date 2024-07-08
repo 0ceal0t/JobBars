@@ -18,7 +18,7 @@ namespace JobBars.Atk {
         private readonly AtkTextNode* Text;
         private readonly AtkImageNode* Combo;
 
-        public AtkIconTimer( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, UIIconProps props ) :
+        public AtkIconTimer( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, IconProps props ) :
             base( adjustedId, slotId, hotbarIdx, slotIdx, component, props ) {
 
             var nodeList = Component->Component->UldManager.NodeList;

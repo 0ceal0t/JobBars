@@ -1,7 +1,7 @@
-using FFXIVClientStructs.FFXIV.Client.Graphics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit.Nodes;
 
-namespace JobBars.Atk {
+namespace JobBars.Nodes.Icon {
     public enum IconComboType {
         Combo_Or_Active,
         Combo_And_Active,
@@ -16,7 +16,7 @@ namespace JobBars.Atk {
         public bool ShowRing;
     }
 
-    public abstract unsafe class AtkIcon {
+    public unsafe abstract class IconNode {
         protected enum IconState {
             None,
             TimerRunning,
@@ -38,9 +38,7 @@ namespace JobBars.Atk {
 
         private bool Disposed = false;
 
-        protected uint NodeIdx = 200;
-
-        public AtkIcon( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, IconProps props ) {
+        public IconNode( uint adjustedId, uint slotId, int hotbarIdx, int slotIdx, AtkComponentNode* component, IconProps props ) {
             ComboType = props.ComboType;
             ShowRing = props.ShowRing;
 
@@ -71,38 +69,30 @@ namespace JobBars.Atk {
 
         public abstract void RefreshVisuals();
 
-        protected static void SetTextSmall( AtkTextNode* text ) {
-            text->AtkResNode.Width = 48;
-            text->AtkResNode.Height = 12;
-            text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
-            text->EdgeColor = new ByteColor { R = 51, G = 51, B = 51, A = 255 };
-            text->LineSpacing = 12;
-            text->AlignmentFontType = 3;
-            text->FontSize = 12;
-            text->TextFlags = 8;
+        protected static void SetTextSmall( TextNode text ) {
+            text.Size = new( 48, 12 );
+            text.TextColor = new( 1f, 1f, 1f, 1f );
+            text.TextOutlineColor = new( 51f / 255f, 51f / 255f, 51f / 255f, 1f );
+            text.LineSpacing = 12;
+            text.AlignmentFontType = 3;
+            text.FontSize = 12;
+            text.TextFlags = ( TextFlags )8;
         }
 
-        protected static void SetTextLarge( AtkTextNode* text ) {
-            text->AtkResNode.Width = 40;
-            text->AtkResNode.Height = 35;
-            text->TextColor = new ByteColor { R = 255, G = 255, B = 255, A = 255 };
-            text->EdgeColor = new ByteColor { R = 0, G = 0, B = 0, A = 255 };
-            text->LineSpacing = 12;
-            text->AlignmentFontType = 52;
-            text->FontSize = 24;
-            text->TextFlags = 8;
+        protected static void SetTextLarge( TextNode text ) {
+            text.Size = new( 40, 35 );
+            text.TextColor = new( 1f, 1f, 1f, 1f );
+            text.TextOutlineColor = new( 0f, 0f, 0f, 1f );
+            text.LineSpacing = 12;
+            text.AlignmentFontType = 52;
+            text.FontSize = 24;
+            text.TextFlags = ( TextFlags )8;
         }
 
         public void Dispose() {
-            if( Disposed ) {
-                return;
-            }
+            if( Disposed ) return;
             Disposed = true;
-
             OnDispose();
-
-            Component = null;
-            IconComponent = null;
         }
     }
 }
