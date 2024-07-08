@@ -1,4 +1,3 @@
-using FFXIVClientStructs.FFXIV.Client.UI;
 using JobBars.Data;
 using JobBars.GameStructs;
 using JobBars.Helper;
@@ -56,13 +55,14 @@ namespace JobBars.Icons {
             }
         }
 
-        public override unsafe void UpdateIcon( HotbarSlotStruct* data, ActionBarSlot slot ) {
+        public override unsafe void UpdateIcon( HotbarSlotStruct* data ) {
             if( State == IconBuffState.Active ) {
                 if( IsTimer ) { // Timer
                     data->YellowBorder = CalcShowBorder( false, data->YellowBorder );
                     data->TextColor = 0;
                     data->Usable = false;
                     data->CdText = ( uint )Math.Round( TimeLeft );
+                    data->InRange = true;
 
                     if( JobBars.Configuration.IconTimerLarge ) data->TextStyle = 5;
 
@@ -80,6 +80,7 @@ namespace JobBars.Icons {
                     data->CdPercent = 0;
                     data->Usable = true;
                     data->UseRing = false;
+                    data->InRange = true;
 
                     if( JobBars.Configuration.IconBuffLarge ) data->TextStyle = 5;
                 }

@@ -109,7 +109,7 @@ namespace JobBars.GameStructs {
         [FieldOffset( 32 )] public uint GcdSwingPercent;
         [FieldOffset( 36 )] public uint CdPercent;
         [FieldOffset( 40 )] public uint CdText;
-        [FieldOffset( 64 )] public bool OutOfRange;
+        [FieldOffset( 64 )] public bool InRange;
         [FieldOffset( 24 )] public bool Usable;
 
         [FieldOffset( 0x38 )] public bool YellowBorder;
