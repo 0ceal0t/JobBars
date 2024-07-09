@@ -48,11 +48,12 @@ namespace JobBars.Nodes.Gauge.Diamond {
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,
+                Position = new( 0, 20 ),
+                Size = new( 32, 32 ),
                 FontSize = 14,
                 LineSpacing = 14,
-                AlignmentFontType = 52,
-                FontType = FontType.Jupiter,
-                NodeFlags = NodeFlags.Visible,
+                AlignmentFontType = 4,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorRight,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 40f / 255f, 40f / 255f, 40f / 255f, 1 ),
                 TextId = 0,
