@@ -119,7 +119,7 @@ namespace JobBars {
             if( arg1 == Constants.WipeArg1 ) {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
-                BuffManager?.ResetTrackers();
+                BuffManager?.Reset();
                 CooldownManager?.ResetTrackers();
                 UiHelper.ResetTicks();
             }

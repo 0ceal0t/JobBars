@@ -102,11 +102,17 @@ namespace JobBars {
         }
 
         private void OnFrameworkUpdate( IFramework framework ) {
-            if( Dalamud.ClientState.IsPvP ) return;
-            if( !Dalamud.ClientState.IsLoggedIn ) return;
-            if( Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ) return;
+            if( Dalamud.ClientState.IsPvP ||
+                !Dalamud.ClientState.IsLoggedIn ||
+                Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ||
+                !NodeBuilder.IsLoaded ) {
 
-            if( !NodeBuilder.IsLoaded ) return;
+                if( NodeBuilder.GaugeRoot != null ) NodeBuilder.GaugeRoot.IsVisible = false;
+                if( NodeBuilder.BuffRoot != null ) NodeBuilder.BuffRoot.IsVisible = false;
+                if( NodeBuilder.CooldownRoot != null ) NodeBuilder.CooldownRoot.IsVisible = false;
+
+                return;
+            }
 
             UiHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
             UiHelper.UpdatePlayerStatus();
@@ -146,7 +152,7 @@ namespace JobBars {
 
             GaugeManager?.Reset();
             IconManager?.Reset();
-            BuffManager?.ResetTrackers();
+            BuffManager?.Reset();
             UiHelper.ResetTicks();
         }
 

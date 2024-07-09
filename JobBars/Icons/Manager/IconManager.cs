@@ -14,7 +14,9 @@ namespace JobBars.Icons.Manager {
             CurrentJob = job;
         }
 
-        public void Reset() => SetJob( CurrentJob );
+        public void Reset() {
+            foreach( var item in CurrentIcons ) item.Reset();
+        }
 
         public void ResetJob( JobIds job ) {
             if( job == CurrentJob ) Reset();

@@ -25,7 +25,9 @@ namespace JobBars.Nodes.Buff {
 
             Icon = new ImageNode() {
                 NodeID = JobBars.NodeId++,
-                NodeFlags = NodeFlags.Visible
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
+                WrapMode = WrapMode.Unknown,
+                ImageNodeFlags = 0
             };
             Icon.LoadIcon( 405 );
 
@@ -78,10 +80,11 @@ namespace JobBars.Nodes.Buff {
             Text.Size = new( WIDTH, HEIGHT );
             Icon.Size = new( WIDTH, HEIGHT );
             Overlay.Width = WIDTH;
+
             Icon.TextureCoordinates = new( ( 40 - WIDTH ) / 2, ( 40 - HEIGHT ) / 2 );
             Icon.TextureSize = new( WIDTH, HEIGHT );
-            Border.Size = new( WIDTH + 8, HEIGHT + 8 );
 
+            Border.Size = new( WIDTH + 8, HEIGHT + 8 );
             Border.TextureCoordinates = JobBars.Configuration.BuffThinBorder ? new( 0, 96 ) : new( 252, 12 );
             Border.TextureSize = JobBars.Configuration.BuffThinBorder ? new( 48, 48 ) : new( 47, 47 );
 

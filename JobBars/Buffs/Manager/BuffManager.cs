@@ -88,11 +88,9 @@ namespace JobBars.Buffs.Manager {
             NodeBuilder.SetScaleGlobal( JobBars.NodeBuilder.BuffRoot, JobBars.Configuration.BuffScale );
         }
 
-        public void ResetUi() {
-            ObjectIdToMember.Clear();
-        }
+        public void ResetUi() => ObjectIdToMember.Clear();
 
-        public void ResetTrackers() {
+        public void Reset() {
             foreach( var item in ObjectIdToMember.Values ) item.Reset();
         }
     }

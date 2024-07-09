@@ -90,6 +90,10 @@ namespace JobBars.Icons {
             }
         }
 
+        public override void Reset() {
+            State = IconBuffState.Inactive;
+        }
+
         protected bool CalcShowBorder( bool active, bool border ) => ComboType switch {
             IconComboType.Only_When_Combo => border,
             IconComboType.Only_When_Active => active,

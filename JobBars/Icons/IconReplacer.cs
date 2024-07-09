@@ -69,5 +69,7 @@ namespace JobBars.Icons {
         public bool AppliesTo( uint actionId ) => Enabled && Icons.Contains( actionId );
 
         public abstract unsafe void UpdateIcon( HotbarSlotStruct* data );
+
+        public abstract void Reset();
     }
 }
