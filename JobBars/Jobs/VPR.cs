@@ -4,6 +4,7 @@ using JobBars.Cooldowns;
 using JobBars.Cursors;
 using JobBars.Data;
 using JobBars.Gauges;
+using JobBars.Gauges.Custom.VrpCoil;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
 using JobBars.Icons;
@@ -11,6 +12,8 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class VPR {
         public static GaugeConfig[] Gauges => [
+            new GaugeVprCoilConfig("Rattling Coil", GaugeVisualType.Diamond ),
+
             new GaugeTimerConfig(UiHelper.Localize(BuffIds.HuntersInstinct), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 DefaultDuration = 40,

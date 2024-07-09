@@ -39,7 +39,7 @@ namespace JobBars.Gauges.Manager {
         private static GaugeConfig[] AddMiscGauges( GaugeConfig[] configs, JobIds job, bool mp, float[] mpSegments ) {
             var configList = new List<GaugeConfig>( configs );
             var jobName = UiHelper.Localize( job );
-            if( mp ) configList.Add( new GaugeMPConfig( $"MP ({jobName})", GaugeVisualType.Bar, mpSegments, defaultDisabled: true ) );
+            if( mp ) configList.Add( new GaugeMpConfig( $"MP ({jobName})", GaugeVisualType.Bar, mpSegments, defaultDisabled: true ) );
             configList.Add( new GaugeRollingConfig( $"GCD ({jobName})", GaugeVisualType.Bar ) );
             return [.. configList];
 

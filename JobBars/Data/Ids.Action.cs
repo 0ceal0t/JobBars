@@ -140,6 +140,9 @@ namespace JobBars.Data {
         KunaisBane = 36958,
         Dokumori = 36957,
 
+        // VPR ===========
+        RattlingCoil = 39189,
+
         // SAM ===========
         Higanbana = 7489,
         Jinpu = 7478,

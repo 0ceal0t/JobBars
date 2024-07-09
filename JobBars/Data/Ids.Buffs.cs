@@ -123,6 +123,7 @@ namespace JobBars.Data {
         ImmortalSacrifice = 2592,
         DeathsDesign = 2586,
         BloodsownCircle = 2972,
+        Executioner = 3858,
 
         // BRD =========
         RagingStrikes = 0x7d,

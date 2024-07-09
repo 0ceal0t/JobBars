@@ -7,26 +7,23 @@ using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Gauges.Types.Diamond;
 
 namespace JobBars.Gauges.Custom {
-    public class GaugeDrkMPTracker : GaugeMPTracker, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
-        private readonly GaugeDrkMPConfig Config;
+    public class GaugeDrkMpTracker : GaugeMPTracker, IGaugeBarDiamondComboInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
+        private readonly GaugeDrkMpConfig CustomConfig;
         private bool DarkArts = false;
 
-        public GaugeDrkMPTracker( GaugeDrkMPConfig config, int idx ) : base( config, idx, true ) {
-            Config = config;
-            LoadUI( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeDrkMPTracker>( this, idx ),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMPTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMPTracker>( this, idx ),
-                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMPTracker>( this, idx ),
-                _ => new GaugeBarDiamondCombo<GaugeDrkMPTracker>( this, idx ) // DEFAULT
+        public GaugeDrkMpTracker( GaugeDrkMpConfig config, int idx ) : base( config, idx, true ) {
+            CustomConfig = config;
+            LoadUi( config.TypeConfig switch {
+                GaugeBarConfig _ => new GaugeBar<GaugeDrkMpTracker>( this, idx ),
+                GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMpTracker>( this, idx ),
+                GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMpTracker>( this, idx ),
+                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMpTracker>( this, idx ),
+                _ => new GaugeBarDiamondCombo<GaugeDrkMpTracker>( this, idx ) // DEFAULT
             } );
         }
 
-        public override GaugeConfig GetConfig() => Config;
-
         protected override void TickTracker() {
             base.TickTracker();
-
             var drkGauge = Dalamud.JobGauges.Get<DRKGauge>();
             DarkArts = drkGauge != null && drkGauge.HasDarkArts;
         }
@@ -41,7 +38,7 @@ namespace JobBars.Gauges.Custom {
 
         public int GetCurrentMaxTicks() => 1;
 
-        public ElementColor GetTickColor( int idx ) => Config.DarkArtsColor;
+        public ElementColor GetTickColor( int idx ) => CustomConfig.DarkArtsColor;
 
         public bool GetTickValue( int idx ) => DarkArts;
 

@@ -7,11 +7,11 @@ using JobBars.Helper;
 namespace JobBars.Gauges.Stacks {
     public class GaugeStacksTracker : GaugeTracker, IGaugeBarInterface, IGaugeArrowInterface, IGaugeDiamondInterface {
         private readonly GaugeStacksConfig Config;
-        private int Value = 0;
+        protected int Value = 0;
 
         public GaugeStacksTracker( GaugeStacksConfig config, int idx ) {
             Config = config;
-            LoadUI( Config.TypeConfig switch {
+            LoadUi( Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeStacksTracker>( this, idx ),
                 GaugeArrowConfig _ => new GaugeArrow<GaugeStacksTracker>( this, idx ),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeStacksTracker>( this, idx ),
@@ -32,6 +32,11 @@ namespace JobBars.Gauges.Stacks {
                 currentValue = value > currentValue ? value : currentValue;
             }
 
+            PlaySound( currentValue );
+            Value = currentValue;
+        }
+
+        protected void PlaySound( int currentValue ) {
             if( currentValue != Value ) {
                 if( currentValue == 0 ) {
                     if( Config.CompletionSound == GaugeCompleteSoundType.When_Empty || Config.CompletionSound == GaugeCompleteSoundType.When_Empty_or_Full )
@@ -45,7 +50,6 @@ namespace JobBars.Gauges.Stacks {
                     Config.PlaySoundEffect();
                 }
             }
-            Value = currentValue;
         }
 
         public float GetBarPercent() => ( ( float )Value ) / Config.MaxStacks;

@@ -40,7 +40,7 @@ namespace JobBars.Gauges {
             GaugeUi = null;
         }
 
-        protected void LoadUI( Gauge ui ) {
+        protected void LoadUi( Gauge ui ) {
             GaugeUi = ui;
             if( GaugeUi == null ) return;
             GaugeUi.UpdateVisual();

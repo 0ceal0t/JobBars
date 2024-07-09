@@ -12,7 +12,7 @@ namespace JobBars.Gauges.Rolling {
 
         public GaugeRollingTracker( GaugeRollingConfig config, int idx ) {
             Config = config;
-            LoadUI( Config.TypeConfig switch {
+            LoadUi( Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeRollingTracker>( this, idx ),
                 _ => new GaugeBar<GaugeRollingTracker>( this, idx ) // DEFAULT
             } );

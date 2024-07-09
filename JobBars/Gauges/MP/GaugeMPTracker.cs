@@ -3,15 +3,15 @@ using JobBars.Gauges.Types.Bar;
 
 namespace JobBars.Gauges.MP {
     public class GaugeMPTracker : GaugeTracker, IGaugeBarInterface {
-        private readonly GaugeMPConfig Config;
+        protected readonly GaugeMpConfig Config;
 
         protected float Value;
         protected string TextValue;
 
-        public GaugeMPTracker( GaugeMPConfig config, int idx, bool noInit = false ) {
+        public GaugeMPTracker( GaugeMpConfig config, int idx, bool noInit = false ) {
             Config = config;
             if( noInit ) return;
-            LoadUI( Config.TypeConfig switch {
+            LoadUi( Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeMPTracker>( this, idx ),
                 _ => new GaugeBar<GaugeMPTracker>( this, idx ) // DEFAULT
             } );

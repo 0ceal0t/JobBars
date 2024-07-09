@@ -13,8 +13,15 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class RPR {
         public static GaugeConfig[] Gauges => [
-            new GaugeStacksConfig(UiHelper.Localize(BuffIds.SoulReaver), GaugeVisualType.Diamond, new GaugeStacksProps {
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.Executioner), GaugeVisualType.Diamond, new GaugeStacksProps {
                 MaxStacks = 2,
+                Triggers = [
+                    new Item(BuffIds.Executioner)
+                ],
+                Color = ColorConstants.BrightGreen
+            }),
+            new GaugeStacksConfig(UiHelper.Localize(BuffIds.SoulReaver), GaugeVisualType.Diamond, new GaugeStacksProps {
+                MaxStacks = 1,
                 Triggers = [
                     new Item(BuffIds.SoulReaver),
                     new Item(BuffIds.SoulReaver2)

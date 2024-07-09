@@ -12,8 +12,7 @@ using JobBars.Icons;
 namespace JobBars.Jobs {
     public static class DRK {
         public static GaugeConfig[] Gauges => [
-            new GaugeDrkMPConfig($"MP ({UiHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
-                Color = ColorConstants.Purple,
+            new GaugeDrkMpConfig($"MP ({UiHelper.Localize(JobIds.DRK)})", GaugeVisualType.BarDiamondCombo, new GaugeDrkMpProps {
                 DarkArtsColor = ColorConstants.LightBlue,
                 Segments = [0.3f, 0.6f, 0.9f]
             }),

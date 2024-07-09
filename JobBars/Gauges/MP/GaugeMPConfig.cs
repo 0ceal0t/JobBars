@@ -1,7 +1,7 @@
 using JobBars.Atk;
 
 namespace JobBars.Gauges.MP {
-    public class GaugeMPConfig : GaugeConfig {
+    public class GaugeMpConfig : GaugeConfig {
         private static readonly GaugeVisualType[] ValidGaugeVisualType = [GaugeVisualType.Bar];
         protected override GaugeVisualType[] GetValidGaugeTypes() => ValidGaugeVisualType;
 
@@ -9,7 +9,7 @@ namespace JobBars.Gauges.MP {
         public ElementColor Color { get; private set; }
         public bool ShowSegments { get; private set; }
 
-        public GaugeMPConfig( string name, GaugeVisualType type, float[] segments, bool defaultDisabled = false ) : base( name, type ) {
+        public GaugeMpConfig( string name, GaugeVisualType type, float[] segments, bool defaultDisabled = false ) : base( name, type ) {
             Segments = segments;
             if( defaultDisabled )
                 Enabled = JobBars.Configuration.GaugeEnabled.Get( Name, false ); // default disabled

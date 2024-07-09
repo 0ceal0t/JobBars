@@ -109,7 +109,7 @@ namespace JobBars.Gauges.GCD {
             SubGCDs = Config.SubGCDs.Select( subGCD => new GaugeSubGCD( config, subGCD ) ).ToList();
             MaxWidth = Config.SubGCDs.Select( subGCD => subGCD.MaxCounter ).Max();
             ActiveSubGCD = SubGCDs[0];
-            LoadUI( Config.TypeConfig switch {
+            LoadUi( Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeGCDTracker>( this, idx ),
                 GaugeArrowConfig _ => new GaugeArrow<GaugeGCDTracker>( this, idx ),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeGCDTracker>( this, idx ),

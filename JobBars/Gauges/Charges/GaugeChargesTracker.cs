@@ -22,7 +22,7 @@ namespace JobBars.Gauges.Charges {
             Config = config;
             TotalCharges = Config.Parts.Where( p => p.Diamond ).Select( d => d.MaxCharges ).Sum();
             IsCDBar = Config.Parts.Where( p => p.Bar ).All( p => p.Triggers.All( t => t.Type != ItemType.Buff ) );
-            LoadUI( Config.TypeConfig switch {
+            LoadUi( Config.TypeConfig switch {
                 GaugeBarConfig _ => new GaugeBar<GaugeChargesTracker>( this, idx ),
                 GaugeDiamondConfig _ => new GaugeDiamond<GaugeChargesTracker>( this, idx ),
                 GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeChargesTracker>( this, idx ),
