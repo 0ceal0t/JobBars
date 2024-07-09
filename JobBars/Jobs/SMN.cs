@@ -65,7 +65,7 @@ namespace JobBars.Jobs {
         public static BuffConfig[] Buffs => [
             new BuffConfig(UiHelper.Localize(ActionIds.SearingLight), new BuffProps {
                 CD = 120,
-                Duration = 30,
+                Duration = 20,
                 Icon = ActionIds.SearingLight,
                 Color = ColorConstants.Purple,
                 Triggers = [new Item(ActionIds.SearingLight)]
