@@ -44,7 +44,7 @@ namespace JobBars.Nodes.Cursor {
 
         private static void SetPartId( ImageNode node, int partId, ref bool staticCircle ) {
             if( partId == 80 ) { // Placeholder for static circle
-                if( !staticCircle ) node.LoadTexture( "ui/uld/CursorLocation.tex" );
+                if( !staticCircle ) node.LoadTexture( "ui/uld/CursorLocation.tex", JobBars.Configuration.Use4K ? 2u : 1u );
                 staticCircle = true;
 
                 node.TextureCoordinates = new( 0, 0 );
@@ -52,7 +52,7 @@ namespace JobBars.Nodes.Cursor {
 
             }
             else {
-                if( staticCircle ) node.LoadTexture( "ui/uld/IconA_Recast2.tex" );
+                if( staticCircle ) node.LoadTexture( "ui/uld/IconA_Recast2.tex", JobBars.Configuration.Use4K ? 2u : 1u );
                 staticCircle = false;
 
                 var row = partId % 9;

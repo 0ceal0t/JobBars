@@ -51,7 +51,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Background.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+            Background.LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             // ========= BAR ==============
 
@@ -95,7 +95,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                     WrapMode = WrapMode.Unknown,
                     ImageNodeFlags = 0,
                 } );
-                Separators[i].LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+                Separators[i].LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
                 Separators[i].InternalResNode->DrawFlags = 1 | 4;
             }
 
@@ -110,7 +110,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Frame.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+            Frame.LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Indicator = new NineGridNode() {
                 NodeID = JobBars.NodeId++,

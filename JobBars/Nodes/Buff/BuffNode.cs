@@ -40,7 +40,7 @@ namespace JobBars.Nodes.Buff {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Overlay.LoadTexture( "ui/uld/IconA_Frame.tex" );
+            Overlay.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Border = new NineGridNode() {
                 NodeID = JobBars.NodeId++,
@@ -49,7 +49,7 @@ namespace JobBars.Nodes.Buff {
                 PartsRenderType = PartsRenderType.RenderType,
                 NodeFlags = NodeFlags.Visible,
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex" );
+            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,

@@ -40,7 +40,7 @@ namespace JobBars.Nodes.Cooldown {
                 TextureSize = new( 48, 48 ),
                 Scale = new( ( ( float )WIDTH + 8 ) / 49.0f, ( ( float )HEIGHT + 6 ) / 47.0f )
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex" );
+            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,

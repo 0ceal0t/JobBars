@@ -25,7 +25,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Background.LoadTexture( "ui/uld/JobHudSimple_StackA.tex" );
+            Background.LoadTexture( "ui/uld/JobHudSimple_StackA.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             SelectedContainer = new ResNode() {
                 NodeID = JobBars.NodeId++,
@@ -44,7 +44,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Selected.LoadTexture( "ui/uld/JobHudSimple_StackA.tex" );
+            Selected.LoadTexture( "ui/uld/JobHudSimple_StackA.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,
