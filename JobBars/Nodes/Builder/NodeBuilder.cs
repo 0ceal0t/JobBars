@@ -27,7 +27,7 @@ namespace JobBars.Nodes.Builder {
             "_ActionBar07",
             "_ActionBar08",
             "_ActionBar09",
-            "_ActionCross",
+            "_ActionCross", // 10
             "_ActionDoubleCrossL",
             "_ActionDoubleCrossR"
         ];
@@ -66,14 +66,20 @@ namespace JobBars.Nodes.Builder {
             if( args is AddonRequestedUpdateArgs updateArgs ) {
                 var data = ( ( NumberArrayData** )updateArgs.NumberArrayData )[6];
                 var addonData = ( AddonHotbarNumberArray* )data->IntArray;
+                var idx = AllActionBars.IndexOf( args.AddonName );
 
-                for( var hotbarIdx = 0; hotbarIdx < 18; hotbarIdx++ ) {
-                    var hotbarData = ( HotbarSlotStruct* )( ( nint )addonData + 0x3C + sizeof( HotbarStruct ) * hotbarIdx );
-                    for( var i = 0; i < addon->SlotCount; i++ ) {
-                        var slotData = ( HotbarSlotStruct* )( ( nint )hotbarData + sizeof( HotbarSlotStruct ) * i );
-                        JobBars.IconManager?.UpdateIcon( slotData );
-                    }
+                if( idx >= 10 ) {
+                    for( var hotbarIdx = 10; hotbarIdx < 18; hotbarIdx++ ) ActionBarUpdate( addon, addonData, hotbarIdx );
                 }
+                else ActionBarUpdate( addon, addonData, idx );
+            }
+        }
+
+        private void ActionBarUpdate( AddonActionBarBase* addon, AddonHotbarNumberArray* addonData, int hotbarIdx ) {
+            var hotbarData = ( HotbarSlotStruct* )( ( nint )addonData + 0x3C + sizeof( HotbarStruct ) * hotbarIdx );
+            for( var i = 0; i < addon->SlotCount; i++ ) {
+                var slotData = ( HotbarSlotStruct* )( ( nint )hotbarData + sizeof( HotbarSlotStruct ) * i );
+                JobBars.IconManager?.UpdateIcon( slotData );
             }
         }
 

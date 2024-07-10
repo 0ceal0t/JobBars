@@ -1,6 +1,5 @@
 using JobBars.Data;
 using JobBars.GameStructs;
-using JobBars.Helper;
 using System.Linq;
 
 namespace JobBars.Icons.Manager {
@@ -34,8 +33,7 @@ namespace JobBars.Icons.Manager {
 
         public void UpdateIcon( HotbarSlotStruct* data ) {
             if( !JobBars.Configuration.IconsEnabled ) return;
-            var action = UiHelper.GetAdjustedAction( data->ActionId );
-            CurrentIcons.FirstOrDefault( i => i.AppliesTo( action ) )?.UpdateIcon( data );
+            CurrentIcons.FirstOrDefault( i => i.AppliesTo( data->ActionId ) )?.UpdateIcon( data );
         }
     }
 }
