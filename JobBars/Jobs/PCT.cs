@@ -56,7 +56,8 @@ namespace JobBars.Jobs {
         public static IconReplacer[] Icons => [
             new IconBuffReplacer(UiHelper.Localize(BuffIds.StarryMuse), new IconBuffProps {
                 Icons = [
-                    ActionIds.StarryMuse
+                    ActionIds.StarryMuse,
+                    ActionIds.ScenicMuse,
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.StarryMuse), Duration = 20 }
@@ -64,7 +65,7 @@ namespace JobBars.Jobs {
             }),
         ];
 
-        public static bool MP => false;
+        public static bool MP => true;
 
         public static float[] MP_SEGMENTS => null;
     }

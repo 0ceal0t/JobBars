@@ -4,6 +4,7 @@ using JobBars.Cooldowns;
 using JobBars.Cursors;
 using JobBars.Data;
 using JobBars.Gauges;
+using JobBars.Gauges.Charges;
 using JobBars.Gauges.Custom.VrpCoil;
 using JobBars.Gauges.Timer;
 using JobBars.Helper;
@@ -38,6 +39,28 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.Swiftscaled)
                 ]
             }),
+            new GaugeChargesConfig($"{UiHelper.Localize(ActionIds.TrueNorth)} ({UiHelper.Localize(JobIds.VPR)})", GaugeVisualType.BarDiamondCombo, new GaugeChargesProps {
+                BarColor = ColorConstants.NoColor,
+                SameColor = true,
+                Parts = [
+                    new GaugesChargesPartProps {
+                        Diamond = true,
+                        MaxCharges = 2,
+                        CD = 45,
+                        Triggers = [
+                            new Item(ActionIds.TrueNorth)
+                        ]
+                    },
+                    new GaugesChargesPartProps {
+                        Bar = true,
+                        Duration = 10,
+                        Triggers = [
+                            new Item(BuffIds.TrueNorth)
+                        ]
+                    }
+                ],
+                CompletionSound = GaugeCompleteSoundType.Never
+            })
         ];
 
         public static BuffConfig[] Buffs => [];

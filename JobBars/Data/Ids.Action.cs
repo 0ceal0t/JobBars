@@ -216,7 +216,7 @@ namespace JobBars.Data {
         // PCT ===========
         StarryMuse = 34675,
         TemperaCoat = 34685,
-
+        ScenicMuse = 35349,
 
         // BLU ===========
         SongOfTorment = 11386,

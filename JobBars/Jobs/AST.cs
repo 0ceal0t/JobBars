@@ -52,7 +52,7 @@ namespace JobBars.Jobs {
             }),
             new BuffConfig(UiHelper.Localize(ActionIds.Divination), new BuffProps {
                 CD = 120,
-                Duration = 15,
+                Duration = 20,
                 Icon = ActionIds.Divination,
                 Color = ColorConstants.Yellow,
                 Triggers = [new Item(ActionIds.Divination)]
@@ -104,7 +104,7 @@ namespace JobBars.Jobs {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Divination), new IconBuffProps {
                 Icons = [ActionIds.Divination],
                 Triggers = [
-                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Divination), Duration = 15 }
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Divination), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Lightspeed), new IconBuffProps {
