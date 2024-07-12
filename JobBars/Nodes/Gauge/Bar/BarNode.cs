@@ -10,7 +10,7 @@ namespace JobBars.Nodes.Gauge.Bar {
     public unsafe class BarNode : GaugeNode {
         private static readonly int MAX_SEGMENTS = 6;
 
-        private readonly ResNode Container;
+        private readonly ResNode GaugeContainer;
 
         private readonly ImageNode Background;
         private readonly ResNode BarContainer;
@@ -34,12 +34,13 @@ namespace JobBars.Nodes.Gauge.Bar {
 
         public BarNode() : base() {
             NodeID = JobBars.NodeId++;
+            NodeFlags |= NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 160, 46 );
 
-            Container = new ResNode() {
+            GaugeContainer = new ResNode() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 160, 32 ),
-                NodeFlags = NodeFlags.Visible,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
 
             Background = new ImageNode() {
@@ -47,7 +48,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 Size = new( 160, 20 ),
                 TextureCoordinates = new( 0, 100 ),
                 TextureSize = new( 160, 20 ),
-                NodeFlags = NodeFlags.Visible,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
@@ -58,7 +59,7 @@ namespace JobBars.Nodes.Gauge.Bar {
             BarContainer = new ResNode() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 160, 20 ),
-                NodeFlags = NodeFlags.Visible,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
 
             BarMain = new NineGridNode() {
@@ -68,7 +69,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextureCoordinates = new( 6, 40 ),
                 TextureSize = new( 148, 20 ),
                 PartsRenderType = PartsRenderType.RenderType,
-                NodeFlags = NodeFlags.Visible,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
             BarMain.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
 
@@ -79,7 +80,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextureCoordinates = new( 6, 40 ),
                 TextureSize = new( 148, 20 ),
                 PartsRenderType = PartsRenderType.RenderType,
-                NodeFlags = NodeFlags.Visible,
+                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
             BarSecondary.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
 
@@ -172,7 +173,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 BarContainer,
                 Frame,
                 Indicator,
-            ], Container, NodePosition.AsLastChild );
+            ], GaugeContainer, NodePosition.AsLastChild );
 
             JobBars.NativeController.AttachToNode( [
                 TextBlur,
@@ -180,7 +181,7 @@ namespace JobBars.Nodes.Gauge.Bar {
             ], TextContainer, NodePosition.AsLastChild );
 
             JobBars.NativeController.AttachToNode( [
-                Container,
+                GaugeContainer,
                 TextContainer
             ], this, NodePosition.AsLastChild );
         }
@@ -219,13 +220,14 @@ namespace JobBars.Nodes.Gauge.Bar {
             TextSwap = textSwap;
 
             if( vertical ) {
-                Container.Rotation = ( float )( -Math.PI / 2f );
-                Container.Position = new( TextSwap ? 42 : 0, 158 );
+                GaugeContainer.Rotation = ( float )( -Math.PI / 2f );
+                GaugeContainer.Position = new( TextSwap ? 42 : 0, 158 );
+                GaugeContainer.DrawFlags |= 1 | 4;
                 TextContainer.Position = new( TextSwap ? 8 : 6, 125 );
             }
             else {
-                Container.Rotation = 0;
-                Container.Position = new( 0, TextSwap ? 24 : 0 );
+                GaugeContainer.Rotation = 0;
+                GaugeContainer.Position = new( 0, TextSwap ? 24 : 0 );
                 TextContainer.Position = new( 112, TextSwap ? -3 : 6 );
             }
         }
@@ -318,7 +320,7 @@ namespace JobBars.Nodes.Gauge.Bar {
 
         protected override void Dispose( bool disposing ) {
             if( disposing ) {
-                Container.Dispose();
+                GaugeContainer.Dispose();
                 Background.Dispose();
                 BarContainer.Dispose();
                 BarMain.Dispose();
