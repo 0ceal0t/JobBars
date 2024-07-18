@@ -200,6 +200,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextContainer.X = ( 112 + 17 ) - size;
             }
 
+            Text.IsVisible = true;
             Text.X = 14;
             Text.Size = new( size, 30 );
             TextContainer.Size = new( 30 + size, 40 );

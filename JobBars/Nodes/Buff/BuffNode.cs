@@ -122,6 +122,7 @@ namespace JobBars.Nodes.Buff {
                 Text.Text = text;
                 CurrentText = text;
             }
+            Text.IsVisible = true;
         }
 
         public void SetColor( ElementColor color ) {

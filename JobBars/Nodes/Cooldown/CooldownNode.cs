@@ -84,6 +84,7 @@ namespace JobBars.Nodes.Cooldown {
         public void SetText( string text ) {
             Text.FontSize = text.Length > 2 ? ( byte )17 : ( byte )21;
             Text.Text = text;
+            Text.IsVisible = true;
         }
 
         public void SetOnCd() {

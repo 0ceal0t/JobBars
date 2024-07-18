@@ -44,6 +44,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
 
         public void SetText( int idx, string text ) {
             Ticks[idx].Text.Text = text;
+            Ticks[idx].Text.IsVisible = true;
         }
 
         public void ShowText( int idx ) {
