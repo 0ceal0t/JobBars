@@ -69,15 +69,15 @@ namespace JobBars.Nodes.Builder {
                 var idx = AllActionBars.IndexOf( args.AddonName );
 
                 if( idx >= 10 ) {
-                    for( var hotbarIdx = 10; hotbarIdx < 18; hotbarIdx++ ) ActionBarUpdate( addon, addonData, hotbarIdx );
+                    for( var hotbarIdx = 10; hotbarIdx < 18; hotbarIdx++ ) ActionBarUpdate( addonData, hotbarIdx );
                 }
-                else ActionBarUpdate( addon, addonData, idx );
+                else ActionBarUpdate( addonData, idx );
             }
         }
 
-        private void ActionBarUpdate( AddonActionBarBase* addon, AddonHotbarNumberArray* addonData, int hotbarIdx ) {
+        private void ActionBarUpdate( AddonHotbarNumberArray* addonData, int hotbarIdx ) {
             var hotbarData = ( HotbarSlotStruct* )( ( nint )addonData + 0x3C + sizeof( HotbarStruct ) * hotbarIdx );
-            for( var i = 0; i < addon->SlotCount; i++ ) {
+            for( var i = 0; i < 16; i++ ) {
                 var slotData = ( HotbarSlotStruct* )( ( nint )hotbarData + sizeof( HotbarSlotStruct ) * i );
                 JobBars.IconManager?.UpdateIcon( slotData );
             }
