@@ -23,14 +23,6 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.HuntersInstinct)
                 ]
             }),
-            new GaugeTimerConfig(UiHelper.Localize(BuffIds.NoxiousGash), GaugeVisualType.Bar, new GaugeSubTimerProps {
-                MaxDuration = 40,
-                DefaultDuration = 40,
-                Color = ColorConstants.Red,
-                Triggers = [
-                    new Item(BuffIds.NoxiousGash)
-                ]
-            }),
             new GaugeTimerConfig(UiHelper.Localize(BuffIds.Swiftscaled), GaugeVisualType.Bar, new GaugeSubTimerProps {
                 MaxDuration = 40,
                 DefaultDuration = 40,
