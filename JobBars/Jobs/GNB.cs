@@ -50,10 +50,17 @@ namespace JobBars.Jobs {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
                 Icons = [
                     ActionIds.NoMercy,
-                    ActionIds.SonicBreak
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
+                ]
+            }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.ReadyToBreak), new IconBuffProps {
+                Icons = [
+                    ActionIds.SonicBreak,
+                ],
+                Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ReadyToBreak), Duration = 30 }
                 ]
             }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.GNB)})", new IconBuffProps {
