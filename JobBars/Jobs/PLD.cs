@@ -83,11 +83,18 @@ namespace JobBars.Jobs {
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.FightOrFlight), new IconBuffProps {
                 Icons = [
-                    ActionIds.FightOrFlight,
-                    ActionIds.GoringBlade
+                    ActionIds.FightOrFlight
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 20 }
+                ]
+            }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.GoringBladeReady), new IconBuffProps {
+                Icons = [
+                    ActionIds.GoringBlade
+                ],
+                Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GoringBladeReady), Duration = 30 }
                 ]
             }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.PLD)})", new IconBuffProps {
