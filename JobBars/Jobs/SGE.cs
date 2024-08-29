@@ -60,7 +60,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => [
             new IconBuffReplacer(UiHelper.Localize(BuffIds.EukrasianDosis), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.EukrasianDosis,
                     ActionIds.EukrasianDosis2,

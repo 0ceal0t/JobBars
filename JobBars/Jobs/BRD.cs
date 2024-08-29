@@ -111,25 +111,28 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.RagingStrikes), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.RagingStrikes],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RagingStrikes), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.BattleVoice), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.BattleVoice],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BattleVoice), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.RadiantFinale), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.RadiantFinale],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.RadiantFinale), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.VenomousBite), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.CausticBite,
                     ActionIds.VenomousBite,
@@ -140,7 +143,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Stormbite), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Windbite,
                     ActionIds.Stormbite,

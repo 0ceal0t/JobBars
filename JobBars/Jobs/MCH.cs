@@ -91,6 +91,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Wildfire), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Wildfire],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Wildfire), Duration = 10 }

@@ -77,14 +77,14 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.BluBleed), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [ActionIds.SongOfTorment],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.BluBleed), Duration = 60 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Poison), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [ActionIds.BadBreath],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Poison), Duration = 15 }

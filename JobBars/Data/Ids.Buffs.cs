@@ -33,6 +33,7 @@ namespace JobBars.Data {
         HallowedGround = 82,
         AtonementReady = 1902,
         Guardian = 3829,
+        GoringBladeReady = 3847,
 
         // GNB =========
         NoMercy = 0x727,
@@ -42,6 +43,7 @@ namespace JobBars.Data {
         HeartOfStone = 1840,
         HeartOfCorundum = 2683,
         GreatNebula = 3838,
+        ReadyToBreak = 3886,
 
         // SCH =========
         ArcBio = 179,

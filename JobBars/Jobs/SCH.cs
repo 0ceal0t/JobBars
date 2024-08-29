@@ -75,6 +75,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Seraphism), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.Seraphism,
                 ],
@@ -83,13 +84,14 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(ActionIds.ChainStratagem), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.ChainStratagem],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ChainStratagem), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Biolysis), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.SchBio,
                     ActionIds.SchBio2,
