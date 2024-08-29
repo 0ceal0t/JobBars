@@ -55,6 +55,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => [
             new IconBuffReplacer(UiHelper.Localize(BuffIds.StarryMuse), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.StarryMuse,
                     ActionIds.ScenicMuse,

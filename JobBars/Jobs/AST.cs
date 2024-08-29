@@ -89,7 +89,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => [
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Combust3), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Combust1,
                     ActionIds.Combust2,
@@ -102,18 +102,21 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Divination), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Divination],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Divination), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Lightspeed), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Lightspeed],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Lightspeed), Duration = 15 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(ActionIds.EarthlyStar), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.EarthlyStar,
                     ActionIds.StellarDetonation

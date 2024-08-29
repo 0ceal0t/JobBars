@@ -93,6 +93,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.KunaisBane), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.TrickAttack,
                     ActionIds.KunaisBane,
@@ -103,6 +104,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Dokumori), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.Mug,
                     ActionIds.Dokumori

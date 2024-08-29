@@ -100,7 +100,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => [
             new IconBuffReplacer(UiHelper.Localize(BuffIds.DeathsDesign), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [ActionIds.ShadowOfDeath],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DeathsDesign), Duration = 60 }

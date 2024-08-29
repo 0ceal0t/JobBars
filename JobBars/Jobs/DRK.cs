@@ -77,12 +77,14 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.DRK)})", new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Rampart],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.ShadowedVigil), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.ShadowWall,
                     ActionIds.ShadowedVigil
@@ -93,18 +95,20 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.DarkMind), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.DarkMind],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.DarkMind), Duration = 10 }
                 ]
             }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.ArmsLength)} ({UiHelper.Localize(JobIds.DRK)})", new IconBuffProps {
-                Icons = [ActionIds.ArmsLength],
+                IconType = IconActionType.Buff,Icons = [ActionIds.ArmsLength],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.LivingDead), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.LivingDead],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LivingDead), Duration = 10 }

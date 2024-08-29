@@ -4,8 +4,15 @@ using JobBars.Helper;
 using System;
 
 namespace JobBars.Icons {
+    public enum IconActionType {
+        GCD,
+        Buff,
+        Timer
+    }
+
     public struct IconBuffProps {
-        public bool IsTimer;
+
+        public IconActionType IconType;
         public ActionIds[] Icons;
         public IconBuffTriggerStruct[] Triggers;
     }
@@ -28,7 +35,7 @@ namespace JobBars.Icons {
         private float MaxDuration;
         private float TimeLeft;
 
-        public IconBuffReplacer( string name, IconBuffProps props ) : base( name, props.IsTimer, props.Icons ) {
+        public IconBuffReplacer( string name, IconBuffProps props ) : base( name, props.IconType, props.Icons ) {
             Triggers = props.Triggers;
         }
 
@@ -57,35 +64,46 @@ namespace JobBars.Icons {
 
         public override unsafe void UpdateIcon( HotbarSlotStruct* data ) {
             if( State == IconBuffState.Active ) {
-                if( IsTimer ) { // Timer
-                    data->YellowBorder = CalcShowBorder( false, data->YellowBorder );
-                    data->TextColor = 0;
-                    data->Usable = false;
-                    data->CdText = ( uint )Math.Round( TimeLeft );
-                    data->InRange = true;
+                switch(IconType) 
+                { 
+                    case IconActionType.Timer: // Timer
+                        data->YellowBorder = CalcShowBorder( false, data->YellowBorder );
+                        data->TextColor = 0;
+                        data->Usable = false;
+                        data->CdText = ( uint )Math.Round( TimeLeft );
+                        data->InRange = true;
 
-                    if( JobBars.Configuration.IconTimerLarge ) data->TextStyle = 5;
+                        if( JobBars.Configuration.IconTimerLarge ) data->TextStyle = 5;
 
-                    if( ShowRing ) {
-                        data->CdPercent = ( uint )Math.Round( 100f * ( 1f - ( TimeLeft / MaxDuration ) ) );
-                        if( data->CdPercent == 100 ) data->CdPercent = 0;
-                        data->UseRing = true;
-                    }
-                }
-                else { // Buff
-                    data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
-                    data->TextColor = 0;
-                    data->CdText = ( uint )Math.Round( TimeLeft );
-                    data->GcdSwingPercent = 0;
-                    data->CdPercent = 0;
-                    data->Usable = true;
-                    data->UseRing = false;
-                    data->InRange = true;
+                        if( ShowRing ) {
+                            data->CdPercent = ( uint )Math.Round( 100f * ( 1f - ( TimeLeft / MaxDuration ) ) );
+                            if( data->CdPercent == 100 ) data->CdPercent = 0;
+                            data->UseRing = true;
+                        }
+                        break;
+                    case IconActionType.GCD: // GCD
+                        data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
+                        data->CdText = ( uint )Math.Round( TimeLeft );
+                        
+                        if( JobBars.Configuration.IconBuffLarge ) data->TextStyle = 5;
+                        break;
+                    case IconActionType.Buff:// Buff
+                        data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
+                        data->TextColor = 0;
+                        data->CdText = ( uint )Math.Round( TimeLeft );
+                        data->GcdSwingPercent = 0;
+                        data->CdPercent = 0;
+                        data->Usable = true;
+                        data->UseRing = false;
+                        data->InRange = true;
 
-                    if( JobBars.Configuration.IconBuffLarge ) data->TextStyle = 5;
+                        if( JobBars.Configuration.IconBuffLarge ) data->TextStyle = 5;
+                        break;
+                    default: 
+                        break;
                 }
             }
-            else if( State == IconBuffState.Done && IsTimer ) {
+            else if( State == IconBuffState.Done && IconType == IconActionType.Timer ) {
                 data->YellowBorder = CalcShowBorder( true, data->YellowBorder );
             }
         }
