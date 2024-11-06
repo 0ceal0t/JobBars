@@ -75,6 +75,11 @@ namespace JobBars.Jobs {
                Icons = [
                    ActionIds.StrikingMuse,
                    ActionIds.SteelMuse,
+                   ActionIds.HammerStamp,
+                   ActionIds.HammerBrush,
+                   ActionIds.PolishingHammer,
+                   ActionIds.HammerMotif,
+                   ActionIds.WeaponMotif,
                ],
                Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HammerTime), Duration = 30 }
