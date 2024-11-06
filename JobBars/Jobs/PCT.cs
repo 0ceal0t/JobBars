@@ -71,6 +71,15 @@ namespace JobBars.Jobs {
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.StarryMuse), Duration = 20 }
                 ]
             }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.HammerTime), new IconBuffProps {
+               Icons = [
+                   ActionIds.StrikingMuse,
+                   ActionIds.SteelMuse,
+               ],
+               Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HammerTime), Duration = 30 }
+               ]
+            }),
         ];
 
         public static bool MP => true;
