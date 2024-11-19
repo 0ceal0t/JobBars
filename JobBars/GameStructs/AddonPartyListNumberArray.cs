@@ -43,7 +43,7 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout( LayoutKind.Sequential, Size = 42 * 4 )]
+    [StructLayout( LayoutKind.Sequential, Size = 43 * 4 )]
     public unsafe struct AddonPartyListMemberIntArray {
         public int Level;
         public int ClassJobIcon;
@@ -82,6 +82,7 @@ namespace JobBars.GameStructs {
         public int CastingTargetIcon;
         public int Unknown36;
         public int Unknown37;
+        public int Unknown38;
         public int ObjectID;
     }
 }
