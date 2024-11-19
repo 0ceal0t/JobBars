@@ -43,12 +43,15 @@ namespace JobBars.GameStructs {
         };
     }
 
-    [StructLayout( LayoutKind.Sequential, Size = 42 * 4 )]
+    [StructLayout( LayoutKind.Sequential, Size = 43 * 4 )]
     public unsafe struct AddonPartyListMemberIntArray {
+        public int PartySlot;
+
         public int Level;
         public int ClassJobIcon;
 
-        public int Unknown2;
+        public int Unknown3;
+        public int Unknown4;
 
         public int HP;
         public int HPMax;
@@ -56,19 +59,15 @@ namespace JobBars.GameStructs {
         public int MP;
         public int MPMax;
 
-        public int Unknown8;
-        public int Unknown9;
-
-        public int PartySlot;
-
+        public int Unknown10;
         public int Unknown11;
         public int Unknown12;
+        public int Unknown13;
+        public int Unknown14;
 
         public int StatusEffectCount;
         public fixed int StatusEffects[10];
 
-        public int Unknown24;
-        public int Unknown25;
         public int Unknown26;
         public int Unknown27;
         public int Unknown28;
@@ -77,11 +76,14 @@ namespace JobBars.GameStructs {
         public int Unknown31;
         public int Unknown32;
         public int Unknown33;
+        public int Unknown34;
+        public int Unknown35;
 
         public int CastingPercent;
         public int CastingTargetIcon;
-        public int Unknown36;
-        public int Unknown37;
+
+        public int Unknown38;
+
         public int ObjectID;
     }
 }
