@@ -141,7 +141,7 @@ namespace JobBars {
             NodeBuilder.Load();
         }
 
-        private void OnLogout() {
+        private void OnLogout( int type, int code ) {
             Dalamud.Log( "==== LOGOUT ====" );
             Animation.Dispose();
             CurrentJob = JobIds.OTHER;
@@ -157,7 +157,7 @@ namespace JobBars {
         }
 
         private static void CheckForJobChange() {
-            var job = UiHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.Id );
+            var job = UiHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.RowId );
             if( job != CurrentJob ) {
                 CurrentJob = job;
                 Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );

@@ -2,7 +2,7 @@ using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Enums;
 using JobBars.Data;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -68,8 +68,8 @@ namespace JobBars.Helper {
         public static JobIds IdToJob( uint job ) => job < 19 ? JobIds.OTHER : ( JobIds )job;
 
         private static IEnumerable<ClassJob> JobSheet;
-        private static IEnumerable<Lumina.Excel.GeneratedSheets.Action> ActionSheet;
-        private static IEnumerable<Lumina.Excel.GeneratedSheets.Status> StatusSheet;
+        private static IEnumerable<Lumina.Excel.Sheets.Action> ActionSheet;
+        private static IEnumerable<Lumina.Excel.Sheets.Status> StatusSheet;
 
         // Cache converted strings
         private static Dictionary<JobIds, string> JobToString;
@@ -105,7 +105,7 @@ namespace JobBars.Helper {
 
         private static string ConvertJobToString( JobIds job ) {
             foreach( var classJob in JobSheet ) {
-                if( classJob.RowId == ( uint )job ) return ToTitleCase( classJob.Name );
+                if( classJob.RowId == ( uint )job ) return ToTitleCase( classJob.Name.ExtractText() );
             }
             return "ERROR";
         }
@@ -113,11 +113,11 @@ namespace JobBars.Helper {
         private static string ConvertItemToString( Item item ) {
             if( item.Type == ItemType.Buff ) {
                 var buff = StatusSheet.Where( x => x.RowId == item.Id );
-                return !buff.Any() ? "Unknown" : ToTitleCase( buff.First().Name );
+                return !buff.Any() ? "Unknown" : ToTitleCase( buff.First().Name.ExtractText() );
             }
             else {
                 var action = ActionSheet.Where( x => x.RowId == item.Id );
-                return !action.Any() ? "Unknown" : ToTitleCase( action.First().Name );
+                return !action.Any() ? "Unknown" : ToTitleCase( action.First().Name.ExtractText() );
             }
         }
 
@@ -131,8 +131,8 @@ namespace JobBars.Helper {
             ActionList.Clear();
             StatusList.Clear();
 
-            ActionSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().Where(
-                x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
+            ActionSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>().Where(
+                x => !string.IsNullOrEmpty( x.Name.ExtractText() ) && ( x.IsPlayerAction || x.ClassJob.ValueNullable != null ) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
             foreach( var item in ActionSheet ) {
                 var name = item.Name.ToString();
@@ -145,7 +145,7 @@ namespace JobBars.Helper {
                 }
 
                 ActionList.Add( new ItemData {
-                    Name = item.Name,
+                    Name = item.Name.ExtractText(),
                     Icon = item.Icon,
                     Data = new Item {
                         Id = item.RowId,
@@ -154,10 +154,10 @@ namespace JobBars.Helper {
                 } );
             }
 
-            StatusSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            StatusSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
             foreach( var item in StatusSheet ) {
                 StatusList.Add( new ItemData {
-                    Name = item.Name,
+                    Name = item.Name.ExtractText(),
                     Icon = item.Icon,
                     Data = new Item {
                         Id = item.RowId,
@@ -166,7 +166,7 @@ namespace JobBars.Helper {
                 } );
             }
 
-            JobSheet = Dalamud.DataManager.GetExcelSheet<ClassJob>().Where( x => x.Name != null );
+            JobSheet = Dalamud.DataManager.GetExcelSheet<ClassJob>().Where( x => x.Name.ExtractText() != null );
         }
 
         public static float TimeLeft( float defaultDuration, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime ) {
