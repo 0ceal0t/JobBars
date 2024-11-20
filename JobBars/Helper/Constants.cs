@@ -3,7 +3,7 @@ namespace JobBars.Helper {
         public static readonly string ReceiveActionEffectSig = "40 55 56 57 41 54 41 55 41 56 48 8D AC 24 ?? ?? ?? ??";
         public static readonly string ActorControlSig = "E8 ?? ?? ?? ?? 0F B7 0B 83 E9 64";
 
-        public static readonly string PlaySoundSig = "E8 ?? ?? ?? ?? 48 63 45 80";
+        public static readonly string PlaySoundSig = "E8 ?? ?? ?? ?? 45 0F B7 C5";
 
         public static readonly int PreviousTargetOffset = 0xF0;
 

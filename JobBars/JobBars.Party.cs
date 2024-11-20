@@ -53,7 +53,7 @@ namespace JobBars {
                     ObjectId = localPlayer.GameObjectId,
                     CurrentHP = localPlayer.CurrentHp,
                     MaxHP = localPlayer.MaxHp,
-                    Job = UiHelper.IdToJob( localPlayer.ClassJob.Id ),
+                    Job = UiHelper.IdToJob( localPlayer.ClassJob.RowId ),
                     BuffDict = []
                 };
 
