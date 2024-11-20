@@ -10,8 +10,8 @@ namespace JobBars.GameStructs {
         public int PartyLeaderIndex;
         public int Unknown003;
         public int Unknown004;
-        public int PartyMemberCount;
         public int Unknown006;
+        public int PartyMemberCount;
         public int Unknown007;
         public int Unknown008;
 
