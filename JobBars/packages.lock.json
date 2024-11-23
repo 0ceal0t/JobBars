@@ -11,7 +11,7 @@
       "kamitoolkit": {
         "type": "Project",
         "dependencies": {
-          "DalamudPackager": "[2.1.13, )"
+          "DalamudPackager": "[11.0.0, )"
         }
       }
     }

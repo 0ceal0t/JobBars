@@ -71,7 +71,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 PartsRenderType = PartsRenderType.RenderType,
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
-            BarMain.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+            BarMain.LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             BarSecondary = new NineGridNode() {
                 NodeID = JobBars.NodeId++,
@@ -82,7 +82,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 PartsRenderType = PartsRenderType.RenderType,
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
-            BarSecondary.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+            BarSecondary.LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             for( var i = 0; i < MAX_SEGMENTS - 1; i++ ) {
                 Separators.Add( new ImageNode() {
@@ -124,7 +124,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 PartsRenderType = PartsRenderType.RenderType,
                 NodeFlags = NodeFlags.Visible,
             };
-            Indicator.LoadTexture( "ui/uld/Parameter_Gauge.tex" );
+            Indicator.LoadTexture( "ui/uld/Parameter_Gauge.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             // ======= TEXT ==============
 
@@ -160,7 +160,7 @@ namespace JobBars.Nodes.Gauge.Bar {
                 PartsRenderType = ( PartsRenderType )128,
                 NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
             };
-            TextBlur.LoadTexture( "ui/uld/JobHudNumBg.tex" );
+            TextBlur.LoadTexture( "ui/uld/JobHudNumBg.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             JobBars.NativeController.AttachToNode( [
                 BarSecondary,
