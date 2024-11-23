@@ -11,9 +11,9 @@ namespace JobBars.Nodes.Buff {
         public static ushort HEIGHT => ( ushort )( JobBars.Configuration.BuffSquare ? 40 : 28 );
 
         private readonly TextNode Text;
-        private readonly SimpleImageNode Overlay;
-        private readonly IconImageNode Icon;
-        private readonly SimpleNineGridNode Border;
+        private readonly ImageNode Overlay;
+        private readonly ImageNode Icon;
+        private readonly NineGridNode Border;
 
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
@@ -23,15 +23,15 @@ namespace JobBars.Nodes.Buff {
         public BuffNode() : base( NodeType.Res ) {
             NodeID = JobBars.NodeId++;
 
-            Icon = new IconImageNode() {
+            Icon = new ImageNode() {
                 NodeID = JobBars.NodeId++,
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Unknown,
-                ImageNodeFlags = 0,
-                IconId = 405
+                ImageNodeFlags = 0
             };
+            Icon.LoadIcon( 405 );
 
-            Overlay = new SimpleImageNode() {
+            Overlay = new ImageNode() {
                 NodeID = JobBars.NodeId++,
                 Height = 1,
                 TextureCoordinates = new( 365, 4 ),
@@ -40,16 +40,16 @@ namespace JobBars.Nodes.Buff {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Overlay.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K );
+            Overlay.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
-            Border = new SimpleNineGridNode() {
+            Border = new NineGridNode() {
                 NodeID = JobBars.NodeId++,
                 Position = new( -4, -3 ),
                 Offsets = new( 5, 5, 5, 5 ),
                 PartsRenderType = PartsRenderType.RenderType,
                 NodeFlags = NodeFlags.Visible,
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex" );
+            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
                 NodeID = JobBars.NodeId++,
@@ -114,7 +114,7 @@ namespace JobBars.Nodes.Buff {
         public void LoadIcon( ActionIds action ) {
             if( action == LastAction ) return;
             LastAction = action;
-            Icon.IconId = UiHelper.GetIcon( action );
+            Icon.LoadIcon( UiHelper.GetIcon( action ) );
         }
 
         public void SetText( string text ) {

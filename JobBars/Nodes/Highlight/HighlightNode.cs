@@ -4,14 +4,14 @@ using KamiToolKit.Nodes;
 
 namespace JobBars.Nodes.Highlight {
     public unsafe class HighlightNode : NodeBase<AtkResNode> {
-        private readonly SimpleNineGridNode Highlight;
+        private readonly NineGridNode Highlight;
 
         public HighlightNode() : base( NodeType.Res ) {
             NodeID = JobBars.NodeId++;
             NodeFlags = NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 100, 100 );
 
-            Highlight = new() {
+            Highlight = new NineGridNode() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 320, 48 ),
                 Position = new( 52, 18 ),
