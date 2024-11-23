@@ -10,8 +10,8 @@ namespace JobBars.Nodes.Cooldown {
         public static readonly ushort HEIGHT = 30;
 
         private readonly TextNode Text;
-        private readonly ImageNode Icon;
-        private readonly ImageNode Border;
+        private readonly IconImageNode Icon;
+        private readonly SimpleImageNode Border;
 
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
@@ -20,16 +20,16 @@ namespace JobBars.Nodes.Cooldown {
             NodeID = JobBars.NodeId++;
             Size = new( WIDTH, HEIGHT );
 
-            Icon = new ImageNode() {
+            Icon = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( WIDTH, HEIGHT ),
                 NodeFlags = NodeFlags.Visible,
                 ImageNodeFlags = ImageNodeFlags.AutoFit,
                 TextureSize = new( 44, 46 ),
+                IconId = 405
             };
-            Icon.LoadIcon( 405 );
 
-            Border = new ImageNode() {
+            Border = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 49, 47 ),
                 NodeFlags = NodeFlags.Visible,
@@ -40,9 +40,9 @@ namespace JobBars.Nodes.Cooldown {
                 TextureSize = new( 48, 48 ),
                 Scale = new( ( ( float )WIDTH + 8 ) / 49.0f, ( ( float )HEIGHT + 6 ) / 47.0f )
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
+            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K );
 
-            Text = new TextNode() {
+            Text = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( WIDTH, HEIGHT ),
                 FontSize = 21,
@@ -104,7 +104,7 @@ namespace JobBars.Nodes.Cooldown {
         public void LoadIcon( ActionIds action ) {
             if( action == LastAction ) return;
             LastAction = action;
-            Icon.LoadIcon( UiHelper.GetIcon( action ) );
+            Icon.IconId = UiHelper.GetIcon( action );
         }
 
         protected override void Dispose( bool disposing ) {

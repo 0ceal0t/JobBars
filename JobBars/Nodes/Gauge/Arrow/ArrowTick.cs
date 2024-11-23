@@ -5,9 +5,9 @@ using KamiToolKit.Nodes;
 
 namespace JobBars.Nodes.Gauge.Arrow {
     public unsafe class ArrowTick : NodeBase<AtkResNode> {
-        public readonly ImageNode Background;
+        public readonly SimpleImageNode Background;
         public readonly ResNode SelectedContainer;
-        public readonly ImageNode Selected;
+        public readonly SimpleImageNode Selected;
 
         private ElementColor TickColor = ColorConstants.NoColor;
 
@@ -15,7 +15,7 @@ namespace JobBars.Nodes.Gauge.Arrow {
             NodeID = JobBars.NodeId++;
             Size = new( 32, 32 );
 
-            Background = new ImageNode() {
+            Background = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 32, 32 ),
                 TextureCoordinates = new( 0, 0 ),
@@ -24,16 +24,16 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Background.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K ? 2u : 1u );
+            Background.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K );
 
-            SelectedContainer = new ResNode() {
+            SelectedContainer = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
                 NodeFlags = NodeFlags.Visible,
             };
 
-            Selected = new ImageNode() {
+            Selected = new() {
                 NodeID = JobBars.NodeId++,
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
@@ -43,7 +43,7 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 WrapMode = WrapMode.Unknown,
                 ImageNodeFlags = 0,
             };
-            Selected.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K ? 2u : 1u );
+            Selected.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K );
 
             JobBars.NativeController.AttachToNode( [
                 Selected,
