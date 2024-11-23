@@ -48,21 +48,32 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.NoMercy), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.NoMercy,
-                    ActionIds.SonicBreak
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.NoMercy), Duration = 20 }
                 ]
             }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.ReadyToBreak), new IconBuffProps {
+                IconType = IconActionType.GCD,
+                Icons = [
+                    ActionIds.SonicBreak,
+                ],
+                Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ReadyToBreak), Duration = 30 }
+                ]
+            }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Rampart],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.GreatNebula), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.Nebula,
                     ActionIds.GreatNebula
@@ -73,24 +84,28 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Camouflage), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Camouflage],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Camouflage), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.ArmsLength)} ({UiHelper.Localize(JobIds.GNB)})", new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.ArmsLength],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Superbolide), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Superbolide],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Superbolide), Duration = 10 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.HeartOfCorundum), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons =
                 [
                     ActionIds.HeartOfStone,

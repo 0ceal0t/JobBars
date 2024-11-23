@@ -21,15 +21,15 @@ namespace JobBars.Icons {
         public bool Enabled;
 
         public readonly string Name;
-        public readonly bool IsTimer;
+        public readonly IconActionType IconType;
         public readonly List<uint> Icons;
         protected IconComboType ComboType;
         protected float Offset;
         protected bool ShowRing;
 
-        public IconReplacer( string name, bool isTimer, ActionIds[] icons ) {
+        public IconReplacer( string name, IconActionType iconType, ActionIds[] icons ) {
             Name = name;
-            IsTimer = isTimer;
+            IconType = iconType;
             Icons = new List<ActionIds>( icons ).Select( x => ( uint )x ).ToList();
             Enabled = JobBars.Configuration.IconEnabled.Get( Name );
             ComboType = JobBars.Configuration.IconComboType.Get( Name );
@@ -43,7 +43,7 @@ namespace JobBars.Icons {
 
         public void Draw( string id, JobIds _ ) {
             var _ID = id + Name;
-            var type = IsTimer ? "TIMER" : "BUFF";
+            var type = IconType.ToString().ToUpper();
             var color = Enabled ? new Vector4( 0, 1, 0, 1 ) : new Vector4( 1, 0, 0, 1 );
 
             ImGui.PushStyleColor( ImGuiCol.Text, color );
@@ -54,9 +54,13 @@ namespace JobBars.Icons {
                 if( JobBars.Configuration.IconEnabled.Draw( $"Enabled{_ID}", Name, Enabled, out var newEnabled ) ) Enabled = newEnabled;
                 if( JobBars.Configuration.IconComboType.Draw( $"Dash border{_ID}", Name, ValidComboTypes, ComboType, out var newComboType ) ) ComboType = newComboType;
 
-                if( IsTimer ) {
-                    if( JobBars.Configuration.IconTimerOffset.Draw( $"Time offset{_ID}", Name, Offset, out var newOffset ) ) Offset = newOffset;
-                    if( JobBars.Configuration.IconTimerRing.Draw( $"Display ring{_ID}", Name, Enabled, out var newRing ) ) ShowRing = newRing;
+                switch(IconType){
+                    case IconActionType.Timer:
+                        if( JobBars.Configuration.IconTimerOffset.Draw( $"Time offset{_ID}", Name, Offset, out var newOffset ) ) Offset = newOffset;
+                        if( JobBars.Configuration.IconTimerRing.Draw( $"Display ring{_ID}", Name, Enabled, out var newRing ) ) ShowRing = newRing;
+                        break;
+                    default:
+                        break;
                 }
 
                 ImGui.Unindent();

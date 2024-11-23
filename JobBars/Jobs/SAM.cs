@@ -88,14 +88,14 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Fugetsu), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [ActionIds.Jinpu],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Fugetsu), Duration = 40 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Fuka), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [ActionIds.Shifu],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Fuka), Duration = 40 }

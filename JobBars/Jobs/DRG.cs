@@ -83,13 +83,14 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.LanceCharge), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.LanceCharge],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LanceCharge), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.PowerSurge), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Disembowel,
                     ActionIds.SpiralBlow,
@@ -99,7 +100,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.ChaosThrust), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.ChaosThrust,
                     ActionIds.ChaoticSpring

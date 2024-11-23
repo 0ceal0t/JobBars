@@ -84,6 +84,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.RiddleOfFire), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.RiddleOfFire,
                     ActionIds.FiresReply,

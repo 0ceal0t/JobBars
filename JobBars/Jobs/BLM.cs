@@ -68,7 +68,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.HighThunder), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Thunder,
                     ActionIds.Thunder3,
@@ -81,7 +81,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.HighThunder2), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Thunder2,
                     ActionIds.Thunder4,
@@ -94,6 +94,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.LeyLines), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.LeyLines],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.LeyLines), Duration = 30 }

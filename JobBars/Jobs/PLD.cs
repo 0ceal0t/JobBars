@@ -82,21 +82,32 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.FightOrFlight), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
-                    ActionIds.FightOrFlight,
-                    ActionIds.GoringBlade
+                    ActionIds.FightOrFlight
                 ],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.FightOrFlight), Duration = 20 }
                 ]
             }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.GoringBladeReady), new IconBuffProps {
+                IconType = IconActionType.GCD,
+                Icons = [
+                    ActionIds.GoringBlade
+                ],
+                Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.GoringBladeReady), Duration = 30 }
+                ]
+            }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.Rampart)} ({UiHelper.Localize(JobIds.PLD)})", new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Rampart],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Rampart), Duration = 20 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Guardian), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [
                     ActionIds.Sentinel,
                     ActionIds.Guardian
@@ -107,18 +118,21 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Bulwark), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.Bulwark],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.Bulwark), Duration = 10 }
                 ]
             }),
             new IconBuffReplacer($"{UiHelper.Localize(ActionIds.ArmsLength)} ({UiHelper.Localize(JobIds.PLD)})", new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.ArmsLength],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.ArmsLength), Duration = 6 }
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.HallowedGround), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.HallowedGround],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HallowedGround), Duration = 10 }

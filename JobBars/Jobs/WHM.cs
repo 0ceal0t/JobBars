@@ -73,7 +73,7 @@ namespace JobBars.Jobs {
 
         public static IconReplacer[] Icons => new[] {
             new IconBuffReplacer(UiHelper.Localize(BuffIds.Dia), new IconBuffProps {
-                IsTimer = true,
+                IconType = IconActionType.Timer,
                 Icons = [
                     ActionIds.Aero,
                     ActionIds.Aero2,
@@ -86,6 +86,7 @@ namespace JobBars.Jobs {
                 ]
             }),
             new IconBuffReplacer(UiHelper.Localize(BuffIds.PresenceOfMind), new IconBuffProps {
+                IconType = IconActionType.Buff,
                 Icons = [ActionIds.PresenceOfMind],
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.PresenceOfMind), Duration = 15 }
