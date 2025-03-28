@@ -21,7 +21,7 @@ namespace JobBars {
         public static void UpdatePartyMembers() {
             var order = GetPartyMemberOrder();
             var members = GetPartyMembers();
-            PartyMembers = order.Select( objectId => objectId == 0 ? null : members.Find( member => member.ObjectId == objectId ) ).ToList();
+            PartyMembers = [.. order.Select( objectId => objectId == 0 ? null : members.Find( member => member.ObjectId == objectId ) )];
         }
 
         private static List<ulong> GetPartyMemberOrder() {
@@ -78,7 +78,7 @@ namespace JobBars {
                     BuffDict = []
                 };
 
-                if( info.StatusManager.Status == null ) continue;
+                if( info.StatusManager.Status.IsEmpty ) continue;
                 for( var j = 0; j < info.StatusManager.NumValidStatuses; j++ ) {
                     var status = info.StatusManager.Status[j];
                     if( status.StatusId == 0 ) continue;

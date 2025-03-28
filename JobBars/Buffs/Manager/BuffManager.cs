@@ -11,10 +11,10 @@ namespace JobBars.Buffs.Manager {
         private readonly List<BuffConfig> ApplyToTargetBuffs = [];
 
         private readonly Dictionary<JobIds, List<BuffConfig>> CustomBuffs = [];
-        private List<BuffConfig> ApplyToTargetCustomBuffs => CustomBuffs.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) ).ToList();
+        private List<BuffConfig> ApplyToTargetCustomBuffs => [.. CustomBuffs.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )];
 
         public BuffManager() : base( "##JobBars_Buffs" ) {
-            ApplyToTargetBuffs.AddRange( JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) ).ToList() );
+            ApplyToTargetBuffs.AddRange( [.. JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )] );
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {

@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.Sdk/12.0.2">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyTitle>JobBars</AssemblyTitle>
     <Company></Company>
@@ -24,10 +24,6 @@
     <None Remove="lib\**" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
@@ -45,33 +41,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Dalamud">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-    </Reference>
-    <Reference Include="FFXIVClientStructs">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-    </Reference>
-    <Reference Include="ImGui.NET">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="ImGuiScene">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-    </Reference>
-    <Reference Include="Lumina">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-    </Reference>
-    <Reference Include="Lumina.Excel">
-      <Private>false</Private>
-      <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
-  <ItemGroup>
     <None Update="JobBars.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -79,10 +48,6 @@
   
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="11.0.0" />
   </ItemGroup>
   
   <ItemGroup>

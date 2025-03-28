@@ -48,7 +48,6 @@ namespace JobBars.Helper {
                 Param = status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
                 SourceId = status.SourceId,
-                StackCount = status.StackCount,
                 StatusId = status.StatusId
             };
         }
@@ -61,7 +60,6 @@ namespace JobBars.Helper {
                 Param = ( byte )status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
                 SourceId = status.SourceId,
-                StackCount = status.StackCount,
                 StatusId = ( ushort )status.StatusId
             };
         }

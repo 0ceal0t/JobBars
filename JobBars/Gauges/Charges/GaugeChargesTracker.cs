@@ -46,7 +46,7 @@ namespace JobBars.Gauges.Charges {
                 foreach( var trigger in part.Triggers ) {
                     if( trigger.Type == ItemType.Buff ) {
                         var buffExists = UiHelper.PlayerStatus.TryGetValue( trigger, out var buff );
-                        var buffValue = buffExists ? buff.StackCount : 0;
+                        var buffValue = buffExists ? buff.Param : 0;
 
                         if( part.Bar && !barAssigned && buffExists ) {
                             barAssigned = true;
