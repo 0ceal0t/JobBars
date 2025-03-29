@@ -179,6 +179,7 @@ namespace JobBars.Data {
         Hyperphantasia = 3688,
         SubtractivePaletee = 3674,
         StarryMuse = 3685,
+        HammerTime = 3680,
 
         // BLU =========
         BluBleed = 1714,
