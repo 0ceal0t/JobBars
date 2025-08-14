@@ -29,7 +29,7 @@ namespace JobBars.Buffs.Manager {
 
         public void PerformAction( Item action, uint objectId ) {
             if( !JobBars.Configuration.BuffBarEnabled ) return;
-            if( !JobBars.Configuration.BuffIncludeParty && objectId != Dalamud.ClientState.LocalPlayer.GameObjectId ) return;
+            if( !JobBars.Configuration.BuffIncludeParty && objectId != Service.ClientState.LocalPlayer.GameObjectId ) return;
 
             foreach( var member in ObjectIdToMember.Values ) member.ProcessAction( action, objectId );
         }
@@ -49,13 +49,13 @@ namespace JobBars.Buffs.Manager {
             Dictionary<ulong, BuffPartyMember> newObjectIdToMember = [];
             HashSet<BuffTracker> activeBuffs = [];
 
-            if( JobBars.PartyMembers == null ) Dalamud.Error( "PartyMembers is NULL" );
+            if( JobBars.PartyMembers == null ) Service.Error( "PartyMembers is NULL" );
 
             for( var idx = 0; idx < JobBars.PartyMembers.Count; idx++ ) {
                 var partyMember = JobBars.PartyMembers[idx];
 
                 if( partyMember == null || partyMember?.Job == JobIds.OTHER || partyMember?.ObjectId == 0 ) continue;
-                if( !JobBars.Configuration.BuffIncludeParty && partyMember.ObjectId != Dalamud.ClientState.LocalPlayer.GameObjectId ) continue;
+                if( !JobBars.Configuration.BuffIncludeParty && partyMember.ObjectId != Service.ClientState.LocalPlayer.GameObjectId ) continue;
 
                 var member = ObjectIdToMember.TryGetValue( partyMember.ObjectId, out var _member ) ? _member : new BuffPartyMember( partyMember.ObjectId, partyMember.IsPlayer );
                 member.Tick( activeBuffs, partyMember, out var highlight, out var partyText );

@@ -19,8 +19,8 @@ namespace JobBars.Helper {
         public static void UpdatePlayerStatus() {
             Dictionary<Item, Status> buffDict = [];
 
-            var ownerId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
-            ActorToBuffItems( Dalamud.ClientState.LocalPlayer, ownerId, buffDict );
+            var ownerId = ( int )Service.ClientState.LocalPlayer.GameObjectId;
+            ActorToBuffItems( Service.ClientState.LocalPlayer, ownerId, buffDict );
 
             var prevEnemy = PreviousEnemyTarget;
             if( prevEnemy != null ) ActorToBuffItems( prevEnemy, ownerId, buffDict );
@@ -47,7 +47,7 @@ namespace JobBars.Helper {
             }] = new Status {
                 Param = status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                SourceId = status.SourceId,
+                SourceObject = status.SourceObject,
                 StatusId = status.StatusId
             };
         }
@@ -59,7 +59,9 @@ namespace JobBars.Helper {
             }] = new Status {
                 Param = ( byte )status.Param,
                 RemainingTime = status.RemainingTime > 0 ? status.RemainingTime : status.RemainingTime * -1,
-                SourceId = status.SourceId,
+                SourceObject = new() {
+                    ObjectId = status.SourceObject.EntityId
+                },
                 StatusId = ( ushort )status.StatusId
             };
         }

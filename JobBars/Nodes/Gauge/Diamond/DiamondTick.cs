@@ -58,7 +58,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 TextOutlineColor = new( 40f / 255f, 40f / 255f, 40f / 255f, 1 ),
                 TextId = 0,
                 TextFlags = TextFlags.Glare,
-                TextFlags2 = 0,
                 Text = "",
             };
 

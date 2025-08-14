@@ -56,7 +56,7 @@ namespace JobBars.Cooldowns.Manager {
 
             Dictionary<ulong, CooldownPartyMember> newObjectIdToMember = [];
 
-            if( JobBars.PartyMembers == null ) Dalamud.Error( "PartyMembers is null" );
+            if( JobBars.PartyMembers == null ) Service.Error( "PartyMembers is null" );
 
             for( var idx = 0; idx < JobBars.PartyMembers.Count; idx++ ) {
                 var partyMember = JobBars.PartyMembers[idx];
@@ -66,7 +66,7 @@ namespace JobBars.Cooldowns.Manager {
                     continue;
                 }
 
-                if( !JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Dalamud.ClientState.LocalPlayer.GameObjectId ) {
+                if( !JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Service.ClientState.LocalPlayer.GameObjectId ) {
                     JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, false );
                     continue;
                 }

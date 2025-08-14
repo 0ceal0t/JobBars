@@ -41,15 +41,15 @@ namespace JobBars.Helper {
     }
 
     public unsafe partial class UiHelper {
-        public static bool OutOfCombat => !Dalamud.Condition[ConditionFlag.InCombat];
-        public static bool WeaponSheathed => Dalamud.ClientState.LocalPlayer != null && !Dalamud.ClientState.LocalPlayer.StatusFlags.HasFlag( StatusFlags.WeaponOut );
-        public static bool WatchingCutscene => Dalamud.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Dalamud.Condition[ConditionFlag.WatchingCutscene78] || Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51];
+        public static bool OutOfCombat => !Service.Condition[ConditionFlag.InCombat];
+        public static bool WeaponSheathed => Service.ClientState.LocalPlayer != null && !Service.ClientState.LocalPlayer.StatusFlags.HasFlag( StatusFlags.WeaponOut );
+        public static bool WatchingCutscene => Service.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Service.Condition[ConditionFlag.WatchingCutscene78] || Service.Condition[ConditionFlag.BetweenAreas] || Service.Condition[ConditionFlag.BetweenAreas51];
         public static bool CalcDoHide( bool enabled, bool hideOutOfCombat, bool hideWeaponSheathed ) {
             if( !enabled ) return true;
             if( OutOfCombat && hideOutOfCombat ) return true;
             if( WeaponSheathed && hideWeaponSheathed ) return true;
             if( WatchingCutscene ) return true;
-            if( Dalamud.ClientState.IsPvP ) return true;
+            if( Service.ClientState.IsPvP ) return true;
             return false;
         }
 
@@ -84,7 +84,7 @@ namespace JobBars.Helper {
             }
         }
 
-        public static string ProcText => Dalamud.ClientState.ClientLanguage switch {
+        public static string ProcText => Service.ClientState.ClientLanguage switch {
             ClientLanguage.Japanese => "Procs",
             ClientLanguage.English => "Procs",
             ClientLanguage.German => "Procs",
@@ -131,7 +131,7 @@ namespace JobBars.Helper {
             ActionList.Clear();
             StatusList.Clear();
 
-            ActionSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>().Where(
+            ActionSheet = Service.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>().Where(
                 x => !string.IsNullOrEmpty( x.Name.ExtractText() ) && ( x.IsPlayerAction || x.ClassJob.ValueNullable != null ) && !x.IsPvP // weird conditions to catch things like enchanted RDM spells
             );
             foreach( var item in ActionSheet ) {
@@ -154,7 +154,7 @@ namespace JobBars.Helper {
                 } );
             }
 
-            StatusSheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
+            StatusSheet = Service.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Status>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
             foreach( var item in StatusSheet ) {
                 StatusList.Add( new ItemData {
                     Name = item.Name.ExtractText(),
@@ -166,7 +166,7 @@ namespace JobBars.Helper {
                 } );
             }
 
-            JobSheet = Dalamud.DataManager.GetExcelSheet<ClassJob>().Where( x => x.Name.ExtractText() != null );
+            JobSheet = Service.DataManager.GetExcelSheet<ClassJob>().Where( x => x.Name.ExtractText() != null );
         }
 
         public static float TimeLeft( float defaultDuration, Dictionary<Item, Status> buffDict, Item lastActiveTrigger, DateTime lastActiveTime ) {

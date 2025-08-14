@@ -29,7 +29,7 @@ namespace JobBars {
 
             var partyUI = UiHelper.GetPartyUI();
             if( partyUI == null || partyUI->PartyMemberCount == 0 ) { // fallback
-                ret.Add( Dalamud.ClientState.LocalPlayer.GameObjectId );
+                ret.Add( Service.ClientState.LocalPlayer.GameObjectId );
                 return ret;
             }
 
@@ -44,7 +44,7 @@ namespace JobBars {
 
         private static List<CurrentPartyMember> GetPartyMembers() {
             var ret = new List<CurrentPartyMember>();
-            var localPlayer = Dalamud.ClientState.LocalPlayer;
+            var localPlayer = Service.ClientState.LocalPlayer;
 
             var groupManager = GroupManager.Instance()->MainGroup;
             if( groupManager.MemberCount == 0 ) { // fallback
@@ -107,7 +107,7 @@ namespace JobBars {
             foreach( var member in PartyMembers ) {
                 if( member == null ) continue;
                 foreach( var entry in member.BuffDict ) {
-                    if( entry.Value.SourceId != ownerId ) continue;
+                    if( entry.Value.SourceObject.ObjectId != ownerId ) continue;
                     if( !buffsToSearch.Contains( ( BuffIds )entry.Key.Id ) ) continue;
                     buffDict[entry.Key] = entry.Value;
                 }

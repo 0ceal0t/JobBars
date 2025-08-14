@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using JobBars.Atk;
 
 namespace JobBars.Gauges.Timer {

@@ -1,6 +1,6 @@
 using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;

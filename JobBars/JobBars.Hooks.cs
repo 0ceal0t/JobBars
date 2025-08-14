@@ -15,7 +15,7 @@ namespace JobBars {
         private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
         private void ReceiveActionEffect( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail ) {
-            if( !NodeBuilder.IsLoaded || !Dalamud.ClientState.IsLoggedIn ) {
+            if( !NodeBuilder.IsLoaded || !Service.ClientState.IsLoggedIn ) {
                 ReceiveActionEffectHook.Original( sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail );
                 return;
             }
@@ -23,7 +23,7 @@ namespace JobBars {
             var id = *( ( uint* )effectHeader.ToPointer() + 0x2 );
             var type = *( ( byte* )effectHeader.ToPointer() + 0x1F ); // 1 = action
 
-            var selfId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
+            var selfId = ( int )Service.ClientState.LocalPlayer.GameObjectId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && ( GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH ) && IsPet( ( ulong )sourceId, selfId );
             var isParty = !isSelf && !isPet && IsInParty( ( uint )sourceId );
@@ -109,7 +109,7 @@ namespace JobBars {
             ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10 );
             if( !NodeBuilder.IsLoaded ) return;
 
-            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.GameObjectId ) {
+            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Service.ClientState.LocalPlayer?.GameObjectId ) {
                 UiHelper.UpdateActorTick();
             }
             else if( entityId > 0 && id == Constants.ActorControlOtherId ) {
@@ -127,7 +127,7 @@ namespace JobBars {
 
         private static bool IsPet( ulong objectId, int ownerId ) {
             if( objectId == 0 ) return false;
-            foreach( var actor in Dalamud.Objects ) {
+            foreach( var actor in Service.Objects ) {
                 if( actor == null ) continue;
                 if( actor.GameObjectId == objectId ) {
                     if( actor is IBattleNpc npc ) {

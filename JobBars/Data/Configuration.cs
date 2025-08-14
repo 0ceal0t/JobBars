@@ -1,5 +1,5 @@
 using Dalamud.Configuration;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using JobBars.Atk;
 using JobBars.Cooldowns;
 using JobBars.Cursors;
@@ -196,7 +196,7 @@ namespace JobBars.Data {
         }
 
         public void Save() {
-            Dalamud.PluginInterface.SavePluginConfig( this );
+            Service.PluginInterface.SavePluginConfig( this );
         }
 
         public static bool DrawColor( string id, ElementColor currentValue, out ElementColor value ) {

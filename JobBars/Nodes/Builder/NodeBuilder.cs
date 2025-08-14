@@ -45,24 +45,24 @@ namespace JobBars.Nodes.Builder {
         public NodeBuilder() { }
 
         public void Load() {
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "_PartyList", OnPartyListSetup );
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "_PartyList", OnPartyListFinalize );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "_PartyList", OnPartyListSetup );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "_PartyList", OnPartyListFinalize );
 
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "ChatLog", OnChatLogSetup );
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "ChatLog", OnChatLogFinalize );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "ChatLog", OnChatLogSetup );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "ChatLog", OnChatLogFinalize );
 
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "_ParameterWidget", OnParametersSetup );
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "_ParameterWidget", OnParametersFinalize );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "_ParameterWidget", OnParametersSetup );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "_ParameterWidget", OnParametersFinalize );
 
             if( UiHelper.PartyListAddon is not null ) AttachToNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
             if( UiHelper.ChatLogAddon is not null ) AttachToNative( UiHelper.ChatLogAddon, "ChatLog" );
             if( UiHelper.ParameterAddon is not null ) AttachToNative( UiHelper.ParameterAddon, "_ParameterWidget" );
 
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreRequestedUpdate, AllActionBars, ActionBarUpdate );
+            Service.AddonLifecycle.RegisterListener( AddonEvent.PreRequestedUpdate, AllActionBars, ActionBarUpdate );
         }
 
         private void ActionBarUpdate( AddonEvent _, AddonArgs args ) {
-            var addon = ( AddonActionBarBase* )args.Addon;
+            var addon = ( AddonActionBarBase* )args.Addon.Address;
             if( args is AddonRequestedUpdateArgs updateArgs ) {
                 var data = ( ( NumberArrayData** )updateArgs.NumberArrayData )[6];
                 var addonData = ( AddonHotbarNumberArray* )data->IntArray;
@@ -84,16 +84,16 @@ namespace JobBars.Nodes.Builder {
         }
 
         public void Unload() {
-            Dalamud.AddonLifecycle.UnregisterListener( OnPartyListSetup );
-            Dalamud.AddonLifecycle.UnregisterListener( OnPartyListFinalize );
+            Service.AddonLifecycle.UnregisterListener( OnPartyListSetup );
+            Service.AddonLifecycle.UnregisterListener( OnPartyListFinalize );
 
-            Dalamud.AddonLifecycle.UnregisterListener( OnChatLogSetup );
-            Dalamud.AddonLifecycle.UnregisterListener( OnChatLogFinalize );
+            Service.AddonLifecycle.UnregisterListener( OnChatLogSetup );
+            Service.AddonLifecycle.UnregisterListener( OnChatLogFinalize );
 
-            Dalamud.AddonLifecycle.UnregisterListener( OnParametersSetup );
-            Dalamud.AddonLifecycle.UnregisterListener( OnParametersFinalize );
+            Service.AddonLifecycle.UnregisterListener( OnParametersSetup );
+            Service.AddonLifecycle.UnregisterListener( OnParametersFinalize );
 
-            Dalamud.AddonLifecycle.UnregisterListener( ActionBarUpdate );
+            Service.AddonLifecycle.UnregisterListener( ActionBarUpdate );
 
             if( UiHelper.PartyListAddon is not null ) DetachFromNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
             if( UiHelper.ChatLogAddon is not null ) DetachFromNative( UiHelper.ChatLogAddon, "ChatLog" );
@@ -104,17 +104,17 @@ namespace JobBars.Nodes.Builder {
             Unload();
         }
 
-        private void OnPartyListSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon, "_PartyList" );
-        private void OnPartyListFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon, "_PartyList" );
+        private void OnPartyListSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon.Address, "_PartyList" );
+        private void OnPartyListFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon.Address, "_PartyList" );
 
-        private void OnChatLogSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon, "ChatLog" );
-        private void OnChatLogFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon, "ChatLog" );
+        private void OnChatLogSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon.Address, "ChatLog" );
+        private void OnChatLogFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon.Address, "ChatLog" );
 
-        private void OnParametersSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon, "_ParameterWidget" );
-        private void OnParametersFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon, "_ParameterWidget" );
+        private void OnParametersSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon.Address, "_ParameterWidget" );
+        private void OnParametersFinalize( AddonEvent _, AddonArgs args ) => DetachFromNative( ( AtkUnitBase* )args.Addon.Address, "_ParameterWidget" );
 
         private void AttachToNative( AtkUnitBase* addon, string name ) {
-            Dalamud.Framework.RunOnFrameworkThread( () => {
+            Service.Framework.RunOnFrameworkThread( () => {
                 if( IsAttached.Contains( name ) ) return;
 
                 if( name == UiHelper.BuffGaugeAttachAddonName ) {
@@ -146,7 +146,7 @@ namespace JobBars.Nodes.Builder {
         }
 
         private void DetachFromNative( AtkUnitBase* addon, string name ) {
-            Dalamud.Framework.RunOnFrameworkThread( () => {
+            Service.Framework.RunOnFrameworkThread( () => {
                 if( !IsAttached.Contains( name ) ) return;
 
                 if( name == UiHelper.BuffGaugeAttachAddonName ) {

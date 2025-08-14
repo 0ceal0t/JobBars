@@ -147,7 +147,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextOutlineColor = new( 157f / 255f, 131f / 255f, 91f / 255f, 1 ),
                 TextId = 0,
                 TextFlags = TextFlags.Glare,
-                TextFlags2 = 0,
                 Text = "",
             };
 

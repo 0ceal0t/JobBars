@@ -1,5 +1,5 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
-using ImGuiNET;
 using JobBars.Data;
 using System;
 using System.Numerics;
@@ -39,7 +39,7 @@ namespace JobBars {
             ImGui.PushStyleColor( ImGuiCol.Border, new Vector4( 1, 0, 0, 0.3f ) );
             ImGui.PushStyleColor( ImGuiCol.ChildBg, new Vector4( 1, 0, 0, 0.1f ) );
 
-            var textSize = ImGui.CalcTextSize( Text, ImGui.GetContentRegionMax().X - 40 );
+            var textSize = ImGui.CalcTextSize( Text, wrapWidth: ImGui.GetContentRegionMax().X - 40 );
 
             ImGui.BeginChild( "##AnimationWarning", new Vector2( -1,
                 textSize.Y +
@@ -55,7 +55,7 @@ namespace JobBars {
 
         private void BuildSettingsUi() {
             if( !NodeBuilder.IsLoaded ) return;
-            if( !Dalamud.ClientState.IsLoggedIn ) return;
+            if( !Service.ClientState.IsLoggedIn ) return;
             if( !Visible ) return;
 
             var _ID = "##JobBars_Settings";

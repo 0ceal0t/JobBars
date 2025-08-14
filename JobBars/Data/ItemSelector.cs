@@ -1,5 +1,5 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Textures.TextureWraps;
-using ImGuiNET;
 using JobBars.Helper;
 using System;
 using System.Collections.Generic;
@@ -49,7 +49,8 @@ namespace JobBars.Data {
                 ImGui.BeginChild( $"Select{Id}", new Vector2( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 200 ), true );
 
                 DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
-                if( resetScroll ) { ImGui.SetScrollHereY(); };
+                if( resetScroll ) { ImGui.SetScrollHereY(); }
+                ;
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
 
                 var idx = 0;
@@ -58,10 +59,10 @@ namespace JobBars.Data {
                     if( ImGui.Selectable( $"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data ) ) {
                         SearchSelected = item;
                         try {
-                            Icon = Dalamud.TextureProvider.GetFromGameIcon( item.Icon > 0 ? item.Icon : 0 ).GetWrapOrDefault();
+                            Icon = Service.TextureProvider.GetFromGameIcon( item.Icon > 0 ? item.Icon : 0 ).GetWrapOrDefault();
                         }
                         catch( Exception ) {
-                            Icon = Dalamud.TextureProvider.GetFromGameIcon( 0 ).GetWrapOrDefault();
+                            Icon = Service.TextureProvider.GetFromGameIcon( 0 ).GetWrapOrDefault();
                         }
                     }
                     idx++;
@@ -72,7 +73,7 @@ namespace JobBars.Data {
 
                 if( SearchSelected.Data.Id != 0 ) {
                     if( Icon != null ) {
-                        ImGui.Image( Icon.ImGuiHandle, new Vector2( 24, 24 ) );
+                        ImGui.Image( Icon.Handle, new Vector2( 24, 24 ) );
                         ImGui.SameLine();
                     }
 

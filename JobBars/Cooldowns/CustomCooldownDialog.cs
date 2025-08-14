@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using JobBars.Cooldowns.Manager;
 using JobBars.Data;
 using JobBars.Helper;

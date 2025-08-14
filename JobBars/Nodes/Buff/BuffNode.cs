@@ -61,7 +61,6 @@ namespace JobBars.Nodes.Buff {
                 TextOutlineColor = new( 0, 0, 0, 1 ),
                 TextId = 0,
                 TextFlags = TextFlags.Glare,
-                TextFlags2 = 0,
                 Text = "",
             };
 
