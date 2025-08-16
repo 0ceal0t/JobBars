@@ -24,7 +24,7 @@ namespace JobBars.Gauges.Custom {
 
         protected override void TickTracker() {
             base.TickTracker();
-            var drkGauge = Service.JobGauges.Get<DRKGauge>();
+            var drkGauge = Dalamud.JobGauges.Get<DRKGauge>();
             DarkArts = drkGauge != null && drkGauge.HasDarkArts;
         }
 

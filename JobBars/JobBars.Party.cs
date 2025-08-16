@@ -29,7 +29,7 @@ namespace JobBars {
 
             var partyUI = UiHelper.GetPartyUI();
             if( partyUI == null || partyUI->PartyMemberCount == 0 ) { // fallback
-                ret.Add( Service.ClientState.LocalPlayer.GameObjectId );
+                ret.Add( Dalamud.ClientState.LocalPlayer.GameObjectId );
                 return ret;
             }
 
@@ -44,7 +44,7 @@ namespace JobBars {
 
         private static List<CurrentPartyMember> GetPartyMembers() {
             var ret = new List<CurrentPartyMember>();
-            var localPlayer = Service.ClientState.LocalPlayer;
+            var localPlayer = Dalamud.ClientState.LocalPlayer;
 
             var groupManager = GroupManager.Instance()->MainGroup;
             if( groupManager.MemberCount == 0 ) { // fallback

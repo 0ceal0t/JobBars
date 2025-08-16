@@ -33,7 +33,7 @@ namespace JobBars {
         public static uint NodeId { get; set; } = 89990001;
 
         public JobBars( IDalamudPluginInterface pluginInterface ) {
-            pluginInterface.Create<Service>();
+            pluginInterface.Create<Dalamud>();
 
             NativeController = new( pluginInterface );
 
@@ -41,21 +41,21 @@ namespace JobBars {
             ColorConstants.SetupColors();
 
             try {
-                Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+                Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             }
             catch( Exception e ) {
-                Service.Error( e, "Error loading config" );
+                Dalamud.Error( e, "Error loading config" );
                 Configuration = new Configuration();
                 Configuration.Save();
             }
             if( Configuration.Version < 1 ) {
-                Service.Log( "Old config version found" );
+                Dalamud.Log( "Old config version found" );
                 Configuration = new Configuration();
                 Configuration.Save();
             }
 
-            ReceiveActionEffectHook = Service.Hooks.HookFromSignature<ReceiveActionEffectDelegate>( Constants.ReceiveActionEffectSig, ReceiveActionEffect );
-            ActorControlSelfHook = Service.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
+            ReceiveActionEffectHook = Dalamud.Hooks.HookFromSignature<ReceiveActionEffectDelegate>( Constants.ReceiveActionEffectSig, ReceiveActionEffect );
+            ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
             ReceiveActionEffectHook.Enable();
             ActorControlSelfHook.Enable();
 
@@ -69,16 +69,16 @@ namespace JobBars {
             CursorManager = new CursorManager();
             IconManager = new IconManager();
 
-            Service.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
-            Service.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
-            Service.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
             SetupCommands();
 
-            if( Service.ClientState.IsLoggedIn ) OnLogin();
-            Service.Framework.Update += OnFrameworkUpdate;
-            Service.ClientState.Login += OnLogin;
-            Service.ClientState.Logout += OnLogout;
-            Service.ClientState.TerritoryChanged += OnZoneChange;
+            if( Dalamud.ClientState.IsLoggedIn ) OnLogin();
+            Dalamud.Framework.Update += OnFrameworkUpdate;
+            Dalamud.ClientState.Login += OnLogin;
+            Dalamud.ClientState.Logout += OnLogout;
+            Dalamud.ClientState.TerritoryChanged += OnZoneChange;
 
         }
 
@@ -86,15 +86,15 @@ namespace JobBars {
             ReceiveActionEffectHook?.Dispose();
             ActorControlSelfHook?.Dispose();
 
-            Service.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
-            Service.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
-            Service.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
             RemoveCommands();
 
-            Service.Framework.Update -= OnFrameworkUpdate;
-            Service.ClientState.Login -= OnLogin;
-            Service.ClientState.Logout -= OnLogout;
-            Service.ClientState.TerritoryChanged -= OnZoneChange;
+            Dalamud.Framework.Update -= OnFrameworkUpdate;
+            Dalamud.ClientState.Login -= OnLogin;
+            Dalamud.ClientState.Logout -= OnLogout;
+            Dalamud.ClientState.TerritoryChanged -= OnZoneChange;
 
             Animation.Dispose();
             NodeBuilder?.Dispose();
@@ -102,9 +102,9 @@ namespace JobBars {
         }
 
         private void OnFrameworkUpdate( IFramework framework ) {
-            if( Service.ClientState.IsPvP ||
-                !Service.ClientState.IsLoggedIn ||
-                Service.Condition[ConditionFlag.BetweenAreas] || Service.Condition[ConditionFlag.BetweenAreas51] || Service.Condition[ConditionFlag.CreatingCharacter] ||
+            if( Dalamud.ClientState.IsPvP ||
+                !Dalamud.ClientState.IsLoggedIn ||
+                Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ||
                 !NodeBuilder.IsLoaded ) {
 
                 if( NodeBuilder.GaugeRoot != null ) NodeBuilder.GaugeRoot.IsVisible = false;
@@ -114,7 +114,7 @@ namespace JobBars {
                 return;
             }
 
-            UiHelper.UpdateMp( Service.ClientState.LocalPlayer.CurrentMp );
+            UiHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
             UiHelper.UpdatePlayerStatus();
 
             Animation.Tick();
@@ -142,7 +142,7 @@ namespace JobBars {
         }
 
         private void OnLogout( int type, int code ) {
-            Service.Log( "==== LOGOUT ====" );
+            Dalamud.Log( "==== LOGOUT ====" );
             Animation.Dispose();
             CurrentJob = JobIds.OTHER;
         }
@@ -157,10 +157,10 @@ namespace JobBars {
         }
 
         private static void CheckForJobChange() {
-            var job = UiHelper.IdToJob( Service.ClientState.LocalPlayer.ClassJob.RowId );
+            var job = UiHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.RowId );
             if( job != CurrentJob ) {
                 CurrentJob = job;
-                Service.Log( $"SWITCHED JOB TO {CurrentJob}" );
+                Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );
                 GaugeManager.SetJob( CurrentJob );
                 CursorManager.SetJob( CurrentJob );
                 IconManager.SetJob( CurrentJob );
@@ -170,7 +170,7 @@ namespace JobBars {
         // ======= COMMANDS ============
 
         private void SetupCommands() {
-            Service.CommandManager.AddHandler( "/jobbars", new CommandInfo( OnCommand ) {
+            Dalamud.CommandManager.AddHandler( "/jobbars", new CommandInfo( OnCommand ) {
                 HelpMessage = $"Open config window for VFXEditor",
                 ShowInHelp = true
             } );
@@ -186,7 +186,7 @@ namespace JobBars {
         }
 
         public static void RemoveCommands() {
-            Service.CommandManager.RemoveHandler( "/jobbars" );
+            Dalamud.CommandManager.RemoveHandler( "/jobbars" );
         }
     }
 }

@@ -5,7 +5,7 @@ using Dalamud.Plugin.Services;
 using System;
 
 namespace JobBars {
-    public class Service {
+    public class Dalamud {
         [PluginService] public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
         [PluginService] public static IClientState ClientState { get; private set; } = null!;
         [PluginService] public static IFramework Framework { get; private set; } = null!;

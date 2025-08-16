@@ -196,7 +196,7 @@ namespace JobBars.Data {
         }
 
         public void Save() {
-            Service.PluginInterface.SavePluginConfig( this );
+            Dalamud.PluginInterface.SavePluginConfig( this );
         }
 
         public static bool DrawColor( string id, ElementColor currentValue, out ElementColor value ) {

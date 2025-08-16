@@ -1,7 +1,5 @@
 <Project Sdk="Dalamud.NET.Sdk/13.0.0">
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <LangVersion>latest</LangVersion>
     <AssemblyTitle>JobBars</AssemblyTitle>
     <Company></Company>
     <Product>JobBars</Product>

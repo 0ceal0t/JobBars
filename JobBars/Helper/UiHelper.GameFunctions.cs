@@ -12,7 +12,7 @@ namespace JobBars.Helper {
         public static bool Ready { get; private set; } = false;
 
         public static void Setup() {
-            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>( Service.SigScanner.ScanText( Constants.PlaySoundSig ) );
+            PlayGameSoundEffect = Marshal.GetDelegateForFunctionPointer<PlaySoundEffectDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );
             SetupSheets();
             Ready = true;
         }
@@ -25,9 +25,9 @@ namespace JobBars.Helper {
         }
 
         public static bool GetCurrentCast( out float currentTime, out float totalTime ) {
-            currentTime = Service.ClientState.LocalPlayer.CurrentCastTime;
-            totalTime = Service.ClientState.LocalPlayer.TotalCastTime;
-            return Service.ClientState.LocalPlayer.IsCasting;
+            currentTime = Dalamud.ClientState.LocalPlayer.CurrentCastTime;
+            totalTime = Dalamud.ClientState.LocalPlayer.TotalCastTime;
+            return Dalamud.ClientState.LocalPlayer.IsCasting;
         }
 
         public static bool GetRecastActive( uint actionId, out float timeElapsed, ActionType actionType = ActionType.Action ) {
@@ -56,7 +56,7 @@ namespace JobBars.Helper {
             var actorAddress = Marshal.ReadIntPtr( new IntPtr( TargetSystem.Instance() ) + Constants.PreviousTargetOffset );
             if( actorAddress == IntPtr.Zero ) return null;
 
-            return Service.Objects.CreateObjectReference( actorAddress );
+            return Dalamud.Objects.CreateObjectReference( actorAddress );
         }
     }
 }

@@ -59,10 +59,10 @@ namespace JobBars.Data {
                     if( ImGui.Selectable( $"{item.Name}{Id}{item.Data.Id}", item.Data == SearchSelected.Data ) ) {
                         SearchSelected = item;
                         try {
-                            Icon = Service.TextureProvider.GetFromGameIcon( item.Icon > 0 ? item.Icon : 0 ).GetWrapOrDefault();
+                            Icon = Dalamud.TextureProvider.GetFromGameIcon( item.Icon > 0 ? item.Icon : 0 ).GetWrapOrDefault();
                         }
                         catch( Exception ) {
-                            Icon = Service.TextureProvider.GetFromGameIcon( 0 ).GetWrapOrDefault();
+                            Icon = Dalamud.TextureProvider.GetFromGameIcon( 0 ).GetWrapOrDefault();
                         }
                     }
                     idx++;

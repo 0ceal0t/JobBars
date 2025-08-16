@@ -16,7 +16,7 @@ namespace JobBars.Gauges.Custom.VrpCoil {
 
 
         protected override void TickTracker() {
-            var vprGauge = Service.JobGauges.Get<VPRGauge>();
+            var vprGauge = Dalamud.JobGauges.Get<VPRGauge>();
             var currentValue = vprGauge == null ? 0 : vprGauge.RattlingCoilStacks;
             PlaySound( currentValue );
             Value = currentValue;
