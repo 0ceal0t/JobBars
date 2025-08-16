@@ -7,6 +7,7 @@ using JobBars.Gauges;
 using JobBars.Gauges.Stacks;
 using JobBars.Helper;
 using JobBars.Icons;
+using JobBars.Gauges.Timer;
 
 namespace JobBars.Jobs {
     public static class PCT {
@@ -24,6 +25,13 @@ namespace JobBars.Jobs {
                     new Item(BuffIds.SubtractivePaletee)
                 ],
                 Color = ColorConstants.BlueGreen
+            }),
+            new GaugeTimerConfig(UiHelper.Localize(BuffIds.HammerTime), GaugeVisualType.Bar, new GaugeSubTimerProps {
+                MaxDuration = 30,
+                Color = ColorConstants.Orange,
+                Triggers = [
+                    new Item(BuffIds.HammerTime)
+                ],
             }),
         ];
 
@@ -62,6 +70,20 @@ namespace JobBars.Jobs {
                 Triggers = [
                     new IconBuffTriggerStruct { Trigger = new Item(BuffIds.StarryMuse), Duration = 20 }
                 ]
+            }),
+            new IconBuffReplacer(UiHelper.Localize(BuffIds.HammerTime), new IconBuffProps {
+               Icons = [
+                   ActionIds.StrikingMuse,
+                   ActionIds.SteelMuse,
+                   ActionIds.HammerStamp,
+                   ActionIds.HammerBrush,
+                   ActionIds.PolishingHammer,
+                   ActionIds.HammerMotif,
+                   ActionIds.WeaponMotif,
+               ],
+               Triggers = [
+                    new IconBuffTriggerStruct { Trigger = new Item(BuffIds.HammerTime), Duration = 30 }
+               ]
             }),
         ];
 
