@@ -28,7 +28,7 @@ namespace JobBars.Atk {
         }
 
         public readonly Vector3 AddColor => new( AddRed / 255f, AddGreen / 255f, AddBlue / 255f );
-        public readonly Vector3 MultiplyColor => new( MultiplyRed / 255f, MultiplyGreen / 255f, MultiplyBlue / 255f );
+        public readonly Vector3 MultiplyColor => new( MultiplyRed / 100f, MultiplyGreen / 100f, MultiplyBlue / 100f );
 
         public readonly void SetColor( NodeBase node ) {
             node.MultiplyColor = MultiplyColor;
