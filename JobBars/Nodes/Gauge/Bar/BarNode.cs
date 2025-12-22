@@ -139,7 +139,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 String = "",
             };
             Text.Node->AlignmentFontType = 21;
-            Text.AttachNode( TextContainer );
 
             TextBlur = new SimpleNineGridNode() {
                 Size = new( 47, 48 ),
@@ -150,7 +149,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 TexturePath = "ui/uld/JobHudNumBg.tex"
             };
-            TextBlur.AttachNode( TextContainer );
 
             BarSecondary.AttachNode( BarContainer );
             BarMain.AttachNode( BarContainer );
@@ -160,6 +158,9 @@ namespace JobBars.Nodes.Gauge.Bar {
             BarContainer.AttachNode( GaugeContainer );
             Frame.AttachNode( GaugeContainer );
             Indicator.AttachNode( GaugeContainer );
+
+            TextBlur.AttachNode( TextContainer );
+            Text.AttachNode( TextContainer );
 
             GaugeContainer.AttachNode( this );
             TextContainer.AttachNode( this );
