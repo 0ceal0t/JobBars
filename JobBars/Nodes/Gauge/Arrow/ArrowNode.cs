@@ -1,5 +1,6 @@
 using JobBars.Atk;
 using JobBars.Data;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace JobBars.Nodes.Gauge.Arrow {
         public static readonly int MAX_ITEMS = 12;
 
         public ArrowNode() : base() {
-            NodeID = JobBars.NodeId++;
             Size = new( 160, 46 );
 
             for( var idx = 0; idx < MAX_ITEMS; idx++ ) {
@@ -21,7 +21,8 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 };
                 Ticks.Add( tick );
             }
-            JobBars.NativeController.AttachToNode( Ticks.Select( x => ( NodeBase )x ).ToList(), this, NodePosition.AsLastChild );
+
+            Ticks.ForEach( x => x.AttachNode(this) );
         }
 
         public void SetMaxValue( int value ) {
@@ -42,12 +43,5 @@ namespace JobBars.Nodes.Gauge.Arrow {
         }
 
         public void Tick( float percent ) => Ticks.ForEach( t => t.Tick( percent ) );
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var tick in Ticks ) tick.Dispose();
-                base.Dispose( disposing );
-            }
-        }
     }
 }

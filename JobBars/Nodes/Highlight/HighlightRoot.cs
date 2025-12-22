@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -9,27 +10,20 @@ namespace JobBars.Nodes.Highlight {
         public readonly List<HighlightNode> Highlights = [];
 
         public HighlightRoot() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 100, 100 );
             Position = new( -12, 19 );
 
-            for( var i = 0; i < 8; i++ ) {
+            for( var i = 0; i < 8; i++ ) { 
                 Highlights.Add( new HighlightNode() );
                 Highlights[i].Position = new( 0, 40 * i );
             }
-            JobBars.NativeController.AttachToNode( Highlights.Select( x => ( NodeBase )x ).ToList(), this, NodePosition.AsLastChild );
+
+            Highlights.ForEach( x => x.AttachNode( this ) );
         }
 
         public void HideAll() {
             foreach( var item in Highlights ) item.IsVisible = false;
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var item in Highlights ) item.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }

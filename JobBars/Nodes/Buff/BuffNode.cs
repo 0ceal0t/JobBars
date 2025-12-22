@@ -2,6 +2,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
@@ -12,8 +13,8 @@ namespace JobBars.Nodes.Buff {
 
         private readonly TextNode Text;
         private readonly ImageNode Overlay;
-        private readonly ImageNode Icon;
-        private readonly NineGridNode Border;
+        private readonly IconImageNode Icon;
+        private readonly SimpleNineGridNode Border;
 
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
@@ -21,55 +22,48 @@ namespace JobBars.Nodes.Buff {
         private string CurrentText = "";
 
         public BuffNode() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
-
-            Icon = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Icon = new IconImageNode() {
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
-                WrapMode = WrapMode.Unknown,
-                ImageNodeFlags = 0
+                WrapMode = WrapMode.Tile,
+                ImageNodeFlags = 0,
+                IconId = 405
             };
-            Icon.LoadIcon( 405 );
 
-            Overlay = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Overlay = new SimpleImageNode() {
                 Height = 1,
                 TextureCoordinates = new( 365, 4 ),
                 TextureSize = new( 37, 37 ),
                 NodeFlags = NodeFlags.Visible,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
+                TexturePath = "ui/uld/IconA_Frame.tex"
             };
-            Overlay.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
-            Border = new NineGridNode() {
-                NodeID = JobBars.NodeId++,
+            Border = new SimpleNineGridNode() {
                 Position = new( -4, -3 ),
                 Offsets = new( 5, 5, 5, 5 ),
-                PartsRenderType = PartsRenderType.RenderType,
+                PartsRenderType = ( byte )PartsRenderType.RenderType ,
                 NodeFlags = NodeFlags.Visible,
+                TexturePath = "ui/uld/IconA_Frame.tex"
+
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
-                NodeID = JobBars.NodeId++,
                 FontSize = ( byte )JobBars.Configuration.BuffTextSize_v2,
                 LineSpacing = ( byte )JobBars.Configuration.BuffTextSize_v2,
-                AlignmentFontType = 52,
                 NodeFlags = NodeFlags.Visible,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 0, 0, 0, 1 ),
                 TextId = 0,
                 TextFlags = TextFlags.Glare,
-                Text = "",
+                String = "",
             };
+            Text.Node->AlignmentFontType = 52;
 
-            JobBars.NativeController.AttachToNode( [
-                Icon,
-                Overlay,
-                Border,
-                Text
-            ], this, NodePosition.AsLastChild );
+            Icon.AttachNode( this );
+            Overlay.AttachNode( this );
+            Border.AttachNode( this );
+            Text.AttachNode( this );
 
             Update();
         }
@@ -118,7 +112,7 @@ namespace JobBars.Nodes.Buff {
 
         public void SetText( string text ) {
             if( text != CurrentText ) {
-                Text.Text = text;
+                Text.String = text;
                 CurrentText = text;
             }
             Text.IsVisible = true;
@@ -127,16 +121,6 @@ namespace JobBars.Nodes.Buff {
         public void SetColor( ElementColor color ) {
             if( JobBars.Configuration.BuffThinBorder ) color.AddBlue -= 40;
             color.SetColor( Border );
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                Text.Dispose();
-                Overlay.Dispose();
-                Icon.Dispose();
-                Border.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }

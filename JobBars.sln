@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31521.260
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobBars", "JobBars\JobBars.csproj", "{240138B9-D3F2-4E0F-BDB4-7580C1D76301}"
 EndProject
@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		JobBars\JobBars.json = JobBars\JobBars.json
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -23,7 +24,7 @@ Global
 		{240138B9-D3F2-4E0F-BDB4-7580C1D76301}.Debug|x64.ActiveCfg = Debug|x64
 		{240138B9-D3F2-4E0F-BDB4-7580C1D76301}.Debug|x64.Build.0 = Debug|x64
 		{240138B9-D3F2-4E0F-BDB4-7580C1D76301}.Release|x64.ActiveCfg = Release|x64
-		{240138B9-D3F2-4E0F-BDB4-7580C1D76301}.Release|x64.Build.0 = Release|Any CP
+		{240138B9-D3F2-4E0F-BDB4-7580C1D76301}.Release|x64.Build.0 = Release|x64
 		{1AD92667-BC56-4744-BC7D-CCCD226492E3}.Debug|x64.ActiveCfg = Debug|x64
 		{1AD92667-BC56-4744-BC7D-CCCD226492E3}.Debug|x64.Build.0 = Debug|x64
 		{1AD92667-BC56-4744-BC7D-CCCD226492E3}.Release|x64.ActiveCfg = Release|x64

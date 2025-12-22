@@ -1,50 +1,46 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
 namespace JobBars.Nodes.Cursor {
     public unsafe class CursorRoot : NodeBase<AtkResNode> {
-        private readonly ImageNode Inner;
-        private readonly ImageNode Outer;
+        private readonly SimpleImageNode Inner;
+        private readonly SimpleImageNode Outer;
 
         private bool StaticCircleInner = true;
         private bool StaticCircleOuter = true;
 
         public CursorRoot() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( 44, 48 );
             NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
 
-            Inner = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Inner = new SimpleImageNode() {
                 Size = new( 44, 46 ),
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0
             };
 
             SetPartId( Inner, 79, ref StaticCircleInner );
 
-            Outer = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Outer = new SimpleImageNode() {
                 Size = new( 44, 46 ),
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0
             };
 
             SetPartId( Outer, 79, ref StaticCircleOuter );
 
-            JobBars.NativeController.AttachToNode( [
-                Inner,
-                Outer
-            ], this, NodePosition.AsLastChild );
+            Inner.AttachNode( this );
+            Outer.AttachNode( this );
         }
 
-        private static void SetPartId( ImageNode node, int partId, ref bool staticCircle ) {
+        private static void SetPartId( SimpleImageNode node, int partId, ref bool staticCircle ) {
             if( partId == 80 ) { // Placeholder for static circle
-                if( !staticCircle ) node.LoadTexture( "ui/uld/CursorLocation.tex", JobBars.Configuration.Use4K ? 2u : 1u );
+                if( !staticCircle ) node.TexturePath = "ui/uld/CursorLocation.tex";
                 staticCircle = true;
 
                 node.TextureCoordinates = new( 0, 0 );
@@ -52,7 +48,7 @@ namespace JobBars.Nodes.Cursor {
 
             }
             else {
-                if( staticCircle ) node.LoadTexture( "ui/uld/IconA_Recast2.tex", JobBars.Configuration.Use4K ? 2u : 1u );
+                if( staticCircle ) node.TexturePath = "ui/uld/IconA_Recast2.tex";
                 staticCircle = false;
 
                 var row = partId % 9;
@@ -73,7 +69,7 @@ namespace JobBars.Nodes.Cursor {
         public void SetInner( float percent, float scale ) => SetCursorPercent( Inner, percent, scale, ref StaticCircleInner );
         public void SetOuter( float percent, float scale ) => SetCursorPercent( Outer, percent, scale, ref StaticCircleOuter );
 
-        private static void SetCursorPercent( ImageNode node, float percent, float scale, ref bool staticCircle ) {
+        private static void SetCursorPercent( SimpleImageNode node, float percent, float scale, ref bool staticCircle ) {
             if( percent == 2 ) { // whatever, just use this for the solid circle
                 node.Size = new( 128, 128 );
                 node.Position = new( -( 128f * scale ) / 2f, -( 128f * scale ) / 2f + 2 );
@@ -104,14 +100,6 @@ namespace JobBars.Nodes.Cursor {
 
             Outer.MultiplyColor = color.MultiplyColor;
             Outer.AddColor = color.AddColor;
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                Inner.Dispose();
-                Outer.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }

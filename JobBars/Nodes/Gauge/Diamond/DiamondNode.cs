@@ -1,4 +1,5 @@
 using JobBars.Atk;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
         public static readonly int MAX_ITEMS = 12;
 
         public DiamondNode() : base() {
-            NodeID = JobBars.NodeId++;
             Size = new( 160, 46 );
 
             for( var idx = 0; idx < MAX_ITEMS; idx++ ) {
@@ -20,7 +20,8 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 };
                 Ticks.Add( tick );
             }
-            JobBars.NativeController.AttachToNode( Ticks.Select( x => ( NodeBase )x ).ToList(), this, NodePosition.AsLastChild );
+
+            Ticks.ForEach( x => x.AttachNode( this ) );
         }
 
         public void SetMaxValue( int value ) {
@@ -43,7 +44,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
         }
 
         public void SetText( int idx, string text ) {
-            Ticks[idx].Text.Text = text;
+            Ticks[idx].Text.String = text;
             Ticks[idx].Text.IsVisible = true;
         }
 
@@ -60,12 +61,5 @@ namespace JobBars.Nodes.Gauge.Diamond {
         }
 
         public void Tick( float percent ) => Ticks.ForEach( t => t.Tick( percent ) );
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var tick in Ticks ) tick.Dispose();
-                base.Dispose( disposing );
-            }
-        }
     }
 }

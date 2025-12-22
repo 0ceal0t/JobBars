@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -12,13 +13,13 @@ namespace JobBars.Nodes.Cooldown {
         public static int BUFFS_HORIZONTAL => JobBars.Configuration.BuffHorizontal;
 
         public CooldownRoot() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( 100, 100 );
             Position = JobBars.Configuration.CooldownPosition;
             NodeFlags = NodeFlags.Visible;
 
             for( var i = 0; i < 8; i++ ) Rows.Add( new CooldownRow() );
-            JobBars.NativeController.AttachToNode( Rows.Select( x => ( NodeBase )x ).ToList(), this, NodePosition.AsLastChild );
+
+            Rows.ForEach( x => x.AttachNode(this) );
 
             Update();
         }
@@ -28,12 +29,5 @@ namespace JobBars.Nodes.Cooldown {
         }
 
         public void SetCooldownRowVisible( int idx, bool visible ) => Rows[idx].IsVisible = visible;
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var buff in Rows ) buff.Dispose();
-                base.Dispose( disposing );
-            }
-        }
     }
 }

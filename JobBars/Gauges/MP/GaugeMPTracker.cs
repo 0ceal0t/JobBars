@@ -24,7 +24,7 @@ namespace JobBars.Gauges.MP {
         public override void ProcessAction( Item action ) { }
 
         protected override void TickTracker() {
-            var mp = Dalamud.ClientState.LocalPlayer.CurrentMp;
+            var mp = Dalamud.Objects.LocalPlayer.CurrentMp;
             Value = mp / 10000f;
             TextValue = ( ( int )( mp / 100 ) ).ToString();
         }

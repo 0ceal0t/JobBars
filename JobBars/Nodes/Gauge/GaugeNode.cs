@@ -1,6 +1,6 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Helper;
-using KamiToolKit.Nodes;
+using KamiToolKit;
 using System.Numerics;
 
 namespace JobBars.Nodes.Gauge {
@@ -20,8 +20,8 @@ namespace JobBars.Nodes.Gauge {
         }
 
         public virtual unsafe void SetSplitPosition( Vector2 pos ) {
-            var p = UiHelper.GetGlobalPosition( JobBars.NodeBuilder.GaugeRoot.InternalResNode );
-            var pScale = UiHelper.GetGlobalScale( JobBars.NodeBuilder.GaugeRoot.InternalResNode );
+            var p = UiHelper.GetGlobalPosition( JobBars.NodeBuilder.GaugeRoot.Node );
+            var pScale = UiHelper.GetGlobalScale( JobBars.NodeBuilder.GaugeRoot.Node );
             Position = new( ( pos.X - p.X ) / pScale.X, ( pos.Y - p.Y ) / pScale.Y );
         }
     }

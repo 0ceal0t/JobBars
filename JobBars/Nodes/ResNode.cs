@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit;
 using KamiToolKit.Nodes;
 
 namespace JobBars.Nodes {

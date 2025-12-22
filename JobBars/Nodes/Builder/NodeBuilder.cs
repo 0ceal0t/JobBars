@@ -9,6 +9,7 @@ using JobBars.Nodes.Cooldown;
 using JobBars.Nodes.Cursor;
 using JobBars.Nodes.Gauge;
 using JobBars.Nodes.Highlight;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -125,21 +126,19 @@ namespace JobBars.Nodes.Builder {
 
                     JobBars.GaugeManager?.Reset();
 
-                    JobBars.NativeController.AttachToAddon( BuffRoot, addon, addon->RootNode, NodePosition.AsLastChild, false, false );
-                    JobBars.NativeController.AttachToAddon( CursorRoot, addon, addon->RootNode, NodePosition.AsLastChild, false, false );
-                    JobBars.NativeController.AttachToAddon( GaugeRoot, addon, addon->RootNode, NodePosition.AsLastChild, false, false );
+                    BuffRoot.AttachNode( addon->RootNode );
+                    CursorRoot.AttachNode( addon->RootNode );
+                    GaugeRoot.AttachNode( addon->RootNode );
                 }
 
                 if( name == UiHelper.CooldownAttachAddonName ) {
                     CooldownRoot = new();
-
-                    JobBars.NativeController.AttachToAddon( CooldownRoot, addon, addon->RootNode, NodePosition.AsLastChild, false, false );
+                    CooldownRoot.AttachNode( addon->RootNode );
                 }
 
                 if( name == "_PartyList" ) {
                     HighlightRoot = new();
-
-                    JobBars.NativeController.AttachToAddon( HighlightRoot, addon, addon->GetNodeById( 20 ), NodePosition.AfterTarget, false, false );
+                    HighlightRoot.AttachNode( addon->GetNodeById( 20 ) );
                 }
 
                 IsAttached.Add( name );
@@ -152,17 +151,14 @@ namespace JobBars.Nodes.Builder {
 
                 if( name == UiHelper.BuffGaugeAttachAddonName ) {
                     if( BuffRoot != null ) {
-                        JobBars.NativeController.DetachFromAddon( BuffRoot, addon, false, false );
                         BuffRoot.Dispose();
                         BuffRoot = null;
                     }
                     if( CursorRoot != null ) {
-                        JobBars.NativeController.DetachFromAddon( CursorRoot, addon, false, false );
                         CursorRoot.Dispose();
                         CursorRoot = null;
                     }
                     if( GaugeRoot != null ) {
-                        JobBars.NativeController.DetachFromAddon( GaugeRoot, addon, false, false );
                         GaugeRoot.Dispose();
                         GaugeRoot = null;
                     }
@@ -170,7 +166,6 @@ namespace JobBars.Nodes.Builder {
 
                 if( name == UiHelper.CooldownAttachAddonName ) {
                     if( CooldownRoot != null ) {
-                        JobBars.NativeController.DetachFromAddon( CooldownRoot, addon, false, false );
                         CooldownRoot.Dispose();
                         CooldownRoot = null;
                     }
@@ -178,7 +173,6 @@ namespace JobBars.Nodes.Builder {
 
                 if( name == "_PartyList" ) {
                     if( HighlightRoot != null ) {
-                        JobBars.NativeController.DetachFromAddon( HighlightRoot, addon, false, false );
                         HighlightRoot.Dispose();
                         HighlightRoot = null;
                     }

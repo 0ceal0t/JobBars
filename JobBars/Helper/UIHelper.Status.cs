@@ -3,7 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using JobBars.Data;
 using System.Collections.Generic;
 using System.Linq;
-using DalamudStatus = Dalamud.Game.ClientState.Statuses.Status;
+using DalamudStatus = Dalamud.Game.ClientState.Statuses.IStatus;
 
 namespace JobBars.Helper {
     public unsafe partial class UiHelper {
@@ -19,8 +19,8 @@ namespace JobBars.Helper {
         public static void UpdatePlayerStatus() {
             Dictionary<Item, Status> buffDict = [];
 
-            var ownerId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
-            ActorToBuffItems( Dalamud.ClientState.LocalPlayer, ownerId, buffDict );
+            var ownerId = ( int )Dalamud.Objects.LocalPlayer.GameObjectId;
+            ActorToBuffItems( Dalamud.Objects.LocalPlayer, ownerId, buffDict );
 
             var prevEnemy = PreviousEnemyTarget;
             if( prevEnemy != null ) ActorToBuffItems( prevEnemy, ownerId, buffDict );

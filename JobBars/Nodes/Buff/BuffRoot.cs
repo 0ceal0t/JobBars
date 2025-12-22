@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -12,11 +13,11 @@ namespace JobBars.Nodes.Buff {
         public static int BUFFS_HORIZONTAL => JobBars.Configuration.BuffHorizontal;
 
         public BuffRoot() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( 256, 100 );
 
             for( var i = 0; i < MAX_BUFFS; i++ ) Buffs.Add( new BuffNode() );
-            JobBars.NativeController.AttachToNode( Buffs.Select( x => ( NodeBase )x ).ToList(), this, NodePosition.AsLastChild );
+
+            Buffs.ForEach( x => x.AttachNode(this) );
 
             Update();
         }
@@ -32,13 +33,6 @@ namespace JobBars.Nodes.Buff {
                 Buffs[idx].Position = new( xMod * ( BuffNode.WIDTH + 9 ) * position_x, yMod * ( BuffNode.HEIGHT + 7 ) * position_y );
             }
             foreach( var buff in Buffs ) buff.Update();
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var buff in Buffs ) buff.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }

@@ -25,9 +25,9 @@ namespace JobBars.Helper {
         }
 
         public static bool GetCurrentCast( out float currentTime, out float totalTime ) {
-            currentTime = Dalamud.ClientState.LocalPlayer.CurrentCastTime;
-            totalTime = Dalamud.ClientState.LocalPlayer.TotalCastTime;
-            return Dalamud.ClientState.LocalPlayer.IsCasting;
+            currentTime = Dalamud.Objects.LocalPlayer.CurrentCastTime;
+            totalTime = Dalamud.Objects.LocalPlayer.TotalCastTime;
+            return Dalamud.Objects.LocalPlayer.IsCasting;
         }
 
         public static bool GetRecastActive( uint actionId, out float timeElapsed, ActionType actionType = ActionType.Action ) {

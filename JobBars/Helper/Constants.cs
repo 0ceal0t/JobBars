@@ -11,4 +11,9 @@ namespace JobBars.Helper {
         public static readonly int ActorControlOtherId = 1540;
         public static readonly int WipeArg1 = 0x4000000F;
     }
+
+    public enum PartsRenderType : byte {
+        PartsType = 1 << 1,
+        RenderType = 1 << 2,
+    }
 }

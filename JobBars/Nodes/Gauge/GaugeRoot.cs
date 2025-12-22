@@ -2,6 +2,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Nodes.Gauge.Arrow;
 using JobBars.Nodes.Gauge.Bar;
 using JobBars.Nodes.Gauge.Diamond;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace JobBars.Nodes.Gauge {
         public readonly List<DiamondNode> Diamonds = [];
 
         public GaugeRoot() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( 256, 100 );
 
             for( var i = 0; i < MAX_GAUGES; i++ ) {
@@ -29,22 +29,13 @@ namespace JobBars.Nodes.Gauge {
             allGauges.AddRange( Arrows );
             allGauges.AddRange( Diamonds );
 
-            JobBars.NativeController.AttachToNode( allGauges, this, NodePosition.AsLastChild );
+            allGauges.ForEach( x => x.AttachNode( this ) );
         }
 
         public void HideAll() {
             foreach( var item in Bars ) item.IsVisible = false;
             foreach( var item in Arrows ) item.IsVisible = false;
             foreach( var item in Diamonds ) item.IsVisible = false;
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                foreach( var item in Bars ) item.Dispose();
-                foreach( var item in Arrows ) item.Dispose();
-                foreach( var item in Diamonds ) item.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }

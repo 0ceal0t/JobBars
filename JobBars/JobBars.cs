@@ -23,19 +23,16 @@ namespace JobBars {
         public static CooldownManager CooldownManager { get; private set; }
         public static CursorManager CursorManager { get; private set; }
         public static IconManager IconManager { get; private set; }
-        public static NativeController NativeController { get; private set; }
 
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
 
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
-        public static uint NodeId { get; set; } = 89990001;
-
         public JobBars( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
-            NativeController = new( pluginInterface );
+            KamiToolKitLibrary.Initialize( pluginInterface );
 
             UiHelper.Setup();
             ColorConstants.SetupColors();
@@ -98,7 +95,7 @@ namespace JobBars {
 
             Animation.Dispose();
             NodeBuilder?.Dispose();
-            NativeController?.Dispose();
+            KamiToolKitLibrary.Dispose();
         }
 
         private void OnFrameworkUpdate( IFramework framework ) {
@@ -114,7 +111,7 @@ namespace JobBars {
                 return;
             }
 
-            UiHelper.UpdateMp( Dalamud.ClientState.LocalPlayer.CurrentMp );
+            UiHelper.UpdateMp( Dalamud.Objects.LocalPlayer.CurrentMp );
             UiHelper.UpdatePlayerStatus();
 
             Animation.Tick();
@@ -157,7 +154,7 @@ namespace JobBars {
         }
 
         private static void CheckForJobChange() {
-            var job = UiHelper.IdToJob( Dalamud.ClientState.LocalPlayer.ClassJob.RowId );
+            var job = UiHelper.IdToJob( Dalamud.Objects.LocalPlayer.ClassJob.RowId );
             if( job != CurrentJob ) {
                 CurrentJob = job;
                 Dalamud.Log( $"SWITCHED JOB TO {CurrentJob}" );

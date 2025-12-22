@@ -11,7 +11,7 @@ namespace JobBars {
         private delegate void ReceiveActionEffectDelegate( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail );
         private readonly Hook<ReceiveActionEffectDelegate> ReceiveActionEffectHook;
 
-        private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 );
+        private delegate void ActorControlSelfDelegate( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, ulong targetId, byte a10 );
         private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
         private void ReceiveActionEffect( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail ) {
@@ -23,7 +23,7 @@ namespace JobBars {
             var id = *( ( uint* )effectHeader.ToPointer() + 0x2 );
             var type = *( ( byte* )effectHeader.ToPointer() + 0x1F ); // 1 = action
 
-            var selfId = ( int )Dalamud.ClientState.LocalPlayer.GameObjectId;
+            var selfId = ( int )Dalamud.Objects.LocalPlayer.GameObjectId;
             var isSelf = sourceId == selfId;
             var isPet = !isSelf && ( GaugeManager?.CurrentJob == JobIds.SMN || GaugeManager?.CurrentJob == JobIds.SCH ) && IsPet( ( ulong )sourceId, selfId );
             var isParty = !isSelf && !isPet && IsInParty( ( uint )sourceId );
@@ -105,13 +105,13 @@ namespace JobBars {
             ReceiveActionEffectHook.Original( sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail );
         }
 
-        private void ActorControlSelf( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, ulong targetId, byte a10 ) {
+        private void ActorControlSelf( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, ulong targetId, byte a10 ) {
 
 
-            ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, targetId, a10 );
+            ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, targetId, a10 );
             if( !NodeBuilder.IsLoaded ) return;
 
-            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.ClientState.LocalPlayer?.GameObjectId ) {
+            if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.Objects.LocalPlayer?.GameObjectId ) {
                 UiHelper.UpdateActorTick();
             }
             else if( entityId > 0 && id == Constants.ActorControlOtherId ) {

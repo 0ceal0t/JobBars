@@ -1,5 +1,6 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
@@ -12,47 +13,39 @@ namespace JobBars.Nodes.Gauge.Arrow {
         private ElementColor TickColor = ColorConstants.NoColor;
 
         public ArrowTick() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( 32, 32 );
 
-            Background = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Background = new SimpleImageNode() {
                 Size = new( 32, 32 ),
                 TextureCoordinates = new( 0, 0 ),
                 TextureSize = new( 32, 32 ),
                 NodeFlags = NodeFlags.Visible,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
+                TexturePath = "ui/uld/JobHudSimple_StackB.tex"
             };
-            Background.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             SelectedContainer = new ResNode() {
-                NodeID = JobBars.NodeId++,
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
                 NodeFlags = NodeFlags.Visible,
             };
 
-            Selected = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Selected = new SimpleImageNode() {
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
                 TextureCoordinates = new( 32, 0 ),
                 TextureSize = new( 32, 32 ),
                 NodeFlags = NodeFlags.Visible,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
+                TexturePath = "ui/uld/JobHudSimple_StackB.tex"
             };
-            Selected.LoadTexture( "ui/uld/JobHudSimple_StackB.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
-            JobBars.NativeController.AttachToNode( [
-                Selected,
-            ], SelectedContainer, NodePosition.AsLastChild );
+            Selected.AttachNode( SelectedContainer );
 
-            JobBars.NativeController.AttachToNode( [
-                Background,
-                SelectedContainer,
-            ], this, NodePosition.AsLastChild );
+            Background.AttachNode( this );
+            SelectedContainer.AttachNode( this );
         }
 
         public void SetColor( ElementColor color ) {
@@ -61,14 +54,5 @@ namespace JobBars.Nodes.Gauge.Arrow {
         }
 
         public void Tick( float percent ) => TickColor.SetColorPulse( Selected, percent );
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                Background.Dispose();
-                SelectedContainer.Dispose();
-                Selected.Dispose();
-                base.Dispose( disposing );
-            }
-        }
     }
 }

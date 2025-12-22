@@ -66,7 +66,7 @@ namespace JobBars.Cooldowns.Manager {
                     continue;
                 }
 
-                if( !JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Dalamud.ClientState.LocalPlayer.GameObjectId ) {
+                if( !JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Dalamud.Objects.LocalPlayer.GameObjectId ) {
                     JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, false );
                     continue;
                 }

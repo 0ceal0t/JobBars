@@ -1,6 +1,7 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
+using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 
@@ -10,56 +11,50 @@ namespace JobBars.Nodes.Cooldown {
         public static readonly ushort HEIGHT = 30;
 
         private readonly TextNode Text;
-        private readonly ImageNode Icon;
-        private readonly ImageNode Border;
+        private readonly SimpleImageNode Icon;
+        private readonly SimpleImageNode Border;
 
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
 
         public CooldownNode() : base( NodeType.Res ) {
-            NodeID = JobBars.NodeId++;
             Size = new( WIDTH, HEIGHT );
 
-            Icon = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Icon = new IconImageNode() {
                 Size = new( WIDTH, HEIGHT ),
                 NodeFlags = NodeFlags.Visible,
                 ImageNodeFlags = ImageNodeFlags.AutoFit,
                 TextureSize = new( 44, 46 ),
+                IconId = 405
             };
-            Icon.LoadIcon( 405 );
 
-            Border = new ImageNode() {
-                NodeID = JobBars.NodeId++,
+            Border = new SimpleImageNode() {
                 Size = new( 49, 47 ),
                 NodeFlags = NodeFlags.Visible,
-                WrapMode = WrapMode.Unknown,
+                WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 Position = new( -4, -2 ),
                 TextureCoordinates = new( 0, 96 ),
                 TextureSize = new( 48, 48 ),
-                Scale = new( ( ( float )WIDTH + 8 ) / 49.0f, ( ( float )HEIGHT + 6 ) / 47.0f )
+                Scale = new( ( ( float )WIDTH + 8 ) / 49.0f, ( ( float )HEIGHT + 6 ) / 47.0f ),
+                TexturePath = "ui/uld/IconA_Frame.tex"
             };
-            Border.LoadTexture( "ui/uld/IconA_Frame.tex", JobBars.Configuration.Use4K ? 2u : 1u );
 
             Text = new TextNode() {
-                NodeID = JobBars.NodeId++,
                 Size = new( WIDTH, HEIGHT ),
                 FontSize = 21,
                 LineSpacing = ( byte )HEIGHT,
-                AlignmentFontType = 52,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 0, 0, 0, 1 ),
                 TextId = 0,
                 TextFlags = TextFlags.Glare,
-                Text = "",
+                String = "",
             };
+            Text.Node->AlignmentFontType = 52;
 
-            JobBars.NativeController.AttachToNode( [
-                Icon,
-                Border,
-                Text
-            ], this, NodePosition.AsLastChild );
+            Icon.AttachNode( this );
+            Border.AttachNode( this );
+            Text.AttachNode( this );
         }
 
         public void SetNoDash() {
@@ -82,7 +77,7 @@ namespace JobBars.Nodes.Cooldown {
 
         public void SetText( string text ) {
             Text.FontSize = text.Length > 2 ? ( byte )17 : ( byte )21;
-            Text.Text = text;
+            Text.String = text;
             Text.IsVisible = true;
         }
 
@@ -104,15 +99,6 @@ namespace JobBars.Nodes.Cooldown {
             if( action == LastAction ) return;
             LastAction = action;
             Icon.LoadIcon( UiHelper.GetIcon( action ) );
-        }
-
-        protected override void Dispose( bool disposing ) {
-            if( disposing ) {
-                Icon.Dispose();
-                Border.Dispose();
-                Text.Dispose();
-                base.Dispose( disposing );
-            }
         }
     }
 }
