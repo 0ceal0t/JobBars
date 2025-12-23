@@ -24,6 +24,7 @@ namespace JobBars.Nodes.Cooldown {
                 Size = new( WIDTH, HEIGHT ),
                 NodeFlags = NodeFlags.Visible,
                 ImageNodeFlags = ImageNodeFlags.AutoFit,
+                WrapMode = WrapMode.Stretch,
                 TextureSize = new( 44, 46 ),
                 IconId = 405
             };

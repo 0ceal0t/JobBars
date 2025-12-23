@@ -33,6 +33,13 @@ namespace JobBars.Nodes.Buff {
                 Buffs[idx].Position = new( xMod * ( BuffNode.WIDTH + 9 ) * position_x, yMod * ( BuffNode.HEIGHT + 7 ) * position_y );
             }
             foreach( var buff in Buffs ) buff.Update();
+
+            // Update container size to fit content
+            var columns = BUFFS_HORIZONTAL == 0 ? 1 : BUFFS_HORIZONTAL;
+            var rows = BUFFS_HORIZONTAL == 0 ? MAX_BUFFS : ( MAX_BUFFS + columns - 1 ) / columns;
+            var width = columns * ( BuffNode.WIDTH + 9 );
+            var height = rows * ( BuffNode.HEIGHT + 7 );
+            Size = new( width, height );
         }
     }
 }
