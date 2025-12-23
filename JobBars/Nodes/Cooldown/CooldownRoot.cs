@@ -26,6 +26,11 @@ namespace JobBars.Nodes.Cooldown {
 
         public void Update() {
             for( var i = 0; i < 8; i++ ) Rows[i].Position = new( 0, JobBars.Configuration.CooldownsSpacing * i );
+
+            // Update container size to fit content
+            var width = ( 5 + CooldownNode.WIDTH ) * CooldownRow.MAX_ITEMS;
+            var height = JobBars.Configuration.CooldownsSpacing * 8;
+            Size = new( width, height );
         }
 
         public void SetCooldownRowVisible( int idx, bool visible ) => Rows[idx].IsVisible = visible;
