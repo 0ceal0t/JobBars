@@ -22,6 +22,8 @@ namespace JobBars.Nodes.Buff {
         private string CurrentText = "";
 
         public BuffNode() : base( NodeType.Res ) {
+            MultiplyColor = new( 1f, 1f, 1f );
+
             Icon = new IconImageNode() {
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Tile,
@@ -86,14 +88,14 @@ namespace JobBars.Nodes.Buff {
         }
 
         public void SetOnCd() {
-            MultiplyColor = new( 75f / 255f, 75f / 255f, 75f / 255f );
+            MultiplyColor = new( 75f / 100f, 75f / 100f, 75f / 100f );
             Color = Color with {
                 W = JobBars.Configuration.BuffOnCDOpacity
             };
         }
 
         public void SetOffCd() {
-            MultiplyColor = new( 100f / 255f, 100f / 255f, 100f / 255f );
+            MultiplyColor = new( 100f / 100f, 100f / 100f, 100f / 100f );
             Color = Color with {
                 W = 1f
             };

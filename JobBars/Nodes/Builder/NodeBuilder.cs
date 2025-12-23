@@ -85,7 +85,7 @@ namespace JobBars.Nodes.Builder {
             }
         }
 
-        public void Unload() {
+        public void Dispose() {
             Dalamud.AddonLifecycle.UnregisterListener( OnPartyListSetup );
             Dalamud.AddonLifecycle.UnregisterListener( OnPartyListFinalize );
 
@@ -100,10 +100,6 @@ namespace JobBars.Nodes.Builder {
             if( UiHelper.PartyListAddon is not null ) DetachFromNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
             if( UiHelper.ChatLogAddon is not null ) DetachFromNative( UiHelper.ChatLogAddon, "ChatLog" );
             if( UiHelper.ParameterAddon is not null ) DetachFromNative( UiHelper.ParameterAddon, "_ParameterWidget" );
-        }
-
-        public void Dispose() {
-            Unload();
         }
 
         private void OnPartyListSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon.Address, "_PartyList" );
@@ -138,7 +134,7 @@ namespace JobBars.Nodes.Builder {
 
                 if( name == "_PartyList" ) {
                     HighlightRoot = new();
-                    HighlightRoot.AttachNode( addon->GetNodeById( 20 ) );
+                    HighlightRoot.AttachNode( addon->GetNodeById( 21 ) );
                 }
 
                 IsAttached.Add( name );

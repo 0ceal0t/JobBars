@@ -18,7 +18,7 @@ namespace JobBars.Nodes.Highlight {
                 TextureSize = new( 48, 48 ),
                 Offsets = new( 20, 20, 20, 20 ),
                 NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
-                MultiplyColor = new( 150f / 255f, 100f / 255f, 50 / 255f ),
+                MultiplyColor = new( 150f / 100f, 100f / 100f, 50f / 100f ),
                 TexturePath = "ui/uld/PartyListTargetBase.tex"
             };
 

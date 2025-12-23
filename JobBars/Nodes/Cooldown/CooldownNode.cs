@@ -25,7 +25,8 @@ namespace JobBars.Nodes.Cooldown {
                 NodeFlags = NodeFlags.Visible,
                 ImageNodeFlags = ImageNodeFlags.AutoFit,
                 TextureSize = new( 44, 46 ),
-                IconId = 405
+                IconId = 405,
+                FitTexture = true
             };
 
             Border = new SimpleImageNode() {
@@ -82,14 +83,14 @@ namespace JobBars.Nodes.Cooldown {
         }
 
         public void SetOnCd() {
-            Icon.MultiplyColor = new( 75f / 255f, 75f / 255f, 75f / 255f );
+            Icon.MultiplyColor = new( 75f / 100f, 75f / 100f, 75f / 100f );
             Color = Color with {
                 W = JobBars.Configuration.CooldownsOnCDOpacity
             };
         }
 
         public void SetOffCd() {
-            Icon.MultiplyColor = new( 100f / 255f, 100f / 255f, 100f / 255f );
+            Icon.MultiplyColor = new( 100f / 100f, 100f / 100f, 100f / 100f );
             Color = Color with {
                 W = 1f
             };
