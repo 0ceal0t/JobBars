@@ -2,6 +2,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
+using KamiToolKit.Extensions;
 
 namespace JobBars.Helper {
     public unsafe partial class UiHelper {
@@ -35,9 +36,10 @@ namespace JobBars.Helper {
             var partyList = PartyListAddon;
             if( partyList == null ) return 0;
             if( partyList->AtkUnitBase.UldManager.NodeList == null ) return 0;
-            if( partyList->AtkUnitBase.UldManager.NodeList[3] == null ) return 0;
 
-            return partyList->AtkUnitBase.UldManager.NodeList[3]->Y;
+            var offsetNode = partyList->AtkUnitBase.UldManager.SearchNodeById( 2 );
+            if( offsetNode == null ) return 0;
+            return offsetNode->Y;
         }
 
         public static AtkUnitBase* BuffGaugeAttachAddon => GetAddon( JobBars.AttachAddon );
