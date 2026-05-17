@@ -27,7 +27,6 @@ namespace JobBars.Nodes.Gauge.Bar {
         private readonly TextNode Text;
         private readonly NineGridNode TextBlur;
 
-        private string CurrentText;
         private float LastPercent = 1f;
         private Animation Animation;
         private float[] Segments = null;
@@ -36,19 +35,16 @@ namespace JobBars.Nodes.Gauge.Bar {
         private bool TextSwap = false;
 
         public BarNode() : base() {
-            NodeFlags |= NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 160, 46 );
 
             GaugeContainer = new ResNode() {
-                Size = new( 160, 32 ),
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
+                Size = new( 160, 32 )
             };
 
             Background = new SimpleImageNode() {
                 Size = new( 160, 20 ),
                 TextureCoordinates = new( 0, 100 ),
                 TextureSize = new( 160, 20 ),
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/Parameter_Gauge.tex"
@@ -57,8 +53,7 @@ namespace JobBars.Nodes.Gauge.Bar {
             // ========= BAR ==============
 
             BarContainer = new ResNode() {
-                Size = new( 160, 20 ),
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
+                Size = new( 160, 20 )
             };
 
             BarMain = new SimpleNineGridNode() {
@@ -67,7 +62,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextureCoordinates = new( 6, 40 ),
                 TextureSize = new( 148, 20 ),
                 PartsRenderType = ( byte )PartsRenderType.RenderType,
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 TexturePath = "ui/uld/Parameter_Gauge.tex"
             };
 
@@ -88,7 +82,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                     Position = new( 0, 5 ),
                     TextureCoordinates = new( 10, 3 ),
                     TextureSize = new( 10, 5 ),
-                    NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                     WrapMode = WrapMode.Tile,
                     ImageNodeFlags = 0,
                     TexturePath = "ui/uld/Parameter_Gauge.tex"
@@ -101,7 +94,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 Size = new( 160, 20 ),
                 TextureCoordinates = new( 0, 0 ),
                 TextureSize = new( 160, 20 ),
-                NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/Parameter_Gauge.tex"
@@ -115,7 +107,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 LeftOffset = 15,
                 RightOffset = 15,
                 PartsRenderType = ( byte )PartsRenderType.RenderType,
-                NodeFlags = NodeFlags.Visible,
                 TexturePath = "ui/uld/Parameter_Gauge.tex"
             };
 
@@ -123,8 +114,7 @@ namespace JobBars.Nodes.Gauge.Bar {
 
             TextContainer = new ResNode() {
                 Size = new( 47, 40 ),
-                Position = new( 112, 6 ),
-                NodeFlags = NodeFlags.Visible,
+                Position = new( 112, 6 )
             };
 
             Text = new TextNode() {
@@ -132,14 +122,11 @@ namespace JobBars.Nodes.Gauge.Bar {
                 Size = new( 17, 30 ),
                 FontSize = 18,
                 LineSpacing = 18,
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorRight,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 157f / 255f, 131f / 255f, 91f / 255f, 1 ),
-                TextId = 0,
                 TextFlags = TextFlags.Glare,
-                String = "",
             };
-            Text.Node->AlignmentFontType = 21;
+            Text.Node->AlignmentFontType = 21; // TODO
 
             TextBlur = new SimpleNineGridNode() {
                 Size = new( 47, 48 ),
@@ -147,32 +134,28 @@ namespace JobBars.Nodes.Gauge.Bar {
                 LeftOffset = 28,
                 RightOffset = 28,
                 PartsRenderType = 128,
-                NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 TexturePath = "ui/uld/JobHudNumBg.tex"
             };
 
-            BarSecondary.AttachNode( BarContainer );
-            BarMain.AttachNode( BarContainer );
-            Separators.ForEach( x => x.AttachNode( BarContainer ) );
+            GaugeContainer.AttachNode( this );
+            TextContainer.AttachNode( this );
+
+            TextBlur.AttachNode( TextContainer );
+            Text.AttachNode( TextContainer );
 
             Background.AttachNode( GaugeContainer );
             BarContainer.AttachNode( GaugeContainer );
             Frame.AttachNode( GaugeContainer );
             Indicator.AttachNode( GaugeContainer );
 
-            TextBlur.AttachNode( TextContainer );
-            Text.AttachNode( TextContainer );
-
-            GaugeContainer.AttachNode( this );
-            TextContainer.AttachNode( this );
+            BarSecondary.AttachNode( BarContainer );
+            BarMain.AttachNode( BarContainer );
+            Separators.ForEach( x => x.AttachNode( BarContainer ) );
         }
 
         public void SetText( string text ) {
             if( text == null ) return;
-            if( text != CurrentText ) {
-                Text.String = text;
-                CurrentText = text;
-            }
+            Text.String = text;
 
             var size = text.Length * 17;
             if( Vertical ) {

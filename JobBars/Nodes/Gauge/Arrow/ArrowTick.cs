@@ -21,7 +21,6 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 Size = new( 32, 32 ),
                 TextureCoordinates = new( 0, 0 ),
                 TextureSize = new( 32, 32 ),
-                NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/JobHudSimple_StackB.tex"
@@ -38,16 +37,15 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 Origin = new( 16, 16 ),
                 TextureCoordinates = new( 32, 0 ),
                 TextureSize = new( 32, 32 ),
-                NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/JobHudSimple_StackB.tex"
             };
 
-            Selected.AttachNode( SelectedContainer );
-
             Background.AttachNode( this );
             SelectedContainer.AttachNode( this );
+
+            Selected.AttachNode( SelectedContainer );
         }
 
         public void SetColor( ElementColor color ) {

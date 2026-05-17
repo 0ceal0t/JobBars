@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using static FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentContentsFinder.Delegates;
 
 namespace JobBars.Cooldowns.Manager {
     public struct CooldownPartyMemberStruct {

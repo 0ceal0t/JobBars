@@ -18,8 +18,6 @@ namespace JobBars.Nodes.Buff {
             for( var i = 0; i < MAX_BUFFS; i++ ) Buffs.Add( new BuffNode() );
 
             Buffs.ForEach( x => x.AttachNode(this) );
-
-            UpdateSettings();
         }
 
         public void UpdateSettings() {

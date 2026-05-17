@@ -50,9 +50,7 @@ namespace JobBars.Nodes.Cooldown {
                 LineSpacing = ( byte )HEIGHT,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 0, 0, 0, 1 ),
-                TextId = 0,
-                TextFlags = TextFlags.Glare,
-                String = "",
+                TextFlags = TextFlags.Glare
             };
             Text.Node->AlignmentFontType = 52;
 

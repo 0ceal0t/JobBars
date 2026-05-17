@@ -20,7 +20,6 @@ namespace JobBars.Nodes.Cursor {
 
             Inner = new SimpleImageNode() {
                 Size = new( 44, 46 ),
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0
             };
@@ -29,7 +28,6 @@ namespace JobBars.Nodes.Cursor {
 
             Outer = new SimpleImageNode() {
                 Size = new( 44, 46 ),
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0
             };

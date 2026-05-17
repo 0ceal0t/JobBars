@@ -1,7 +1,5 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
-using KamiToolKit.Classes;
-using KamiToolKit.Nodes;
 using System.Collections.Generic;
 using System.Linq;
 

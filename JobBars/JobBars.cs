@@ -31,7 +31,7 @@ namespace JobBars {
         public JobBars( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
-            KamiToolKitLibrary.Initialize( pluginInterface );
+            KamiToolKitLibrary.Initialize( pluginInterface, "JobBars" );
 
             UiHelper.Setup();
             ColorConstants.SetupColors();

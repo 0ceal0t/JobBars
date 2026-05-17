@@ -22,7 +22,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 Size = new( 32, 32 ),
                 TextureCoordinates = new( 0, 0 ),
                 TextureSize = new( 32, 32 ),
-                NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/JobHudSimple_StackA.tex"
@@ -31,7 +30,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
             SelectedContainer = new ResNode() {
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
-                NodeFlags = NodeFlags.Visible,
             };
 
             Selected = new SimpleImageNode() {
@@ -39,7 +37,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 Origin = new( 16, 16 ),
                 TextureCoordinates = new( 32, 0 ),
                 TextureSize = new( 32, 32 ),
-                NodeFlags = NodeFlags.Visible,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 TexturePath = "ui/uld/JobHudSimple_StackA.tex"
@@ -50,20 +47,17 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 Size = new( 32, 32 ),
                 FontSize = 14,
                 LineSpacing = 14,
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorRight,
                 TextColor = new( 1, 1, 1, 1 ),
                 TextOutlineColor = new( 40f / 255f, 40f / 255f, 40f / 255f, 1 ),
-                TextId = 0,
                 TextFlags = TextFlags.Glare,
-                String = "",
             };
             Text.Node->AlignmentFontType = 4;
 
-            Selected.AttachNode( SelectedContainer );
-            Text.AttachNode( SelectedContainer );
-
             Background.AttachNode( this );
             SelectedContainer.AttachNode( this );
+
+            Selected.AttachNode( SelectedContainer );
+            Text.AttachNode( SelectedContainer );
         }
 
         public void SetColor( ElementColor color ) {
