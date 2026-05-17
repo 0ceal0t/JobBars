@@ -9,14 +9,8 @@ namespace JobBars.Gauges.Stacks {
         private readonly GaugeStacksConfig Config;
         protected int Value = 0;
 
-        public GaugeStacksTracker( GaugeStacksConfig config, int idx ) {
+        public GaugeStacksTracker( GaugeStacksConfig config ) {
             Config = config;
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeStacksTracker>( this, idx ),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeStacksTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeStacksTracker>( this, idx ),
-                _ => new GaugeDiamond<GaugeStacksTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -25,7 +19,7 @@ namespace JobBars.Gauges.Stacks {
 
         public override void ProcessAction( Item action ) { }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             var currentValue = 0;
             foreach( var trigger in Config.Triggers ) {
                 var value = UiHelper.PlayerStatus.TryGetValue( trigger, out var elem ) ? elem.Param : 0;

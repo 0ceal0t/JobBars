@@ -44,7 +44,7 @@ namespace JobBars.Gauges {
 
         public override void SetPosition( Vector2 position ) => Node.SetPosition( position );
 
-        public override void SetSplitPosition( GaugeRoot root, Vector2 position ) => Node.SetSplitPosition( position );
+        public override void SetSplitPosition( GaugeRoot root, Vector2 position ) => Node.SetSplitPosition( root, position );
 
         public override void UpdateVisual() {
             if( Node == null ) return;

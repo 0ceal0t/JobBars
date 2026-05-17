@@ -17,7 +17,7 @@ namespace JobBars.Gauges.MP {
             ShowSegments = JobBars.Configuration.GaugeShowSegments.Get( Name );
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeMPTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeMPTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             if( Segments != null ) {

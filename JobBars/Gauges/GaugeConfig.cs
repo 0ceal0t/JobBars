@@ -36,7 +36,7 @@ namespace JobBars.Gauges {
             SetType( JobBars.Configuration.GaugeType.Get( Name, type ) );
         }
 
-        public abstract GaugeTracker GetTracker( int idx );
+        public abstract GaugeTracker GetTracker();
 
         private void SetType( GaugeVisualType type ) {
             var validTypes = GetValidGaugeTypes();
@@ -136,7 +136,6 @@ namespace JobBars.Gauges {
             if( JobBars.DrawPositionView( Name + "##GaugePosition", Position, out var pos ) ) {
                 JobBars.Configuration.GaugeSplitPosition.Set( Name, pos );
                 SetSplitPosition( pos );
-                //JobBars.GaugeManager.UpdatePositionScale();
             }
         }
 

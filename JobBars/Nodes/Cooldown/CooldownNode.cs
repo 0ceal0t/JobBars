@@ -6,6 +6,7 @@ using KamiToolKit.Classes;
 using KamiToolKit.Enums;
 using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
+using System.Reflection.Metadata.Ecma335;
 
 namespace JobBars.Nodes.Cooldown {
     public unsafe class CooldownNode : NodeBase<AtkResNode> {
@@ -79,6 +80,7 @@ namespace JobBars.Nodes.Cooldown {
         }
 
         public void SetText( string text ) {
+            if( text == null ) return;
             Text.FontSize = text.Length > 2 ? ( byte )17 : ( byte )21;
             Text.String = text;
             Text.IsVisible = true;

@@ -32,7 +32,7 @@ namespace JobBars.Nodes.Buff {
 
                 Buffs[idx].Position = new( xMod * ( BuffNode.WIDTH + 9 ) * position_x, yMod * ( BuffNode.HEIGHT + 7 ) * position_y );
             }
-            foreach( var buff in Buffs ) buff.Update();
+            foreach( var buff in Buffs ) buff.UpdateSettings();
         }
     }
 }

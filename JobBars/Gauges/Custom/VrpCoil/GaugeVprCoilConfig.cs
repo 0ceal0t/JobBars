@@ -10,6 +10,6 @@ namespace JobBars.Gauges.Custom.VrpCoil {
         } ) {
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeVprCoilTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeVprCoilTracker( this );
     }
 }

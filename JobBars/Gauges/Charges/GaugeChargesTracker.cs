@@ -18,16 +18,10 @@ namespace JobBars.Gauges.Charges {
         private float BarTextValue = 0;
         private float BarPercentValue = 0;
 
-        public GaugeChargesTracker( GaugeChargesConfig config, int idx ) {
+        public GaugeChargesTracker( GaugeChargesConfig config ) {
             Config = config;
             TotalCharges = Config.Parts.Where( p => p.Diamond ).Select( d => d.MaxCharges ).Sum();
             IsCDBar = Config.Parts.Where( p => p.Bar ).All( p => p.Triggers.All( t => t.Type != ItemType.Buff ) );
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeChargesTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeChargesTracker>( this, idx ),
-                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeChargesTracker>( this, idx ),
-                _ => new GaugeBarDiamondCombo<GaugeChargesTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -36,7 +30,7 @@ namespace JobBars.Gauges.Charges {
 
         public override void ProcessAction( Item action ) { }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             ChargesActive.Clear();
             var barAssigned = false;
             var currentChargesValue = 0;

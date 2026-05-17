@@ -22,7 +22,7 @@ namespace JobBars.Gauges.Rolling {
             RollingType = JobBars.Configuration.GaugeGCDRolling.Get( Name, GaugeGCDRollingType.GCD );
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeRollingTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeRollingTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             if( JobBars.Configuration.GaugeGCDRolling.Draw( $"Data type{id}", Name, ValidRollingType, RollingType, out var newRollingType ) ) {

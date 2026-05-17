@@ -8,13 +8,9 @@ namespace JobBars.Gauges.MP {
         protected float Value;
         protected string TextValue;
 
-        public GaugeMPTracker( GaugeMpConfig config, int idx, bool noInit = false ) {
+        public GaugeMPTracker( GaugeMpConfig config, bool noInit = false ) {
             Config = config;
             if( noInit ) return;
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeMPTracker>( this, idx ),
-                _ => new GaugeBar<GaugeMPTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -23,8 +19,8 @@ namespace JobBars.Gauges.MP {
 
         public override void ProcessAction( Item action ) { }
 
-        protected override void TickTracker() {
-            var mp = Dalamud.Objects.LocalPlayer.CurrentMp;
+        public override void TickTracker() {
+            var mp = Dalamud.Objects.LocalPlayer?.CurrentMp ?? 0;
             Value = mp / 10000f;
             TextValue = ( ( int )( mp / 100 ) ).ToString();
         }

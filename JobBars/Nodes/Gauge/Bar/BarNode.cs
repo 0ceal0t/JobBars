@@ -1,9 +1,8 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
 using JobBars.Data;
+using JobBars.Gauges.Types.Bar;
 using JobBars.Helper;
-using KamiToolKit;
-using KamiToolKit.Classes;
 using KamiToolKit.Enums;
 using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
@@ -169,6 +168,7 @@ namespace JobBars.Nodes.Gauge.Bar {
         }
 
         public void SetText( string text ) {
+            if( text == null ) return;
             if( text != CurrentText ) {
                 Text.String = text;
                 CurrentText = text;
@@ -299,5 +299,25 @@ namespace JobBars.Nodes.Gauge.Bar {
             Segments = null;
             foreach( var item in Separators ) item.IsVisible = false;
         }
+
+        // ========================
+
+        public void Tick( IGaugeBarInterface tracker ) {
+            SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
+            SetScale( tracker.GetConfig().Scale );
+
+            SetSegments( tracker.GetBarSegments() );
+            SetColor( tracker.GetColor() );
+            SetTextColor( tracker.GetBarDanger() ? ColorConstants.Red : ColorConstants.NoColor );
+            SetLayout( tracker.GetBarTextSwap(), tracker.GetVertical() );
+            SetText( tracker.GetBarText() );
+            SetTextVisible( tracker.GetBarTextVisible() );
+            SetPercent( tracker.GetBarPercent() );
+            SetIndicatorPercent( tracker.GetBarIndicatorPercent(), tracker.GetBarPercent() );
+        }
+
+        public int GetHeight( IGaugeBarInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( tracker.GetVertical() ? 160 : 46 ) );
+
+        public int GetWidth( IGaugeBarInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( tracker.GetVertical() ? 55 : 160 ) );
     }
 }

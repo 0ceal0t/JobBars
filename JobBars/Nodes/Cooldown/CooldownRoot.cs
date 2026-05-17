@@ -21,10 +21,10 @@ namespace JobBars.Nodes.Cooldown {
 
             Rows.ForEach( x => x.AttachNode(this) );
 
-            Update();
+            UpdateSpacing();
         }
 
-        public void Update() {
+        public void UpdateSpacing() {
             for( var i = 0; i < 8; i++ ) Rows[i].Position = new( 0, JobBars.Configuration.CooldownsSpacing * i );
         }
 

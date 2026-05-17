@@ -41,7 +41,7 @@ namespace JobBars.Gauges.Procs {
             ProcSound = JobBars.Configuration.GaugeCompletionSound.Get( Name, props.ProcSound );
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeProcsTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeProcsTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             if( JobBars.Configuration.GaugeShowText.Draw( $"Show text{id}", Name, ProcsShowText, out var newProcsShowText ) ) {

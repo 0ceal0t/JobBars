@@ -10,12 +10,8 @@ namespace JobBars.Gauges.Rolling {
         protected float IndicatorValue;
         protected string TextValue;
 
-        public GaugeRollingTracker( GaugeRollingConfig config, int idx ) {
+        public GaugeRollingTracker( GaugeRollingConfig config ) {
             Config = config;
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeRollingTracker>( this, idx ),
-                _ => new GaugeBar<GaugeRollingTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -24,7 +20,7 @@ namespace JobBars.Gauges.Rolling {
 
         public override void ProcessAction( Item action ) { }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             if( Config.RollingType == GaugeGCDRollingType.GCD ) {
                 Value = UiHelper.GetGCD( out var timeElapsed, out var total );
                 IndicatorValue = 0f;

@@ -1,4 +1,6 @@
 using JobBars.Atk;
+using JobBars.Gauges.Types.Bar;
+using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Helper;
 using JobBars.Nodes.Gauge.Bar;
 using JobBars.Nodes.Gauge.Diamond;
@@ -41,8 +43,6 @@ namespace JobBars.Nodes.Gauge.BarDiamondCombo {
 
         public void SetBarColor( ElementColor color ) => Bar.SetColor( color );
 
-        public void SetDiamondVlaue( int idx, bool value ) => Diamond.SetValue( idx, value );
-
         public void SetDiamondColor( int idx, ElementColor color ) => Diamond.SetColor( idx, color );
 
         public void SetDiamondValue( int idx, bool value ) => Diamond.SetValue( idx, value );
@@ -56,9 +56,11 @@ namespace JobBars.Nodes.Gauge.BarDiamondCombo {
 
         public void Clear() => Diamond.Clear();
 
-        public unsafe void SetSplitPosition( Vector2 pos ) {
-            var p = UiHelper.GetGlobalPosition( JobBars.NodeBuilder.GaugeRoot.Node );
-            var pScale = UiHelper.GetGlobalScale( JobBars.NodeBuilder.GaugeRoot.Node );
+        public unsafe void SetSplitPosition( GaugeRoot root, Vector2 pos ) {
+            if( root == null ) return;
+
+            var p = UiHelper.GetGlobalPosition( root );
+            var pScale = UiHelper.GetGlobalScale( root );
 
             var x = ( pos.X - p.X ) / pScale.X;
             var y = ( pos.Y - p.Y ) / pScale.Y;
@@ -66,5 +68,19 @@ namespace JobBars.Nodes.Gauge.BarDiamondCombo {
             Bar.Position = new( x, y );
             Diamond.Position = new( x, y + 10 );
         }
+
+        // =====================
+
+        public void Tick( IGaugeBarDiamondComboInterface tracker,float percent ) {
+            Bar.Tick( tracker  );
+            Diamond.Tick( tracker, percent );
+
+            SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
+            SetScale( tracker.GetConfig().Scale );
+        }
+
+        public int GetHeight( IGaugeBarDiamondComboInterface tracker ) => ( int )( tracker.GetConfig().Scale * 50 );
+
+        public int GetWidth( IGaugeBarDiamondComboInterface tracker ) => ( int )( tracker.GetConfig().Scale * 160 );
     }
 }

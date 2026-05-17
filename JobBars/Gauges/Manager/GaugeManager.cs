@@ -1,5 +1,9 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
+using JobBars.Gauges.Types.Arrow;
+using JobBars.Gauges.Types.Bar;
+using JobBars.Gauges.Types.BarDiamondCombo;
+using JobBars.Gauges.Types.Diamond;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
 using JobBars.Nodes.Builder;
@@ -18,12 +22,12 @@ namespace JobBars.Gauges.Manager {
 
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new( [BuffIds.Excog] ); // which buffs on party members do we care about?
 
-        private MultiAddonController? Controller;
+        private AddonController? Controller;
         private GaugeRoot? Root;
 
         public GaugeManager() : base( "##JobBars_Gauges" ) {
-            Controller = new MultiAddonController {
-                AddonNames = ["ChatLog", "_ParameterWidget", "_PartyList"],
+            Controller = new AddonController {
+                AddonName = UiHelper.BuffGaugeAttachAddonName,
                 OnSetup = SetupAddon,
                 OnFinalize = ResetAddon,
                 OnUpdate = UpdateAddon
@@ -36,23 +40,17 @@ namespace JobBars.Gauges.Manager {
         }
 
         private void SetupAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root = new();
-                Root.AttachNode( addon );
-            }
+            Root = new();
+            Root.AttachNode( addon );
         }
 
         private void ResetAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root?.Dispose();
-                Root = null;
-            }
+            Root?.Dispose();
+            Root = null;
         }
 
         private void UpdateAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Tick();
-            }
+            Tick();
         }
 
         public void Dispose() {
@@ -61,13 +59,10 @@ namespace JobBars.Gauges.Manager {
         }
 
         public void SetJob( JobIds job ) {
-            CurrentGauges.Clear();
             Root?.HideAll();
-
+            CurrentGauges.Clear();
             CurrentJob = job;
-            for( var idx = 0; idx < CurrentConfigs.Length; idx++ ) {
-                CurrentGauges.Add( CurrentConfigs[idx].GetTracker( idx ) );
-            }
+            CurrentGauges.AddRange( CurrentConfigs.Select( x => x.GetTracker() ) );
         }
 
         public void PerformAction( Item action ) {
@@ -88,6 +83,7 @@ namespace JobBars.Gauges.Manager {
             else {
                 Root!.IsVisible = true;
             }
+            Root.HideAll();
 
             // Global position + scale
 
@@ -101,52 +97,93 @@ namespace JobBars.Gauges.Manager {
                 JobBars.SearchForPartyMemberStatus( ( int )Dalamud.Objects.LocalPlayer.GameObjectId, UiHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
             }
 
-            foreach( var gauge in CurrentGauges.Where( g => g.Enabled ) ) gauge.Tick();
-
             // Pulses
 
             var time = DateTime.Now;
             var millis = time.Second * 1000 + time.Millisecond;
             var percent = ( float )( millis % 1000 ) / 1000;
-            Root?.Arrows.ForEach( x => x.Tick( percent ) );
-            Root?.Diamonds.ForEach( x => x.Tick( percent ) );
-        }
 
-        private Vector2 GetPerJobPosition() => JobBars.Configuration.GaugePerJobPosition.Get( $"{CurrentJob}" );
+            foreach( var gauge in CurrentGauges.Where( g => g.Enabled ) ) gauge.TickTracker();
 
-        /*public void UpdatePositionScale() {
-            if( Root == null ) return;
-
-            // Global postion + scale
-
-            NodeBuilder.SetPositionGlobal( Root,
-                JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
-            NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.GaugeScale );
-
+            var arrowIdx = 0;
+            var barIdx = 0;
+            var diamondIdx = 0;
             var position = 0;
-            foreach( var gauge in CurrentGauges.OrderBy( g => g.Order ).Where( g => g.Enabled ) ) {
+
+            foreach( var gauge in CurrentGauges.Where( x => x.Enabled ).OrderBy( x => x.Order ) ) {
+                IGaugeNode? node = null;
+                var requestedType = gauge.GetConfig().Type;
+                var width = 0;
+                var height = 0;
+                var yOffset = 0;
+
+                // Kind of jank but oh well
+                if( requestedType == GaugeVisualType.Bar && gauge is IGaugeBarInterface barTracker && barIdx <= GaugeRoot.MAX_GAUGES ) {
+                    var bar = Root.Bars[barIdx];
+                    node = bar;
+                    bar.Tick( barTracker );
+
+                    width = bar.GetWidth( barTracker );
+                    height = bar.GetHeight( barTracker );
+                    yOffset = 0;
+
+                    barIdx++;
+                }
+                else if( requestedType == GaugeVisualType.Diamond && gauge is IGaugeDiamondInterface diamondTracker && diamondIdx <= GaugeRoot.MAX_GAUGES ) {
+                    var diamond = Root.Diamonds[diamondIdx];
+                    node = diamond;
+                    diamond.Tick( diamondTracker, percent );
+
+                    width = diamond.GetWidth( diamondTracker );
+                    height = diamond.GetHeight( diamondTracker );
+                    yOffset = -3;
+
+                    diamondIdx++;
+                }
+                else if( requestedType == GaugeVisualType.Arrow && gauge is IGaugeArrowInterface arrowTracker && arrowIdx <= GaugeRoot.MAX_GAUGES ) {
+                    var arrow = Root.Arrows[arrowIdx];
+                    node = arrow;
+                    arrow.Tick( arrowTracker, percent );
+
+                    width = arrow.GetWidth( arrowTracker );
+                    height = arrow.GetHeight( arrowTracker );
+                    yOffset = -3;
+
+                    arrowIdx++;
+                }
+                else if( requestedType == GaugeVisualType.BarDiamondCombo && gauge is IGaugeBarDiamondComboInterface comboTracker && barIdx <= GaugeRoot.MAX_GAUGES ) {
+                    var combo = Root.BarDiamondCombos[barIdx];
+                    node = combo;
+                    combo.Tick( comboTracker, percent );
+
+                    width = combo.GetWidth( comboTracker );
+                    height = combo.GetHeight( comboTracker );
+                    yOffset = 0;
+
+                    barIdx++;
+                    diamondIdx++;
+                }
+
                 if( JobBars.Configuration.GaugePositionType == GaugePositionType.Split ) {
-                    gauge.UpdateSplitPosition();
+                    node?.SetSplitPosition( Root, gauge.GetConfig().Position );
                 }
                 else {
                     var x = JobBars.Configuration.GaugeHorizontal ? position :
-                        ( JobBars.Configuration.GaugeAlignRight ? 160 - gauge.Width : 0 );
+                        ( JobBars.Configuration.GaugeAlignRight ? 160 - width : 0 );
 
-                    var y = JobBars.Configuration.GaugeHorizontal ? gauge.YOffset :
-                        ( JobBars.Configuration.GaugeBottomToTop ? position - gauge.Height : position );
+                    var y = JobBars.Configuration.GaugeHorizontal ? yOffset :
+                        ( JobBars.Configuration.GaugeBottomToTop ? position - height : position );
 
-                    var posChange = JobBars.Configuration.GaugeHorizontal ? gauge.Width :
-                        ( JobBars.Configuration.GaugeBottomToTop ? -1 * gauge.Height : gauge.Height );
+                    var posChange = JobBars.Configuration.GaugeHorizontal ? width :
+                        ( JobBars.Configuration.GaugeBottomToTop ? -1 * height : height );
 
-                    gauge.SetPosition( new Vector2( x, y ) );
+                    node?.SetPosition( new Vector2( x, y ) );
                     position += posChange;
                 }
             }
         }
 
-        public void UpdateVisuals() {
-            foreach( var gauge in CurrentGauges ) gauge.UpdateVisual();
-        }*/
+        private Vector2 GetPerJobPosition() => JobBars.Configuration.GaugePerJobPosition.Get( $"{CurrentJob}" );
 
         public void Reset() => SetJob( CurrentJob );
     }

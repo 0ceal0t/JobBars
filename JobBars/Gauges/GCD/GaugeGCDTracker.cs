@@ -104,17 +104,11 @@ namespace JobBars.Gauges.GCD {
 
         private readonly int MaxWidth;
 
-        public GaugeGCDTracker( GaugeGCDConfig config, int idx ) {
+        public GaugeGCDTracker( GaugeGCDConfig config ) {
             Config = config;
-            SubGCDs = Config.SubGCDs.Select( subGCD => new GaugeSubGCD( config, subGCD ) ).ToList();
+            SubGCDs = [.. Config.SubGCDs.Select( subGCD => new GaugeSubGCD( config, subGCD ) )];
             MaxWidth = Config.SubGCDs.Select( subGCD => subGCD.MaxCounter ).Max();
             ActiveSubGCD = SubGCDs[0];
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeGCDTracker>( this, idx ),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeGCDTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeGCDTracker>( this, idx ),
-                _ => null
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -122,17 +116,14 @@ namespace JobBars.Gauges.GCD {
         public override bool GetActive() => ActiveSubGCD.GetActive();
 
         public override void ProcessAction( Item action ) {
-            var refreshVisuals = false;
             foreach( var subGCD in SubGCDs ) {
                 if( subGCD.ProcessAction( action ) && subGCD != ActiveSubGCD ) {
                     ActiveSubGCD = subGCD;
-                    refreshVisuals = true;
                 }
             }
-            if( refreshVisuals ) GaugeUi.UpdateVisual();
         }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             foreach( var subGCD in SubGCDs ) subGCD.Tick();
         }
 

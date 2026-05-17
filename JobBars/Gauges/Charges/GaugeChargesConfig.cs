@@ -37,7 +37,7 @@ namespace JobBars.Gauges.Charges {
             ReverseFill = JobBars.Configuration.GaugeReverseFill.Get( Name, false );
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeChargesTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeChargesTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             if( JobBars.Configuration.GaugeColor.Draw( $"Color{id}", Name, BarColor, out var newColor ) ) {

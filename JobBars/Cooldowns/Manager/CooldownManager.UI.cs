@@ -5,24 +5,21 @@ namespace JobBars.Cooldowns.Manager {
     public unsafe partial class CooldownManager {
         private readonly InfoBox<CooldownManager> PositionInfoBox = new() {
             Label = "Position",
-            ContentsAction = ( CooldownManager manager ) => {
+            ContentsAction = manager => {
                 if( ImGui.Checkbox( "Left-aligned" + manager.Id, ref JobBars.Configuration.CooldownsLeftAligned ) ) {
                     JobBars.Configuration.Save();
                     manager.ResetUi();
                 }
 
                 if( ImGui.InputFloat( "Scale" + manager.Id, ref JobBars.Configuration.CooldownScale ) ) {
-                    UpdatePositionScale();
                     JobBars.Configuration.Save();
                 }
 
                 if( ImGui.InputFloat2( "Position" + manager.Id, ref JobBars.Configuration.CooldownPosition ) ) {
-                    UpdatePositionScale();
                     JobBars.Configuration.Save();
                 }
 
                 if( ImGui.InputFloat( "Line height" + manager.Id, ref JobBars.Configuration.CooldownsSpacing ) ) {
-                    UpdatePositionScale();
                     JobBars.Configuration.Save();
                 }
             }
@@ -30,7 +27,7 @@ namespace JobBars.Cooldowns.Manager {
 
         private readonly InfoBox<CooldownManager> ShowIconInfoBox = new() {
             Label = "Show Icons When",
-            ContentsAction = ( CooldownManager manager ) => {
+            ContentsAction = manager => {
                 if( ImGui.Checkbox( "Default" + manager.Id, ref JobBars.Configuration.CooldownsStateShowDefault ) ) JobBars.Configuration.Save();
                 if( ImGui.Checkbox( "Active" + manager.Id, ref JobBars.Configuration.CooldownsStateShowRunning ) ) JobBars.Configuration.Save();
                 if( ImGui.Checkbox( "On cooldown" + manager.Id, ref JobBars.Configuration.CooldownsStateShowOnCD ) ) JobBars.Configuration.Save();
@@ -40,7 +37,7 @@ namespace JobBars.Cooldowns.Manager {
 
         private readonly InfoBox<CooldownManager> HideWhenInfoBox = new() {
             Label = "Hide When",
-            ContentsAction = ( CooldownManager manager ) => {
+            ContentsAction = manager => {
                 if( ImGui.Checkbox( "Out of combat", ref JobBars.Configuration.CooldownsHideOutOfCombat ) ) JobBars.Configuration.Save();
                 if( ImGui.Checkbox( "Weapon sheathed", ref JobBars.Configuration.CooldownsHideWeaponSheathed ) ) JobBars.Configuration.Save();
             }

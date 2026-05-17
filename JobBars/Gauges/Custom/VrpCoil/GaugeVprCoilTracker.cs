@@ -6,16 +6,9 @@ using JobBars.Gauges.Types.Diamond;
 
 namespace JobBars.Gauges.Custom.VrpCoil {
     public class GaugeVprCoilTracker : GaugeStacksTracker {
-        public GaugeVprCoilTracker( GaugeVprCoilConfig config, int idx ) : base( config, idx ) {
-            LoadUi( config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeVprCoilTracker>( this, idx ),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeVprCoilTracker>( this, idx ),
-                _ => new GaugeDiamond<GaugeVprCoilTracker>( this, idx ), // DEFAULT
-            } );
-        }
+        public GaugeVprCoilTracker( GaugeVprCoilConfig config ) : base( config ) { }
 
-
-        protected override void TickTracker() {
+        public override void TickTracker() {
             var vprGauge = Dalamud.JobGauges.Get<VPRGauge>();
             var currentValue = vprGauge == null ? 0 : vprGauge.RattlingCoilStacks;
             PlaySound( currentValue );

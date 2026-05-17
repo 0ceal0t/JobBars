@@ -1,9 +1,13 @@
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
+using JobBars.Nodes.Cooldown;
+using KamiToolKit.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using static FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentContentsFinder.Delegates;
 
 namespace JobBars.Cooldowns.Manager {
     public struct CooldownPartyMemberStruct {
@@ -16,12 +20,46 @@ namespace JobBars.Cooldowns.Manager {
         private Dictionary<ulong, CooldownPartyMember> ObjectIdToMember = [];
         private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = [];
 
+        private AddonController? Controller;
+        private CooldownRoot? Root;
+
         public CooldownManager() : base( "##JobBars_Cooldowns" ) {
             // Initialize custom cooldowns, remove duplicates
             foreach( var custom in JobBars.Configuration.CustomCooldown.GroupBy( x => x.GetNameId() ).Select( x => x.First() ).ToList() ) {
                 if( !CustomCooldowns.ContainsKey( custom.Job ) ) CustomCooldowns[custom.Job] = [];
                 CustomCooldowns[custom.Job].Add( new CooldownConfig( custom.Name, custom.GetNameId(), custom.Props ) );
             }
+
+            Controller = new AddonController {
+                AddonName = UiHelper.CooldownAttachAddonName,
+                OnSetup = SetupAddon,
+                OnFinalize = ResetAddon,
+                OnUpdate = UpdateAddon
+            };
+            Controller.Enable();
+        }
+
+        public void Hide() {
+            Root?.IsVisible = false;
+        }
+
+        private void SetupAddon( AtkUnitBase* addon ) {
+            Root = new();
+            Root.AttachNode( addon );
+        }
+
+        private void ResetAddon( AtkUnitBase* addon ) {
+            Root?.Dispose();
+            Root = null;
+        }
+
+        private void UpdateAddon( AtkUnitBase* addon ) {
+            Tick();
+        }
+
+        public void Dispose() {
+            Controller?.Dispose();
+            Controller = null;
         }
 
         public CooldownConfig[] GetCooldownConfigs( JobIds job ) {
@@ -40,15 +78,25 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void Tick() {
+            if( Root == null ) return;
+
+            // Visibility
+
             if( UiHelper.CalcDoHide( JobBars.Configuration.CooldownsEnabled, JobBars.Configuration.CooldownsHideOutOfCombat, JobBars.Configuration.CooldownsHideWeaponSheathed ) ) {
-                JobBars.NodeBuilder.CooldownRoot.IsVisible = false;
+                Root!.IsVisible = false;
                 return;
             }
             else {
-                JobBars.NodeBuilder.CooldownRoot.IsVisible = true;
+                Root!.IsVisible = true;
             }
 
-            // ============================
+            // Global position + scale
+
+            Root.Position = JobBars.Configuration.CooldownPosition + new Vector2( 0, UiHelper.PartyListOffset() );
+            Root.Scale = new( JobBars.Configuration.CooldownScale, JobBars.Configuration.CooldownScale );
+            Root.UpdateSpacing();
+
+            // Trick
 
             var time = DateTime.Now;
             var millis = time.Second * 1000 + time.Millisecond;
@@ -62,38 +110,32 @@ namespace JobBars.Cooldowns.Manager {
                 var partyMember = JobBars.PartyMembers[idx];
 
                 if( partyMember == null || partyMember?.ObjectId == 0 || partyMember?.Job == JobIds.OTHER ) {
-                    JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, false );
+                    Root!.SetCooldownRowVisible( idx, false );
                     continue;
                 }
 
                 if( !JobBars.Configuration.CooldownsShowPartyMembers && partyMember.ObjectId != Dalamud.Objects.LocalPlayer.GameObjectId ) {
-                    JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, false );
+                    Root!.SetCooldownRowVisible( idx, false );
                     continue;
                 }
 
                 var member = ObjectIdToMember.TryGetValue( partyMember.ObjectId, out var _member ) ? _member : new CooldownPartyMember( partyMember.ObjectId );
-                member.Tick( JobBars.NodeBuilder.CooldownRoot.Rows[idx], partyMember, percent );
+                member.Tick( Root!.Rows[idx], partyMember, percent );
                 newObjectIdToMember[partyMember.ObjectId] = member;
 
-                JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, true );
+                Root!.SetCooldownRowVisible( idx, true );
             }
 
             for( var idx = JobBars.PartyMembers.Count; idx < 8; idx++ ) { // hide remaining slots
-                JobBars.NodeBuilder.CooldownRoot.SetCooldownRowVisible( idx, false );
+                Root!.SetCooldownRowVisible( idx, false );
             }
 
             ObjectIdToMember = newObjectIdToMember;
         }
 
-        public static void UpdatePositionScale() {
-            JobBars.NodeBuilder.CooldownRoot.Position = JobBars.Configuration.CooldownPosition + new Vector2( 0, UiHelper.PartyListOffset() );
-            JobBars.NodeBuilder.CooldownRoot.Scale = new( JobBars.Configuration.CooldownScale, JobBars.Configuration.CooldownScale );
-            JobBars.NodeBuilder.CooldownRoot.Update();
-        }
-
         public void ResetUi() => ObjectIdToMember.Clear();
 
-        public void ResetTrackers() {
+        public void Reset() {
             foreach( var item in ObjectIdToMember.Values ) item.Reset();
         }
 

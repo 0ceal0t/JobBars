@@ -16,67 +16,65 @@ namespace JobBars.Buffs.Manager {
         private readonly Dictionary<JobIds, List<BuffConfig>> CustomBuffs = [];
         private List<BuffConfig> ApplyToTargetCustomBuffs => [.. CustomBuffs.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )];
 
-        private MultiAddonController? Controller;
+        private AddonController? Controller;
+        private AddonController? PartyListController;
+
         private BuffRoot? Root;
         private HighlightRoot? Highlight;
 
         public BuffManager() : base( "##JobBars_Buffs" ) {
             ApplyToTargetBuffs.AddRange( [.. JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )] );
 
-            Controller = new MultiAddonController {
-                AddonNames = ["ChatLog", "_ParameterWidget", "_PartyList"],
+            Controller = new AddonController {
+                AddonName = UiHelper.BuffGaugeAttachAddonName,
                 OnSetup = SetupAddon,
                 OnFinalize = ResetAddon,
                 OnUpdate = UpdateAddon
             };
             Controller.Enable();
+
+            PartyListController = new AddonController {
+                AddonName = "_PartyList",
+                OnSetup = SetupPartyList,
+                OnFinalize = ResetPartyList,
+            };
+            PartyListController.Enable();
         }
 
         public void Hide() {
             Root?.IsVisible = false;
         }
 
-        public void UpdateSettings() {
-            Root?.UpdateSettings();
-        }
-
         private void SetupAddon( AtkUnitBase* addon ) {
-            if(addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root = new();
-                Root.AttachNode( addon );
-            }
-
-            if(addon->NameString == "_PartyList") {
-                Highlight = new();
-                Highlight.AttachNode( addon->GetNodeById( 21 ) );
-            }
+            Root = new();
+            Root.AttachNode( addon );
         }
 
-        private void ResetAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root?.Dispose();
-                Root = null;
-            }
-
-            if( addon->NameString == "_PartyList" ) {
-                Highlight?.Dispose();
-                Highlight = null;
-            }
+        private void SetupPartyList( AtkUnitBase* addon ) {
+            Highlight = new();
+            Highlight.AttachNode( addon->GetNodeById( 21 ) );
         }
 
         private void UpdateAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Tick();
-            }
+            Tick();
+        }
 
-            if( addon->NameString == "_PartyList" ) {
+        private void ResetAddon( AtkUnitBase* addon ) {
+            Root?.Dispose();
+            Root = null;
+        }
 
-            }
+        private void ResetPartyList( AtkUnitBase* addon ) {
+            Highlight?.Dispose();
+            Highlight = null;
         }
 
         public void Dispose() {
             Controller?.Dispose();
             Controller = null;
+
+            PartyListController?.Dispose();
+            PartyListController = null;
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {
@@ -114,6 +112,7 @@ namespace JobBars.Buffs.Manager {
 
             NodeBuilder.SetPositionGlobal( Root, JobBars.Configuration.BuffPosition );
             NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.BuffScale );
+            Root?.UpdateSettings();
 
             // Evaluate each buff
 
@@ -149,6 +148,7 @@ namespace JobBars.Buffs.Manager {
             }
 
             // Hide all the rest
+
             for( var i = buffIdx; i < BuffRoot.MAX_BUFFS; i++ ) {
                 Root!.Buffs[i].IsVisible = false;
             }

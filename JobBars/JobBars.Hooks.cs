@@ -44,7 +44,7 @@ namespace JobBars {
             }
             if( !isPet ) {
                 BuffManager?.PerformAction( actionItem, ( uint )sourceId );
-                //CooldownManager?.PerformAction( actionItem, ( uint )sourceId );
+                CooldownManager?.PerformAction( actionItem, ( uint )sourceId );
             }
 
             var targetCount = *( byte* )( effectHeader + 0x21 );
@@ -119,7 +119,7 @@ namespace JobBars {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
                 BuffManager?.Reset();
-                //CooldownManager?.ResetTrackers();
+                CooldownManager?.Reset();
                 UiHelper.ResetTicks();
             }
         }

@@ -23,13 +23,9 @@ namespace JobBars.Gauges.Procs {
         private readonly List<Proc> Procs;
         private GaugeState State = GaugeState.Inactive;
 
-        public GaugeProcsTracker( GaugeProcsConfig config, int idx ) {
+        public GaugeProcsTracker( GaugeProcsConfig config ) {
             Config = config;
             Procs = [.. Config.Procs.Select( p => new Proc( p ) ).OrderBy( proc => proc.Config.Order )];
-            LoadUi( Config.TypeConfig switch {
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeProcsTracker>( this, idx ),
-                _ => new GaugeDiamond<GaugeProcsTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -38,7 +34,7 @@ namespace JobBars.Gauges.Procs {
 
         public override void ProcessAction( Item action ) { }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             var playSound = false;
             var procActiveCount = 0;
             foreach( var proc in Procs ) {

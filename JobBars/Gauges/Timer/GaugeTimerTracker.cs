@@ -82,15 +82,10 @@ namespace JobBars.Gauges.Timer {
         private readonly List<GaugeSubTimer> SubTimers;
         private GaugeSubTimer ActiveSubTimer;
 
-        public GaugeTimerTracker( GaugeTimerConfig config, int idx ) {
+        public GaugeTimerTracker( GaugeTimerConfig config ) {
             Config = config;
-            SubTimers = Config.SubTimers.Select( subTimer => new GaugeSubTimer( config, subTimer ) ).ToList();
+            SubTimers = [.. Config.SubTimers.Select( subTimer => new GaugeSubTimer( config, subTimer ) )];
             ActiveSubTimer = SubTimers[0];
-            LoadUi( Config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeTimerTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeTimerTracker>( this, idx ),
-                _ => new GaugeBar<GaugeTimerTracker>( this, idx ) // DEFAULT
-            } );
         }
 
         public override GaugeConfig GetConfig() => Config;
@@ -98,17 +93,14 @@ namespace JobBars.Gauges.Timer {
         public override bool GetActive() => ActiveSubTimer.GetActive();
 
         public override void ProcessAction( Item action ) {
-            var refreshVisuals = false;
             foreach( var subTimer in SubTimers ) {
                 if( subTimer.ProcessAction( action ) && subTimer != ActiveSubTimer ) {
                     ActiveSubTimer = subTimer;
-                    refreshVisuals = true;
                 }
             }
-            if( refreshVisuals ) GaugeUi.UpdateVisual();
         }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             foreach( var subTimer in SubTimers ) subTimer.Tick();
         }
 

@@ -68,10 +68,10 @@ namespace JobBars.Nodes.Buff {
             Border.AttachNode( this );
             Text.AttachNode( this );
 
-            Update();
+            UpdateSettings();
         }
 
-        public void Update() {
+        public void UpdateSettings() {
             Size = new( WIDTH, HEIGHT );
             Text.Size = new( WIDTH, HEIGHT );
             Icon.Size = new( WIDTH, HEIGHT );
@@ -114,7 +114,7 @@ namespace JobBars.Nodes.Buff {
         }
 
         public void SetText( string text ) {
-            if( text != CurrentText ) {
+            if( text != CurrentText && text != null ) {
                 Text.String = text;
                 CurrentText = text;
             }

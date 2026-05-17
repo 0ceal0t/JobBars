@@ -1,12 +1,7 @@
 using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Gauges.Types.Arrow;
-using KamiToolKit;
-using KamiToolKit.Classes;
-using KamiToolKit.Nodes;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace JobBars.Nodes.Gauge.Arrow {
     public unsafe class ArrowNode : GaugeNode {
@@ -37,7 +32,7 @@ namespace JobBars.Nodes.Gauge.Arrow {
             var prevVisible = Ticks[idx].Selected.IsVisible;
             Ticks[idx].Selected.IsVisible = value;
 
-            if( value && !prevVisible ) Animation.AddAnim( ( float f ) => Ticks[idx].Selected.Scale = new( f, f ), 0.2f, 2.5f, 1.0f );
+            if( value && !prevVisible ) Animation.AddAnim( f => Ticks[idx].Selected.Scale = new( f, f ), 0.2f, 2.5f, 1.0f );
         }
 
         public void Clear() {

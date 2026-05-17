@@ -58,16 +58,15 @@ namespace JobBars {
             AttachAddon = Configuration.AttachAddon;
             CooldownAttachAddon = Configuration.CooldownAttachAddon;
 
-            //NodeBuilder = new NodeBuilder();
             BuffManager = new BuffManager();
-            //CooldownManager = new CooldownManager();
+            CooldownManager = new CooldownManager();
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
             IconManager = new IconManager();
 
-            //Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
-            //Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
-            //Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
             SetupCommands();
 
             Dalamud.Framework.Update += OnFrameworkUpdate;
@@ -80,9 +79,9 @@ namespace JobBars {
             ReceiveActionEffectHook?.Dispose();
             ActorControlSelfHook?.Dispose();
 
-            //Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
-            //Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
-            //Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
+            Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
+            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
             RemoveCommands();
 
             Dalamud.Framework.Update -= OnFrameworkUpdate;
@@ -93,9 +92,9 @@ namespace JobBars {
             IconManager?.Dispose();
             CursorManager?.Dispose();
             GaugeManager?.Dispose();
+            CooldownManager?.Dispose();
 
             Animation.Dispose();
-            //NodeBuilder?.Dispose();
             KamiToolKitLibrary.Dispose();
         }
 
@@ -106,11 +105,8 @@ namespace JobBars {
 
                 BuffManager?.Hide();
                 GaugeManager?.Hide();
-
-                //if( NodeBuilder.GaugeRoot != null ) NodeBuilder.GaugeRoot.IsVisible = false;
-                // TODO
-                //if( NodeBuilder.BuffRoot != null ) NodeBuilder.BuffRoot.IsVisible = false;
-                //if( NodeBuilder.CooldownRoot != null ) NodeBuilder.CooldownRoot.IsVisible = false;
+                CooldownManager?.Hide();
+                CursorManager?.Hide();
 
                 return;
             }
@@ -122,19 +118,7 @@ namespace JobBars {
             CheckForJobChange();
             UpdatePartyMembers();
 
-            //GaugeManager.Tick();
-            //CooldownManager.Tick();
-            //CursorManager.Tick();
             IconManager.Tick();
-
-            //var time = DateTime.Now;
-            //var millis = time.Second * 1000 + time.Millisecond;
-            //var percent = ( float )( millis % 1000 ) / 1000;
-
-            //NodeBuilder.Tick( Configuration.GaugePulse ? percent : 0f );
-            //GaugeManager.UpdatePositionScale();
-            //BuffManager.UpdatePositionScale();
-            //CooldownManager.UpdatePositionScale();
         }
 
         private void OnLogout( int type, int code ) {
@@ -158,6 +142,7 @@ namespace JobBars {
                 GaugeManager.SetJob( CurrentJob );
                 CursorManager.SetJob( CurrentJob );
                 IconManager.SetJob( CurrentJob );
+                // CD?
             }
         }
 

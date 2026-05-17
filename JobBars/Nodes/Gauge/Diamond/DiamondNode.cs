@@ -1,8 +1,11 @@
 using JobBars.Atk;
+using JobBars.Gauges.Types.Arrow;
+using JobBars.Gauges.Types.Diamond;
 using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace JobBars.Nodes.Gauge.Diamond {
@@ -44,6 +47,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
         }
 
         public void SetText( int idx, string text ) {
+            if( text == null ) return;
             Ticks[idx].Text.String = text;
             Ticks[idx].Text.IsVisible = true;
         }
@@ -60,6 +64,30 @@ namespace JobBars.Nodes.Gauge.Diamond {
             for( var idx = 0; idx < MAX_ITEMS; idx++ ) SetValue( idx, false );
         }
 
-        public void Tick( float percent ) => Ticks.ForEach( t => t.Tick( percent ) );
+        // ====================
+
+        public void Tick( IGaugeDiamondInterface tracker, float percent ) {
+            SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
+            SetScale( tracker.GetConfig().Scale );
+
+            SetMaxValue( tracker.GetTotalMaxTicks() );
+            SetTextVisible( tracker.GetDiamondTextVisible() );
+            Clear();
+
+            for( var i = 0; i < tracker.GetCurrentMaxTicks(); i++ ) {
+                var trackerIndex = tracker.GetReverseFill() ? ( tracker.GetCurrentMaxTicks() - i - 1 ) : i;
+                SetValue( i, tracker.GetTickValue( trackerIndex ) );
+                SetColor( i, tracker.GetTickColor( trackerIndex ) );
+                if( tracker.GetDiamondTextVisible()) {
+                    SetText( i, tracker.GetDiamondText( trackerIndex ) );
+                }
+            }
+
+            Ticks.ForEach( t => t.Tick( percent ) ); // pulse
+        }
+
+        public int GetHeight( IGaugeDiamondInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( tracker.GetDiamondTextVisible() ? 40 : 32 ) );
+
+        public int GetWidth( IGaugeDiamondInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( 32 + 20 * ( tracker.GetCurrentMaxTicks() - 1 ) ) );
     }
 }

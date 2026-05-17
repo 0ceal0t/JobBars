@@ -67,7 +67,7 @@ namespace JobBars.Gauges.Timer {
             }
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeTimerTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeTimerTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             DrawSoundEffect( "Low warning sound effect" );

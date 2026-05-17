@@ -1,7 +1,7 @@
 using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Bar {
-    public interface IGaugeBarInterface {
+    public interface IGaugeBarInterface : IGaugeInterface {
         // ===== SETUP ======
 
         public float[] GetBarSegments();

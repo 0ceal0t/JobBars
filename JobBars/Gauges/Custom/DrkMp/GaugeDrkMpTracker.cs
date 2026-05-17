@@ -11,18 +11,11 @@ namespace JobBars.Gauges.Custom {
         private readonly GaugeDrkMpConfig CustomConfig;
         private bool DarkArts = false;
 
-        public GaugeDrkMpTracker( GaugeDrkMpConfig config, int idx ) : base( config, idx, true ) {
+        public GaugeDrkMpTracker( GaugeDrkMpConfig config ) : base( config, true ) {
             CustomConfig = config;
-            LoadUi( config.TypeConfig switch {
-                GaugeBarConfig _ => new GaugeBar<GaugeDrkMpTracker>( this, idx ),
-                GaugeArrowConfig _ => new GaugeArrow<GaugeDrkMpTracker>( this, idx ),
-                GaugeDiamondConfig _ => new GaugeDiamond<GaugeDrkMpTracker>( this, idx ),
-                GaugeBarDiamondComboConfig _ => new GaugeBarDiamondCombo<GaugeDrkMpTracker>( this, idx ),
-                _ => new GaugeBarDiamondCombo<GaugeDrkMpTracker>( this, idx ) // DEFAULT
-            } );
         }
 
-        protected override void TickTracker() {
+        public override void TickTracker() {
             base.TickTracker();
             var drkGauge = Dalamud.JobGauges.Get<DRKGauge>();
             DarkArts = drkGauge != null && drkGauge.HasDarkArts;

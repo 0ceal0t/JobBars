@@ -15,15 +15,15 @@ namespace JobBars.Cursors.Manager {
         private ElementColor InnerColor;
         private ElementColor OuterColor;
 
-        private MultiAddonController? Controller;
+        private AddonController? Controller;
         private CursorRoot? Root;
 
         public CursorManager() : base( "##JobBars_Cursor" ) {
             InnerColor = ColorConstants.GetColor( JobBars.Configuration.CursorInnerColor, ColorConstants.MpPink );
             OuterColor = ColorConstants.GetColor( JobBars.Configuration.CursorOuterColor, ColorConstants.HealthGreen );
 
-            Controller = new MultiAddonController {
-                AddonNames = ["ChatLog", "_ParameterWidget", "_PartyList"],
+            Controller = new AddonController {
+                AddonName = UiHelper.BuffGaugeAttachAddonName,
                 OnSetup = SetupAddon,
                 OnFinalize = ResetAddon,
                 OnUpdate = UpdateAddon
@@ -36,23 +36,17 @@ namespace JobBars.Cursors.Manager {
         }
 
         private void SetupAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root = new();
-                Root.AttachNode( addon );
-            }
+            Root = new();
+            Root.AttachNode( addon );
         }
 
         private void ResetAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Root?.Dispose();
-                Root = null;
-            }
+            Root?.Dispose();
+            Root = null;
         }
 
         private void UpdateAddon( AtkUnitBase* addon ) {
-            if( addon->NameString == UiHelper.BuffGaugeAttachAddonName ) {
-                Tick();
-            }
+            Tick();
         }
 
         public void Dispose() {

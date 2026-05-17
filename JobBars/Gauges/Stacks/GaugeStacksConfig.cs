@@ -27,7 +27,7 @@ namespace JobBars.Gauges.Stacks {
             ReverseFill = JobBars.Configuration.GaugeReverseFill.Get( Name, false );
         }
 
-        public override GaugeTracker GetTracker( int idx ) => new GaugeStacksTracker( this, idx );
+        public override GaugeTracker GetTracker() => new GaugeStacksTracker( this );
 
         protected override void DrawConfig( string id, ref bool newVisual, ref bool reset ) {
             if( JobBars.Configuration.GaugeColor.Draw( $"Color{id}", Name, Color, out var newColor ) ) {
