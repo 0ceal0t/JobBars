@@ -34,14 +34,14 @@ namespace JobBars.Nodes.Builder {
         ];
 
 
-        private readonly HashSet<string> IsAttached = [];
-        public bool IsLoaded => IsAttached.Count > 0;
+        //private readonly HashSet<string> IsAttached = [];
+        //public bool IsLoaded => IsAttached.Count > 0;
 
-        public BuffRoot BuffRoot { get; private set; }
-        public CursorRoot CursorRoot { get; private set; }
+        //public BuffRoot BuffRoot { get; private set; }
+        //public CursorRoot CursorRoot { get; private set; }
         public CooldownRoot CooldownRoot { get; private set; }
-        public GaugeRoot GaugeRoot { get; private set; }
-        public HighlightRoot HighlightRoot { get; private set; }
+        //public GaugeRoot GaugeRoot { get; private set; }
+        //public HighlightRoot HighlightRoot { get; private set; }
 
         public NodeBuilder() { }
 
@@ -55,11 +55,11 @@ namespace JobBars.Nodes.Builder {
             Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PostSetup, "_ParameterWidget", OnParametersSetup );
             Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreFinalize, "_ParameterWidget", OnParametersFinalize );
 
-            if( UiHelper.PartyListAddon is not null ) AttachToNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
-            if( UiHelper.ChatLogAddon is not null ) AttachToNative( UiHelper.ChatLogAddon, "ChatLog" );
-            if( UiHelper.ParameterAddon is not null ) AttachToNative( UiHelper.ParameterAddon, "_ParameterWidget" );
+            //if( UiHelper.PartyListAddon is not null ) AttachToNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
+            //if( UiHelper.ChatLogAddon is not null ) AttachToNative( UiHelper.ChatLogAddon, "ChatLog" );
+            //if( UiHelper.ParameterAddon is not null ) AttachToNative( UiHelper.ParameterAddon, "_ParameterWidget" );
 
-            Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreRequestedUpdate, AllActionBars, ActionBarUpdate );
+            //Dalamud.AddonLifecycle.RegisterListener( AddonEvent.PreRequestedUpdate, AllActionBars, ActionBarUpdate );
         }
 
         private void ActionBarUpdate( AddonEvent _, AddonArgs args ) {
@@ -97,9 +97,9 @@ namespace JobBars.Nodes.Builder {
 
             Dalamud.AddonLifecycle.UnregisterListener( ActionBarUpdate );
 
-            if( UiHelper.PartyListAddon is not null ) DetachFromNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
-            if( UiHelper.ChatLogAddon is not null ) DetachFromNative( UiHelper.ChatLogAddon, "ChatLog" );
-            if( UiHelper.ParameterAddon is not null ) DetachFromNative( UiHelper.ParameterAddon, "_ParameterWidget" );
+            //if( UiHelper.PartyListAddon is not null ) DetachFromNative( ( AtkUnitBase* )UiHelper.PartyListAddon, "_PartyList" );
+            //if( UiHelper.ChatLogAddon is not null ) DetachFromNative( UiHelper.ChatLogAddon, "ChatLog" );
+            //if( UiHelper.ParameterAddon is not null ) DetachFromNative( UiHelper.ParameterAddon, "_ParameterWidget" );
         }
 
         private void OnPartyListSetup( AddonEvent _, AddonArgs args ) => AttachToNative( ( AtkUnitBase* )args.Addon.Address, "_PartyList" );
@@ -113,18 +113,18 @@ namespace JobBars.Nodes.Builder {
 
         private void AttachToNative( AtkUnitBase* addon, string name ) {
             Dalamud.Framework.RunOnFrameworkThread( () => {
-                if( IsAttached.Contains( name ) ) return;
+                //if( IsAttached.Contains( name ) ) return;
 
                 if( name == UiHelper.BuffGaugeAttachAddonName ) {
-                    BuffRoot = new();
-                    CursorRoot = new();
-                    GaugeRoot = new();
+                    //BuffRoot = new();
+                    //CursorRoot = new();
+                    //GaugeRoot = new();
 
-                    JobBars.GaugeManager?.Reset();
+                    //JobBars.GaugeManager?.Reset();
 
-                    BuffRoot.AttachNode( addon->RootNode );
-                    CursorRoot.AttachNode( addon->RootNode );
-                    GaugeRoot.AttachNode( addon->RootNode );
+                    //BuffRoot.AttachNode( addon->RootNode );
+                    //CursorRoot.AttachNode( addon->RootNode );
+                    //GaugeRoot.AttachNode( addon->RootNode );
                 }
 
                 if( name == UiHelper.CooldownAttachAddonName ) {
@@ -132,12 +132,12 @@ namespace JobBars.Nodes.Builder {
                     CooldownRoot.AttachNode( addon->RootNode );
                 }
 
-                if( name == "_PartyList" ) {
-                    HighlightRoot = new();
-                    HighlightRoot.AttachNode( addon->GetNodeById( 21 ) );
-                }
+                //if( name == "_PartyList" ) {
+                //    HighlightRoot = new();
+                //    HighlightRoot.AttachNode( addon->GetNodeById( 21 ) );
+                //}
 
-                IsAttached.Add( name );
+                //IsAttached.Add( name );
             } );
         }
 
@@ -145,27 +145,27 @@ namespace JobBars.Nodes.Builder {
 
         private void DetachFromNative( AtkUnitBase* addon, string name ) {
             Dalamud.Framework.RunOnFrameworkThread( () => {
-                if( !IsAttached.Contains( name ) ) return;
+                //if( !IsAttached.Contains( name ) ) return;
 
                 if( name == UiHelper.BuffGaugeAttachAddonName ) {
-                    if( BuffRoot != null ) {
+                    /*if( BuffRoot != null ) {
                         Dalamud.Log( $"Disposing Buff" );
 
                         BuffRoot.Dispose();
                         BuffRoot = null;
-                    }
-                    if( CursorRoot != null ) {
+                    }*/
+                    /*if( CursorRoot != null ) {
                         Dalamud.Log( $"Disposing Cursor" );
 
                         CursorRoot.Dispose();
                         CursorRoot = null;
-                    }
-                    if( GaugeRoot != null ) {
-                        Dalamud.Log( $"Disposing Gauge" );
-
-                        GaugeRoot.Dispose();
-                        GaugeRoot = null;
-                    }
+                    }*/
+                   // if( GaugeRoot != null ) {
+                    //    Dalamud.Log( $"Disposing Gauge" );
+                    //
+                        //GaugeRoot.Dispose();
+                       // GaugeRoot = null;
+                    //}
                 }
 
                 if( name == UiHelper.CooldownAttachAddonName ) {
@@ -176,23 +176,23 @@ namespace JobBars.Nodes.Builder {
                         CooldownRoot = null;
                     }
                 }
-
-                if( name == "_PartyList" ) {
+                
+                /*if( name == "_PartyList" ) {
                     if( HighlightRoot != null ) {
                         Dalamud.Log( $"Disposing Highlight" );
 
                         HighlightRoot.Dispose();
                         HighlightRoot = null;
                     }
-                }
+                }*/
 
-                IsAttached.Remove( name );
+                //IsAttached.Remove( name );
             } );
         }
 
         public void Tick( float percent ) {
-            GaugeRoot?.Arrows.ForEach( x => x.Tick( percent ) );
-            GaugeRoot?.Diamonds.ForEach( x => x.Tick( percent ) );
+            //GaugeRoot?.Arrows.ForEach( x => x.Tick( percent ) );
+            //GaugeRoot?.Diamonds.ForEach( x => x.Tick( percent ) );
         }
 
         // ==== HELPER FUNCTIONS ============
@@ -201,7 +201,7 @@ namespace JobBars.Nodes.Builder {
 
         public static unsafe void SetPosition( NodeBase node, float x, float y ) {
             var addon = UiHelper.BuffGaugeAttachAddon;
-            if( addon == null ) return;
+            if( addon == null || node == null ) return;
             var p = UiHelper.GetGlobalPosition( addon->RootNode );
             var scale = UiHelper.GetGlobalScale( addon->RootNode );
             node.Position = new( ( x - p.X ) / scale.X, ( y - p.Y ) / scale.Y );
@@ -211,7 +211,7 @@ namespace JobBars.Nodes.Builder {
 
         public static unsafe void SetScale( NodeBase node, float x, float y ) {
             var addon = UiHelper.BuffGaugeAttachAddon;
-            if( addon == null ) return;
+            if( addon == null || node == null ) return;
             var p = UiHelper.GetGlobalScale( addon->RootNode );
             node.Scale = new( x / p.X, y / p.Y );
         }

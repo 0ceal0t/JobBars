@@ -1,9 +1,11 @@
 using JobBars.Atk;
 using JobBars.Data;
+using JobBars.Gauges.Types.Arrow;
 using KamiToolKit;
 using KamiToolKit.Classes;
 using KamiToolKit.Nodes;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace JobBars.Nodes.Gauge.Arrow {
@@ -42,6 +44,26 @@ namespace JobBars.Nodes.Gauge.Arrow {
             for( var idx = 0; idx < MAX_ITEMS; idx++ ) SetValue( idx, false );
         }
 
-        public void Tick( float percent ) => Ticks.ForEach( t => t.Tick( percent ) );
+        // ====================
+
+        public void Tick( IGaugeArrowInterface tracker,  float percent ) {
+            SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
+            SetScale( tracker.GetConfig().Scale );
+
+            SetMaxValue( tracker.GetTotalMaxTicks() );
+            Clear();
+
+            for( var i = 0; i < tracker.GetCurrentMaxTicks(); i++ ) {
+                var trackerIndex = tracker.GetReverseFill() ? ( tracker.GetCurrentMaxTicks() - i - 1 ) : i;
+                SetValue( i, tracker.GetTickValue( trackerIndex ) );
+                SetColor( i, tracker.GetTickColor( trackerIndex ) );
+            }
+
+            Ticks.ForEach( t => t.Tick( percent ) ); // pulse
+        }
+
+        public int GetHeight( IGaugeArrowInterface tracker ) => ( int )( tracker.GetConfig().Scale * 32 );
+
+        public int GetWidth( IGaugeArrowInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( 32 + 18 * ( tracker.GetCurrentMaxTicks() - 1 ) ) );
     }
 }

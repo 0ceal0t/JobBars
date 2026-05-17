@@ -1,7 +1,7 @@
 using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.BarDiamondCombo {
-    public interface IGaugeBarDiamondComboInterface {
+    public interface IGaugeBarDiamondComboInterface : IGaugeInterface {
         // ===== SETUP ======
 
         public float[] GetBarSegments();

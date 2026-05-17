@@ -19,10 +19,10 @@ namespace JobBars.Nodes.Buff {
 
             Buffs.ForEach( x => x.AttachNode(this) );
 
-            Update();
+            UpdateSettings();
         }
 
-        public void Update() {
+        public void UpdateSettings() {
             for( var idx = 0; idx < Buffs.Count; idx++ ) {
                 var position_x = BUFFS_HORIZONTAL == 0 ? 0 : idx % BUFFS_HORIZONTAL;
                 var position_y = BUFFS_HORIZONTAL == 0 ? 0 : ( idx - position_x ) / BUFFS_HORIZONTAL;

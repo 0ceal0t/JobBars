@@ -40,14 +40,14 @@ namespace JobBars.Cursors.Manager {
                 InnerColor = newColorInner;
                 JobBars.Configuration.CursorInnerColor = newColorInner.Name;
                 JobBars.Configuration.Save();
-                JobBars.NodeBuilder.CursorRoot.SetInnerColor( InnerColor );
+                Root?.SetInnerColor( InnerColor );
             }
 
             if( Configuration.DrawColor( "Outer color", OuterColor, out var newColorOuter ) ) {
                 OuterColor = newColorOuter;
                 JobBars.Configuration.CursorOuterColor = newColorOuter.Name;
                 JobBars.Configuration.Save();
-                JobBars.NodeBuilder.CursorRoot.SetOuterColor( OuterColor );
+                Root?.SetOuterColor( OuterColor );
             }
         }
 

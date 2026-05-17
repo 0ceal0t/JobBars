@@ -29,7 +29,7 @@ namespace JobBars.Gauges {
         public abstract int GetWidth();
         public abstract int GetYOffset();
         public abstract void SetPosition( Vector2 position );
-        public abstract void SetSplitPosition( Vector2 position );
+        public abstract void SetSplitPosition( GaugeRoot root, Vector2 position );
     }
 
     public abstract class Gauge<T, S> : Gauge where T : class, IGaugeNode where S : GaugeTracker {
@@ -44,7 +44,7 @@ namespace JobBars.Gauges {
 
         public override void SetPosition( Vector2 position ) => Node.SetPosition( position );
 
-        public override void SetSplitPosition( Vector2 position ) => Node.SetSplitPosition( position );
+        public override void SetSplitPosition( GaugeRoot root, Vector2 position ) => Node.SetSplitPosition( position );
 
         public override void UpdateVisual() {
             if( Node == null ) return;

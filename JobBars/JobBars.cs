@@ -25,7 +25,6 @@ namespace JobBars {
         public static IconManager IconManager { get; private set; }
 
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
-
         public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
         public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
@@ -59,21 +58,19 @@ namespace JobBars {
             AttachAddon = Configuration.AttachAddon;
             CooldownAttachAddon = Configuration.CooldownAttachAddon;
 
-            NodeBuilder = new NodeBuilder();
+            //NodeBuilder = new NodeBuilder();
             BuffManager = new BuffManager();
-            CooldownManager = new CooldownManager();
+            //CooldownManager = new CooldownManager();
             GaugeManager = new GaugeManager();
             CursorManager = new CursorManager();
             IconManager = new IconManager();
 
-            Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
-            Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
-            Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
+            //Dalamud.PluginInterface.UiBuilder.Draw += BuildSettingsUi;
+            //Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfig;
+            //Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfig;
             SetupCommands();
 
-            if( Dalamud.ClientState.IsLoggedIn ) OnLogin();
             Dalamud.Framework.Update += OnFrameworkUpdate;
-            Dalamud.ClientState.Login += OnLogin;
             Dalamud.ClientState.Logout += OnLogout;
             Dalamud.ClientState.TerritoryChanged += OnZoneChange;
 
@@ -83,59 +80,61 @@ namespace JobBars {
             ReceiveActionEffectHook?.Dispose();
             ActorControlSelfHook?.Dispose();
 
-            Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
-            Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
-            Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
+            //Dalamud.PluginInterface.UiBuilder.Draw -= BuildSettingsUi;
+            //Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfig;
+            //Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfig;
             RemoveCommands();
 
             Dalamud.Framework.Update -= OnFrameworkUpdate;
-            Dalamud.ClientState.Login -= OnLogin;
             Dalamud.ClientState.Logout -= OnLogout;
             Dalamud.ClientState.TerritoryChanged -= OnZoneChange;
+            
+            BuffManager?.Dispose();
+            IconManager?.Dispose();
+            CursorManager?.Dispose();
+            GaugeManager?.Dispose();
 
             Animation.Dispose();
-            NodeBuilder?.Dispose();
+            //NodeBuilder?.Dispose();
             KamiToolKitLibrary.Dispose();
         }
 
         private void OnFrameworkUpdate( IFramework framework ) {
             if( Dalamud.ClientState.IsPvP ||
                 !Dalamud.ClientState.IsLoggedIn ||
-                Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ||
-                !NodeBuilder.IsLoaded ) {
+                Dalamud.Condition[ConditionFlag.BetweenAreas] || Dalamud.Condition[ConditionFlag.BetweenAreas51] || Dalamud.Condition[ConditionFlag.CreatingCharacter] ) {
 
-                if( NodeBuilder.GaugeRoot != null ) NodeBuilder.GaugeRoot.IsVisible = false;
-                if( NodeBuilder.BuffRoot != null ) NodeBuilder.BuffRoot.IsVisible = false;
-                if( NodeBuilder.CooldownRoot != null ) NodeBuilder.CooldownRoot.IsVisible = false;
+                BuffManager?.Hide();
+                GaugeManager?.Hide();
+
+                //if( NodeBuilder.GaugeRoot != null ) NodeBuilder.GaugeRoot.IsVisible = false;
+                // TODO
+                //if( NodeBuilder.BuffRoot != null ) NodeBuilder.BuffRoot.IsVisible = false;
+                //if( NodeBuilder.CooldownRoot != null ) NodeBuilder.CooldownRoot.IsVisible = false;
 
                 return;
             }
 
-            UiHelper.UpdateMp( Dalamud.Objects.LocalPlayer.CurrentMp );
+            UiHelper.UpdateMp( Dalamud.Objects.LocalPlayer!.CurrentMp );
             UiHelper.UpdatePlayerStatus();
 
             Animation.Tick();
             CheckForJobChange();
             UpdatePartyMembers();
 
-            GaugeManager.Tick();
-            BuffManager.Tick();
-            CooldownManager.Tick();
-            CursorManager.Tick();
+            //GaugeManager.Tick();
+            //CooldownManager.Tick();
+            //CursorManager.Tick();
             IconManager.Tick();
 
-            var time = DateTime.Now;
-            var millis = time.Second * 1000 + time.Millisecond;
-            var percent = ( float )( millis % 1000 ) / 1000;
+            //var time = DateTime.Now;
+            //var millis = time.Second * 1000 + time.Millisecond;
+            //var percent = ( float )( millis % 1000 ) / 1000;
 
-            NodeBuilder.Tick( Configuration.GaugePulse ? percent : 0f );
-            GaugeManager.UpdatePositionScale();
-            BuffManager.UpdatePositionScale();
-            CooldownManager.UpdatePositionScale();
-        }
-
-        private void OnLogin() {
-            NodeBuilder.Load();
+            //NodeBuilder.Tick( Configuration.GaugePulse ? percent : 0f );
+            //GaugeManager.UpdatePositionScale();
+            //BuffManager.UpdatePositionScale();
+            //CooldownManager.UpdatePositionScale();
         }
 
         private void OnLogout( int type, int code ) {
@@ -145,8 +144,6 @@ namespace JobBars {
         }
 
         private void OnZoneChange( uint newZoneId ) {
-            if( !NodeBuilder.IsLoaded ) return;
-
             GaugeManager?.Reset();
             IconManager?.Reset();
             BuffManager?.Reset();
@@ -174,7 +171,6 @@ namespace JobBars {
         }
 
         private void OpenConfig() {
-            if( !NodeBuilder.IsLoaded ) return;
             Visible = true;
         }
 

@@ -1,7 +1,7 @@
 using JobBars.Atk;
 
 namespace JobBars.Gauges.Types.Arrow {
-    public interface IGaugeArrowInterface {
+    public interface IGaugeArrowInterface : IGaugeInterface {
         // ===== SETUP ======
 
         public int GetTotalMaxTicks();

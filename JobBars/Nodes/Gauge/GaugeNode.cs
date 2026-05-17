@@ -19,9 +19,10 @@ namespace JobBars.Nodes.Gauge {
             IsVisible = visible;
         }
 
-        public virtual unsafe void SetSplitPosition( Vector2 pos ) {
-            var p = UiHelper.GetGlobalPosition( JobBars.NodeBuilder.GaugeRoot.Node );
-            var pScale = UiHelper.GetGlobalScale( JobBars.NodeBuilder.GaugeRoot.Node );
+        public virtual unsafe void SetSplitPosition( GaugeRoot root, Vector2 pos ) {
+            if( root == null ) return;
+            var p = UiHelper.GetGlobalPosition( root.Node );
+            var pScale = UiHelper.GetGlobalScale( root.Node );
             Position = new( ( pos.X - p.X ) / pScale.X, ( pos.Y - p.Y ) / pScale.Y );
         }
     }

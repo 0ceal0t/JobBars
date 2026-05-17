@@ -102,18 +102,18 @@ namespace JobBars.Gauges.Manager {
             }
         }
 
-        private static void SetGaugePositionGlobal( Vector2 pos ) {
+        private void SetGaugePositionGlobal( Vector2 pos ) {
             JobBars.SetWindowPosition( "Gauge Bar##GaugePosition", pos );
             JobBars.Configuration.GaugePositionGlobal = pos;
             JobBars.Configuration.Save();
-            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.GaugeRoot, pos );
+            NodeBuilder.SetPositionGlobal( Root, pos );
         }
 
-        private static void SetGaugePositionPerJob( JobIds job, Vector2 pos ) {
+        private void SetGaugePositionPerJob( JobIds job, Vector2 pos ) {
             JobBars.SetWindowPosition( $"Gauge Bar ({job})##GaugePosition", pos );
             JobBars.Configuration.GaugePerJobPosition.Set( $"{job}", pos );
             JobBars.Configuration.Save();
-            NodeBuilder.SetPositionGlobal( JobBars.NodeBuilder.GaugeRoot, pos );
+            NodeBuilder.SetPositionGlobal( Root, pos );
         }
 
         // ==========================================

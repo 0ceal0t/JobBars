@@ -15,7 +15,7 @@ namespace JobBars {
         private readonly Hook<ActorControlSelfDelegate> ActorControlSelfHook;
 
         private void ReceiveActionEffect( int sourceId, IntPtr sourceCharacter, IntPtr pos, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail ) {
-            if( !NodeBuilder.IsLoaded || !Dalamud.ClientState.IsLoggedIn ) {
+            if( !Dalamud.ClientState.IsLoggedIn ) {
                 ReceiveActionEffectHook.Original( sourceId, sourceCharacter, pos, effectHeader, effectArray, effectTrail );
                 return;
             }
@@ -44,7 +44,7 @@ namespace JobBars {
             }
             if( !isPet ) {
                 BuffManager?.PerformAction( actionItem, ( uint )sourceId );
-                CooldownManager?.PerformAction( actionItem, ( uint )sourceId );
+                //CooldownManager?.PerformAction( actionItem, ( uint )sourceId );
             }
 
             var targetCount = *( byte* )( effectHeader + 0x21 );
@@ -106,10 +106,7 @@ namespace JobBars {
         }
 
         private void ActorControlSelf( uint entityId, uint id, uint arg0, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, ulong targetId, byte a10 ) {
-
-
             ActorControlSelfHook.Original( entityId, id, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, targetId, a10 );
-            if( !NodeBuilder.IsLoaded ) return;
 
             if( entityId > 0 && id == Constants.ActorControlSelfId && entityId == Dalamud.Objects.LocalPlayer?.GameObjectId ) {
                 UiHelper.UpdateActorTick();
@@ -122,7 +119,7 @@ namespace JobBars {
                 GaugeManager?.Reset();
                 IconManager?.Reset();
                 BuffManager?.Reset();
-                CooldownManager?.ResetTrackers();
+                //CooldownManager?.ResetTrackers();
                 UiHelper.ResetTicks();
             }
         }
