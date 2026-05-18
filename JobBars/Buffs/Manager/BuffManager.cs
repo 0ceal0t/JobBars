@@ -31,14 +31,14 @@ namespace JobBars.Buffs.Manager {
                 OnFinalize = ResetAddon,
                 OnUpdate = UpdateAddon
             };
-            Controller.Enable();
+            //Controller.Enable();
 
             PartyListController = new AddonController {
                 AddonName = "_PartyList",
                 OnSetup = SetupPartyList,
                 OnFinalize = ResetPartyList,
             };
-            PartyListController.Enable();
+            //PartyListController.Enable();
         }
 
         public void Hide() {

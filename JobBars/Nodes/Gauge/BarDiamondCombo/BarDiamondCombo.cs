@@ -57,16 +57,8 @@ namespace JobBars.Nodes.Gauge.BarDiamondCombo {
         public void Clear() => Diamond.Clear();
 
         public unsafe void SetSplitPosition( GaugeRoot root, Vector2 pos ) {
-            if( root == null ) return;
-
-            var p = UiHelper.GetGlobalPosition( root );
-            var pScale = UiHelper.GetGlobalScale( root );
-
-            var x = ( pos.X - p.X ) / pScale.X;
-            var y = ( pos.Y - p.Y ) / pScale.Y;
-
-            Bar.Position = new( x, y );
-            Diamond.Position = new( x, y + 10 );
+            Bar.SetSplitPosition( root, pos );
+            Diamond.SetSplitPosition( root, new( pos.X, pos.Y + 10 ) );
         }
 
         // =====================

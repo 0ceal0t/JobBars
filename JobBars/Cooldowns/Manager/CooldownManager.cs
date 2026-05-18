@@ -35,7 +35,7 @@ namespace JobBars.Cooldowns.Manager {
                 OnFinalize = ResetAddon,
                 OnUpdate = UpdateAddon
             };
-            Controller.Enable();
+            //Controller.Enable();
         }
 
         public void Hide() {

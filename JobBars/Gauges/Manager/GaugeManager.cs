@@ -9,6 +9,7 @@ using JobBars.Nodes.Buff;
 using JobBars.Nodes.Builder;
 using JobBars.Nodes.Gauge;
 using KamiToolKit.Controllers;
+using KamiToolKit.Overlay.UiOverlay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,40 +23,24 @@ namespace JobBars.Gauges.Manager {
 
         private static readonly List<BuffIds> GaugeBuffsOnPartyMembers = new( [BuffIds.Excog] ); // which buffs on party members do we care about?
 
-        private AddonController? Controller;
+        private OverlayController? Controller;
         private GaugeRoot? Root;
 
         public GaugeManager() : base( "##JobBars_Gauges" ) {
-            Controller = new AddonController {
-                AddonName = UiHelper.BuffGaugeAttachAddonName,
-                OnSetup = SetupAddon,
-                OnFinalize = ResetAddon,
-                OnUpdate = UpdateAddon
-            };
-            Controller.Enable();
+            Controller = new();
+            Controller.CreateNode( () => {
+                Root = new( this );
+                return Root;
+            } );
         }
 
         public void Hide() {
             Root?.IsVisible = false;
         }
 
-        private void SetupAddon( AtkUnitBase* addon ) {
-            Root = new();
-            Root.AttachNode( addon );
-        }
-
-        private void ResetAddon( AtkUnitBase* addon ) {
-            Root?.Dispose();
-            Root = null;
-        }
-
-        private void UpdateAddon( AtkUnitBase* addon ) {
-            Tick();
-        }
-
         public void Dispose() {
-            Controller?.Dispose();
-            Controller = null;
+            if( Root == null ) return;
+            Controller?.RemoveNode( Root );
         }
 
         public void SetJob( JobIds job ) {
@@ -71,7 +56,7 @@ namespace JobBars.Gauges.Manager {
             foreach( var gauge in CurrentGauges.Where( g => g.Enabled ) ) gauge.ProcessAction( action );
         }
 
-        private void Tick() {
+        public void Tick() {
             if( Root == null ) return;
 
             // Visibility
@@ -87,9 +72,12 @@ namespace JobBars.Gauges.Manager {
 
             // Global position + scale
 
-            NodeBuilder.SetPositionGlobal( Root,
-                JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
-            NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.GaugeScale );
+            Root.Position = JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal;
+            Root.Scale = new( JobBars.Configuration.GaugeScale, JobBars.Configuration.GaugeScale );
+
+            //NodeBuilder.SetPositionGlobal( Root,
+            //    JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
+            //NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.GaugeScale );
 
             // Evaluate gauges
 
