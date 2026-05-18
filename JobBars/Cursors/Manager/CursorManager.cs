@@ -4,9 +4,8 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
-using JobBars.Nodes.Builder;
 using JobBars.Nodes.Cursor;
-using KamiToolKit.Controllers;
+using KamiToolKit.Overlay.UiOverlay;
 using System;
 
 namespace JobBars.Cursors.Manager {
@@ -15,50 +14,34 @@ namespace JobBars.Cursors.Manager {
         private ElementColor InnerColor;
         private ElementColor OuterColor;
 
-        private AddonController? Controller;
+        private OverlayController? Controller;
         private CursorRoot? Root;
 
         public CursorManager() : base( "##JobBars_Cursor" ) {
             InnerColor = ColorConstants.GetColor( JobBars.Configuration.CursorInnerColor, ColorConstants.MpPink );
             OuterColor = ColorConstants.GetColor( JobBars.Configuration.CursorOuterColor, ColorConstants.HealthGreen );
 
-            Controller = new AddonController {
-                AddonName = UiHelper.BuffGaugeAttachAddonName,
-                OnSetup = SetupAddon,
-                OnFinalize = ResetAddon,
-                OnUpdate = UpdateAddon
-            };
-            //Controller.Enable();
+            Controller = new();
+            Controller.CreateNode( () => {
+                Root = new( this );
+                return Root;
+            } );
         }
 
         public void Hide() {
             Root?.IsVisible = false;
         }
 
-        private void SetupAddon( AtkUnitBase* addon ) {
-            Root = new();
-            Root.AttachNode( addon );
-        }
-
-        private void ResetAddon( AtkUnitBase* addon ) {
-            Root?.Dispose();
-            Root = null;
-        }
-
-        private void UpdateAddon( AtkUnitBase* addon ) {
-            Tick();
-        }
-
         public void Dispose() {
-            Controller?.Dispose();
-            Controller = null;
+            if( Root == null ) return;
+            Controller?.RemoveNode( Root );
         }
 
         public void SetJob( JobIds job ) {
             CurrentCursor = JobToValue.TryGetValue( job, out var cursor ) ? cursor : null;
         }
 
-        private void Tick() {
+        public void Tick() {
             if( Root == null ) return;
 
             if( UiHelper.CalcDoHide( JobBars.Configuration.CursorsEnabled, JobBars.Configuration.CursorHideOutOfCombat, JobBars.Configuration.CursorHideWeaponSheathed ) ) {
@@ -91,14 +74,12 @@ namespace JobBars.Cursors.Manager {
                 Root!.IsVisible = true;
 
                 if( pos.X > 0 && pos.Y > 0 && pos.X < viewport.Size.X && pos.Y < viewport.Size.Y && dragging == 1 ) {
-                    NodeBuilder.SetPositionGlobal( Root!, pos );
+                    Root.Position = pos;
                 }
             }
             else {
                 Root!.IsVisible = true;
-                NodeBuilder.SetPositionGlobal(
-                    Root!,
-                    JobBars.Configuration.CursorPosition == CursorPositionType.Middle ? viewport.Size / 2 : JobBars.Configuration.CursorCustomPosition );
+                Root.Position = JobBars.Configuration.CursorPosition == CursorPositionType.Middle ? viewport.Size / 2 : JobBars.Configuration.CursorCustomPosition;
             }
 
             Root!.SetInnerColor( InnerColor );

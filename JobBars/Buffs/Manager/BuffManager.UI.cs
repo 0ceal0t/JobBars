@@ -1,6 +1,5 @@
 using Dalamud.Bindings.ImGui;
 using JobBars.Data;
-using JobBars.Nodes.Builder;
 using System.Numerics;
 
 namespace JobBars.Buffs.Manager {

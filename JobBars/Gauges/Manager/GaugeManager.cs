@@ -1,14 +1,10 @@
-using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Gauges.Types.Arrow;
 using JobBars.Gauges.Types.Bar;
 using JobBars.Gauges.Types.BarDiamondCombo;
 using JobBars.Gauges.Types.Diamond;
 using JobBars.Helper;
-using JobBars.Nodes.Buff;
-using JobBars.Nodes.Builder;
 using JobBars.Nodes.Gauge;
-using KamiToolKit.Controllers;
 using KamiToolKit.Overlay.UiOverlay;
 using System;
 using System.Collections.Generic;
@@ -74,10 +70,6 @@ namespace JobBars.Gauges.Manager {
 
             Root.Position = JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal;
             Root.Scale = new( JobBars.Configuration.GaugeScale, JobBars.Configuration.GaugeScale );
-
-            //NodeBuilder.SetPositionGlobal( Root,
-            //    JobBars.Configuration.GaugePositionType == GaugePositionType.PerJob ? GetPerJobPosition() : JobBars.Configuration.GaugePositionGlobal );
-            //NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.GaugeScale );
 
             // Evaluate gauges
 

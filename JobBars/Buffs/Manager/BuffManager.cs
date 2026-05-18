@@ -2,9 +2,9 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
 using JobBars.Nodes.Buff;
-using JobBars.Nodes.Builder;
 using JobBars.Nodes.Highlight;
 using KamiToolKit.Controllers;
+using KamiToolKit.Overlay.UiOverlay;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +16,7 @@ namespace JobBars.Buffs.Manager {
         private readonly Dictionary<JobIds, List<BuffConfig>> CustomBuffs = [];
         private List<BuffConfig> ApplyToTargetCustomBuffs => [.. CustomBuffs.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )];
 
-        private AddonController? Controller;
+        private OverlayController? Controller;
         private AddonController? PartyListController;
 
         private BuffRoot? Root;
@@ -25,43 +25,27 @@ namespace JobBars.Buffs.Manager {
         public BuffManager() : base( "##JobBars_Buffs" ) {
             ApplyToTargetBuffs.AddRange( [.. JobToValue.Values.SelectMany( x => x.Where( y => y.ApplyToTarget ) )] );
 
-            Controller = new AddonController {
-                AddonName = UiHelper.BuffGaugeAttachAddonName,
-                OnSetup = SetupAddon,
-                OnFinalize = ResetAddon,
-                OnUpdate = UpdateAddon
-            };
-            //Controller.Enable();
+            Controller = new();
+            Controller.CreateNode( () => {
+                Root = new( this );
+                return Root;
+            } );
 
             PartyListController = new AddonController {
                 AddonName = "_PartyList",
                 OnSetup = SetupPartyList,
                 OnFinalize = ResetPartyList,
             };
-            //PartyListController.Enable();
+            PartyListController.Enable();
         }
 
         public void Hide() {
             Root?.IsVisible = false;
         }
 
-        private void SetupAddon( AtkUnitBase* addon ) {
-            Root = new();
-            Root.AttachNode( addon );
-        }
-
         private void SetupPartyList( AtkUnitBase* addon ) {
             Highlight = new();
             Highlight.AttachNode( addon->GetNodeById( 21 ) );
-        }
-
-        private void UpdateAddon( AtkUnitBase* addon ) {
-            Tick();
-        }
-
-        private void ResetAddon( AtkUnitBase* addon ) {
-            Root?.Dispose();
-            Root = null;
         }
 
         private void ResetPartyList( AtkUnitBase* addon ) {
@@ -70,11 +54,11 @@ namespace JobBars.Buffs.Manager {
         }
 
         public void Dispose() {
-            Controller?.Dispose();
-            Controller = null;
-
             PartyListController?.Dispose();
             PartyListController = null;
+
+            if( Root == null ) return;
+            Controller?.RemoveNode( Root );
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {
@@ -94,7 +78,7 @@ namespace JobBars.Buffs.Manager {
             foreach( var member in ObjectIdToMember.Values ) member.ProcessAction( action, objectId );
         }
 
-        private void Tick() {
+        public void Tick() {
             if( Root == null || Highlight == null ) return;
 
             // Visibility
@@ -107,11 +91,11 @@ namespace JobBars.Buffs.Manager {
             else {
                 Root!.IsVisible = true;
             }
-            
+
             // Global position + scale
 
-            NodeBuilder.SetPositionGlobal( Root, JobBars.Configuration.BuffPosition );
-            NodeBuilder.SetScaleGlobal( Root, JobBars.Configuration.BuffScale );
+            Root.Position = JobBars.Configuration.BuffPosition;
+            Root.Scale = new( JobBars.Configuration.BuffScale, JobBars.Configuration.BuffScale );
             Root?.UpdateSettings();
 
             // Evaluate each buff

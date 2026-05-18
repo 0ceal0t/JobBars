@@ -1,6 +1,5 @@
 using Dalamud.Bindings.ImGui;
 using JobBars.Data;
-using JobBars.Nodes.Builder;
 using System;
 using System.Numerics;
 
@@ -12,7 +11,7 @@ namespace JobBars.Gauges.Manager {
 
         private readonly InfoBox<GaugeManager> PositionInfoBox = new() {
             Label = "Position",
-            ContentsAction = ( GaugeManager manager ) => {
+            ContentsAction = manager => {
                 ImGui.Checkbox( "Position locked" + manager.Id, ref manager.LOCKED );
 
                 if( JobBars.Configuration.GaugePositionType != GaugePositionType.Split ) {
@@ -55,7 +54,7 @@ namespace JobBars.Gauges.Manager {
 
         private readonly InfoBox<GaugeManager> HideWhenInfoBox = new() {
             Label = "Hide When",
-            ContentsAction = ( GaugeManager manager ) => {
+            ContentsAction = manager => {
                 if( ImGui.Checkbox( "Out of combat", ref JobBars.Configuration.GaugesHideOutOfCombat ) ) JobBars.Configuration.Save();
                 if( ImGui.Checkbox( "Weapon sheathed", ref JobBars.Configuration.GaugesHideWeaponSheathed ) ) JobBars.Configuration.Save();
             }

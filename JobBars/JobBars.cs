@@ -10,14 +10,12 @@ using JobBars.Data;
 using JobBars.Gauges.Manager;
 using JobBars.Helper;
 using JobBars.Icons.Manager;
-using JobBars.Nodes.Builder;
 using KamiToolKit;
 using System;
 
 namespace JobBars {
     public unsafe partial class JobBars : IDalamudPlugin {
         public static Configuration Configuration { get; private set; }
-        public static NodeBuilder NodeBuilder { get; private set; }
         public static GaugeManager GaugeManager { get; private set; }
         public static BuffManager BuffManager { get; private set; }
         public static CooldownManager CooldownManager { get; private set; }
@@ -25,8 +23,6 @@ namespace JobBars {
         public static IconManager IconManager { get; private set; }
 
         public static JobIds CurrentJob { get; private set; } = JobIds.OTHER;
-        public static AttachAddon AttachAddon { get; private set; } = AttachAddon.Chatbox;
-        public static AttachAddon CooldownAttachAddon { get; private set; } = AttachAddon.PartyList;
 
         public JobBars( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
@@ -54,9 +50,6 @@ namespace JobBars {
             ActorControlSelfHook = Dalamud.Hooks.HookFromSignature<ActorControlSelfDelegate>( Constants.ActorControlSig, ActorControlSelf );
             ReceiveActionEffectHook.Enable();
             ActorControlSelfHook.Enable();
-
-            AttachAddon = Configuration.AttachAddon;
-            CooldownAttachAddon = Configuration.CooldownAttachAddon;
 
             BuffManager = new BuffManager();
             CooldownManager = new CooldownManager();

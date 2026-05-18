@@ -9,7 +9,7 @@ using KamiToolKit.Overlay.UiOverlay;
 using System.Collections.Generic;
 
 namespace JobBars.Nodes.Gauge {
-    public unsafe class GaugeRoot : OverlayNode {
+    public class GaugeRoot : OverlayNode {
         public override OverlayLayer OverlayLayer => OverlayLayer.AboveUserInterface;
 
         public static readonly int MAX_GAUGES = 7;
@@ -22,8 +22,8 @@ namespace JobBars.Nodes.Gauge {
         private readonly GaugeManager Manager;
 
         public GaugeRoot( GaugeManager manager ) {
-            Size = new( 256, 100 );
             Manager = manager;
+            Size = new( 256, 100 );
 
             for( var i = 0; i < MAX_GAUGES; i++ ) {
                 Bars.Add( new BarNode() );

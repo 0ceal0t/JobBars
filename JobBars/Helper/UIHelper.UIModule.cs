@@ -30,20 +30,5 @@ namespace JobBars.Helper {
             if( offsetNode == null ) return 0;
             return offsetNode->Y;
         }
-
-        public static AtkUnitBase* BuffGaugeAttachAddon => GetAddon( JobBars.AttachAddon );
-
-        public static AtkUnitBase* GetAddon( Data.AttachAddon addon ) => GetAddon( GetAddonNameName( addon ) );
-
-        public static string BuffGaugeAttachAddonName => GetAddonNameName( JobBars.AttachAddon );
-
-        public static string CooldownAttachAddonName => GetAddonNameName( JobBars.CooldownAttachAddon );
-
-        public static string GetAddonNameName( Data.AttachAddon addon ) => addon switch {
-            Data.AttachAddon.Chatbox => "ChatLog",
-            Data.AttachAddon.HP_MP_Bars => "_ParameterWidget",
-            Data.AttachAddon.PartyList => "_PartyList",
-            _ => "ChatLog" // Default
-        };
     }
 }

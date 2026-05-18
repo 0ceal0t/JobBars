@@ -24,12 +24,6 @@ namespace JobBars.Data {
         CustomPosition
     }
 
-    public enum AttachAddon {
-        Chatbox,
-        HP_MP_Bars,
-        PartyList
-    }
-
     public struct CustomCooldownProps {
         public string Name;
         public string Id;
@@ -44,10 +38,6 @@ namespace JobBars.Data {
         public int Version { get; set; } = 2;
 
         public bool Use4K = true;
-
-        public AttachAddon AttachAddon = AttachAddon.Chatbox;
-
-        public AttachAddon CooldownAttachAddon = AttachAddon.PartyList;
 
         // ====== GAUGES ======
 

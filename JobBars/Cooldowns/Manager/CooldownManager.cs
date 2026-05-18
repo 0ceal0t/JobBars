@@ -3,6 +3,7 @@ using JobBars.Data;
 using JobBars.Helper;
 using JobBars.Nodes.Cooldown;
 using KamiToolKit.Controllers;
+using KamiToolKit.Overlay.UiOverlay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace JobBars.Cooldowns.Manager {
         public JobIds Job;
     }
 
-    public unsafe partial class CooldownManager : PerJobManager<CooldownConfig[]> {
+    public partial class CooldownManager : PerJobManager<CooldownConfig[]> {
         private static readonly int MILLIS_LOOP = 250;
         private Dictionary<ulong, CooldownPartyMember> ObjectIdToMember = [];
         private readonly Dictionary<JobIds, List<CooldownConfig>> CustomCooldowns = [];
 
-        private AddonController? Controller;
+        private OverlayController? Controller;
         private CooldownRoot? Root;
 
         public CooldownManager() : base( "##JobBars_Cooldowns" ) {
@@ -29,36 +30,20 @@ namespace JobBars.Cooldowns.Manager {
                 CustomCooldowns[custom.Job].Add( new CooldownConfig( custom.Name, custom.GetNameId(), custom.Props ) );
             }
 
-            Controller = new AddonController {
-                AddonName = UiHelper.CooldownAttachAddonName,
-                OnSetup = SetupAddon,
-                OnFinalize = ResetAddon,
-                OnUpdate = UpdateAddon
-            };
-            //Controller.Enable();
+            Controller = new();
+            Controller.CreateNode( () => {
+                Root = new( this );
+                return Root;
+            } );
         }
 
         public void Hide() {
             Root?.IsVisible = false;
         }
 
-        private void SetupAddon( AtkUnitBase* addon ) {
-            Root = new();
-            Root.AttachNode( addon );
-        }
-
-        private void ResetAddon( AtkUnitBase* addon ) {
-            Root?.Dispose();
-            Root = null;
-        }
-
-        private void UpdateAddon( AtkUnitBase* addon ) {
-            Tick();
-        }
-
         public void Dispose() {
-            Controller?.Dispose();
-            Controller = null;
+            if( Root == null ) return;
+            Controller?.RemoveNode( Root );
         }
 
         public CooldownConfig[] GetCooldownConfigs( JobIds job ) {

@@ -1,18 +1,21 @@
-using FFXIVClientStructs.FFXIV.Component.GUI;
-using KamiToolKit;
-using KamiToolKit.Classes;
-using KamiToolKit.Nodes;
+using JobBars.Buffs.Manager;
+using KamiToolKit.Enums;
+using KamiToolKit.Overlay.UiOverlay;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JobBars.Nodes.Buff {
-    public unsafe class BuffRoot : NodeBase<AtkResNode> {
+    public unsafe class BuffRoot : OverlayNode {
+        public override OverlayLayer OverlayLayer => OverlayLayer.AboveUserInterface;
+
         public readonly List<BuffNode> Buffs = [];
 
         public static readonly int MAX_BUFFS = 25;
         public static int BUFFS_HORIZONTAL => JobBars.Configuration.BuffHorizontal;
 
-        public BuffRoot() : base( NodeType.Res ) {
+        private readonly BuffManager Manager;
+
+        public BuffRoot( BuffManager manager ) {
+            Manager = manager;
             Size = new( 256, 100 );
 
             for( var i = 0; i < MAX_BUFFS; i++ ) Buffs.Add( new BuffNode() );
@@ -32,5 +35,7 @@ namespace JobBars.Nodes.Buff {
             }
             foreach( var buff in Buffs ) buff.UpdateSettings();
         }
+
+        protected override void OnUpdate() => Manager.Tick();
     }
 }
