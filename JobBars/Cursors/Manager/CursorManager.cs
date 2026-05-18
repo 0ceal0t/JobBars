@@ -35,6 +35,7 @@ namespace JobBars.Cursors.Manager {
         public void Dispose() {
             Controller?.Dispose();
             Controller = null;
+            Root = null;
         }
 
         public void SetJob( JobIds job ) {

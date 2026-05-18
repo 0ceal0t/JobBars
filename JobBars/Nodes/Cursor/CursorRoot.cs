@@ -20,7 +20,6 @@ namespace JobBars.Nodes.Cursor {
         public CursorRoot( CursorManager manager ) {
             Manager = manager;
             Size = new( 44, 48 );
-            NodeFlags = NodeFlags.Visible | NodeFlags.Fill | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
 
             Inner = new SimpleImageNode() {
                 Size = new( 44, 46 ),

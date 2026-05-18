@@ -44,6 +44,7 @@ namespace JobBars.Cooldowns.Manager {
         public void Dispose() {
             Controller?.Dispose();
             Controller = null;
+            Root = null;
         }
 
         public CooldownConfig[] GetCooldownConfigs( JobIds job ) {

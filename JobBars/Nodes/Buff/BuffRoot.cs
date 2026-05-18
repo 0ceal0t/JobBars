@@ -9,7 +9,7 @@ namespace JobBars.Nodes.Buff {
 
         public readonly List<BuffNode> Buffs = [];
 
-        public static readonly int MAX_BUFFS = 25;
+        public static readonly int MAX_BUFFS = 15;
         public static int BUFFS_HORIZONTAL => JobBars.Configuration.BuffHorizontal;
 
         private readonly BuffManager Manager;
