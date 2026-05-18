@@ -35,8 +35,8 @@ namespace JobBars.Gauges.Manager {
         }
 
         public void Dispose() {
-            if( Root == null ) return;
-            Controller?.RemoveNode( Root );
+            Controller?.Dispose();
+            Controller = null;
         }
 
         public void SetJob( JobIds job ) {

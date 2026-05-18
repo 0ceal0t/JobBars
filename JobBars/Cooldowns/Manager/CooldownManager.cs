@@ -42,8 +42,8 @@ namespace JobBars.Cooldowns.Manager {
         }
 
         public void Dispose() {
-            if( Root == null ) return;
-            Controller?.RemoveNode( Root );
+            Controller?.Dispose();
+            Controller = null;
         }
 
         public CooldownConfig[] GetCooldownConfigs( JobIds job ) {
@@ -76,7 +76,7 @@ namespace JobBars.Cooldowns.Manager {
 
             // Global position + scale
 
-            Root.Position = JobBars.Configuration.CooldownPosition + new Vector2( 0, UiHelper.PartyListOffset() );
+            Root.Position = JobBars.Configuration.CooldownPosition + UiHelper.PartyListPosition() + new Vector2( 0, UiHelper.PartyListOffset() );
             Root.Scale = new( JobBars.Configuration.CooldownScale, JobBars.Configuration.CooldownScale );
             Root.UpdateSpacing();
 

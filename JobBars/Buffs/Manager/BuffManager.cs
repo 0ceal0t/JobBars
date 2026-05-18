@@ -57,8 +57,8 @@ namespace JobBars.Buffs.Manager {
             PartyListController?.Dispose();
             PartyListController = null;
 
-            if( Root == null ) return;
-            Controller?.RemoveNode( Root );
+            Controller?.Dispose();
+            Controller = null;
         }
 
         public BuffConfig[] GetBuffConfigs( JobIds job ) {

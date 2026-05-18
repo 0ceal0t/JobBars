@@ -4,6 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.GameStructs;
 using KamiToolKit.Extensions;
 using System;
+using System.Numerics;
 
 namespace JobBars.Helper {
     public unsafe partial class UiHelper {
@@ -29,6 +30,12 @@ namespace JobBars.Helper {
             var offsetNode = partyList->AtkUnitBase.UldManager.SearchNodeById( 2 );
             if( offsetNode == null ) return 0;
             return offsetNode->Y;
+        }
+
+        public static Vector2 PartyListPosition() {
+            var partyList = ( AddonPartyList* )GetAddon( "_PartyList" );
+            if( partyList == null ) return new( 0, 0 );
+            return partyList->AtkUnitBase.RootNode->Position;
         }
     }
 }
