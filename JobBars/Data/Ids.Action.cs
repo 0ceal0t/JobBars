@@ -217,6 +217,13 @@ namespace JobBars.Data {
         StarryMuse = 34675,
         TemperaCoat = 34685,
         ScenicMuse = 35349,
+        StrikingMuse = 34674,
+        SteelMuse = 35348,
+        HammerStamp = 34678,
+        HammerBrush = 34679,
+        PolishingHammer = 34680,
+        HammerMotif = 34668,
+        WeaponMotif = 34690,
 
         // BLU ===========
         SongOfTorment = 11386,
