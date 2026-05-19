@@ -7,7 +7,7 @@ using KamiToolKit.Premade.Node.Simple;
 
 namespace JobBars.Nodes.Cursor {
     public unsafe class CursorRoot : OverlayNode {
-        public override OverlayLayer OverlayLayer => OverlayLayer.AboveUserInterface;
+        public override OverlayLayer OverlayLayer => OverlayLayer.BehindUserInterface;
 
         private readonly SimpleImageNode Inner;
         private readonly SimpleImageNode Outer;

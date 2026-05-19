@@ -1,11 +1,9 @@
-using FFXIVClientStructs.FFXIV.Component.GUI;
-using JobBars.Helper;
-using KamiToolKit;
+using KamiToolKit.Premade.Node.Simple;
 using System.Numerics;
 
 namespace JobBars.Nodes.Gauge {
-    public abstract class GaugeNode : NodeBase<AtkResNode>, IGaugeNode {
-        public GaugeNode() : base( NodeType.Res ) { }
+    public abstract class GaugeNode : SimpleOverlayNode, IGaugeNode {
+        public GaugeNode() { }
 
         public void SetPosition( Vector2 pos ) {
             Position = pos;
@@ -19,7 +17,7 @@ namespace JobBars.Nodes.Gauge {
             IsVisible = visible;
         }
 
-        public virtual unsafe void SetSplitPosition( GaugeRoot root, Vector2 pos ) {
+        public virtual void SetSplitPosition( GaugeRoot root, Vector2 pos ) {
             Position = new( pos.X - root.Position.X, pos.Y - root.Position.Y );
         }
     }

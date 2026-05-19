@@ -37,8 +37,6 @@ namespace JobBars.Data {
     public class Configuration : IPluginConfiguration {
         public int Version { get; set; } = 2;
 
-        public bool Use4K = true;
-
         // ====== GAUGES ======
 
         public float GaugeScale = 1.0f;
@@ -164,7 +162,7 @@ namespace JobBars.Data {
         [NonSerialized]
         private static readonly Random random = new();
 
-        private static string RandomString( int length ) => new( Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[random.Next( x.Length )] ).ToArray() );
+        private static string RandomString( int length ) => new( [.. Enumerable.Repeat( "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length ).Select( x => x[random.Next( x.Length )] )] );
 
         public void RemoveCustomCooldown( string nameId ) {
             CustomCooldown.RemoveAll( x => x.GetNameId() == nameId );

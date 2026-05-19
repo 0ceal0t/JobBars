@@ -1,13 +1,14 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit;
+using KamiToolKit.Premade.Node.Simple;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace JobBars.Nodes.Highlight {
-    public unsafe class HighlightRoot : NodeBase<AtkResNode> {
+    public unsafe class HighlightRoot : SimpleOverlayNode {
         public readonly List<HighlightNode> Highlights = [];
 
-        public HighlightRoot() : base( NodeType.Res ) {
+        public HighlightRoot() {
             NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 100, 100 );
             Position = new( -12, 19 );

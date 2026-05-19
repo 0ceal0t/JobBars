@@ -2,13 +2,12 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
 using JobBars.Data;
 using JobBars.Helper;
-using KamiToolKit;
 using KamiToolKit.Enums;
 using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
 
 namespace JobBars.Nodes.Buff {
-    public unsafe class BuffNode : NodeBase<AtkResNode> {
+    public unsafe class BuffNode : SimpleOverlayNode {
         public static ushort WIDTH => ( ushort )( JobBars.Configuration.BuffSquare ? 40 : 36 );
         public static ushort HEIGHT => ( ushort )( JobBars.Configuration.BuffSquare ? 40 : 28 );
 
@@ -20,11 +19,10 @@ namespace JobBars.Nodes.Buff {
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
 
-        public BuffNode() : base( NodeType.Res ) {
+        public BuffNode() {
             MultiplyColor = new( 1f, 1f, 1f );
 
             Icon = new IconImageNode() {
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 WrapMode = WrapMode.Tile,
                 ImageNodeFlags = 0,
                 IconId = 405

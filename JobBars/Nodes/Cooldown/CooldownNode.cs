@@ -1,15 +1,12 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Data;
 using JobBars.Helper;
-using KamiToolKit;
-using KamiToolKit.Classes;
 using KamiToolKit.Enums;
 using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
-using System.Reflection.Metadata.Ecma335;
 
 namespace JobBars.Nodes.Cooldown {
-    public unsafe class CooldownNode : NodeBase<AtkResNode> {
+    public unsafe class CooldownNode : SimpleOverlayNode {
         public static readonly ushort WIDTH = 30;
         public static readonly ushort HEIGHT = 30;
 
@@ -20,7 +17,7 @@ namespace JobBars.Nodes.Cooldown {
         private ActionIds LastAction = 0;
         public ActionIds IconId => LastAction;
 
-        public CooldownNode() : base( NodeType.Res ) {
+        public CooldownNode() {
             Size = new( WIDTH, HEIGHT );
 
             Icon = new IconImageNode() {

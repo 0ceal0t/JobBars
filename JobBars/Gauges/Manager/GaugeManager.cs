@@ -78,12 +78,6 @@ namespace JobBars.Gauges.Manager {
                 JobBars.SearchForPartyMemberStatus( ( int )Dalamud.Objects.LocalPlayer.GameObjectId, UiHelper.PlayerStatus, GaugeBuffsOnPartyMembers );
             }
 
-            // Pulses
-
-            var time = DateTime.Now;
-            var millis = time.Second * 1000 + time.Millisecond;
-            var percent = ( float )( millis % 1000 ) / 1000;
-
             foreach( var gauge in CurrentGauges.Where( g => g.Enabled ) ) gauge.TickTracker();
 
             var arrowIdx = 0;
@@ -113,7 +107,7 @@ namespace JobBars.Gauges.Manager {
                 else if( requestedType == GaugeVisualType.Diamond && gauge is IGaugeDiamondInterface diamondTracker && diamondIdx <= GaugeRoot.MAX_GAUGES ) {
                     var diamond = Root.Diamonds[diamondIdx];
                     node = diamond;
-                    diamond.Tick( diamondTracker, percent );
+                    diamond.Tick( diamondTracker );
 
                     width = diamond.GetWidth( diamondTracker );
                     height = diamond.GetHeight( diamondTracker );
@@ -124,7 +118,7 @@ namespace JobBars.Gauges.Manager {
                 else if( requestedType == GaugeVisualType.Arrow && gauge is IGaugeArrowInterface arrowTracker && arrowIdx <= GaugeRoot.MAX_GAUGES ) {
                     var arrow = Root.Arrows[arrowIdx];
                     node = arrow;
-                    arrow.Tick( arrowTracker, percent );
+                    arrow.Tick( arrowTracker );
 
                     width = arrow.GetWidth( arrowTracker );
                     height = arrow.GetHeight( arrowTracker );
@@ -135,7 +129,7 @@ namespace JobBars.Gauges.Manager {
                 else if( requestedType == GaugeVisualType.BarDiamondCombo && gauge is IGaugeBarDiamondComboInterface comboTracker && barIdx <= GaugeRoot.MAX_GAUGES ) {
                     var combo = Root.BarDiamondCombos[barIdx];
                     node = combo;
-                    combo.Tick( comboTracker, percent );
+                    combo.Tick( comboTracker );
 
                     width = combo.GetWidth( comboTracker );
                     height = combo.GetHeight( comboTracker );

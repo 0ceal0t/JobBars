@@ -80,16 +80,13 @@ namespace JobBars {
             Dalamud.Framework.Update -= OnFrameworkUpdate;
             Dalamud.ClientState.Logout -= OnLogout;
             Dalamud.ClientState.TerritoryChanged -= OnZoneChange;
-            
-            Dalamud.Framework.RunOnFrameworkThread(() => {
-                BuffManager?.Dispose();
-                IconManager?.Dispose();
-                CursorManager?.Dispose();
-                GaugeManager?.Dispose();
-                CooldownManager?.Dispose();
-            });
 
             Animation.Dispose();
+            BuffManager?.Dispose();
+            IconManager?.Dispose();
+            CursorManager?.Dispose();
+            GaugeManager?.Dispose();
+            CooldownManager?.Dispose();
             KamiToolKitLibrary.Dispose();
         }
 

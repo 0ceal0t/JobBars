@@ -63,9 +63,9 @@ namespace JobBars.Nodes.Gauge.BarDiamondCombo {
 
         // =====================
 
-        public void Tick( IGaugeBarDiamondComboInterface tracker,float percent ) {
+        public void Tick( IGaugeBarDiamondComboInterface tracker ) {
             Bar.Tick( tracker  );
-            Diamond.Tick( tracker, percent );
+            Diamond.Tick( tracker );
 
             SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
             SetScale( tracker.GetConfig().Scale );

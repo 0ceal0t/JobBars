@@ -1,24 +1,13 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
-using JobBars.Data;
-using System;
 using System.Numerics;
 
 namespace JobBars {
-    public unsafe partial class JobBars {
+    public partial class JobBars {
         public bool Visible = false;
 
         public static readonly Vector4 RED_COLOR = new( 0.85098039216f, 0.32549019608f, 0.30980392157f, 1.0f );
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
-
-        private readonly InfoBox<JobBars> RequiresRestartInfoBox = new() {
-            Label = "Requires Restart",
-            ContentsAction = ( JobBars item ) => {
-                if( ImGui.Checkbox( "Use 4K textures##JobBars_Settings", ref Configuration.Use4K ) ) {
-                    Configuration.Save();
-                }
-            }
-        };
 
         private void BuildSettingsUi() {
             if( !Visible ) return;
@@ -26,12 +15,6 @@ namespace JobBars {
             var _ID = "##JobBars_Settings";
             ImGui.SetNextWindowSize( new Vector2( 600, 1000 ), ImGuiCond.FirstUseEver );
             if( ImGui.Begin( "JobBars Settings", ref Visible ) ) {
-                RequiresRestartInfoBox.Draw( this );
-
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-                // ==========================
-
                 ImGui.BeginTabBar( "Tabs" + _ID );
                 if( ImGui.BeginTabItem( "Gauges" + _ID ) ) {
                     GaugeManager?.Draw();

@@ -1,10 +1,11 @@
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
-using JobBars.Data;
 using JobBars.Gauges.Types.Arrow;
+using KamiToolKit.Timelines;
 using System.Collections.Generic;
 
 namespace JobBars.Nodes.Gauge.Arrow {
-    public unsafe class ArrowNode : GaugeNode {
+    public class ArrowNode : GaugeNode {
         public readonly List<ArrowTick> Ticks = [];
 
         public static readonly int MAX_ITEMS = 12;
@@ -28,20 +29,17 @@ namespace JobBars.Nodes.Gauge.Arrow {
 
         public void SetColor( int idx, ElementColor color ) => Ticks[idx].SetColor( color );
 
-        public void SetValue( int idx, bool value ) {
-            var prevVisible = Ticks[idx].Selected.IsVisible;
-            Ticks[idx].Selected.IsVisible = value;
-
-            if( value && !prevVisible ) Animation.AddAnim( f => Ticks[idx].Selected.Scale = new( f, f ), 0.2f, 2.5f, 1.0f );
-        }
+        public void SetValue( int idx, bool value ) => Ticks[idx].SetValue( value );
 
         public void Clear() {
-            for( var idx = 0; idx < MAX_ITEMS; idx++ ) SetValue( idx, false );
+            foreach( var tick in Ticks ) {
+                tick.Selected.IsVisible = false;
+            }
         }
 
         // ====================
 
-        public void Tick( IGaugeArrowInterface tracker,  float percent ) {
+        public void Tick( IGaugeArrowInterface tracker ) {
             SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
             SetScale( tracker.GetConfig().Scale );
 
@@ -53,8 +51,6 @@ namespace JobBars.Nodes.Gauge.Arrow {
                 SetValue( i, tracker.GetTickValue( trackerIndex ) );
                 SetColor( i, tracker.GetTickColor( trackerIndex ) );
             }
-
-            Ticks.ForEach( t => t.Tick( percent ) ); // pulse
         }
 
         public int GetHeight( IGaugeArrowInterface tracker ) => ( int )( tracker.GetConfig().Scale * 32 );

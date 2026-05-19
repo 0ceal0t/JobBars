@@ -34,20 +34,6 @@ namespace JobBars.Atk {
             node.MultiplyColor = MultiplyColor;
             node.AddColor = AddColor;
         }
-
-        public readonly void SetColorPulse( NodeBase node, float percent ) {
-            // 0 = color
-            // 50 = color + 100
-            // 100 = color
-
-            var add = ( short )( 75 * ( 1f - 2f * Math.Abs( percent - 0.5f ) ) ); // 0 -> 1 -> 0
-            var currentRed = ( short )( AddRed + add );
-            var currentGreen = ( short )( AddGreen + add );
-            var currentBlue = ( short )( AddBlue + add );
-
-            node.MultiplyColor = MultiplyColor;
-            node.AddColor = new( currentRed / 255f, currentGreen / 255f, currentBlue / 255f );
-        }
     }
 
     public class ColorConstants {

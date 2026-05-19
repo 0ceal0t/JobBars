@@ -1,21 +1,19 @@
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using JobBars.Atk;
-using KamiToolKit;
-using KamiToolKit.Classes;
 using KamiToolKit.Enums;
 using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
 
 namespace JobBars.Nodes.Gauge.Diamond {
-    public unsafe class DiamondTick : NodeBase<AtkResNode> {
+    public unsafe class DiamondTick : SimpleOverlayNode {
         public readonly ImageNode Background;
-        public readonly ResNode SelectedContainer;
+        public readonly SimpleOverlayNode SelectedContainer;
         public readonly ImageNode Selected;
         public readonly TextNode Text;
 
         private ElementColor TickColor = ColorConstants.NoColor;
 
-        public DiamondTick() : base( NodeType.Res ) {
+        public DiamondTick() {
             Size = new( 32, 32 );
 
             Background = new SimpleImageNode() {
@@ -27,7 +25,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
                 TexturePath = "ui/uld/JobHudSimple_StackA.tex"
             };
 
-            SelectedContainer = new ResNode() {
+            SelectedContainer = new SimpleOverlayNode() {
                 Size = new( 32, 32 ),
                 Origin = new( 16, 16 ),
             };
@@ -64,7 +62,5 @@ namespace JobBars.Nodes.Gauge.Diamond {
             TickColor = color;
             TickColor.SetColor( Selected );
         }
-
-        public void Tick( float percent ) => TickColor.SetColorPulse( Selected, percent );
     }
 }

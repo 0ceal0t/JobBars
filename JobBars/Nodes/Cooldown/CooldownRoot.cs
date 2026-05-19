@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace JobBars.Nodes.Cooldown {
     public unsafe class CooldownRoot : OverlayNode {
-        public override OverlayLayer OverlayLayer => OverlayLayer.AboveUserInterface;
+        public override OverlayLayer OverlayLayer => OverlayLayer.BehindUserInterface;
 
         public readonly List<CooldownRow> Rows = [];
 

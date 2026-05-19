@@ -13,22 +13,22 @@ namespace JobBars.Nodes.Gauge.Bar {
     public unsafe class BarNode : GaugeNode {
         private static readonly int MAX_SEGMENTS = 6;
 
-        private readonly ResNode GaugeContainer;
+        private readonly SimpleOverlayNode GaugeContainer;
 
         private readonly ImageNode Background;
-        private readonly ResNode BarContainer;
+        private readonly SimpleOverlayNode BarContainer;
         private readonly NineGridNode BarSecondary;
         private readonly NineGridNode BarMain;
         private readonly List<ImageNode> Separators = [];
         private readonly ImageNode Frame;
         private readonly NineGridNode Indicator;
 
-        private readonly ResNode TextContainer;
+        private readonly SimpleOverlayNode TextContainer;
         private readonly TextNode Text;
         private readonly NineGridNode TextBlur;
 
         private float LastPercent = 1f;
-        private Animation Animation;
+        private Animation Animation = null;
         private float[] Segments = null;
 
         private bool Vertical = false;
@@ -37,7 +37,7 @@ namespace JobBars.Nodes.Gauge.Bar {
         public BarNode() : base() {
             Size = new( 160, 46 );
 
-            GaugeContainer = new ResNode() {
+            GaugeContainer = new SimpleOverlayNode() {
                 Size = new( 160, 32 )
             };
 
@@ -52,7 +52,7 @@ namespace JobBars.Nodes.Gauge.Bar {
 
             // ========= BAR ==============
 
-            BarContainer = new ResNode() {
+            BarContainer = new SimpleOverlayNode() {
                 Size = new( 160, 20 )
             };
 
@@ -71,7 +71,6 @@ namespace JobBars.Nodes.Gauge.Bar {
                 TextureCoordinates = new( 6, 40 ),
                 TextureSize = new( 148, 20 ),
                 PartsRenderType = ( byte )PartsRenderType.RenderType,
-                NodeFlags = NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.AnchorTop,
                 TexturePath = "ui/uld/Parameter_Gauge.tex"
             };
 
@@ -112,7 +111,7 @@ namespace JobBars.Nodes.Gauge.Bar {
 
             // ======= TEXT ==============
 
-            TextContainer = new ResNode() {
+            TextContainer = new SimpleOverlayNode() {
                 Size = new( 47, 40 ),
                 Position = new( 112, 6 )
             };
@@ -214,13 +213,12 @@ namespace JobBars.Nodes.Gauge.Bar {
             LastPercent = value;
         }
 
-        public void SetIndicatorPercent( float indicatorPercent, float valuePercent ) {
+        public void SetIndicatorPercent( float indicatorPercent ) {
             if( indicatorPercent <= 0f || indicatorPercent >= 1f ) {
                 Indicator.IsVisible = false;
                 return;
             }
 
-            // var canSlidecast = valuePercent >= ( 1f - indicatorPercent );
             Indicator.IsVisible = true;
             var width = ( int )( 160 * indicatorPercent );
             Indicator.Size = new( width, 20 );
@@ -296,7 +294,7 @@ namespace JobBars.Nodes.Gauge.Bar {
             SetText( tracker.GetBarText() );
             SetTextVisible( tracker.GetBarTextVisible() );
             SetPercent( tracker.GetBarPercent() );
-            SetIndicatorPercent( tracker.GetBarIndicatorPercent(), tracker.GetBarPercent() );
+            SetIndicatorPercent( tracker.GetBarIndicatorPercent() );
         }
 
         public int GetHeight( IGaugeBarInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( tracker.GetVertical() ? 160 : 46 ) );

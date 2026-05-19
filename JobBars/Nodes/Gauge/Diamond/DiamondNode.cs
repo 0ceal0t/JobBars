@@ -66,7 +66,7 @@ namespace JobBars.Nodes.Gauge.Diamond {
 
         // ====================
 
-        public void Tick( IGaugeDiamondInterface tracker, float percent ) {
+        public void Tick( IGaugeDiamondInterface tracker ) {
             SetVisible( !tracker.GetConfig().HideWhenInactive || tracker.GetActive() );
             SetScale( tracker.GetConfig().Scale );
 
@@ -82,8 +82,6 @@ namespace JobBars.Nodes.Gauge.Diamond {
                     SetText( i, tracker.GetDiamondText( trackerIndex ) );
                 }
             }
-
-            Ticks.ForEach( t => t.Tick( percent ) ); // pulse
         }
 
         public int GetHeight( IGaugeDiamondInterface tracker ) => ( int )( tracker.GetConfig().Scale * ( tracker.GetDiamondTextVisible() ? 40 : 32 ) );

@@ -34,7 +34,7 @@ namespace JobBars.Helper {
 
         public static Vector2 PartyListPosition() {
             var partyList = ( AddonPartyList* )GetAddon( "_PartyList" );
-            if( partyList == null ) return new( 0, 0 );
+            if( partyList == null || partyList->AtkUnitBase.RootNode == null ) return new( 0, 0 );
             return partyList->AtkUnitBase.RootNode->Position;
         }
     }

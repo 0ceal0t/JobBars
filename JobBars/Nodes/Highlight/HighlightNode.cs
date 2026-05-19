@@ -5,10 +5,10 @@ using KamiToolKit.Nodes;
 using KamiToolKit.Premade.Node.Simple;
 
 namespace JobBars.Nodes.Highlight {
-    public unsafe class HighlightNode : NodeBase<AtkResNode> {
+    public unsafe class HighlightNode : SimpleOverlayNode {
         private readonly NineGridNode Highlight;
 
-        public HighlightNode() : base( NodeType.Res ) {
+        public HighlightNode() {
             NodeFlags = NodeFlags.AnchorLeft | NodeFlags.AnchorTop;
             Size = new( 100, 100 );
 
